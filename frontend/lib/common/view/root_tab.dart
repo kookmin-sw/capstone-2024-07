@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/common/layout/default_layout.dart';
+import 'package:frontend/common/view/msg_board_list_screen.dart';
 
 class RootTab extends StatefulWidget {
   final int initialIndex;
@@ -36,16 +37,6 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      child: TabBarView(
-        physics: NeverScrollableScrollPhysics(),
-        controller: controller,
-        children: [
-          Center(child: Text('홈')),
-          Center(child: Text('게시판')),
-          Center(child: Text('마이페이지')),
-          Center(child: Text('더보기')),
-        ],
-      ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: PRIMARY_COLOR,
         unselectedItemColor: BODY_TEXT_COLOR,
@@ -56,7 +47,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
           controller.animateTo(index);
         },
         currentIndex: index,
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
@@ -86,9 +77,19 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
             label: '더보기',
           ),
         ],
-        selectedLabelStyle: TextStyle(
+        selectedLabelStyle: const TextStyle(
           fontSize: 12.0,
         ),
+      ),
+      child: TabBarView(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: controller,
+        children: const [
+          Center(child: Text('홈')),
+          MsgBoardListScreen(category: "인기글"),
+          Center(child: Text('마이페이지')),
+          Center(child: Text('더보기')),
+        ],
       ),
     );
   }
