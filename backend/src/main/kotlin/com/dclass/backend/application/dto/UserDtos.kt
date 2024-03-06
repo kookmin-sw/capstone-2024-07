@@ -15,7 +15,7 @@ data class RegisterUserRequest(
     val email: String,
 
     val nickname: String,
-    val password: String,
+    var password: String,
     val confirmPassword: String,
     val authenticationCode: String
 ) {
