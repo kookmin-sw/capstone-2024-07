@@ -1,5 +1,6 @@
 package com.dclass.backend.domain.user
 
+import com.dclass.support.security.sha256Encrypt
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
@@ -25,4 +26,8 @@ private class PasswordSerializer : JsonSerializer<Password>() {
 @Embeddable
 data class Password(
     var value: String
-)
+) {
+    init {
+        value = sha256Encrypt(value)
+    }
+}
