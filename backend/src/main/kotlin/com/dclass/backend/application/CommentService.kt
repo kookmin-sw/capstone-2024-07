@@ -32,7 +32,7 @@ class CommentService (
     }
 
     private fun findByCommentId(commentId: Long) : Comment {
-        val comment = commentRepository.findByCommentId(commentId)
+        val comment = commentRepository.findCommentById(commentId)
             ?: throw NoSuchElementException("해당 댓글이 존재하지 않습니다.")
         check(!comment.isDeleted(commentId)){
             "삭제된 댓글입니다."
