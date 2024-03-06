@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotNull
 import java.time.LocalDateTime
 import com.dclass.backend.domain.user.User
 import com.dclass.backend.domain.user.UserInformation
-import java.time.LocalDateTime
 
 
 data class CreateCommentRequest(
@@ -38,6 +37,8 @@ data class CommentResponse(
         comment.content,
         comment.createdDateTime,
         comment.modifiedDateTime
+    )
+}
 
 
 data class CommentWithUserResponse(

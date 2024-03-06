@@ -46,10 +46,6 @@ class Comment(
     var commentLikes: CommentLikes = commentLikes
         private set
 
-    @Column(nullable = false)
-    var modifiedDateTime : LocalDateTime = modifiedDateTime
-        private set
-
     val likeCount: Int
         get() = commentLikes.count
 
