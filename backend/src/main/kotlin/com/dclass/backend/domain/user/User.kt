@@ -4,6 +4,7 @@ import com.dclass.support.domain.BaseRootEntity
 import jakarta.persistence.*
 
 @Entity
+@Table(name = "users")
 class User(
 
     @Embedded
@@ -13,7 +14,7 @@ class User(
     @Embedded
     var password: Password,
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "university_id", nullable = false)
     val university: University,
 
