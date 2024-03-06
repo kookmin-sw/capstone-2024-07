@@ -4,7 +4,7 @@ import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 
 @Embeddable
-class UserInformation(
+data class UserInformation(
     @Column(nullable = false, length = 30)
     val name: String,
 
