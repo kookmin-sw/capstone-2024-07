@@ -22,6 +22,7 @@ class Comment(
 
     commentLikes: CommentLikes = CommentLikes(),
 
+
     @Column(nullable = false)
     val createdDateTime: LocalDateTime = LocalDateTime.now(),
 
@@ -35,6 +36,10 @@ class Comment(
 
     @Column(nullable = false, length = 255)
     var content: String = content
+        private set
+
+    @Column(nullable = false)
+    var modifiedDateTime: LocalDateTime = modifiedDateTime
         private set
 
     @Embedded
@@ -61,7 +66,5 @@ class Comment(
         this.content = content
         modifiedDateTime = LocalDateTime.now()
     }
-
-
 
 }
