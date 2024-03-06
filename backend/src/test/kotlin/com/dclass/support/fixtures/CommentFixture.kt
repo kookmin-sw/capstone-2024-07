@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 
 fun createComment(
     userId: Long = 1L,
-    postId: Long,
+    postId: Long = 1L,
     content: String = "content",
     commentLikes: CommentLikes = CommentLikes(),
     createdDateTime: LocalDateTime = LocalDateTime.now(),
