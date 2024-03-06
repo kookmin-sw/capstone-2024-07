@@ -22,14 +22,14 @@ class Comment(
 
     commentLikes: CommentLikes = CommentLikes(),
 
-    id: Long = 0L,
 
     @Column(nullable = false)
     val createdDateTime: LocalDateTime = LocalDateTime.now(),
 
     modifiedDateTime: LocalDateTime = LocalDateTime.now(),
 
-    ) : BaseEntity(id) {
+    id : Long = 0L
+) : BaseEntity(id) {
 
     @Column(nullable = false)
     private var deleted: Boolean = false
@@ -46,9 +46,25 @@ class Comment(
     var commentLikes: CommentLikes = commentLikes
         private set
 
+    @Column(nullable = false)
+    var modifiedDateTime : LocalDateTime = modifiedDateTime
+        private set
+
     val likeCount: Int
         get() = commentLikes.count
 
     fun likedBy(userId: Long) =
         commentLikes.findUserById(userId)
+
+    fun like(userId: Long) {
+        commentLikes.add(userId, id)
+    }
+
+    fun isDeleted(commentId: Long) = deleted
+
+    fun changeContent(content: String) {
+        this.content = content
+        modifiedDateTime = LocalDateTime.now()
+    }
+
 }
