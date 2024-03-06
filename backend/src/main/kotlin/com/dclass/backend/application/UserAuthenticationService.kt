@@ -8,6 +8,7 @@ import com.dclass.backend.domain.authenticationcode.AuthenticationCodeRepository
 import com.dclass.backend.domain.authenticationcode.getLastByEmail
 import com.dclass.backend.domain.user.*
 import com.dclass.backend.security.JwtTokenProvider
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -18,6 +19,7 @@ class UserAuthenticationService(
     private val authenticationCodeRepository: AuthenticationCodeRepository,
     private val universityRepository: UniversityRepository,
     private val jwtTokenProvider: JwtTokenProvider,
+    private val passwordEncoder: PasswordEncoder
 ) {
     fun generateTokenByRegister(request: RegisterUserRequest): LoginUserResponse {
         require(request.password == request.confirmPassword) { "비밀번호가 일치하지 않습니다." }
@@ -26,7 +28,8 @@ class UserAuthenticationService(
             .validate(request.authenticationCode)
 
         val univ = universityRepository.findByEmailSuffix(getEmailSuffix(request.email))
-        val user = userRepository.save(request.toEntity(univ))
+        val user = userRepository.save(request.toEntity(univ.apply { request.password = passwordEncoder.encode(request.password) })) // 비밀번호를 암호화하여 저장
+
 
         return LoginUserResponse(
             jwtTokenProvider.createAccessToken(user.email),
@@ -37,7 +40,9 @@ class UserAuthenticationService(
     fun generateTokenByLogin(request: AuthenticateUserRequest): LoginUserResponse {
         val user = userRepository.findByEmail(request.email)
             ?: throw UnidentifiedUserException("사용자 정보가 일치하지 않습니다.")
-        user.authenticate(request.password)
+        if (!passwordEncoder.matches(request.password.value, user.password.value)) {
+            throw UnidentifiedUserException("사용자 정보가 일치하지 않습니다.")
+        }
 
         return LoginUserResponse(
             jwtTokenProvider.createAccessToken(user.email),
