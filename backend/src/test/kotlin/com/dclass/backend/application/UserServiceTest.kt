@@ -1,12 +1,9 @@
 package com.dclass.backend.application
 
+import com.dclass.backend.application.dto.EditPasswordRequest
 import com.dclass.backend.application.dto.ResetPasswordRequest
-import com.dclass.backend.domain.user.Password
-import com.dclass.backend.domain.user.UnidentifiedUserException
-import com.dclass.backend.domain.user.UserRepository
-import com.dclass.backend.domain.user.findByEmail
-import com.dclass.support.fixtures.RANDOM_PASSWORD_TEXT
-import com.dclass.support.fixtures.user
+import com.dclass.backend.domain.user.*
+import com.dclass.support.fixtures.*
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
@@ -38,6 +35,37 @@ class UserServiceTest : BehaviorSpec({
             Then("예외가 발생한다") {
                 shouldThrow<UnidentifiedUserException> {
                     userService.resetPassword(ResetPasswordRequest("가짜 이름", user.email))
+                }
+            }
+        }
+    }
+
+    Given("특정 회원이 있고 변경할 비밀번호가 있는 경우") {
+        val user = user(id = 1L, password = PASSWORD.value)
+        val password = NEW_PASSWORD
+
+        every { userRepository.getOrThrow(any()) } returns user
+
+        When("기존 비밀번호와 함께 새 비밀번호를 변경하면") {
+            userService.editPassword(user.id, EditPasswordRequest(user.password, password, password))
+
+            Then("새 비밀번호로 변경된다") {
+                user.password shouldBe password
+            }
+        }
+
+        When("일치하지 않는 기존 비밀번호와 함께 새 비밀번호를 변경하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<UnidentifiedUserException> {
+                    userService.editPassword(user.id, EditPasswordRequest(WRONG_PASSWORD, password, password))
+                }
+            }
+        }
+
+        When("이전 비밀번호는 일치하지만 새 비밀번호와 확인 비밀번호가 일치하지 않으면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalArgumentException> {
+                    userService.editPassword(user.id, EditPasswordRequest(user.password, password, WRONG_PASSWORD))
                 }
             }
         }
