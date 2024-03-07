@@ -30,6 +30,16 @@ data class AuthenticateUserRequest(
     val password: Password
 )
 
+data class ResetPasswordRequest(
+    @field:Pattern(regexp = "[가-힣]{1,30}", message = "올바른 형식의 이름이어야 합니다")
+    val name: String,
+
+    @field:Email
+    val email: String,
+)
+
+
+
 data class LoginUserResponse(
     val accessToken: String,
     val refreshToken: String
