@@ -13,4 +13,8 @@ data class UserInformation(
 
     @Column(nullable = false, length = 13)
     val nickname: String
-)
+) {
+    fun same(name: String): Boolean {
+        return this.name == name
+    }
+}
