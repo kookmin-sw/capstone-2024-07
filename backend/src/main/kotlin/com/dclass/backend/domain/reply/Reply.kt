@@ -4,6 +4,7 @@ import com.dclass.support.domain.BaseEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
+import java.time.LocalDateTime
 
 @SQLDelete(sql = "update reply set deleted = true where id = ?")
 @SQLRestriction("deleted = false")
@@ -18,6 +19,11 @@ class Reply(
     content: String = "",
 
     replyLikes: ReplyLikes = ReplyLikes(),
+
+    @Column(nullable = false)
+    val createdDateTime: LocalDateTime = LocalDateTime.now(),
+
+    modifiedDateTime: LocalDateTime = LocalDateTime.now(),
 
     id: Long = 0L
 ) : BaseEntity(id) {
@@ -35,6 +41,10 @@ class Reply(
 
     val likeCount: Int
         get() = replyLikes.count
+
+    @Column(nullable = false)
+    var modifiedDateTime: LocalDateTime = modifiedDateTime
+        private set
 
     fun likedBy(userId: Long) =
         replyLikes.findUserById(userId)
