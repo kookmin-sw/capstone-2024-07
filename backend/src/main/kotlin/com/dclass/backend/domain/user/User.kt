@@ -47,4 +47,17 @@ class User(
     fun authenticate(password: Password) {
         require(password == this.password) { "사용자 정보가 일치하지 않습니다." }
     }
+
+    fun resetPassword(name: String, password: String) {
+        identify(information.same(name)) {"사용자 정보가 일치하지 않습니다."}
+        this.password = Password(password)
+        registerEvent(PasswordResetEvent(id, name, email, password))
+    }
+
+    private fun identify(value: Boolean, lazyMessage: () -> Any = {}) {
+        if (!value) {
+            val message = lazyMessage()
+            throw UnidentifiedUserException(message.toString())
+        }
+    }
 }
