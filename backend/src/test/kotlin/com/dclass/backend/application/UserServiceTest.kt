@@ -2,6 +2,7 @@ package com.dclass.backend.application
 
 import com.dclass.backend.application.dto.EditPasswordRequest
 import com.dclass.backend.application.dto.ResetPasswordRequest
+import com.dclass.backend.application.dto.UserResponse
 import com.dclass.backend.domain.user.*
 import com.dclass.support.fixtures.*
 import io.kotest.assertions.throwables.shouldThrow
@@ -67,6 +68,20 @@ class UserServiceTest : BehaviorSpec({
                 shouldThrow<IllegalArgumentException> {
                     userService.editPassword(user.id, EditPasswordRequest(user.password, password, WRONG_PASSWORD))
                 }
+            }
+        }
+    }
+
+    Given("특정 회원이 있는 경우") {
+        val user = user(id = 1L)
+
+        every { userRepository.getOrThrow(any()) } returns user
+
+        When("해당 회원의 정보를 조회하면") {
+            val actual = userService.getInformation(user.id)
+
+            Then("회원 정보를 확인할 수 있다") {
+                actual shouldBe UserResponse(user)
             }
         }
     }
