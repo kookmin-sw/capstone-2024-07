@@ -6,6 +6,8 @@ import java.util.*
 
 val usernames = listOf("devbelly", "zkxmdkdltm", "hongbuly", "jia5232")
 
+const val RANDOM_PASSWORD_TEXT: String = "nEw_p@ssw0rd"
+
 fun user(
     id: Long = 0L,
     name: String = "username",
