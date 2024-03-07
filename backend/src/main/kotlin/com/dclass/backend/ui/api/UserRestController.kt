@@ -6,6 +6,7 @@ import com.dclass.backend.application.UserService
 import com.dclass.backend.application.dto.AuthenticateUserRequest
 import com.dclass.backend.application.dto.LoginUserResponse
 import com.dclass.backend.application.dto.RegisterUserRequest
+import com.dclass.backend.application.dto.ResetPasswordRequest
 import com.dclass.backend.application.mail.MailService
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
@@ -38,6 +39,12 @@ class UserRestController(
         return ResponseEntity.ok(ApiResponse.success(token))
     }
 
+    @PostMapping("/reset-password")
+    fun resetPassword(@RequestBody @Valid request: ResetPasswordRequest): ResponseEntity<Unit> {
+        userService.resetPassword(request)
+        return ResponseEntity.noContent().build()
+    }
+
     @PostMapping("/authentication-code")
     fun generateAuthenticationCode(
         @RequestParam email: String
@@ -56,4 +63,5 @@ class UserRestController(
         userAuthenticationService.authenticateEmail(email, authenticationCode)
         return ResponseEntity.noContent().build()
     }
+
 }
