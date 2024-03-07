@@ -3,14 +3,39 @@ package com.dclass.backend.application.dto
 import com.dclass.backend.domain.user.Password
 import com.dclass.backend.domain.user.University
 import com.dclass.backend.domain.user.User
+import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.Pattern
 
 data class UserResponse(
+    @Schema(
+        description = "유저의 고유 식별자",
+        example = "1"
+    )
     val id: Long,
+
+    @Schema(
+        description = "유저의 이름",
+        example = "쿠민이"
+    )
     val name: String,
+
+    @Schema(
+        description = "유저의 대학교 이메일",
+        example = "test@kookmin.ac.kr"
+    )
     val email: String,
+
+    @Schema(
+        description = "유저의 닉네임",
+        example = "ku-mini"
+    )
     val nickname: String,
+
+    @Schema(
+        description = "유저의 대학교 이름",
+        example = "국민대학교"
+    )
     val universityName: String,
 ) {
     constructor(user: User) : this(
