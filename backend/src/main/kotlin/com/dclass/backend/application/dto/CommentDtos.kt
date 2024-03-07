@@ -1,9 +1,11 @@
 package com.dclass.backend.application.dto
+
 import com.dclass.backend.domain.comment.Comment
-import jakarta.validation.constraints.NotNull
-import java.time.LocalDateTime
+import com.dclass.backend.domain.comment.CommentLikes
 import com.dclass.backend.domain.user.User
 import com.dclass.backend.domain.user.UserInformation
+import jakarta.validation.constraints.NotNull
+import java.time.LocalDateTime
 
 
 data class CreateCommentRequest(
@@ -46,7 +48,7 @@ data class CommentWithUserResponse(
     val userInformation: UserInformation,
     val postId: Long,
     val content: String,
-    val likeCount: Int,
+    val likeCount: CommentLikes,
     val isLiked: Boolean,
     val createdAt: LocalDateTime,
 ) {
@@ -55,8 +57,33 @@ data class CommentWithUserResponse(
         userInformation = UserInformation(user.name, user.email, user.nickname),
         postId = comment.postId,
         content = comment.content,
-        likeCount = comment.likeCount,
+        likeCount = comment.commentLikes,
         isLiked = false,
         createdAt = comment.createdDateTime
+    )
+}
+
+data class CommentReplyWithUserResponse(
+    val id: Long,
+    val userInformation: UserInformation,
+    val postId: Long,
+    val content: String,
+    val likeCount: CommentLikes,
+    val isLiked: Boolean,
+    val createdAt: LocalDateTime,
+    val replies: List<ReplyWithUserResponse>
+) {
+    constructor(
+        commentWithUserResponse: CommentWithUserResponse,
+        replies: List<ReplyWithUserResponse>
+    ) : this(
+        id = commentWithUserResponse.id,
+        userInformation = commentWithUserResponse.userInformation,
+        postId = commentWithUserResponse.postId,
+        content = commentWithUserResponse.content,
+        likeCount = commentWithUserResponse.likeCount,
+        isLiked = commentWithUserResponse.isLiked,
+        createdAt = commentWithUserResponse.createdAt,
+        replies = replies
     )
 }
