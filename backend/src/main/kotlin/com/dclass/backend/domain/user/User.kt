@@ -54,6 +54,11 @@ class User(
         registerEvent(PasswordResetEvent(id, name, email, password))
     }
 
+    fun changePassword(oldPassword: Password, newPassword: Password) {
+        identify(this.password == oldPassword) { "기존 비밀번호가 일치하지 않습니다." }
+        this.password = newPassword
+    }
+
     private fun identify(value: Boolean, lazyMessage: () -> Any = {}) {
         if (!value) {
             val message = lazyMessage()
