@@ -6,6 +6,8 @@ import '../../common/layout/default_layout.dart';
 import '../component/custom_text_form_field.dart';
 
 class LoginScreen extends StatefulWidget {
+  static String get routeName => 'login';
+
   const LoginScreen({super.key});
 
   @override

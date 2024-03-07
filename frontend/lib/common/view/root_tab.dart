@@ -3,6 +3,7 @@ import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/common/layout/default_layout.dart';
 
 class RootTab extends StatefulWidget {
+  static String get routeName => 'home';
   final int initialIndex;
 
   const RootTab({
