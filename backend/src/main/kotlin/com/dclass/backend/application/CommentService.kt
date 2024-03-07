@@ -1,21 +1,19 @@
 package com.dclass.backend.application
 
-import com.dclass.backend.application.dto.CommentResponse
-import com.dclass.backend.application.dto.CreateCommentRequest
-import com.dclass.backend.application.dto.DeleteCommentRequest
-import com.dclass.backend.application.dto.UpdateCommentRequest
+import com.dclass.backend.application.dto.*
 import com.dclass.backend.domain.comment.Comment
 import com.dclass.backend.domain.comment.CommentRepository
-import jakarta.persistence.Id
+import com.dclass.backend.domain.reply.ReplyRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service
-class CommentService (
+class CommentService(
     private val commentRepository: CommentRepository,
-){
-    fun create(userId: Long, request: CreateCommentRequest) : CommentResponse {
+    private val replyRepository: ReplyRepository
+) {
+    fun create(userId: Long, request: CreateCommentRequest): CommentResponse {
         return commentRepository.save(Comment(userId, request.postId, request.content))
             .let(::CommentResponse)
     }
@@ -30,11 +28,27 @@ class CommentService (
         commentRepository.delete(comment)
     }
 
+    @Transactional(readOnly = true)
+    fun findAllByPostId(postId: Long): List<CommentReplyWithUserResponse> {
+        val comments = commentRepository.findCommentWithUserByPostId(postId)
 
-    private fun find(commentId: Long, userId: Long) : Comment {
+        val commentIds = comments.map { it.id }
+
+        val replies = replyRepository.findRepliesWithUserByCommentIdIn(commentIds)
+            .groupBy { it.commentId }
+
+        return comments.map {
+            CommentReplyWithUserResponse(
+                it,
+                replies = replies[it.id] ?: emptyList()
+            )
+        }
+    }
+
+    private fun find(commentId: Long, userId: Long): Comment {
         val comment = commentRepository.findCommentByIdAndUserId(commentId, userId)
             ?: throw NoSuchElementException("해당 댓글이 존재하지 않습니다.")
-        check(!comment.isDeleted(commentId)){
+        check(!comment.isDeleted(commentId)) {
             "삭제된 댓글입니다."
         }
         return comment
