@@ -22,13 +22,12 @@ class Comment(
 
     commentLikes: CommentLikes = CommentLikes(),
 
-
     @Column(nullable = false)
     val createdDateTime: LocalDateTime = LocalDateTime.now(),
 
     modifiedDateTime: LocalDateTime = LocalDateTime.now(),
 
-    id : Long = 0L
+    id: Long = 0L
 ) : BaseEntity(id) {
 
     @Column(nullable = false)
@@ -62,5 +61,4 @@ class Comment(
         this.content = content
         modifiedDateTime = LocalDateTime.now()
     }
-
 }
