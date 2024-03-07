@@ -6,6 +6,6 @@ import java.util.*
 @Component
 class UUIDBasedPasswordGenerator: PasswordGenerator {
     override fun generate(): String {
-        return UUID.randomUUID().toString().take(0)
+        return UUID.randomUUID().toString()
     }
 }
