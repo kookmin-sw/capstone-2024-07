@@ -6,6 +6,6 @@ fun createImage(
     key: String
 ): Image {
     return Image(
-        key = key
+        imageKey = key
     )
 }
