@@ -72,4 +72,12 @@ class UserRestController(
         return ResponseEntity.noContent().build()
     }
 
+    @GetMapping("/me")
+    fun getMyInformation(
+        @LoginUser user: User
+    ): ResponseEntity<ApiResponse<UserResponse>> {
+        val response = userService.getInformation(user.id)
+        return ResponseEntity.ok(ApiResponse.success(response))
+    }
+
 }
