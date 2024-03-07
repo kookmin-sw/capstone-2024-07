@@ -24,14 +24,14 @@ class MemberRepository{
 
   Future<MemberModel> getMe() async {
     final resp = await dio.get(
-      '$baseUrl/api/users/member',
+      '$baseUrl/api/users/me',
       options: Options(
         headers: {
-          'refreshToken': 'true',
+          'accessToken': 'true',
         },
       ),
     );
 
-    return MemberModel.fromJson(resp.data);
+    return MemberModel.fromJson(resp.data['body']);
   }
 }

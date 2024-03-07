@@ -7,15 +7,17 @@ abstract class MemberModelBase {}
 @JsonSerializable()
 class MemberModel extends MemberModelBase {
   final int id;
+  final String name;
   final String email;
   final String nickname;
-  final String univName;
+  final String universityName;
 
   MemberModel({
     required this.id,
+    required this.name,
     required this.email,
     required this.nickname,
-    required this.univName,
+    required this.universityName,
   });
 
   factory MemberModel.fromJson(Map<String, dynamic> json) =>

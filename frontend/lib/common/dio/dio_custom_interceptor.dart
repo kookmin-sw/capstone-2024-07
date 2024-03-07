@@ -131,15 +131,8 @@ class CustomInterceptor extends Interceptor {
       );
 
       // 새로 받아온 accessToken, refreshToken을 스토리지에 저장
-      final refreshTokenArray = resp.data['refreshToken'];
-      final accessTokenArray = resp.data['accessToken'];
-
-      final newRefreshToken = refreshTokenArray != null
-          ? refreshTokenArray!.substring("Bearer ".length)
-          : null;
-      final newAccessToken = accessTokenArray != null
-          ? accessTokenArray!.substring("Bearer ".length)
-          : null;
+      final newRefreshToken = resp.data['refreshToken'];
+      final newAccessToken = resp.data['accessToken'];
 
       print('받은 refreshToken: $newRefreshToken');
       print('받은 accessToken: $newAccessToken');

@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/member/view/signup_screen.dart';
 
 import '../../common/const/colors.dart';
 import '../../common/layout/default_layout.dart';
 import '../component/custom_text_form_field.dart';
+import '../model/member_model.dart';
+import '../provider/member_state_notifier_provider.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   static String get routeName => 'login';
 
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   String email = '';
   String password = '';
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(memberStateNotifierProvider);
+
     return DefaultLayout(
       child: SingleChildScrollView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -65,8 +70,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: (){
-                    print("login pressed!");
+                  onPressed: state is MemberModelLoading //로딩중이면 로그인 버튼 못누르도록
+                      ? null
+                      : () async {
+                    ref.read(memberStateNotifierProvider.notifier)
+                        .login(email: email, password: password);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: PRIMARY_COLOR,

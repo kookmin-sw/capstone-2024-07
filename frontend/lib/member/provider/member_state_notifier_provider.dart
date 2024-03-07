@@ -69,8 +69,8 @@ class MemberStateNotifier extends StateNotifier<MemberModelBase?> {
         password: password,
       ); //resp는 LoginResponse이다.
 
-      await storage.write(key: REFRESH_TOKEN_KEY, value: resp.refreshToken.substring("Bearer ".length));
-      await storage.write(key: ACCESS_TOKEN_KEY, value: resp.accessToken.substring("Bearer ".length));
+      await storage.write(key: REFRESH_TOKEN_KEY, value: resp.refreshToken);
+      await storage.write(key: ACCESS_TOKEN_KEY, value: resp.accessToken);
 
       final memberResp = await memberRepository.getMe();
       state = memberResp;
