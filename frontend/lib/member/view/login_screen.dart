@@ -50,9 +50,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 _renderTitle(),
                 _renderSubTitle(),
                 const SizedBox(height: 16.0),
-                Image.asset(
-                  'asset/imgs/students.jpeg', // 임시로 ai로 만든 이미지 넣어둠.. 추후 변경 예정
-                  width: MediaQuery.of(context).size.width / 2,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12.0, 10.0, 12.0, 20.0),
+                  child: Image.asset(
+                    'asset/imgs/students2.png', // 임시로 ai로 만든 이미지 넣어둠.. 추후 변경 예정
+                    width: MediaQuery.of(context).size.width / 2,
+                  ),
                 ),
                 CustomTextFormField(
                   hintText: '이메일을 입력해주세요.',
@@ -69,38 +72,45 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   obscureText: true,
                 ),
                 const SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: state is MemberModelLoading //로딩중이면 로그인 버튼 못누르도록
-                      ? null
-                      : () async {
-                    ref.read(memberStateNotifierProvider.notifier)
-                        .login(email: email, password: password);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: PRIMARY_COLOR,
-                  ),
-                  child: Text(
-                    '로그인',
-                  ),
-                ),
-                TextButton(
-                  onPressed: (){
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => SignupScreen(),
-                      ),
-                    );
-                  },
-                  style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all(PRIMARY_COLOR),
-                    side: MaterialStateProperty.all(
-                      BorderSide(
-                        color: PRIMARY_COLOR,
-                        width: 1.0,
-                      ),
+                Container(
+                  height: 40.0,
+                  child: ElevatedButton(
+                    onPressed: state is MemberModelLoading //로딩중이면 로그인 버튼 못누르도록
+                        ? null
+                        : () async {
+                      ref.read(memberStateNotifierProvider.notifier)
+                          .login(email: email, password: password);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: PRIMARY_COLOR,
+                    ),
+                    child: Text(
+                      '로그인',
                     ),
                   ),
-                  child: Text('회원가입'),
+                ),
+                SizedBox(height: 8.0),
+                Container(
+                  height: 40.0,
+                  child: TextButton(
+                    onPressed: (){
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => SignupScreen(),
+                        ),
+                      );
+                    },
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.all(PRIMARY_COLOR),
+                      side: MaterialStateProperty.all(
+                        BorderSide(
+                          color: PRIMARY_COLOR,
+                          width: 1.0,
+                        ),
+                      ),
+                    ),
+                    child: Text('회원가입'),
+                  ),
                 ),
               ],
             ),
