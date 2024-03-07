@@ -6,6 +6,21 @@ import com.dclass.backend.domain.user.User
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.Pattern
 
+data class UserResponse(
+    val id: Long,
+    val name: String,
+    val email: String,
+    val nickname: String,
+    val universityName: String,
+) {
+    constructor(user: User) : this(
+        user.id,
+        user.name,
+        user.email,
+        user.nickname,
+        user.universityName
+    )
+}
 
 data class RegisterUserRequest(
     @field:Pattern(regexp = "[가-힣]{1,30}", message = "올바른 형식의 이름이어야 합니다")
