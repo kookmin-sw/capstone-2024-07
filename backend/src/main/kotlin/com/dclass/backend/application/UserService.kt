@@ -2,6 +2,7 @@ package com.dclass.backend.application
 
 import com.dclass.backend.application.dto.EditPasswordRequest
 import com.dclass.backend.application.dto.ResetPasswordRequest
+import com.dclass.backend.application.dto.UserResponse
 import com.dclass.backend.domain.user.User
 import com.dclass.backend.domain.user.UserRepository
 import com.dclass.backend.domain.user.findByEmail
@@ -29,6 +30,11 @@ class UserService(
     fun editPassword(id: Long, request: EditPasswordRequest) {
         require(request.password == request.confirmPassword) { "새 비밀번호가 일치하지 않습니다." }
         userRepository.getOrThrow(id).changePassword(request.oldPassword, request.password)
+    }
+
+    fun getInformation(id: Long): UserResponse {
+        val user = userRepository.getOrThrow(id)
+        return UserResponse(user)
     }
 
 }
