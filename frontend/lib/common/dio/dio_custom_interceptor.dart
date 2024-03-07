@@ -76,7 +76,7 @@ class CustomInterceptor extends Interceptor {
     final isStatus401 = err.response?.statusCode == 401;
 
     // 토큰을 새로 발급받으려다가 에러가 난거라면 refreshToken 자체에 문제가 있다!
-    final isPathRefresh = err.requestOptions.path == '/token';
+    final isPathRefresh = err.requestOptions.path == '/api/users/reissue-token';
 
     if (isStatus401 && !isPathRefresh) {
       RequestOptions options = err.requestOptions;
@@ -122,7 +122,7 @@ class CustomInterceptor extends Interceptor {
     print('보내는 refreshToken: $refreshToken');
     try {
       final resp = await dio.post(
-        'http://$ip/token',
+        'http://$ip/api/users/reissue-token',
         options: Options(
           headers: {
             'Authorization': 'Bearer $refreshToken',
