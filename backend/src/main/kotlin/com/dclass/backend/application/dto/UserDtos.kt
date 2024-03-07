@@ -38,7 +38,11 @@ data class ResetPasswordRequest(
     val email: String,
 )
 
-
+data class EditPasswordRequest(
+    val oldPassword: Password,
+    val password: Password,
+    val confirmPassword: Password
+)
 
 data class LoginUserResponse(
     val accessToken: String,
