@@ -57,7 +57,7 @@ class Post(
         private set
 
     val thumbnail: String?
-        get() = _images.firstOrNull()?.key
+        get() = _images.firstOrNull()?.imageKey
 
     fun update(title: String, content: String, images: List<Image>) {
         this.title = title
