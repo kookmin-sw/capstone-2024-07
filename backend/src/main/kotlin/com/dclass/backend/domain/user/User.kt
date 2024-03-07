@@ -4,6 +4,7 @@ import com.dclass.support.domain.BaseRootEntity
 import jakarta.persistence.*
 
 @Entity
+@Table(name = "users")
 class User(
 
     @Embedded
@@ -13,7 +14,7 @@ class User(
     @Embedded
     var password: Password,
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "university_id", nullable = false)
     val university: University,
 
@@ -45,5 +46,23 @@ class User(
 
     fun authenticate(password: Password) {
         require(password == this.password) { "사용자 정보가 일치하지 않습니다." }
+    }
+
+    fun resetPassword(name: String, password: String) {
+        identify(information.same(name)) {"사용자 정보가 일치하지 않습니다."}
+        this.password = Password(password)
+        registerEvent(PasswordResetEvent(id, name, email, password))
+    }
+
+    fun changePassword(oldPassword: Password, newPassword: Password) {
+        identify(this.password == oldPassword) { "기존 비밀번호가 일치하지 않습니다." }
+        this.password = newPassword
+    }
+
+    private fun identify(value: Boolean, lazyMessage: () -> Any = {}) {
+        if (!value) {
+            val message = lazyMessage()
+            throw UnidentifiedUserException(message.toString())
+        }
     }
 }

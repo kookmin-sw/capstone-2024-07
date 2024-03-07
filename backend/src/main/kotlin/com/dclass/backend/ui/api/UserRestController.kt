@@ -3,10 +3,10 @@ package com.dclass.backend.ui.api
 import com.dclass.backend.application.BlacklistService
 import com.dclass.backend.application.UserAuthenticationService
 import com.dclass.backend.application.UserService
-import com.dclass.backend.application.dto.AuthenticateUserRequest
-import com.dclass.backend.application.dto.LoginUserResponse
-import com.dclass.backend.application.dto.RegisterUserRequest
+import com.dclass.backend.application.dto.*
 import com.dclass.backend.application.mail.MailService
+import com.dclass.backend.domain.user.User
+import com.dclass.backend.security.LoginUser
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -38,6 +38,21 @@ class UserRestController(
         return ResponseEntity.ok(ApiResponse.success(token))
     }
 
+    @PostMapping("/reset-password")
+    fun resetPassword(@RequestBody @Valid request: ResetPasswordRequest): ResponseEntity<Unit> {
+        userService.resetPassword(request)
+        return ResponseEntity.noContent().build()
+    }
+
+    @PostMapping("/edit-password")
+    fun editPassword(
+        @RequestBody @Valid request: EditPasswordRequest,
+        @LoginUser user: User
+    ): ResponseEntity<Unit> {
+        userService.editPassword(user.id, request)
+        return ResponseEntity.noContent().build()
+    }
+
     @PostMapping("/authentication-code")
     fun generateAuthenticationCode(
         @RequestParam email: String
@@ -56,4 +71,13 @@ class UserRestController(
         userAuthenticationService.authenticateEmail(email, authenticationCode)
         return ResponseEntity.noContent().build()
     }
+
+    @GetMapping("/me")
+    fun getMyInformation(
+        @LoginUser user: User
+    ): ResponseEntity<ApiResponse<UserResponse>> {
+        val response = userService.getInformation(user.id)
+        return ResponseEntity.ok(ApiResponse.success(response))
+    }
+
 }
