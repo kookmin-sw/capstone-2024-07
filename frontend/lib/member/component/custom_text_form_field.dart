@@ -44,9 +44,9 @@ class CustomTextFormField extends StatelessWidget {
         suffixIcon: suffixText == null
             ? null
             : Padding(
-                padding: EdgeInsets.only(right: 8.0),
-                child: Text(suffixText!),
-              ),
+          padding: EdgeInsets.only(right: 8.0),
+          child: Text(suffixText!),
+        ),
         suffixIconConstraints: BoxConstraints(
           minHeight: 10,
           minWidth: 10,

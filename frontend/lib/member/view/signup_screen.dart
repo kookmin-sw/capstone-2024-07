@@ -5,6 +5,8 @@ import 'package:frontend/member/component/custom_text_form_field.dart';
 import '../../common/const/colors.dart';
 
 class SignupScreen extends StatefulWidget {
+  static String get routeName => 'signup';
+
   const SignupScreen({super.key});
 
   @override
