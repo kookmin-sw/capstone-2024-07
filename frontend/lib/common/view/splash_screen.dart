@@ -3,6 +3,8 @@ import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/common/layout/default_layout.dart';
 
 class SplashScreen extends StatelessWidget {
+  static String get routeName => 'splash';
+
   const SplashScreen({super.key});
 
   @override
