@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/common/view/root_tab.dart';
+import 'package:frontend/member/view/login_screen.dart';
+import 'package:frontend/member/view/signup_screen.dart';
 
 void main() {
   runApp(const _App());
@@ -15,7 +17,8 @@ class _App extends StatelessWidget {
         fontFamily: 'NotoSans',
         primarySwatch: Colors.purple,
       ),
-      home: RootTab(initialIndex: 0),
+      // home: RootTab(initialIndex: 0),
+      home: LoginScreen(),
     );
   }
 }

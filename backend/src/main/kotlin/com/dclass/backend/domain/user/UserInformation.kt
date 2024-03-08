@@ -4,7 +4,7 @@ import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
 
 @Embeddable
-class UserInformation(
+data class UserInformation(
     @Column(nullable = false, length = 30)
     val name: String,
 
@@ -13,4 +13,8 @@ class UserInformation(
 
     @Column(nullable = false, length = 13)
     val nickname: String
-)
+) {
+    fun same(name: String): Boolean {
+        return this.name == name
+    }
+}

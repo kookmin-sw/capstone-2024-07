@@ -25,8 +25,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     implementation("com.linecorp.kotlin-jdsl:jpql-dsl:3.3.1")
@@ -40,6 +41,10 @@ dependencies {
     compileOnly("io.jsonwebtoken:jjwt-api:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
+//    implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0")
+
+    //swagger
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 
     runtimeOnly("com.mysql:mysql-connector-j")
     runtimeOnly("com.h2database:h2")
