@@ -57,19 +57,26 @@ class BoardList extends StatelessWidget {
                   Row(
                     children: [
                       TextWithIcon(
-                          icon: Icons.favorite_outline_rounded,
-                          text: board.heart),
+                        icon: Icons.favorite_outline_rounded,
+                        text: board.heart,
+                        iconSize: 13,
+                      ),
                       const SizedBox(
                         width: 13,
                       ),
                       TextWithIcon(
-                          icon: Icons.chat_outlined, text: board.comment),
+                        icon: Icons.chat_outlined,
+                        text: board.comment,
+                        iconSize: 13,
+                      ),
                       const SizedBox(
                         width: 13,
                       ),
                       TextWithIcon(
-                          icon: Icons.star_outline_rounded,
-                          text: board.favorite),
+                        icon: Icons.star_outline_rounded,
+                        text: board.favorite,
+                        iconSize: 15,
+                      ),
                       const SizedBox(
                         width: 13,
                       ),
