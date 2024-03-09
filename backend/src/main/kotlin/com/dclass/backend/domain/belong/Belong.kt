@@ -1,4 +1,4 @@
-package com.dclass.backend.domain.join
+package com.dclass.backend.domain.belong
 
 import com.dclass.support.domain.BaseEntity
 import jakarta.persistence.*
@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 
 @Entity
 @Table
-class Join(
+class Belong(
     @Column(nullable = false)
     val userId: Long,
 
@@ -17,7 +17,7 @@ class Join(
 ) : BaseEntity(id) {
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "join_department")
+    @CollectionTable(name = "department_belong")
     private val _departmentIds: MutableList<Long> = departments.toMutableList()
 
     @Column(nullable = false)
