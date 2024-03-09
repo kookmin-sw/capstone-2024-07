@@ -7,18 +7,22 @@ import java.time.LocalDateTime
 @Entity
 @Table
 class Belong(
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     val userId: Long,
 
-    departments: List<Long> = emptyList(),
+    ids: List<Long> = emptyList(),
 
     modifiedDateTime: LocalDateTime = LocalDateTime.now(),
+
     id: Long = 0L
 ) : BaseEntity(id) {
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "department_belong")
-    private val _departmentIds: MutableList<Long> = departments.toMutableList()
+    @CollectionTable(name = "join_department")
+    private val _departmentIds: MutableList<Long> = ids.toMutableList()
+
+    val departmentIds: List<Long>
+        get() = _departmentIds
 
     @Column(nullable = false)
     var modifiedDateTime: LocalDateTime = modifiedDateTime
@@ -26,6 +30,10 @@ class Belong(
 
     val activated: Long
         get() = _departmentIds.first()
+
+    init {
+        require(departmentIds.size <= 2) { "학과는 최대 두 개까지 선택 가능합니다." }
+    }
 
     fun update(ids: List<Long>) {
         require(ids.size <= 2) { "학과는 최대 두개까지 선택가능합니다" }
