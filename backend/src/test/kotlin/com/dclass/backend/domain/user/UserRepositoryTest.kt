@@ -19,20 +19,15 @@ class UserRepositoryTest(
 ) : BehaviorSpec({
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 
-    Given("1") {
+    Given("특정 사용자가 소속된 학과가 있는 경우") {
         val univ = universityRepository.save(university())
         val user = userRepository.save(user(university = univ))
         val belong = belongRepository.save(belong(userId = user.id))
 
-        When("2") {
+        When("사용자의 정보를 조회하면") {
             val findInfo = userRepository.findUserInfoWithDepartment(user.id)
-            val departments = findInfo.departmentIds
-            Then("3") {
-                println(findInfo.departmentIds)
-                for (departmentss1 in departments) {
-                    println("departmentss1 = ${departmentss1}")
-                }
-
+            
+            Then("사용자의 정보와 소속된 학과 정보가 반환된다") {
                 findInfo.departmentIds shouldHaveSize 2
                 findInfo.departmentIds shouldContainExactly belong.departmentIds
             }
