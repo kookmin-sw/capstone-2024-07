@@ -1,5 +1,6 @@
 package com.dclass.backend.application.dto
 
+import com.dclass.backend.domain.belong.Belong
 import com.dclass.backend.domain.user.Password
 import com.dclass.backend.domain.user.University
 import com.dclass.backend.domain.user.User
@@ -44,6 +45,53 @@ data class UserResponse(
         user.email,
         user.nickname,
         user.universityName
+    )
+}
+
+
+data class UserResponseWithDepartment(
+    @Schema(
+        description = "유저의 고유 식별자",
+        example = "1"
+    )
+    val id: Long,
+
+    @Schema(
+        description = "유저의 이름",
+        example = "쿠민이"
+    )
+    val name: String,
+
+    @Schema(
+        description = "유저의 대학교 이메일",
+        example = "test@kookmin.ac.kr"
+    )
+    val email: String,
+
+    @Schema(
+        description = "유저의 닉네임",
+        example = "ku-mini"
+    )
+    val nickname: String,
+
+    @Schema(
+        description = "유저의 대학교 이름", example = "국민대학교"
+    )
+    val universityName: String,
+
+    @Schema(
+        description = "유저의 소속 학과들의 고유 식별자 리스트",
+        example = "[1, 2]"
+    )
+    val departmentIds: List<Long>,
+) {
+    constructor(user: User, belong: Belong) : this(
+        user.id,
+        user.name,
+        user.email,
+        user.nickname,
+        user.universityName,
+        belong.departmentIds
     )
 }
 
