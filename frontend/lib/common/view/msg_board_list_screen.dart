@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/common/const/msg_board_model.dart';
 import 'package:frontend/common/layout/board_layout.dart';
+import 'package:frontend/common/layout/category_circle_layout.dart';
 
 class MsgBoardListScreen extends StatefulWidget {
   final String category;
@@ -16,11 +18,19 @@ class MsgBoardListScreen extends StatefulWidget {
 class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
   // late Future<List<MsgBoardListModel>> boards;
   List<MsgBoardModel> msgboardlistinstance = [];
+  List<String> categorys = [];
 
   @override
   void initState() {
     super.initState();
     // TODO: add board = http
+    categorys.add("인기게시판");
+    categorys.add("자유게시판");
+    categorys.add("전공게시판");
+    categorys.add("취업");
+    categorys.add("대학원");
+    categorys.add("기타");
+    categorys.add("공모전 공고");
 
     msgboardlistinstance.add(MsgBoardModel(
       "1",
@@ -96,24 +106,61 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
       appBar: AppBar(
         shadowColor: Colors.black,
         elevation: 3,
-        title: Text(
-          widget.category,
-          style: const TextStyle(
-            fontSize: 16,
+        title: const Text(
+          "Decl",
+          style: TextStyle(
+            fontSize: 30,
+            color: PRIMARY_COLOR,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
-      body: ListView(
+      body: Column(
         children: [
           const SizedBox(
-            height: 10,
+            height: 5,
           ),
-          for (var board in msgboardlistinstance)
-            Board(
-              board: board,
-              canTap: true,
-              titleSize: 11,
-            )
+          SizedBox(
+            height: 35,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                for (var category in categorys)
+                  Padding(
+                    padding: const EdgeInsets.all(7),
+                    child: CategoryCircle(
+                      category: category,
+                      type: true,
+                    ),
+                  )
+              ],
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: BODY_TEXT_COLOR.withOpacity(0.5),
+                  width: 1,
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              children: [
+                for (var board in msgboardlistinstance)
+                  Board(
+                    board: board,
+                    canTap: true,
+                    titleSize: 11,
+                  ),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          ),
         ],
       ),
       // body: SingleChildScrollView(

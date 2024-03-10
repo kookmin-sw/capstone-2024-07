@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/common/const/msg_board_model.dart';
+import 'package:frontend/common/layout/category_circle_layout.dart';
 import 'package:frontend/common/layout/text_with_icon.dart';
 import 'package:frontend/common/view/msg_board_screen.dart';
 
@@ -40,7 +41,7 @@ class Board extends StatelessWidget {
           ),
         ),
         margin: const EdgeInsets.only(
-          top: 15,
+          top: 10,
           left: 10,
           right: 10,
         ),
@@ -54,20 +55,9 @@ class Board extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        color: PRIMARY_COLOR.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(50)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 3),
-                      child: Text(
-                        board.category,
-                        style: const TextStyle(
-                          fontSize: 10,
-                        ),
-                      ),
-                    ),
+                  CategoryCircle(
+                    category: board.category,
+                    type: false,
                   ),
                   Row(
                     children: [
@@ -100,7 +90,7 @@ class Board extends StatelessWidget {
                 ],
               ),
               const SizedBox(
-                height: 10,
+                height: 5,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -122,7 +112,7 @@ class Board extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 5,
                     ),
                     Text(
                       "${board.date} | ${board.name}",
