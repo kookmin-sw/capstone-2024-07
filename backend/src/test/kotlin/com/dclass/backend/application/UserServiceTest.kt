@@ -1,8 +1,7 @@
 package com.dclass.backend.application
 
-import com.dclass.backend.application.dto.EditPasswordRequest
-import com.dclass.backend.application.dto.ResetPasswordRequest
-import com.dclass.backend.application.dto.UserResponse
+import com.dclass.backend.application.dto.*
+import com.dclass.backend.domain.department.DepartmentRepository
 import com.dclass.backend.domain.user.*
 import com.dclass.support.fixtures.*
 import io.kotest.assertions.throwables.shouldThrow
@@ -14,8 +13,9 @@ import io.mockk.mockk
 class UserServiceTest : BehaviorSpec({
     val userRepository = mockk<UserRepository>()
     val passwordGenerator = mockk<PasswordGenerator>()
+    val departmentRepository = mockk<DepartmentRepository>()
 
-    val userService = UserService(userRepository, passwordGenerator)
+    val userService = UserService(userRepository, passwordGenerator, departmentRepository)
 
     Given("특정 회원의 개인정보가 있는 경우") {
         val user = user()
@@ -82,6 +82,29 @@ class UserServiceTest : BehaviorSpec({
 
             Then("회원 정보를 확인할 수 있다") {
                 actual shouldBe UserResponse(user)
+            }
+        }
+    }
+
+    Given("특정 회원이 학과에 속한 경우") {
+        val user = user(id = 1L)
+        val department = department()
+        val department2 = department(2L, "경영학과")
+
+        every { userRepository.findUserInfoWithDepartment(any()) } returns UserResponseWithDepartment(
+            UserResponse(user),
+            listOf(department.id, department2.id)
+        )
+        every { departmentRepository.findAllById(any()) } returns listOf(department, department2)
+
+        When("해당 회원의 정보를 조회하면") {
+            val actual = userService.getInformation(user.id)
+
+            Then("회원 정보를 확인할 수 있다") {
+                actual shouldBe UserResponseWithDepartmentNames(
+                    userRepository.findUserInfoWithDepartment(user.id),
+                    listOf(department.title, department2.title)
+                )
             }
         }
     }
