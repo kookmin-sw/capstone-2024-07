@@ -59,7 +59,23 @@ data class UserResponseWithDepartment(
     val departmentIds: List<Long>,
 ) {
     constructor(user: User, belong: Belong) : this(
-        UserResponse(user), belong.departmentIds
+        UserResponse(user),
+        belong.departmentIds
+    )
+}
+
+data class UserResponseWithDepartmentNames(
+    val userResponse: UserResponse,
+
+    @Schema(
+        description = "유저의 소속 학과들의 이름 리스트",
+        example = "[\"컴퓨터공학과\", \"전자공학과\"]"
+    )
+    val departmentNames: List<String>,
+) {
+    constructor(user: UserResponseWithDepartment, departmentNames: List<String>) : this(
+        user.userResponse,
+        departmentNames
     )
 }
 
