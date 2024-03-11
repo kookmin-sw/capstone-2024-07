@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/common/const/colors.dart';
-import 'package:frontend/common/const/comment_model.dart';
+import 'package:frontend/common/model/comment_model.dart';
 
 class CoComment extends StatelessWidget {
   final CommentModel cocoment;
