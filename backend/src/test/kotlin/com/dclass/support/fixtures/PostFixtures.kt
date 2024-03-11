@@ -4,13 +4,13 @@ import com.dclass.backend.domain.post.Post
 import com.dclass.backend.domain.post.PostCount
 import com.dclass.support.domain.Image
 
-fun createPost(
+fun post(
     title: String = "title",
     content: String = "content",
     userId: Long = 1L,
     communityId: Long = 1L,
     images: List<Image> = listOf(createImage("key1"), createImage("key2")),
-    postCount: PostCount = createPostCount(),
+    postCount: PostCount = postCount(),
 ): Post {
     return Post(
         title = title,
@@ -22,7 +22,7 @@ fun createPost(
     )
 }
 
-fun createPostCount(
+fun postCount(
     viewCount: Int = 10,
     likeCount: Int = 20,
     replyCount: Int = 30
