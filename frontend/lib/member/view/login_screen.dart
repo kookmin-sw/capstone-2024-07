@@ -53,7 +53,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(12.0, 10.0, 12.0, 20.0),
                   child: Image.asset(
-                    'asset/imgs/students2.png', // 임시로 ai로 만든 이미지 넣어둠.. 추후 변경 예정
+                    'asset/imgs/students.jpeg', // 임시로 ai로 만든 이미지 넣어둠.. 추후 변경 예정
                     width: MediaQuery.of(context).size.width / 2,
                   ),
                 ),
