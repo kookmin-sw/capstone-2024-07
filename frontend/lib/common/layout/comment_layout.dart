@@ -1,12 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/common/const/comment_model.dart';
+import 'package:frontend/common/layout/cocoment_layout.dart';
 import 'package:frontend/common/layout/text_with_icon.dart';
 
-class Comment extends StatelessWidget {
+class Comment extends StatefulWidget {
   final CommentModel comment;
   // TODO: comment of comment
   const Comment({super.key, required this.comment});
+
+  @override
+  State<Comment> createState() => _CommentState();
+}
+
+class _CommentState extends State<Comment> {
+  List<CommentModel> cocomentlistinstance = [];
+
+  @override
+  void initState() {
+    super.initState();
+    cocomentlistinstance.add(CommentModel(
+      "1",
+      "익명4",
+      "맞아맞아",
+      "2",
+    ));
+    cocomentlistinstance.add(CommentModel(
+      "1",
+      "익명5",
+      "맞아맞아맞아",
+      "3",
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +57,7 @@ class Comment extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  comment.name,
+                  widget.comment.name,
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -51,7 +76,7 @@ class Comment extends StatelessWidget {
                         TextWithIcon(
                           icon: Icons.favorite_outline_rounded,
                           iconSize: 15,
-                          text: comment.heart,
+                          text: widget.comment.heart,
                         ),
                         const SizedBox(
                           width: 13,
@@ -67,11 +92,13 @@ class Comment extends StatelessWidget {
               ],
             ),
             Text(
-              comment.content,
+              widget.comment.content,
               style: const TextStyle(
                 fontSize: 10,
               ),
             ),
+            for (var cocoment in cocomentlistinstance)
+              CoComment(cocoment: cocoment)
           ],
         ),
       ),
