@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/common/layout/default_layout.dart';
+import 'package:frontend/common/provider/dio_provider.dart';
 import 'package:frontend/member/component/custom_text_form_field.dart';
 
 import '../../common/const/colors.dart';
+import '../provider/department_list_notifier_provider.dart';
 
-class SignupScreen extends StatefulWidget {
+class SignupScreen extends ConsumerStatefulWidget {
   static String get routeName => 'signup';
 
   const SignupScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  ConsumerState<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SignupScreenState extends ConsumerState<SignupScreen> {
   String name = "";
   String nickname = "";
   String email = "";
@@ -33,6 +36,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final dio = ref.watch(dioProvider);
+
     return DefaultLayout(
       child: SingleChildScrollView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -51,6 +56,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     _renderNameField(),
                     _renderNicknameField(),
                     _renderEmailField(),
+                    _renderDepartmentField(),
                     _renderPasswordField(),
                     _renderIsAcceptCheckbox(),
                     _renderRegisterButton(),
@@ -96,7 +102,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _renderNameField(){
+  Widget _renderNameField() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 30.0),
       child: Column(
@@ -115,7 +121,7 @@ class _SignupScreenState extends State<SignupScreen> {
               },
             ),
           ),
-          if(isNameNull)
+          if (isNameNull)
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
@@ -130,7 +136,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _renderNicknameField(){
+  Widget _renderNicknameField() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 30.0),
       child: Column(
@@ -163,7 +169,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
             ],
           ),
-          if(isNicknameNull)
+          if (isNicknameNull)
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
@@ -178,7 +184,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _renderEmailField(){
+  Widget _renderEmailField() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 30.0),
       child: Column(
@@ -211,7 +217,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
             ],
           ),
-          if(isEmailNull)
+          if (isEmailNull)
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
@@ -226,7 +232,89 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _renderPasswordField(){
+  Widget _renderDepartmentField() {
+    //학과 정보
+    final departmentState = ref.watch(departmentListNotifierProvider);
+
+    String selectedDivision = departmentState.selectedDivision;
+    String selectedDepartment = departmentState.selectedDepartment;
+
+    final divisionAndDepartments = departmentState.divisionAndDepartments;
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          width: 180,
+          child: DropdownButton<String>(
+            isExpanded: true,
+            value: selectedDivision,
+            items: divisionAndDepartments.keys == null
+                ? []
+                : divisionAndDepartments.keys
+                .map((e) => DropdownMenuItem(
+              value: e,
+              child: Text(e),
+            ))
+                .toList(),
+            onChanged: (String? value) {
+              if (value != null &&
+                  divisionAndDepartments.containsKey(value)) {
+                setState(() {
+                  selectedDivision = value;
+                  selectedDepartment =
+                  divisionAndDepartments[value]!.isNotEmpty
+                      ? divisionAndDepartments[value]![0]
+                      : null;
+                  ref
+                      .read(departmentListNotifierProvider
+                      .notifier)
+                      .setSelectedDivision(value);
+                  if (selectedDepartment != null) {
+                    ref
+                        .read(departmentListNotifierProvider
+                        .notifier)
+                        .setSelectedDepartment(
+                        selectedDepartment!);
+                  }
+                });
+              }
+            },
+          ),
+        ),
+        Container(
+          width: 180,
+          child: DropdownButton<String>(
+            isExpanded: true,
+            value: selectedDepartment,
+            items: divisionAndDepartments[selectedDivision] == null
+                ? []
+                : List<String>.from(
+                divisionAndDepartments[selectedDivision])
+                .map((e) => DropdownMenuItem(
+              value: e.toString(),
+              child: Text(e.toString()),
+            ))
+                .toList(),
+            onChanged: (String? value) {
+              if (value != null) {
+                setState(() {
+                  selectedDepartment = value;
+                  ref
+                      .read(departmentListNotifierProvider
+                      .notifier)
+                      .setSelectedDepartment(value);
+                });
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+
+  Widget _renderPasswordField() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 30.0),
       child: Column(
@@ -241,10 +329,9 @@ class _SignupScreenState extends State<SignupScreen> {
               onChanged: (String value) {
                 password = value;
                 setState(() {
-                  isPasswordDifferent =
-                  password == password2 ? false : true;
+                  isPasswordDifferent = password == password2 ? false : true;
                   isPasswordNull =
-                  (password == '' && password2 == '') ? true : false;
+                      (password == '' && password2 == '') ? true : false;
                 });
               },
             ),
@@ -259,15 +346,14 @@ class _SignupScreenState extends State<SignupScreen> {
               onChanged: (String value) {
                 password2 = value;
                 setState(() {
-                  isPasswordDifferent =
-                  password == password2 ? false : true;
+                  isPasswordDifferent = password == password2 ? false : true;
                   isPasswordNull =
-                  (password == '' && password2 == '') ? true : false;
+                      (password == '' && password2 == '') ? true : false;
                 });
               },
             ),
           ),
-          if(isPasswordNull)
+          if (isPasswordNull)
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
@@ -277,7 +363,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
             ),
-          if(isPasswordDifferent)
+          if (isPasswordDifferent)
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
@@ -292,7 +378,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _renderIsAcceptCheckbox(){
+  Widget _renderIsAcceptCheckbox() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 30.0),
       child: Row(
@@ -342,7 +428,7 @@ class _SignupScreenState extends State<SignupScreen> {
     );
   }
 
-  Widget _renderRegisterButton(){
+  Widget _renderRegisterButton() {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: PRIMARY_COLOR,
