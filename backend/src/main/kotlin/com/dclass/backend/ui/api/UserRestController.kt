@@ -99,7 +99,7 @@ class UserRestController(
     @GetMapping("/me")
     fun getMyInformation(
         @LoginUser user: User
-    ): ResponseEntity<ApiResponses<UserResponse>> {
+    ): ResponseEntity<ApiResponses<UserResponseWithDepartmentNames>> {
         val response = userService.getInformation(user.id)
         return ResponseEntity.ok(ApiResponses.success(response))
     }
