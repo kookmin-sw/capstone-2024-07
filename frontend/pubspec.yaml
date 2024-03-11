@@ -70,6 +70,7 @@ flutter:
 
   assets:
     - asset/imgs/
+    - asset/jsons/departments.json
 
   fonts:
     - family: NotoSans
