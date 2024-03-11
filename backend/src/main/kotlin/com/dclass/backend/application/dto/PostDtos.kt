@@ -24,7 +24,7 @@ data class PostResponse(
     val communityTitle: String,
     val postTitle: String,
     val postContent: String,
-    val images: List<String>,
+    var images: List<String>,
     val count: PostCount,
     val isQuestion: Boolean,
     val createdDateTime: LocalDateTime,
