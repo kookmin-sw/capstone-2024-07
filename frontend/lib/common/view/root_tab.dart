@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/common/layout/default_layout.dart';
-import 'package:frontend/common/view/msg_board_list_screen.dart';
 
-class RootTab extends StatefulWidget {
+import '../../member/provider/member_state_notifier_provider.dart';
+
+class RootTab extends ConsumerStatefulWidget {
+  static String get routeName => 'home';
   final int initialIndex;
 
   const RootTab({
@@ -12,10 +15,10 @@ class RootTab extends StatefulWidget {
   });
 
   @override
-  State<RootTab> createState() => _RootTabState();
+  ConsumerState<RootTab> createState() => _RootTabState();
 }
 
-class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
+class _RootTabState extends ConsumerState<RootTab> with SingleTickerProviderStateMixin {
   late TabController controller;
   int index = 0;
 
@@ -37,6 +40,21 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
+      child: TabBarView(
+        physics: NeverScrollableScrollPhysics(),
+        controller: controller,
+        children: [
+          Center(child: Text('홈')),
+          Center(child: Text('게시판')),
+          Center(child: Text('마이페이지')),
+          Center(child: ElevatedButton(
+            onPressed: (){
+              ref.read(memberStateNotifierProvider.notifier).logout();
+            },
+            child: Text('로그아웃'),
+          )),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: PRIMARY_COLOR,
         unselectedItemColor: BODY_TEXT_COLOR,
@@ -47,7 +65,7 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
           controller.animateTo(index);
         },
         currentIndex: index,
-        items: const [
+        items: [
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
@@ -77,19 +95,9 @@ class _RootTabState extends State<RootTab> with SingleTickerProviderStateMixin {
             label: '더보기',
           ),
         ],
-        selectedLabelStyle: const TextStyle(
+        selectedLabelStyle: TextStyle(
           fontSize: 12.0,
         ),
-      ),
-      child: TabBarView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: controller,
-        children: const [
-          Center(child: Text('홈')),
-          MsgBoardListScreen(category: "인기글"),
-          Center(child: Text('마이페이지')),
-          Center(child: Text('더보기')),
-        ],
       ),
     );
   }
