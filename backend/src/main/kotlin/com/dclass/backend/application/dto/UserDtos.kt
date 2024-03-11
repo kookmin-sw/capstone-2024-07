@@ -50,34 +50,7 @@ data class UserResponse(
 
 
 data class UserResponseWithDepartment(
-    @Schema(
-        description = "유저의 고유 식별자",
-        example = "1"
-    )
-    val id: Long,
-
-    @Schema(
-        description = "유저의 이름",
-        example = "쿠민이"
-    )
-    val name: String,
-
-    @Schema(
-        description = "유저의 대학교 이메일",
-        example = "test@kookmin.ac.kr"
-    )
-    val email: String,
-
-    @Schema(
-        description = "유저의 닉네임",
-        example = "ku-mini"
-    )
-    val nickname: String,
-
-    @Schema(
-        description = "유저의 대학교 이름", example = "국민대학교"
-    )
-    val universityName: String,
+    val userResponse: UserResponse,
 
     @Schema(
         description = "유저의 소속 학과들의 고유 식별자 리스트",
@@ -86,12 +59,23 @@ data class UserResponseWithDepartment(
     val departmentIds: List<Long>,
 ) {
     constructor(user: User, belong: Belong) : this(
-        user.id,
-        user.name,
-        user.email,
-        user.nickname,
-        user.universityName,
+        UserResponse(user),
         belong.departmentIds
+    )
+}
+
+data class UserResponseWithDepartmentNames(
+    val userResponse: UserResponse,
+
+    @Schema(
+        description = "유저의 소속 학과들의 이름 리스트",
+        example = "[\"컴퓨터공학과\", \"전자공학과\"]"
+    )
+    val departmentNames: List<String>,
+) {
+    constructor(user: UserResponseWithDepartment, departmentNames: List<String>) : this(
+        user.userResponse,
+        departmentNames
     )
 }
 
