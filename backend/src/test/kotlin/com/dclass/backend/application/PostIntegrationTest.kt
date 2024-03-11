@@ -44,7 +44,14 @@ class PostIntegrationTest(
                 actual.universityName shouldBe user.universityName
                 actual.communityTitle shouldBe community.title
             }
+            /**
+             * 테스트마다 비용이 부과되어 주석처리
+             */
+            Then("이미지가 조회된다") {
+                //actual.images.forEach { it shouldStartWith "https://dclass" }
+            }
         }
+
 
         val anotherUser = userRepository.save(user(university = univ))
         val notBelong =
