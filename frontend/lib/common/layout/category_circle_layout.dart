@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/common/const/colors.dart';
+import 'package:frontend/common/provider/board_provider.dart';
 
-class CategoryCircle extends StatefulWidget {
+class CategoryCircle extends ConsumerWidget {
   const CategoryCircle({
     super.key,
     required this.category,
@@ -12,32 +14,26 @@ class CategoryCircle extends StatefulWidget {
   final bool type;
 
   @override
-  State<CategoryCircle> createState() => _CategoryCircleState();
-}
-
-class _CategoryCircleState extends State<CategoryCircle> {
-  bool clicked = false;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final clickedList = ref.watch(boardStateProvider);
     return GestureDetector(
       onTap: () {
-        if (widget.type) {
-          setState(() {
-            clicked = !clicked;
-          });
+        if (clickedList.contains(category)) {
+          ref.read(boardStateProvider.notifier).remove(category);
+        } else {
+          ref.read(boardStateProvider.notifier).add(category);
         }
       },
       child: Container(
         // category circle
         decoration: BoxDecoration(
-          color: !widget.type
+          color: !type
               ? PRIMARY_COLOR.withOpacity(0.1)
-              : !clicked
+              : !clickedList.contains(category)
                   ? BODY_TEXT_COLOR.withOpacity(0.1)
                   : Colors.white,
           borderRadius: BorderRadius.circular(50),
-          border: clicked
+          border: type && clickedList.contains(category)
               ? Border.all(
                   color: PRIMARY_COLOR,
                 )
@@ -46,7 +42,7 @@ class _CategoryCircleState extends State<CategoryCircle> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 3),
           child: Text(
-            widget.category,
+            category,
             style: const TextStyle(
               fontSize: 10,
             ),

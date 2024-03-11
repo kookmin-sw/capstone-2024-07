@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/common/const/msg_board_model.dart';
 import 'package:frontend/common/layout/board_layout.dart';
 import 'package:frontend/common/layout/category_circle_layout.dart';
+import 'package:frontend/common/provider/board_provider.dart';
 
 class MsgBoardListScreen extends StatefulWidget {
   final String category;
@@ -115,54 +117,8 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 5,
-          ),
-          SizedBox(
-            height: 35,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                for (var category in categorys)
-                  Padding(
-                    padding: const EdgeInsets.all(7),
-                    child: CategoryCircle(
-                      category: category,
-                      type: true,
-                    ),
-                  )
-              ],
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: BODY_TEXT_COLOR.withOpacity(0.5),
-                  width: 1,
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: ListView(
-              children: [
-                for (var board in msgboardlistinstance)
-                  Board(
-                    board: board,
-                    canTap: true,
-                    titleSize: 11,
-                  ),
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      body: BoardListWidget(
+          categorys: categorys, msgboardlistinstance: msgboardlistinstance),
       // body: SingleChildScrollView(
       //   child: Padding(
       //     padding: const EdgeInsets.symmetric(
@@ -186,6 +142,77 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
       //     ),
       //   ),
       // ),
+    );
+  }
+}
+
+class BoardListWidget extends ConsumerWidget {
+  const BoardListWidget({
+    super.key,
+    required this.categorys,
+    required this.msgboardlistinstance,
+  });
+
+  final List<String> categorys;
+  final List<MsgBoardModel> msgboardlistinstance;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final clickedBoardList = ref.watch(boardStateProvider);
+    return Column(
+      children: [
+        const SizedBox(
+          height: 5,
+        ),
+        SizedBox(
+          height: 35,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              for (var category in categorys)
+                Padding(
+                  padding: const EdgeInsets.all(7),
+                  child: CategoryCircle(
+                    category: category,
+                    type: true,
+                  ),
+                )
+            ],
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: BODY_TEXT_COLOR.withOpacity(0.5),
+                width: 1,
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: ListView(
+            children: [
+              for (var board in msgboardlistinstance)
+                if (clickedBoardList.isEmpty)
+                  Board(
+                    board: board,
+                    canTap: true,
+                    titleSize: 11,
+                  )
+                else if (clickedBoardList.contains(board.category))
+                  Board(
+                    board: board,
+                    canTap: true,
+                    titleSize: 11,
+                  ),
+              const SizedBox(
+                height: 10,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
