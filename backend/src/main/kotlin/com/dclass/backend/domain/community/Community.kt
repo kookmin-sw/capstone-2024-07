@@ -3,17 +3,11 @@ package com.dclass.backend.domain.community
 import com.dclass.support.domain.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
 
 @Entity
 class Community(
     @Column(nullable = false)
     val departmentId: Long,
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    val type: CommunityCategory,
 
     title: String = "",
 
