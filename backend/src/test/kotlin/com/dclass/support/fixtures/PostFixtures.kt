@@ -9,7 +9,11 @@ fun post(
     content: String = "content",
     userId: Long = 1L,
     communityId: Long = 1L,
-    images: List<Image> = listOf(createImage("key1"), createImage("key2")),
+    images: List<Image> = listOf(
+        createImage("post/s3-test1"),
+        createImage("post/s3-test2"),
+        createImage("post/s3-test3"),
+    ),
     postCount: PostCount = postCount(),
 ): Post {
     return Post(
