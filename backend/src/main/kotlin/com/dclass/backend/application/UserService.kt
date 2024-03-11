@@ -2,7 +2,8 @@ package com.dclass.backend.application
 
 import com.dclass.backend.application.dto.EditPasswordRequest
 import com.dclass.backend.application.dto.ResetPasswordRequest
-import com.dclass.backend.application.dto.UserResponse
+import com.dclass.backend.application.dto.UserResponseWithDepartmentNames
+import com.dclass.backend.domain.department.DepartmentRepository
 import com.dclass.backend.domain.user.User
 import com.dclass.backend.domain.user.UserRepository
 import com.dclass.backend.domain.user.findByEmail
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 class UserService(
     private val userRepository: UserRepository,
     private val passwordGenerator: PasswordGenerator,
+    private val departmentRepository: DepartmentRepository,
 ) {
     fun getByEmail(email: String): User {
         return userRepository.findByEmail(email) ?: throw IllegalArgumentException("회원이 존재하지 않습니다. email: $email")
@@ -32,9 +34,10 @@ class UserService(
         userRepository.getOrThrow(id).changePassword(request.oldPassword, request.password)
     }
 
-    fun getInformation(id: Long): UserResponse {
-        val user = userRepository.getOrThrow(id)
-        return UserResponse(user)
+    fun getInformation(id: Long): UserResponseWithDepartmentNames {
+        val userWithDepartmentId = userRepository.findUserInfoWithDepartment(id)
+        val departments = departmentRepository.findAllById(userWithDepartmentId.departmentIds).map { it.title }
+        return UserResponseWithDepartmentNames(userWithDepartmentId, departments)
     }
 
 }
