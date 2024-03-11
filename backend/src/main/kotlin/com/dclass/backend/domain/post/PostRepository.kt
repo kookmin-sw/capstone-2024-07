@@ -1,6 +1,9 @@
 package com.dclass.backend.domain.post
 
+import com.dclass.backend.application.dto.PostResponse
 import com.dclass.backend.application.dto.PostScrollPageRequest
+import com.dclass.backend.domain.community.Community
+import com.dclass.backend.domain.user.User
 import com.linecorp.kotlinjdsl.dsl.jpql.jpql
 import com.linecorp.kotlinjdsl.render.jpql.JpqlRenderContext
 import com.linecorp.kotlinjdsl.support.spring.data.jpa.extension.createQuery
@@ -12,6 +15,7 @@ interface PostRepository : JpaRepository<Post, Long>, PostRepositorySupport {
 
 interface PostRepositorySupport {
     fun findPostScrollPage(request: PostScrollPageRequest): List<Post>
+    fun findPostById(id: Long): PostResponse
 }
 
 private class PostRepositoryImpl(
@@ -32,5 +36,23 @@ private class PostRepositoryImpl(
         }
 
         return em.createQuery(query, context).setMaxResults(request.size).resultList
+    }
+
+    override fun findPostById(id: Long): PostResponse {
+        val query = jpql {
+            selectNew<PostResponse>(
+                entity(Post::class),
+                entity(User::class),
+                path(Community::title)
+            ).from(
+                entity(Post::class),
+                join(User::class).on(path(Post::userId).equal(path(User::id))),
+                join(Community::class).on(path(Post::communityId).equal(path(Community::id)))
+            ).where(
+                path(Post::id).equal(id)
+            )
+        }
+
+        return em.createQuery(query, context).singleResult
     }
 }
