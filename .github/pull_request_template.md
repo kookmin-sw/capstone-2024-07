@@ -1,5 +1,3 @@
-#### Link
-- [](https://github.com)
 
 #### Summary
 PR의 내용을 요약해주세요.
