@@ -14,7 +14,7 @@ class AwsPresigner(
     private val client: S3Client
 ) {
     companion object {
-        const val POST_IMAGE_FOLDER = "post-image"
+        const val POST_IMAGE_FOLDER = "post"
     }
 
     suspend fun getPostObjectPresigned(keyName: String): String {
