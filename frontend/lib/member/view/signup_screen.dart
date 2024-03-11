@@ -5,7 +5,8 @@ import 'package:frontend/common/provider/dio_provider.dart';
 import 'package:frontend/member/component/custom_text_form_field.dart';
 
 import '../../common/const/colors.dart';
-import '../provider/department_list_notifier_provider.dart';
+import '../provider/first_major_state_notifier_provider.dart';
+import '../provider/second_major_state_notifier_provider.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   static String get routeName => 'signup';
@@ -22,6 +23,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   String email = "";
   String password = "";
   String password2 = "";
+  String authNumber = "";
+  String major1 = "";
+  String major2 = "";
 
   bool isAccept = false;
 
@@ -34,6 +38,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   bool isNicknameNull = true;
   bool isNicknameDuplicated = true;
 
+  // 복수전공 선택 여부
+  bool isDoubleMajor = false;
+
   @override
   Widget build(BuildContext context) {
     final dio = ref.watch(dioProvider);
@@ -45,7 +52,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           top: true,
           bottom: false,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 40),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -56,7 +63,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     _renderNameField(),
                     _renderNicknameField(),
                     _renderEmailField(),
-                    _renderDepartmentField(),
+                    _renderFirstMajorField(),
+                    if (!isDoubleMajor) _renderAddMajorButton(),
+                    if (isDoubleMajor) _renderSecondMajorField(),
+                    if (isDoubleMajor) _renderDeleteMajorButton(),
                     _renderPasswordField(),
                     _renderIsAcceptCheckbox(),
                     _renderRegisterButton(),
@@ -232,91 +242,210 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     );
   }
 
-  Widget _renderDepartmentField() {
+  Widget _renderFirstMajorField() {
     //학과 정보
-    final departmentState = ref.watch(departmentListNotifierProvider);
+    final departmentState = ref.watch(firstDepartmentListNotifierProvider);
 
     String selectedDivision = departmentState.selectedDivision;
     String selectedDepartment = departmentState.selectedDepartment;
 
     final divisionAndDepartments = departmentState.divisionAndDepartments;
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Container(
-          width: 180,
-          child: DropdownButton<String>(
-            isExpanded: true,
-            value: selectedDivision,
-            items: divisionAndDepartments.keys == null
-                ? []
-                : divisionAndDepartments.keys
-                .map((e) => DropdownMenuItem(
-              value: e,
-              child: Text(e),
-            ))
-                .toList(),
-            onChanged: (String? value) {
-              if (value != null &&
-                  divisionAndDepartments.containsKey(value)) {
-                setState(() {
-                  selectedDivision = value;
-                  selectedDepartment =
-                  divisionAndDepartments[value]!.isNotEmpty
-                      ? divisionAndDepartments[value]![0]
-                      : null;
-                  ref
-                      .read(departmentListNotifierProvider
-                      .notifier)
-                      .setSelectedDivision(value);
-                  if (selectedDepartment != null) {
-                    ref
-                        .read(departmentListNotifierProvider
-                        .notifier)
-                        .setSelectedDepartment(
-                        selectedDepartment!);
-                  }
-                });
-              }
-            },
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '본전공 선택',
           ),
-        ),
-        Container(
-          width: 180,
-          child: DropdownButton<String>(
-            isExpanded: true,
-            value: selectedDepartment,
-            items: divisionAndDepartments[selectedDivision] == null
-                ? []
-                : List<String>.from(
-                divisionAndDepartments[selectedDivision])
-                .map((e) => DropdownMenuItem(
-              value: e.toString(),
-              child: Text(e.toString()),
-            ))
-                .toList(),
-            onChanged: (String? value) {
-              if (value != null) {
-                setState(() {
-                  selectedDepartment = value;
-                  ref
-                      .read(departmentListNotifierProvider
-                      .notifier)
-                      .setSelectedDepartment(value);
-                });
-              }
-            },
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: 180,
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    value: selectedDivision,
+                    items: divisionAndDepartments.keys == null
+                        ? []
+                        : divisionAndDepartments.keys
+                            .map((e) => DropdownMenuItem(
+                                  value: e,
+                                  child: Text(e),
+                                ))
+                            .toList(),
+                    onChanged: (String? value) {
+                      if (value != null &&
+                          divisionAndDepartments.containsKey(value)) {
+                        setState(() {
+                          selectedDivision = value;
+                          selectedDepartment =
+                              divisionAndDepartments[value]!.isNotEmpty
+                                  ? divisionAndDepartments[value]![0]
+                                  : null;
+                          ref
+                              .read(
+                                  firstDepartmentListNotifierProvider.notifier)
+                              .setSelectedDivision(value);
+                          if (selectedDepartment != null) {
+                            ref
+                                .read(firstDepartmentListNotifierProvider
+                                    .notifier)
+                                .setSelectedDepartment(selectedDepartment!);
+                            setState(() {
+                              major1 = selectedDepartment;
+                            });
+                          }
+                        });
+                      }
+                    },
+                  ),
+                ),
+                Container(
+                  width: 180,
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    value: selectedDepartment,
+                    items: divisionAndDepartments[selectedDivision] == null
+                        ? []
+                        : List<String>.from(
+                                divisionAndDepartments[selectedDivision])
+                            .map((e) => DropdownMenuItem(
+                                  value: e.toString(),
+                                  child: Text(e.toString()),
+                                ))
+                            .toList(),
+                    onChanged: (String? value) {
+                      if (value != null) {
+                        setState(() {
+                          selectedDepartment = value;
+                          ref
+                              .read(
+                                  firstDepartmentListNotifierProvider.notifier)
+                              .setSelectedDepartment(value);
+                          setState(() {
+                            major1 = selectedDepartment;
+                          });
+                        });
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
+  Widget _renderSecondMajorField() {
+    //학과 정보
+    final departmentState = ref.watch(secondDepartmentListNotifierProvider);
+
+    String selectedDivision = departmentState.selectedDivision;
+    String selectedDepartment = departmentState.selectedDepartment;
+
+    final divisionAndDepartments = departmentState.divisionAndDepartments;
+
+    return Container(
+      padding: EdgeInsets.only(top: 10.0),
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '복수전공 선택',
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: 180,
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    value: selectedDivision,
+                    items: divisionAndDepartments.keys == null
+                        ? []
+                        : divisionAndDepartments.keys
+                            .map((e) => DropdownMenuItem(
+                                  value: e,
+                                  child: Text(e),
+                                ))
+                            .toList(),
+                    onChanged: (String? value) {
+                      if (value != null &&
+                          divisionAndDepartments.containsKey(value)) {
+                        setState(() {
+                          selectedDivision = value;
+                          selectedDepartment =
+                              divisionAndDepartments[value]!.isNotEmpty
+                                  ? divisionAndDepartments[value]![0]
+                                  : null;
+                          ref
+                              .read(
+                                  secondDepartmentListNotifierProvider.notifier)
+                              .setSelectedDivision(value);
+                          if (selectedDepartment != null) {
+                            ref
+                                .read(secondDepartmentListNotifierProvider
+                                    .notifier)
+                                .setSelectedDepartment(selectedDepartment!);
+                            setState(() {
+                              major2 = selectedDepartment;
+                            });
+                          }
+                        });
+                      }
+                    },
+                  ),
+                ),
+                Container(
+                  width: 180,
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    value: selectedDepartment,
+                    items: divisionAndDepartments[selectedDivision] == null
+                        ? []
+                        : List<String>.from(
+                                divisionAndDepartments[selectedDivision])
+                            .map((e) => DropdownMenuItem(
+                                  value: e.toString(),
+                                  child: Text(e.toString()),
+                                ))
+                            .toList(),
+                    onChanged: (String? value) {
+                      if (value != null) {
+                        setState(() {
+                          selectedDepartment = value;
+                          ref
+                              .read(
+                                  secondDepartmentListNotifierProvider.notifier)
+                              .setSelectedDepartment(value);
+                          setState(() {
+                            major2 = selectedDepartment;
+                          });
+                        });
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _renderPasswordField() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 30.0),
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -472,6 +601,41 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         }
       },
       child: Text('회원가입하기'),
+    );
+  }
+
+  Widget _renderAddMajorButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        TextButton.icon(
+          onPressed: () {
+            setState(() {
+              isDoubleMajor = true;
+            });
+          },
+          icon: const Icon(Icons.add),
+          label: Text('복수전공 추가'),
+        ),
+      ],
+    );
+  }
+
+  Widget _renderDeleteMajorButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        TextButton.icon(
+          onPressed: () {
+            setState(() {
+              isDoubleMajor = false;
+              major2 = "";
+            });
+          },
+          icon: const Icon(Icons.clear),
+          label: Text('복수전공 취소'),
+        ),
+      ],
     );
   }
 }
