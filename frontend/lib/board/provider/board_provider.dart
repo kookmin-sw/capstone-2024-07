@@ -12,6 +12,10 @@ class BoardNotifier extends StateNotifier<List<String>> {
   Future<void> remove(String category) async {
     state = List.from(state)..remove(category);
   }
+
+  Future<void> clear() async {
+    state = List.from(state)..clear();
+  }
 }
 
 final boardStateProvider =
