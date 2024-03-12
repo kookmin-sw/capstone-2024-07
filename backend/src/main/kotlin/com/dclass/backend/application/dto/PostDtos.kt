@@ -3,12 +3,13 @@ package com.dclass.backend.application.dto
 import com.dclass.backend.domain.post.Post
 import com.dclass.backend.domain.post.PostCount
 import com.dclass.backend.domain.user.User
+import com.dclass.support.domain.Image
 import java.time.LocalDateTime
 
 
 data class PostScrollPageRequest(
-    val lastId: Long?,
-    val communityId: Long,
+    val lastId: Long? = null,
+    val communityId: Long? = null,
     val size: Int,
 )
 
@@ -46,5 +47,22 @@ data class PostResponse(
         post.postCount,
         post.isQuestion,
         post.createdDateTime
+    )
+}
+
+data class CreatePostRequest(
+    val communityId: Long,
+    val title: String,
+    val content: String,
+    val isQuestion: Boolean,
+    val images: List<String>,
+) {
+    fun toEntity(userId: Long) = Post(
+        userId = userId,
+        communityId = communityId,
+        title = title,
+        content = content,
+        images = images.map { Image(it) },
+        isQuestion = isQuestion,
     )
 }
