@@ -28,8 +28,10 @@ class Belong(
     var modifiedDateTime: LocalDateTime = modifiedDateTime
         private set
 
-    val activated: Long
-        get() = _departmentIds.first()
+    val activated: Long?
+        get() = _departmentIds.firstOrNull()
+
+    var major: Boolean = true;
 
     init {
         require(departmentIds.size <= 2) { "학과는 최대 두 개까지 선택 가능합니다." }
@@ -47,6 +49,7 @@ class Belong(
 
     fun switch() {
         _departmentIds.reverse()
+        major = !major
     }
 
     private fun periodValidation(): Boolean {
