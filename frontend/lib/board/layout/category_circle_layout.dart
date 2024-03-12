@@ -21,6 +21,7 @@ class CategoryCircle extends ConsumerWidget {
         if (clickedList.contains(category)) {
           ref.read(boardStateProvider.notifier).remove(category);
         } else {
+          ref.read(boardStateProvider.notifier).clear();
           ref.read(boardStateProvider.notifier).add(category);
         }
       },
