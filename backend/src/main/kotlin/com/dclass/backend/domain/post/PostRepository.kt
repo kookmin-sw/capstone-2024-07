@@ -16,13 +16,19 @@ interface PostRepository : JpaRepository<Post, Long>, PostRepositorySupport {
 interface PostRepositorySupport {
     fun findPostScrollPage(request: PostScrollPageRequest): List<Post>
     fun findPostById(id: Long): PostResponse
+    fun findPostScrollPage(
+        communityIds: List<Long>,
+        request: PostScrollPageRequest
+    ): List<PostResponse>
 }
 
 private class PostRepositoryImpl(
     private val em: EntityManager,
     private val context: JpqlRenderContext
 ) : PostRepositorySupport {
-    override fun findPostScrollPage(request: PostScrollPageRequest): List<Post> {
+    override fun findPostScrollPage(
+        request: PostScrollPageRequest
+    ): List<Post> {
         val query = jpql {
             select(
                 entity(Post::class)
@@ -54,5 +60,31 @@ private class PostRepositoryImpl(
         }
 
         return em.createQuery(query, context).singleResult
+    }
+
+    override fun findPostScrollPage(
+        communityIds: List<Long>,
+        request: PostScrollPageRequest
+    ): List<PostResponse> {
+
+        val query = jpql {
+            selectNew<PostResponse>(
+                entity(Post::class),
+                entity(User::class),
+                path(Community::title)
+            ).from(
+                entity(Post::class),
+                join(Community::class).on(path(Post::communityId).equal(path(Community::id))),
+                join(User::class).on(path(Post::userId).equal(path(User::id)))
+            ).whereAnd(
+                path(Post::id).lessThan(request.lastId ?: Long.MAX_VALUE),
+                path(Post::communityId).`in`(communityIds),
+                request.communityId?.let { path(Post::communityId).equal(it) }
+            ).orderBy(
+                path(Post::id).desc()
+            )
+        }
+
+        return em.createQuery(query, context).setMaxResults(request.size).resultList
     }
 }
