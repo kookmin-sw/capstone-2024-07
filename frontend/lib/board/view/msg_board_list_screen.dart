@@ -7,10 +7,8 @@ import 'package:frontend/board/layout/category_circle_layout.dart';
 import 'package:frontend/board/provider/board_provider.dart';
 
 class MsgBoardListScreen extends StatefulWidget {
-  final String category;
   const MsgBoardListScreen({
     super.key,
-    required this.category,
   });
 
   @override
