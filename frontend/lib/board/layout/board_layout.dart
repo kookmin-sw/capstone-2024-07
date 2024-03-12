@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/common/const/colors.dart';
-import 'package:frontend/common/model/msg_board_model.dart';
-import 'package:frontend/common/layout/category_circle_layout.dart';
-import 'package:frontend/common/layout/text_with_icon.dart';
-import 'package:frontend/common/view/msg_board_screen.dart';
+import 'package:frontend/board/model/msg_board_model.dart';
+import 'package:frontend/board/layout/category_circle_layout.dart';
+import 'package:frontend/board/layout/text_with_icon.dart';
+import 'package:frontend/board/view/msg_board_screen.dart';
 
 class Board extends StatelessWidget {
   final MsgBoardModel board;

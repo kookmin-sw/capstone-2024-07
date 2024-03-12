@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/common/model/comment_model.dart';
-import 'package:frontend/common/model/msg_board_model.dart';
+import 'package:frontend/board/model/comment_model.dart';
+import 'package:frontend/board/model/msg_board_model.dart';
 import 'package:frontend/common/const/colors.dart';
-import 'package:frontend/common/layout/board_layout.dart';
-import 'package:frontend/common/layout/comment_layout.dart';
+import 'package:frontend/board/layout/board_layout.dart';
+import 'package:frontend/board/layout/comment_layout.dart';
 
 class MsgBoardScreen extends StatefulWidget {
   final MsgBoardModel board;

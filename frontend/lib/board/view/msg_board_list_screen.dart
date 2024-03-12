@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/common/const/colors.dart';
-import 'package:frontend/common/model/msg_board_model.dart';
-import 'package:frontend/common/layout/board_layout.dart';
-import 'package:frontend/common/layout/category_circle_layout.dart';
-import 'package:frontend/common/provider/board_provider.dart';
+import 'package:frontend/board/model/msg_board_model.dart';
+import 'package:frontend/board/layout/board_layout.dart';
+import 'package:frontend/board/layout/category_circle_layout.dart';
+import 'package:frontend/board/provider/board_provider.dart';
 
 class MsgBoardListScreen extends StatefulWidget {
   final String category;
@@ -143,6 +143,7 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
       //   ),
       // ),
     );
+    //test
   }
 }
 

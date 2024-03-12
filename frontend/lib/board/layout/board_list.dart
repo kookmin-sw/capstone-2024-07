@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/common/const/colors.dart';
-import 'package:frontend/common/model/msg_board_model.dart';
-import 'package:frontend/common/layout/category_circle_layout.dart';
-import 'package:frontend/common/layout/text_with_icon.dart';
-import 'package:frontend/common/view/msg_board_screen.dart';
+import 'package:frontend/board/model/msg_board_model.dart';
+import 'package:frontend/board/layout/text_with_icon.dart';
+import 'package:frontend/board/view/msg_board_screen.dart';
 
-class Board extends StatelessWidget {
+class BoardList extends StatelessWidget {
   final MsgBoardModel board;
   final bool canTap;
-  final double titleSize;
-  const Board({
-    super.key,
-    required this.board,
-    required this.canTap,
-    required this.titleSize,
-  });
+  const BoardList({super.key, required this.board, required this.canTap});
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +33,10 @@ class Board extends StatelessWidget {
             ),
           ),
         ),
-        margin: const EdgeInsets.only(
-          top: 10,
-          left: 10,
-          right: 10,
-        ),
+        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: Padding(
-          padding: const EdgeInsets.only(
-            bottom: 10,
+          padding: const EdgeInsets.symmetric(
+            vertical: 10,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,32 +44,38 @@ class Board extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CategoryCircle(
-                    category: board.category,
-                    type: false,
+                  Container(
+                    decoration: BoxDecoration(
+                        color: PRIMARY_COLOR.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(50)),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      child: Text(board.category),
+                    ),
                   ),
                   Row(
                     children: [
                       TextWithIcon(
                         icon: Icons.favorite_outline_rounded,
-                        iconSize: 15,
                         text: board.heart,
+                        iconSize: 13,
                       ),
                       const SizedBox(
                         width: 13,
                       ),
                       TextWithIcon(
                         icon: Icons.chat_outlined,
-                        iconSize: 15,
                         text: board.comment,
+                        iconSize: 13,
                       ),
                       const SizedBox(
                         width: 13,
                       ),
                       TextWithIcon(
                         icon: Icons.star_outline_rounded,
-                        iconSize: 18,
                         text: board.favorite,
+                        iconSize: 15,
                       ),
                       const SizedBox(
                         width: 13,
@@ -90,7 +85,7 @@ class Board extends StatelessWidget {
                 ],
               ),
               const SizedBox(
-                height: 5,
+                height: 10,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -99,8 +94,8 @@ class Board extends StatelessWidget {
                   children: [
                     Text(
                       board.title,
-                      style: TextStyle(
-                        fontSize: titleSize,
+                      style: const TextStyle(
+                        fontSize: 17,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -108,11 +103,11 @@ class Board extends StatelessWidget {
                       board.preview,
                       softWrap: false,
                       style: const TextStyle(
-                        fontSize: 10,
+                        fontSize: 13,
                       ),
                     ),
                     const SizedBox(
-                      height: 5,
+                      height: 10,
                     ),
                     Text(
                       "${board.date} | ${board.name}",

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/common/const/colors.dart';
-import 'package:frontend/common/model/comment_model.dart';
-import 'package:frontend/common/layout/cocoment_layout.dart';
-import 'package:frontend/common/layout/text_with_icon.dart';
+import 'package:frontend/board/model/comment_model.dart';
+import 'package:frontend/board/layout/cocoment_layout.dart';
+import 'package:frontend/board/layout/text_with_icon.dart';
 
 class Comment extends StatefulWidget {
   final CommentModel comment;
