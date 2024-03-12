@@ -1,6 +1,8 @@
 package com.dclass.backend.application
 
 import com.dclass.backend.application.dto.*
+import com.dclass.backend.domain.belong.Belong
+import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.department.DepartmentRepository
 import com.dclass.backend.domain.user.*
 import com.dclass.support.fixtures.*
@@ -14,8 +16,9 @@ class UserServiceTest : BehaviorSpec({
     val userRepository = mockk<UserRepository>()
     val passwordGenerator = mockk<PasswordGenerator>()
     val departmentRepository = mockk<DepartmentRepository>()
+    val belongRepository = mockk<BelongRepository>()
 
-    val userService = UserService(userRepository, passwordGenerator, departmentRepository)
+    val userService = UserService(userRepository, passwordGenerator, departmentRepository, belongRepository)
 
     Given("특정 회원의 개인정보가 있는 경우") {
         val user = user()
@@ -71,7 +74,7 @@ class UserServiceTest : BehaviorSpec({
             }
         }
     }
-    
+
     Given("특정 회원이 학과에 속한 경우") {
         val user = user(id = 1L)
         val department = department()
@@ -79,18 +82,61 @@ class UserServiceTest : BehaviorSpec({
 
         every { userRepository.findUserInfoWithDepartment(any()) } returns UserResponseWithDepartment(
             UserResponse(user),
-            listOf(department.id, department2.id)
+            listOf(department.id, department2.id),
+            true
         )
+        every { belongRepository.findByUserId(any()) } returns Belong(user.id, listOf(department.id, department2.id))
         every { departmentRepository.findAllById(any()) } returns listOf(department, department2)
 
         When("해당 회원의 정보를 조회하면") {
             val actual = userService.getInformation(user.id)
+            val belong = belongRepository.findByUserId(user.id)
 
             Then("회원 정보를 확인할 수 있다") {
                 actual shouldBe UserResponseWithDepartmentNames(
                     userRepository.findUserInfoWithDepartment(user.id),
-                    listOf(department.title, department2.title)
+                    department.title,
+                    department2.title
                 )
+                belong.activated shouldBe department.id
+                actual.major shouldBe department.title
+                actual.minor shouldBe department2.title
+            }
+        }
+
+        When("해당 회원의 활성화된 전공이 바뀐 경우에도") {
+            val belong = belongRepository.findByUserId(user.id)
+            belong.switch()
+            val actual = userService.getInformation(user.id)
+
+            Then("기존 전공/부전공은 바뀌지 않는다") {
+                belong.activated shouldBe department2.id
+                actual.major shouldBe department.title
+                actual.minor shouldBe department2.title
+            }
+        }
+    }
+
+    Given("해당 회원이 선택한 전공이 하나인 경우엔") {
+        val user = user(id = 1L)
+        val department = department()
+
+        every { userRepository.findUserInfoWithDepartment(any()) } returns UserResponseWithDepartment(
+            UserResponse(user),
+            listOf(department.id),
+            true
+        )
+        every { belongRepository.findByUserId(any()) } returns Belong(user.id, listOf(department.id))
+        every { departmentRepository.findAllById(any()) } returns listOf(department)
+
+        When("해당 회원의 정보를 조회하면") {
+            val belong = belongRepository.findByUserId(user.id)
+            belong.switch()
+            val actual = userService.getInformation(user.id)
+
+            Then("부전공은 존재하지 않는다") {
+                actual.major shouldBe department.title
+                actual.minor shouldBe null
             }
         }
     }
