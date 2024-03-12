@@ -14,10 +14,12 @@ import io.kotest.extensions.spring.SpringTestExtension
 import io.kotest.extensions.spring.SpringTestLifecycleMode
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.throwable.shouldHaveMessage
+import org.springframework.transaction.annotation.Transactional
 
 const val NEVER_EXIST_ID: Long = 999_999
 
 @IntegrationTest
+@Transactional
 class PostIntegrationTest(
     private val postService: PostService,
     private val userRepository: UserRepository,
