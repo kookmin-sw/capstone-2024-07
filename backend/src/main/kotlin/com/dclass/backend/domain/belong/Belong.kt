@@ -31,6 +31,7 @@ class Belong(
     val activated: Long?
         get() = _departmentIds.firstOrNull()
 
+    @Column(nullable = false)
     var major: Boolean = true;
 
     init {
