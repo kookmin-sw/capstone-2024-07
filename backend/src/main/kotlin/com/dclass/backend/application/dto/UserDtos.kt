@@ -57,10 +57,17 @@ data class UserResponseWithDepartment(
         example = "[1, 2]"
     )
     val departmentIds: List<Long>,
+
+    @Schema(
+        description = "유저의 전공 여부",
+        example = "true"
+    )
+    val major: Boolean,
 ) {
     constructor(user: User, belong: Belong) : this(
         UserResponse(user),
-        belong.departmentIds
+        belong.departmentIds,
+        belong.major
     )
 }
 
@@ -68,14 +75,26 @@ data class UserResponseWithDepartmentNames(
     val userResponse: UserResponse,
 
     @Schema(
-        description = "유저의 소속 학과들의 이름 리스트",
-        example = "[\"컴퓨터공학과\", \"전자공학과\"]"
+        description = "유저의 전공 학과 이름",
+        example = "컴퓨터공학과"
     )
-    val departmentNames: List<String>,
+    val major: String,
+
+    @Schema(
+        description = "유저의 부전공 학과 이름",
+        example = "소프트웨어학과"
+    )
+    val minor: String? = null,
 ) {
-    constructor(user: UserResponseWithDepartment, departmentNames: List<String>) : this(
+    constructor(user: UserResponseWithDepartment, major: String, minor: String) : this(
         user.userResponse,
-        departmentNames
+        major,
+        minor,
+    )
+
+    constructor(user: UserResponseWithDepartment, major: String) : this(
+        user.userResponse,
+        major,
     )
 }
 
