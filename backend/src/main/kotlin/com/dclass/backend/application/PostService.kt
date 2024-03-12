@@ -43,4 +43,16 @@ class PostService(
             }
         }
     }
+
+    fun getHot(userId: Long, request: PostScrollPageRequest): List<PostResponse> {
+        val departmentIds = belongRepository.findByUserId(userId).departmentIds
+        val communityIds = communityRepository.findByDepartmentIdIn(departmentIds)
+            .map { it.id }
+
+        return postRepository.findHotPostScrollPage(communityIds, request).onEach {
+            it.images = runBlocking(Dispatchers.IO) {
+                it.images.map { async { awsPresigner.getPostObjectPresigned(it) } }.awaitAll()
+            }
+        }
+    }
 }
