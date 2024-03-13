@@ -57,4 +57,10 @@ class UserService(
             if (departments.size == 2) groupby[belong.minor]!!.title else ""
         )
     }
+
+    fun switchDepartment(id: Long) {
+        val belong = belongRepository.findByUserId(id)
+        belong.switch()
+    }
+
 }
