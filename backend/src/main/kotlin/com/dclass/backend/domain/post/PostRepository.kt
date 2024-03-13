@@ -9,6 +9,10 @@ import com.linecorp.kotlinjdsl.render.jpql.JpqlRenderContext
 import com.linecorp.kotlinjdsl.support.spring.data.jpa.extension.createQuery
 import jakarta.persistence.EntityManager
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.repository.findByIdOrNull
+
+fun PostRepository.getByIdOrThrow(id: Long): Post = findByIdOrNull(id)
+    ?: throw NoSuchElementException("게시글이 존재하지 않습니다. id: $id")
 
 interface PostRepository : JpaRepository<Post, Long>, PostRepositorySupport {
 }
