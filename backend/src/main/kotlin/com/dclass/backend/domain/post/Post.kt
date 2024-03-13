@@ -67,8 +67,8 @@ class Post(
         this.modifiedDateTime = LocalDateTime.now()
     }
 
-    fun increaseViewCount() {
-        postCount = postCount.increaseViewCount()
+    fun increaseViewCount(cnt: Int) {
+        postCount = postCount.increaseViewCount(cnt)
     }
 
     fun increaseCommentReplyCount(cnt : Int) {
