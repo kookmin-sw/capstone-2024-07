@@ -7,6 +7,8 @@ import com.linecorp.kotlinjdsl.render.jpql.JpqlRenderContext
 import com.linecorp.kotlinjdsl.support.spring.data.jpa.extension.createQuery
 import jakarta.persistence.EntityManager
 
+// TODO: 제거 결정 후 삭제
+
 interface UserRepositorySupport {
     fun findUserInfoWithDepartment(id: Long): UserResponseWithDepartment
 }
