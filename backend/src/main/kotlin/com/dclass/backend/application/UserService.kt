@@ -9,6 +9,7 @@ import com.dclass.backend.domain.user.User
 import com.dclass.backend.domain.user.UserRepository
 import com.dclass.backend.domain.user.findByEmail
 import com.dclass.backend.domain.user.getOrThrow
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -22,7 +23,8 @@ class UserService(
     private val belongRepository: BelongRepository,
 ) {
     fun getByEmail(email: String): User {
-        return userRepository.findByEmail(email) ?: throw IllegalArgumentException("회원이 존재하지 않습니다. email: $email")
+        return userRepository.findByEmail(email)
+            ?: throw IllegalArgumentException("회원이 존재하지 않습니다. email: $email")
     }
 
     fun resetPassword(request: ResetPasswordRequest) {
@@ -37,20 +39,22 @@ class UserService(
     }
 
     fun getInformation(id: Long): UserResponseWithDepartmentNames {
-        val userWithDepartmentId = userRepository.findUserInfoWithDepartment(id)
-        val departments = departmentRepository.findAllById(userWithDepartmentId.departmentIds).map { it.title }
-        if (departments.size == 1) {
-            return UserResponseWithDepartmentNames(userWithDepartmentId, departments[0])
-        }
-        val major = when (userWithDepartmentId.major) {
-            true -> departments[0]
-            false -> departments[1]
-        }
-        val minor = when (userWithDepartmentId.major) {
-            true -> departments[1]
-            false -> departments[0]
-        }
-        return UserResponseWithDepartmentNames(userWithDepartmentId, major, minor)
-    }
+        val user = userRepository.findByIdOrNull(id)
+            ?: throw IllegalArgumentException("회원이 존재하지 않습니다. id: $id")
 
+        val belong = belongRepository.findByUserId(id)
+
+        val departments = departmentRepository.findAllById(belong.departmentIds)
+
+        val groupby = belong.departmentIds.associateWith { departmentId ->
+            departments.find { it.id == departmentId }
+                ?: throw IllegalArgumentException("학과가 존재하지 않습니다: $departmentId")
+        }
+
+        return UserResponseWithDepartmentNames(
+            user,
+            groupby[belong.major]!!.title,
+            if (departments.size == 2) groupby[belong.minor]!!.title else ""
+        )
+    }
 }
