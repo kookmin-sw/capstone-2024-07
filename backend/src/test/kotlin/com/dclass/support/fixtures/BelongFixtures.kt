@@ -8,6 +8,7 @@ fun belong(
 ): Belong {
     return Belong(
         userId = userId,
-        ids = departmentIds
+        ids = departmentIds,
+        major = departmentIds.first()
     )
 }
