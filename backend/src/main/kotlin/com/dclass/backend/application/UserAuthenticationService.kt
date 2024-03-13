@@ -6,6 +6,10 @@ import com.dclass.backend.application.dto.RegisterUserRequest
 import com.dclass.backend.domain.authenticationcode.AuthenticationCode
 import com.dclass.backend.domain.authenticationcode.AuthenticationCodeRepository
 import com.dclass.backend.domain.authenticationcode.getLastByEmail
+import com.dclass.backend.domain.belong.Belong
+import com.dclass.backend.domain.belong.BelongRepository
+import com.dclass.backend.domain.department.DepartmentRepository
+import com.dclass.backend.domain.department.getOrThrow
 import com.dclass.backend.domain.user.*
 import com.dclass.backend.security.JwtTokenProvider
 import org.springframework.stereotype.Service
@@ -17,6 +21,8 @@ class UserAuthenticationService(
     private val userRepository: UserRepository,
     private val authenticationCodeRepository: AuthenticationCodeRepository,
     private val universityRepository: UniversityRepository,
+    private val belongRepository: BelongRepository,
+    private val departmentRepository: DepartmentRepository,
     private val jwtTokenProvider: JwtTokenProvider,
 ) {
     fun generateTokenByRegister(request: RegisterUserRequest): LoginUserResponse {
@@ -25,8 +31,15 @@ class UserAuthenticationService(
         authenticationCodeRepository.getLastByEmail(request.email)
             .validate(request.authenticationCode)
 
+
         val univ = universityRepository.findByEmailSuffix(getEmailSuffix(request.email))
         val user = userRepository.save(request.toEntity(univ))
+        val departmentIds = mutableListOf(departmentRepository.getOrThrow(request.major).id)
+        if (request.minor.isNotBlank()) {
+            departmentIds.add(departmentRepository.getOrThrow(request.minor).id)
+        }
+
+        belongRepository.save(Belong(user.id, departmentIds, major = departmentIds[0]))
 
         return LoginUserResponse(
             jwtTokenProvider.createAccessToken(user.email),
