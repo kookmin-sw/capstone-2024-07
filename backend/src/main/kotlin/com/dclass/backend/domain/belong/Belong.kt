@@ -31,8 +31,17 @@ class Belong(
     val activated: Long?
         get() = _departmentIds.firstOrNull()
 
+
     @Column(nullable = false)
-    var major: Boolean = true;
+    var majorIndex: Int = 0
+        private set
+
+    val major: Long
+        get() = _departmentIds[majorIndex]
+
+    val minor: Long?
+        get() = if (_departmentIds.size == 2) _departmentIds[1 - majorIndex] else null
+
 
     init {
         require(departmentIds.size <= 2) { "학과는 최대 두 개까지 선택 가능합니다." }
@@ -46,11 +55,12 @@ class Belong(
         modifiedDateTime = LocalDateTime.now()
     }
 
-    fun contain(departmentId: Long) = activated == departmentId
+    fun contain(departmentId: Long) = major == departmentId
 
     fun switch() {
+        if (_departmentIds.size == 1) throw IllegalStateException("부전공이 없는 사용자는 변경할 수 없습니다.")
         _departmentIds.reverse()
-        major = !major
+        majorIndex = 1 - majorIndex
     }
 
     private fun periodValidation(): Boolean {
