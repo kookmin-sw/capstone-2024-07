@@ -1,5 +1,6 @@
 class MsgBoardModel {
   final String id,
+      postId,
       category,
       title,
       preview,
@@ -9,8 +10,8 @@ class MsgBoardModel {
       date,
       name;
 
-  MsgBoardModel(this.id, this.category, this.title, this.preview, this.heart,
-      this.comment, this.favorite, this.date, this.name);
+  MsgBoardModel(this.id, this.postId, this.category, this.title, this.preview,
+      this.heart, this.comment, this.favorite, this.date, this.name);
   // MsgBoardListModel.fromJson(Map<String, dynamic> json)
   // : id = json['id'],
   //   category = json['category'],

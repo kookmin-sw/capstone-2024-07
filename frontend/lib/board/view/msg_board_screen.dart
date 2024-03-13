@@ -21,17 +21,23 @@ class _MsgBoardScreenState extends State<MsgBoardScreen> {
     super.initState();
     commentlistinstance.add(CommentModel(
       "1",
+      widget.board.postId,
+      "1",
       "익명1",
       "ㅇㅈ",
       "0",
     ));
     commentlistinstance.add(CommentModel(
       "2",
+      widget.board.postId,
+      "2",
       "익명2",
       "ㅇㅈㅇㅈ",
       "0",
     ));
     commentlistinstance.add(CommentModel(
+      "3",
+      widget.board.postId,
       "3",
       "익명3",
       "ㅆㅇㅈ",

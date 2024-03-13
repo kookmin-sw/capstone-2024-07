@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/board/model/cocomment_model.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/layout/cocoment_layout.dart';
@@ -6,7 +7,6 @@ import 'package:frontend/board/layout/text_with_icon.dart';
 
 class Comment extends StatefulWidget {
   final CommentModel comment;
-  // TODO: comment of comment
   const Comment({super.key, required this.comment});
 
   @override
@@ -14,19 +14,25 @@ class Comment extends StatefulWidget {
 }
 
 class _CommentState extends State<Comment> {
-  List<CommentModel> cocomentlistinstance = [];
+  List<CoCommentModel> cocomentlistinstance = [];
 
   @override
   void initState() {
     super.initState();
-    cocomentlistinstance.add(CommentModel(
-      "1",
+    cocomentlistinstance.add(CoCommentModel(
+      "4",
+      widget.comment.postId,
+      widget.comment.commentId,
+      "4",
       "익명4",
       "맞아맞아",
       "2",
     ));
-    cocomentlistinstance.add(CommentModel(
-      "1",
+    cocomentlistinstance.add(CoCommentModel(
+      "5",
+      widget.comment.postId,
+      widget.comment.commentId,
+      "5",
       "익명5",
       "맞아맞아맞아",
       "3",
@@ -76,7 +82,7 @@ class _CommentState extends State<Comment> {
                         TextWithIcon(
                           icon: Icons.favorite_outline_rounded,
                           iconSize: 15,
-                          text: widget.comment.heart,
+                          text: widget.comment.likeCount,
                         ),
                         const SizedBox(
                           width: 13,

@@ -18,15 +18,30 @@ class TextWithIcon extends StatefulWidget {
 class _TextWithIconState extends State<TextWithIcon> {
   // TODO : if user click heart(write comment, favorite), then change icon.
   bool heartClicked = false;
+  int heartCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    heartCount = int.parse(widget.text);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         if (widget.icon == Icons.favorite_outline_rounded) {
           setState(() {
+            // TODO: add heartCount to Server
+            if (heartClicked) {
+              heartCount -= 1;
+            } else {
+              heartCount += 1;
+            }
             heartClicked = !heartClicked;
           });
-        }
+        } else if (widget.icon == Icons.chat_outlined) {
+        } else if (widget.icon == Icons.star_outline_rounded) {}
       },
       child: Row(
         children: [
@@ -39,7 +54,7 @@ class _TextWithIconState extends State<TextWithIcon> {
             width: 2,
           ),
           Text(
-            widget.text,
+            "$heartCount",
             style: const TextStyle(
               fontSize: 12,
             ),

@@ -36,6 +36,7 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
 
     msgboardlistinstance.add(MsgBoardModel(
       "1",
+      "1",
       "인기게시판",
       "종강마렵다",
       "ㅈㄱㄴssssssssssssssssssssssssssssssssssssssssssssssssssddddddddddddpppppabcdefg",
@@ -46,6 +47,7 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
       "익명",
     ));
     msgboardlistinstance.add(MsgBoardModel(
+      "2",
       "2",
       "인기게시판",
       "종강종강",
@@ -58,6 +60,7 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
     ));
     msgboardlistinstance.add(MsgBoardModel(
       "3",
+      "3",
       "인기게시판",
       "토끼는 깡종강종강",
       "거북이도 종강종강",
@@ -68,6 +71,7 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
       "익명",
     ));
     msgboardlistinstance.add(MsgBoardModel(
+      "4",
       "4",
       "인기게시판",
       "교수님 정강이 때릴 사람 구합니다.",
@@ -80,6 +84,7 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
     ));
     msgboardlistinstance.add(MsgBoardModel(
       "5",
+      "5",
       "인기게시판",
       "슬슬 종강할 때 되지 않았나",
       "눈치껏 종강하자",
@@ -90,6 +95,7 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
       "익명",
     ));
     msgboardlistinstance.add(MsgBoardModel(
+      "6",
       "6",
       "인기게시판",
       "그냥 종강좀 해라",
