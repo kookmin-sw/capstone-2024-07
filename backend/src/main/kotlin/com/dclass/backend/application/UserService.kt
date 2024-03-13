@@ -4,6 +4,7 @@ import com.dclass.backend.application.dto.EditPasswordRequest
 import com.dclass.backend.application.dto.ResetPasswordRequest
 import com.dclass.backend.application.dto.UserResponseWithDepartmentNames
 import com.dclass.backend.domain.belong.BelongRepository
+import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.department.DepartmentRepository
 import com.dclass.backend.domain.user.User
 import com.dclass.backend.domain.user.UserRepository
@@ -42,7 +43,7 @@ class UserService(
         val user = userRepository.findByIdOrNull(id)
             ?: throw IllegalArgumentException("회원이 존재하지 않습니다. id: $id")
 
-        val belong = belongRepository.findByUserId(id)
+        val belong = belongRepository.getOrThrow(id)
 
         val departments = departmentRepository.findAllById(belong.departmentIds)
 
@@ -59,7 +60,7 @@ class UserService(
     }
 
     fun switchDepartment(id: Long) {
-        val belong = belongRepository.findByUserId(id)
+        val belong = belongRepository.getOrThrow(id)
         belong.switch()
     }
 

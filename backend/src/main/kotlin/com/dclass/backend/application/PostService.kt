@@ -3,6 +3,7 @@ package com.dclass.backend.application
 import com.dclass.backend.application.dto.PostResponse
 import com.dclass.backend.application.dto.PostScrollPageRequest
 import com.dclass.backend.domain.belong.BelongRepository
+import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.infra.s3.AwsPresigner
@@ -23,7 +24,7 @@ class PostService(
     private val awsPresigner: AwsPresigner
 ) {
     fun getAll(userId: Long, request: PostScrollPageRequest): List<PostResponse> {
-        val departmentIds = belongRepository.findByUserId(userId).departmentIds
+        val departmentIds = belongRepository.getOrThrow(userId).departmentIds
         val communityIds = communityRepository.findByDepartmentIdIn(departmentIds)
             .map { it.id }
 
@@ -43,4 +44,5 @@ class PostService(
             }
         }
     }
+    
 }
