@@ -1,5 +1,6 @@
 package com.dclass.backend.application.dto
 
+import com.dclass.backend.domain.belong.Belong
 import com.dclass.backend.domain.user.Password
 import com.dclass.backend.domain.user.University
 import com.dclass.backend.domain.user.User
@@ -56,13 +57,12 @@ data class UserResponseWithDepartment(
         example = "[1, 2]"
     )
     val departmentIds: List<Long>,
-
-    @Schema(
-        description = "유저의 전공 여부",
-        example = "true"
+) {
+    constructor(user: User, belong: Belong) : this(
+        UserResponse(user),
+        belong.departmentIds
     )
-    val major: Boolean,
-)
+}
 
 
 data class UserResponseWithDepartmentNames(
