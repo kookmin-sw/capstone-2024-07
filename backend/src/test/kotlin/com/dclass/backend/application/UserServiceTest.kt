@@ -11,6 +11,7 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import org.springframework.data.repository.findByIdOrNull
 
 class UserServiceTest : BehaviorSpec({
     val userRepository = mockk<UserRepository>()
@@ -94,9 +95,9 @@ class UserServiceTest : BehaviorSpec({
 
             Then("회원 정보를 확인할 수 있다") {
                 actual shouldBe UserResponseWithDepartmentNames(
-                    userRepository.findUserInfoWithDepartment(user.id),
+                    userRepository.findByIdOrNull(user.id)!!,
                     department.title,
-                    department2.title
+                    department2.title,
                 )
                 belong.activated shouldBe department.id
                 actual.major shouldBe department.title
@@ -105,12 +106,10 @@ class UserServiceTest : BehaviorSpec({
         }
 
         When("해당 회원의 활성화된 전공이 바뀐 경우에도") {
-            val belong = belongRepository.findByUserId(user.id)
-            belong.switch()
+            userService.switchDepartment(user.id)
             val actual = userService.getInformation(user.id)
 
             Then("기존 전공/부전공은 바뀌지 않는다") {
-                belong.activated shouldBe department2.id
                 actual.major shouldBe department.title
                 actual.minor shouldBe department2.title
             }
@@ -121,22 +120,19 @@ class UserServiceTest : BehaviorSpec({
         val user = user(id = 1L)
         val department = department()
 
-        every { userRepository.findUserInfoWithDepartment(any()) } returns UserResponseWithDepartment(
-            UserResponse(user),
-            listOf(department.id),
-            true
-        )
         every { belongRepository.findByUserId(any()) } returns Belong(user.id, listOf(department.id))
         every { departmentRepository.findAllById(any()) } returns listOf(department)
 
         When("해당 회원의 정보를 조회하면") {
             val belong = belongRepository.findByUserId(user.id)
-            belong.switch()
+            shouldThrow<IllegalStateException> {
+                belong.switch()
+            }
             val actual = userService.getInformation(user.id)
 
             Then("부전공은 존재하지 않는다") {
                 actual.major shouldBe department.title
-                actual.minor shouldBe null
+                actual.minor shouldBe ""
             }
         }
     }
