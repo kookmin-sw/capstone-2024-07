@@ -1,9 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/common/const/data.dart';
 import 'package:frontend/common/layout/default_layout.dart';
 import 'package:frontend/common/provider/dio_provider.dart';
 import 'package:frontend/member/component/custom_text_form_field.dart';
 
+import '../../common/component/NoticePopupDialog.dart';
 import '../../common/const/colors.dart';
 import '../provider/first_major_state_notifier_provider.dart';
 import '../provider/second_major_state_notifier_provider.dart';
@@ -29,22 +32,26 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   bool isAccept = false;
 
-  //이름, 닉네임 이메일, 비밀번호 검증
+  //이름, 닉네임 이메일, 비밀번호, 인증번호 검증
   bool isNameNull = true;
+
   bool isEmailNull = true;
   bool isEmailAuthenticated = false;
+  bool isEmailSend = false;
+
   bool isPasswordNull = true;
   bool isPasswordDifferent = false;
+
   bool isNicknameNull = true;
   bool isNicknameDuplicated = true;
+
+  bool isAuthNumberNull = true;
 
   // 복수전공 선택 여부
   bool isDoubleMajor = false;
 
   @override
   Widget build(BuildContext context) {
-    final dio = ref.watch(dioProvider);
-
     return DefaultLayout(
       child: SingleChildScrollView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -195,6 +202,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Widget _renderEmailField() {
+    final dio = ref.watch(dioProvider);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 30.0),
       child: Column(
@@ -205,7 +214,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               SizedBox(
                 width: MediaQuery.of(context).size.width / 3 * 2,
                 child: CustomTextFormField(
-                  isInputEnabled: true,
+                  isInputEnabled: !isEmailSend,
                   hintText: '대학교 이메일을 입력해주세요.',
                   onChanged: (String value) {
                     email = value;
@@ -220,10 +229,46 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: PRIMARY_COLOR,
                 ),
-                onPressed: () {
-                  print("pressed!");
-                },
-                child: Text('확인'),
+                onPressed: (isEmailNull || isEmailAuthenticated)
+                    ? null
+                    : () async {
+                        try{
+                          final resp = await dio.post(
+                            'http://$ip/api/users/authentication-code?email=$email',
+                          );
+                          if(resp.statusCode == 204){
+                            setState(() {
+                              isEmailSend = true;
+                            });
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return NoticePopupDialog(
+                                  message: "인증번호가 전송되었습니다.",
+                                  buttonText: "닫기",
+                                  onPressed: () {
+                                    Navigator.pop(context); // 두 번째 팝업 닫기
+                                  },
+                                );
+                              },
+                            );
+                          }
+                        } on DioException catch (e){
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return NoticePopupDialog(
+                                message: e.response?.data["message"] ?? "에러 발생",
+                                buttonText: "닫기",
+                                onPressed: () {
+                                  Navigator.pop(context); // 두 번째 팝업 닫기
+                                },
+                              );
+                            },
+                          );
+                        }
+                      },
+                child: Text('전송'),
               ),
             ],
           ),
@@ -232,6 +277,80 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
                 '이메일은 빈칸일 수 없습니다.',
+                style: TextStyle(
+                  fontSize: 12.0,
+                ),
+              ),
+            ),
+          SizedBox(height: 16.0),
+          Row(
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 3 * 2,
+                child: CustomTextFormField(
+                  isInputEnabled: !isEmailAuthenticated,
+                  hintText: '인증번호를 입력해주세요.',
+                  onChanged: (String value) {
+                    authNumber = value;
+                    setState(() {
+                      isAuthNumberNull = authNumber == "" ? true : false;
+                    });
+                  },
+                ),
+              ),
+              const SizedBox(width: 12.0),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: PRIMARY_COLOR,
+                ),
+                onPressed: (isEmailNull || isEmailAuthenticated)
+                    ? null
+                    : () async {
+                  try{
+                    final resp = await dio.post(
+                      'http://$ip/api/users/authenticate-email?email=$email&authenticationCode=$authNumber',
+                    );
+                    if(resp.statusCode == 204){
+                      setState(() {
+                        isEmailAuthenticated = true;
+                      });
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return NoticePopupDialog(
+                            message: "인증이 완료되었습니다.",
+                            buttonText: "닫기",
+                            onPressed: () {
+                              Navigator.pop(context); // 두 번째 팝업 닫기
+                            },
+                          );
+                        },
+                      );
+                    }
+                  } on DioException catch (e){
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return NoticePopupDialog(
+                          message: e.response?.data["message"] ?? "에러 발생",
+                          buttonText: "닫기",
+                          onPressed: () {
+                            Navigator.pop(context); // 두 번째 팝업 닫기
+                          },
+                        );
+                      },
+                    );
+                  }
+                },
+                child: Text('확인'),
+              ),
+            ],
+          ),
+          if (isAuthNumberNull)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                '인증번호는 빈칸일 수 없습니다.',
                 style: TextStyle(
                   fontSize: 12.0,
                 ),
