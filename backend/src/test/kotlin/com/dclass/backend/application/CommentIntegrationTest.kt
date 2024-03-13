@@ -60,5 +60,13 @@ class CommentIntegrationTest(
                 comments[1].replies.size shouldBe 2
             }
         }
+
+        When("해당 게시글의 댓글과 대댓글 수를 조회하면") {
+            val count = commentRepository.countCommentReplyByPostId(1L)
+
+            Then("댓글과 대댓글 수가 조회된다") {
+                count shouldBe 8
+            }
+        }
     }
 })
