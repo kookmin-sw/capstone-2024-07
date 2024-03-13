@@ -14,6 +14,8 @@ class Belong(
 
     modifiedDateTime: LocalDateTime = LocalDateTime.now(),
 
+    major: Long,
+
     id: Long = 0L
 ) : BaseEntity(id) {
 
@@ -36,7 +38,8 @@ class Belong(
     var majorIndex: Int = 0
         private set
 
-    val major: Long
+    var major: Long = major
+        private set
         get() = _departmentIds[majorIndex]
 
     val minor: Long?
