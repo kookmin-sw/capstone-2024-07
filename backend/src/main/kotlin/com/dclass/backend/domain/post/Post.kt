@@ -71,8 +71,8 @@ class Post(
         postCount = postCount.increaseViewCount()
     }
 
-    fun increaseReplyCount() {
-        postCount = postCount.increaseReplyCount()
+    fun increaseCommentReplyCount(cnt : Int) {
+        postCount = postCount.increaseCommentReplyCount(cnt)
     }
 
     fun increaseLikeCount() {
