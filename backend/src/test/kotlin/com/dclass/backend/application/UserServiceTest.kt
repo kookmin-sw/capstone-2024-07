@@ -84,7 +84,6 @@ class UserServiceTest : BehaviorSpec({
         every { userRepository.findUserInfoWithDepartment(any()) } returns UserResponseWithDepartment(
             UserResponse(user),
             listOf(department.id, department2.id),
-            true
         )
         every { belongRepository.findByUserId(any()) } returns Belong(user.id, listOf(department.id, department2.id))
         every { departmentRepository.findAllById(any()) } returns listOf(department, department2)
