@@ -34,6 +34,6 @@ fun postCount(
     return PostCount(
         viewCount = viewCount,
         likeCount = likeCount,
-        replyCount = replyCount
+        commentReplyCount = replyCount
     )
 }
