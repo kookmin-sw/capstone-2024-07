@@ -137,7 +137,9 @@ data class RegisterUserRequest(
     val nickname: String,
     val password: String,
     val confirmPassword: String,
-    val authenticationCode: String
+    val authenticationCode: String,
+    val major: String,
+    val minor: String,
 ) {
     fun toEntity(univ: University): User {
         return User(name, email, nickname, password, univ)
