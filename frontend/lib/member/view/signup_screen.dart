@@ -5,6 +5,7 @@ import 'package:frontend/common/const/data.dart';
 import 'package:frontend/common/layout/default_layout.dart';
 import 'package:frontend/common/provider/dio_provider.dart';
 import 'package:frontend/member/component/custom_text_form_field.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../common/component/NoticePopupDialog.dart';
 import '../../common/const/colors.dart';
@@ -43,7 +44,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   bool isPasswordDifferent = false;
 
   bool isNicknameNull = true;
-  bool isNicknameDuplicated = true;
+  // bool isNicknameDuplicated = true;
 
   bool isAuthNumberNull = true;
 
@@ -159,32 +160,18 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 3 * 2,
-                child: CustomTextFormField(
-                  isInputEnabled: true,
-                  hintText: '닉네임을 입력해주세요.',
-                  onChanged: (String value) {
-                    nickname = value;
-                    setState(() {
-                      isNicknameNull = nickname == "" ? true : false;
-                    });
-                  },
-                ),
-              ),
-              const SizedBox(width: 12.0),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: PRIMARY_COLOR,
-                ),
-                onPressed: () {
-                  print("pressed!");
-                },
-                child: Text('확인'),
-              ),
-            ],
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: CustomTextFormField(
+              isInputEnabled: true,
+              hintText: '닉네임을 입력해주세요.',
+              onChanged: (String value) {
+                nickname = value;
+                setState(() {
+                  isNicknameNull = nickname == "" ? true : false;
+                });
+              },
+            ),
           ),
           if (isNicknameNull)
             Padding(
@@ -232,11 +219,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 onPressed: (isEmailNull || isEmailAuthenticated)
                     ? null
                     : () async {
-                        try{
+                        try {
                           final resp = await dio.post(
                             'http://$ip/api/users/authentication-code?email=$email',
                           );
-                          if(resp.statusCode == 204){
+                          if (resp.statusCode == 204) {
                             setState(() {
                               isEmailSend = true;
                             });
@@ -253,7 +240,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                               },
                             );
                           }
-                        } on DioException catch (e){
+                        } on DioException catch (e) {
                           showDialog(
                             context: context,
                             builder: (context) {
@@ -306,42 +293,42 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 onPressed: (isEmailNull || isEmailAuthenticated)
                     ? null
                     : () async {
-                  try{
-                    final resp = await dio.post(
-                      'http://$ip/api/users/authenticate-email?email=$email&authenticationCode=$authNumber',
-                    );
-                    if(resp.statusCode == 204){
-                      setState(() {
-                        isEmailAuthenticated = true;
-                      });
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return NoticePopupDialog(
-                            message: "인증이 완료되었습니다.",
-                            buttonText: "닫기",
-                            onPressed: () {
-                              Navigator.pop(context); // 두 번째 팝업 닫기
+                        try {
+                          final resp = await dio.post(
+                            'http://$ip/api/users/authenticate-email?email=$email&authenticationCode=$authNumber',
+                          );
+                          if (resp.statusCode == 204) {
+                            setState(() {
+                              isEmailAuthenticated = true;
+                            });
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return NoticePopupDialog(
+                                  message: "인증이 완료되었습니다.",
+                                  buttonText: "닫기",
+                                  onPressed: () {
+                                    Navigator.pop(context); // 두 번째 팝업 닫기
+                                  },
+                                );
+                              },
+                            );
+                          }
+                        } on DioException catch (e) {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return NoticePopupDialog(
+                                message: e.response?.data["message"] ?? "에러 발생",
+                                buttonText: "닫기",
+                                onPressed: () {
+                                  Navigator.pop(context); // 두 번째 팝업 닫기
+                                },
+                              );
                             },
                           );
-                        },
-                      );
-                    }
-                  } on DioException catch (e){
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return NoticePopupDialog(
-                          message: e.response?.data["message"] ?? "에러 발생",
-                          buttonText: "닫기",
-                          onPressed: () {
-                            Navigator.pop(context); // 두 번째 팝업 닫기
-                          },
-                        );
+                        }
                       },
-                    );
-                  }
-                },
                 child: Text('확인'),
               ),
             ],
@@ -677,6 +664,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   }
 
   Widget _renderRegisterButton() {
+    final dio = ref.watch(dioProvider);
+
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: PRIMARY_COLOR,
@@ -691,32 +680,50 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             !isPasswordNull &&
             !isPasswordDifferent &&
             !isNicknameNull &&
-            !isNicknameDuplicated &&
+            !isNameNull &&
             isAccept) {
-          // 회원가입 api 요청..
-
-          // try {
-          //   final resp = await dio.post(
-          //     'http://$ip/signup',
-          //     data: {
-          //       'email': email,
-          //       'password': password,
-          //       'nickname': nickname,
-          //       'univName': univName,
-          //       'isAccept': isAccept,
-          //       'isEmailAuthenticated': isEmailAuthenticated,
-          //     },
-          //     options: Options(
-          //       headers: {'Content-Type': 'application/json'},
-          //     ),
-          //   );
-          //   if (resp.statusCode == 200) {
-          //     //리다이렉트 로직 다시 짜기!
-          //     getSignupResultDialog(context, "회원가입이 완료되었습니다.");
-          //   }
-          // } catch (e) {
-          //   getNoticeDialog(context, e.toString());
-          // }
+          try {
+            final resp = await dio.post(
+              'http://$ip/api/users/register',
+              data: {
+                'name': name,
+                'email': email,
+                'nickname': nickname,
+                'password': password,
+                'confirmPassword': password2,
+                'authenticationCode': authNumber,
+              },
+            );
+            if (resp.statusCode == 200) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return NoticePopupDialog(
+                    message: "회원가입이 완료되었습니다.",
+                    buttonText: "닫기",
+                    onPressed: () {
+                      //Dialog를 닫고 로그인페이지로 나가야 하므로 두번 pop.
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                  );
+                },
+              );
+            }
+          } on DioException catch (e) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return NoticePopupDialog(
+                  message: e.response?.data["message"] ?? "에러 발생",
+                  buttonText: "닫기",
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                );
+              },
+            );
+          }
         }
       },
       child: Text('회원가입하기'),
