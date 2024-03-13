@@ -8,7 +8,7 @@ class PostCount(
     val likeCount: Int = 0,
     val commentReplyCount: Int = 0
 ) {
-    fun increaseViewCount() = PostCount(viewCount + 1, likeCount, commentReplyCount)
+    fun increaseViewCount(cnt: Int) = PostCount(viewCount + cnt, likeCount, commentReplyCount)
     fun increaseLikeCount() = PostCount(viewCount, likeCount + 1, commentReplyCount)
     fun increaseCommentReplyCount(cnt : Int) = PostCount(viewCount, likeCount, commentReplyCount + cnt)
 }
