@@ -11,6 +11,8 @@ class MemberModel extends MemberModelBase {
   final String email;
   final String nickname;
   final String universityName;
+  final String major;
+  final String minor;
 
   MemberModel({
     required this.id,
@@ -18,6 +20,8 @@ class MemberModel extends MemberModelBase {
     required this.email,
     required this.nickname,
     required this.universityName,
+    required this.major,
+    required this.minor,
   });
 
   factory MemberModel.fromJson(Map<String, dynamic> json) =>
