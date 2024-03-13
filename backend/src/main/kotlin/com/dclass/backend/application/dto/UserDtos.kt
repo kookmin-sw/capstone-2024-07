@@ -1,6 +1,5 @@
 package com.dclass.backend.application.dto
 
-import com.dclass.backend.domain.belong.Belong
 import com.dclass.backend.domain.user.Password
 import com.dclass.backend.domain.user.University
 import com.dclass.backend.domain.user.User
@@ -63,17 +62,39 @@ data class UserResponseWithDepartment(
         example = "true"
     )
     val major: Boolean,
-) {
-    constructor(user: User, belong: Belong) : this(
-        UserResponse(user),
-        belong.departmentIds,
-        belong.major
-    )
-}
+)
+
 
 data class UserResponseWithDepartmentNames(
-    val userResponse: UserResponse,
+    @Schema(
+        description = "유저의 고유 식별자",
+        example = "1"
+    )
+    val id: Long,
 
+    @Schema(
+        description = "유저의 이름",
+        example = "쿠민이"
+    )
+    val name: String,
+
+    @Schema(
+        description = "유저의 대학교 이메일",
+        example = "test@kookmin.ac.kr"
+    )
+    val email: String,
+
+    @Schema(
+        description = "유저의 닉네임",
+        example = "ku-mini"
+    )
+    val nickname: String,
+
+    @Schema(
+        description = "유저의 대학교 이름",
+        example = "국민대학교"
+    )
+    val universityName: String,
     @Schema(
         description = "유저의 전공 학과 이름",
         example = "컴퓨터공학과"
@@ -84,17 +105,25 @@ data class UserResponseWithDepartmentNames(
         description = "유저의 부전공 학과 이름",
         example = "소프트웨어학과"
     )
-    val minor: String? = null,
+    val minor: String = "",
 ) {
-    constructor(user: UserResponseWithDepartment, major: String, minor: String) : this(
-        user.userResponse,
-        major,
-        minor,
+    constructor(user: User, major: String, minor: String) : this(
+        user.id,
+        user.name,
+        user.email,
+        user.nickname,
+        user.universityName,
+        major = major,
+        minor = minor,
     )
 
-    constructor(user: UserResponseWithDepartment, major: String) : this(
-        user.userResponse,
-        major,
+    constructor(user: User, major: String) : this(
+        user.id,
+        user.name,
+        user.email,
+        user.nickname,
+        user.universityName,
+        major = major,
     )
 }
 
