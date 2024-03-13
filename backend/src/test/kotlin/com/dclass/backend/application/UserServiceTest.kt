@@ -3,6 +3,7 @@ package com.dclass.backend.application
 import com.dclass.backend.application.dto.*
 import com.dclass.backend.domain.belong.Belong
 import com.dclass.backend.domain.belong.BelongRepository
+import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.department.DepartmentRepository
 import com.dclass.backend.domain.user.*
 import com.dclass.support.fixtures.*
@@ -85,12 +86,16 @@ class UserServiceTest : BehaviorSpec({
             UserResponse(user),
             listOf(department.id, department2.id),
         )
-        every { belongRepository.findByUserId(any()) } returns Belong(user.id, listOf(department.id, department2.id))
+        every { belongRepository.getOrThrow(any()) } returns Belong(
+            user.id,
+            listOf(department.id, department2.id),
+            major = department.id
+        )
         every { departmentRepository.findAllById(any()) } returns listOf(department, department2)
 
         When("해당 회원의 정보를 조회하면") {
             val actual = userService.getInformation(user.id)
-            val belong = belongRepository.findByUserId(user.id)
+            val belong = belongRepository.getOrThrow(user.id)
 
             Then("회원 정보를 확인할 수 있다") {
                 actual shouldBe UserResponseWithDepartmentNames(
@@ -119,11 +124,15 @@ class UserServiceTest : BehaviorSpec({
         val user = user(id = 1L)
         val department = department()
 
-        every { belongRepository.findByUserId(any()) } returns Belong(user.id, listOf(department.id))
+        every { belongRepository.getOrThrow(any()) } returns Belong(
+            user.id,
+            listOf(department.id),
+            major = department.id
+        )
         every { departmentRepository.findAllById(any()) } returns listOf(department)
 
         When("해당 회원의 정보를 조회하면") {
-            val belong = belongRepository.findByUserId(user.id)
+            val belong = belongRepository.getOrThrow(user.id)
             shouldThrow<IllegalStateException> {
                 belong.switch()
             }
