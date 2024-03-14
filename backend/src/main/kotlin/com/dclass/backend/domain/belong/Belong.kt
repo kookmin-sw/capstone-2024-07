@@ -14,8 +14,6 @@ class Belong(
 
     modifiedDateTime: LocalDateTime = LocalDateTime.now(),
 
-    major: Long,
-
     id: Long = 0L
 ) : BaseEntity(id) {
 
@@ -38,12 +36,11 @@ class Belong(
     var majorIndex: Int = 0
         private set
 
-    var major: Long = major
-        private set
+    val major: Long
         get() = _departmentIds[majorIndex]
 
-    val minor: Long?
-        get() = if (_departmentIds.size == 2) _departmentIds[1 - majorIndex] else null
+    val minor: Long
+        get() = _departmentIds[1 - majorIndex]
 
 
     init {
@@ -58,10 +55,9 @@ class Belong(
         modifiedDateTime = LocalDateTime.now()
     }
 
-    fun contain(departmentId: Long) = major == departmentId
+    fun contain(departmentId: Long) = departmentIds.contains(departmentId)
 
     fun switch() {
-        if (_departmentIds.size == 1) throw IllegalStateException("부전공이 없는 사용자는 변경할 수 없습니다.")
         _departmentIds.reverse()
         majorIndex = 1 - majorIndex
     }
