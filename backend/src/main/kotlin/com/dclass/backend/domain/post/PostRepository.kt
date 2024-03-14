@@ -94,15 +94,7 @@ private class PostRepositoryImpl(
         return em.createQuery(query, context).setMaxResults(request.size).resultList
     }
 
-    private fun Jpql.isHot(request: PostScrollPageRequest): Predicatable? = request.run {
-        request.isHot.let { isHot ->
-            if (isHot) {
-                val postCountPath = path(Post::postCount)
-                val likeCountPath = postCountPath.path(PostCount::likeCount)
-                likeCountPath.greaterThanOrEqualTo(10)
-            } else {
-                null
-            }
-        }
+    private fun Jpql.isHot(request: PostScrollPageRequest): Predicatable? {
+        return if (request.isHot) path(Post::postCount)(PostCount::likeCount).ge(10) else null
     }
 }
