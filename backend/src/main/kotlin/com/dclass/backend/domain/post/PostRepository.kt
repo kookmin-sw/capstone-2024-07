@@ -4,7 +4,9 @@ import com.dclass.backend.application.dto.PostResponse
 import com.dclass.backend.application.dto.PostScrollPageRequest
 import com.dclass.backend.domain.community.Community
 import com.dclass.backend.domain.user.User
+import com.linecorp.kotlinjdsl.dsl.jpql.Jpql
 import com.linecorp.kotlinjdsl.dsl.jpql.jpql
+import com.linecorp.kotlinjdsl.querymodel.jpql.predicate.Predicatable
 import com.linecorp.kotlinjdsl.render.jpql.JpqlRenderContext
 import com.linecorp.kotlinjdsl.support.spring.data.jpa.extension.createQuery
 import jakarta.persistence.EntityManager
@@ -84,12 +86,23 @@ private class PostRepositoryImpl(
                 path(Post::id).lessThan(request.lastId ?: Long.MAX_VALUE),
                 path(Post::communityId).`in`(communityIds),
                 request.communityId?.let { path(Post::communityId).equal(it) },
-                request.isHot.let { path(Post::postCount).path(PostCount::likeCount).greaterThanOrEqualTo(10) }
+                isHot(request)
             ).orderBy(
                 path(Post::id).desc()
             )
         }
-
         return em.createQuery(query, context).setMaxResults(request.size).resultList
+    }
+
+    private fun Jpql.isHot(request: PostScrollPageRequest): Predicatable? = request.run {
+        request.isHot.let { isHot ->
+            if (isHot) {
+                val postCountPath = path(Post::postCount)
+                val likeCountPath = postCountPath.path(PostCount::likeCount)
+                likeCountPath.greaterThanOrEqualTo(10)
+            } else {
+                null
+            }
+        }
     }
 }
