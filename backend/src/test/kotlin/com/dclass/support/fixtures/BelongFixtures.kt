@@ -9,6 +9,5 @@ fun belong(
     return Belong(
         userId = userId,
         ids = departmentIds,
-        major = departmentIds.first()
     )
 }
