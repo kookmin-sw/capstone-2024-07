@@ -116,15 +116,6 @@ data class UserResponseWithDepartmentNames(
         major = major,
         minor = minor,
     )
-
-    constructor(user: User, major: String) : this(
-        user.id,
-        user.name,
-        user.email,
-        user.nickname,
-        user.universityName,
-        major = major,
-    )
 }
 
 data class RegisterUserRequest(
