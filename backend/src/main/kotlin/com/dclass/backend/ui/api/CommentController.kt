@@ -43,5 +43,12 @@ class CommentController(
         return ResponseEntity.noContent().build()
     }
 
-    
+    @GetMapping("/{postId}")
+    fun getComments(
+        @LoginUser user: User,
+        @PathVariable postId: Long
+    ): ResponseEntity<ApiResponses<List<CommentReplyWithUserResponse>>> {
+        val comments = commentService.findAllByPostId(postId)
+        return ResponseEntity.ok(ApiResponses.success(comments))
+    }
 }
