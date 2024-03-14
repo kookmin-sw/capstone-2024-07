@@ -692,6 +692,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 'password': password,
                 'confirmPassword': password2,
                 'authenticationCode': authNumber,
+                'major': major1,
+                'minor': major2,
               },
             );
             if (resp.statusCode == 200) {
