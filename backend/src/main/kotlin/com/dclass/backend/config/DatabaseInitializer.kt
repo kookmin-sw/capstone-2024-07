@@ -614,6 +614,7 @@ class DatabaseInitializer(
             Department(title = "메이크업아티스트학과"),
             Department(title = "모델학과"),
             Department(title = "조리제빵학과"),
+            Department(id = 999, title = "")
         )
 
         departmentRepository.saveAll(departments)
