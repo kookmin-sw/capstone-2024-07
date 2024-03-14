@@ -47,15 +47,15 @@ class UserService(
 
         val departments = departmentRepository.findAllById(belong.departmentIds)
 
-        val groupby = belong.departmentIds.associateWith { departmentId ->
+        val groupBy = belong.departmentIds.associateWith { departmentId ->
             departments.find { it.id == departmentId }
                 ?: throw IllegalArgumentException("학과가 존재하지 않습니다: $departmentId")
         }
 
         return UserResponseWithDepartmentNames(
             user,
-            groupby[belong.major]!!.title,
-            if (departments.size == 2) groupby[belong.minor]!!.title else ""
+            groupBy[belong.major]!!.title,
+            groupBy[belong.minor]!!.title
         )
     }
 
