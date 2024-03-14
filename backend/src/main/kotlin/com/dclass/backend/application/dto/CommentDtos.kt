@@ -7,6 +7,10 @@ import com.dclass.backend.domain.user.UserInformation
 import jakarta.validation.constraints.NotNull
 import java.time.LocalDateTime
 
+data class CommentRequest(
+    @field:NotNull
+    val content: String,
+)
 
 data class CreateCommentRequest(
     val postId: Long,
@@ -17,6 +21,8 @@ data class CreateCommentRequest(
 
 data class UpdateCommentRequest(
     val commentId: Long,
+
+    @field:NotNull
     val content: String,
 )
 
