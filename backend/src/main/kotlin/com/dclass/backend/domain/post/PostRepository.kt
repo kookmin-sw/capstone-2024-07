@@ -83,7 +83,8 @@ private class PostRepositoryImpl(
             ).whereAnd(
                 path(Post::id).lessThan(request.lastId ?: Long.MAX_VALUE),
                 path(Post::communityId).`in`(communityIds),
-                request.communityId?.let { path(Post::communityId).equal(it) }
+                request.communityId?.let { path(Post::communityId).equal(it) },
+                request.isHot.let { path(Post::postCount).path(PostCount::likeCount).greaterThanOrEqualTo(10) }
             ).orderBy(
                 path(Post::id).desc()
             )
