@@ -3,6 +3,7 @@ package com.dclass.backend.application
 import com.dclass.backend.application.dto.PostScrollPageRequest
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.community.CommunityRepository
+import com.dclass.backend.domain.post.PostCount
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.user.UniversityRepository
 import com.dclass.backend.domain.user.UserRepository
@@ -123,6 +124,133 @@ class PostIntegrationTest(
             val actual = postService.getAll(user.id, PostScrollPageRequest(size = 30))
 
             Then("자신이 속한 학과 커뮤니티의 게시글만 조회된다") {
+                actual.size shouldBe 15
+            }
+        }
+    }
+
+    Given("특정 학과에 속한 학생이 인기 게시글을 조회하는 경우") {
+        val univ = universityRepository.save(university())
+        val user = userRepository.save(user(university = univ))
+
+        val communities = communityRepository.saveAll(
+            listOf(
+                community(departmentId = 1L, title = "자유"),
+                community(departmentId = 1L, title = "대학원"),
+                community(departmentId = 1L, title = "취업"),
+            )
+        )
+        belongRepository.save(
+            belong(
+                userId = user.id,
+                departmentIds = communities.map { it.departmentId }.distinct()
+            )
+        )
+
+        repeat(5) {
+            postRepository.save(
+                post(
+                    userId = user.id,
+                    communityId = communities[0].id,
+                    postCount = PostCount(0, 15, 0)
+                )
+            )
+            postRepository.save(
+                post(
+                    userId = user.id,
+                    communityId = communities[1].id,
+                    postCount = PostCount(0, 15, 0)
+                )
+            )
+            postRepository.save(
+                post(
+                    userId = user.id,
+                    communityId = communities[2].id,
+                    postCount = PostCount(0, 15, 0)
+                )
+            )
+            postRepository.save(
+                post(
+                    userId = user.id,
+                    communityId = communities[0].id,
+                    postCount = PostCount(0, 0, 0)
+                )
+            )
+            postRepository.save(
+                post(
+                    userId = user.id,
+                    communityId = communities[1].id,
+                    postCount = PostCount(0, 0, 0)
+                )
+            )
+            postRepository.save(
+                post(
+                    userId = user.id,
+                    communityId = communities[1].id,
+                    postCount = PostCount(0, 0, 0)
+                )
+            )
+        }
+
+        val anotherUser = userRepository.save(user(university = univ))
+
+        val notMyCommunities = communityRepository.saveAll(
+            listOf(
+                community(departmentId = 2L, title = "다른 자유"),
+                community(departmentId = 2L, title = "다른 대학원"),
+                community(departmentId = 2L, title = "다른 취업"),
+            )
+        )
+
+        repeat(5) {
+            postRepository.save(
+                post(
+                    userId = anotherUser.id,
+                    communityId = notMyCommunities[0].id,
+                    postCount = PostCount(0, 10, 0)
+                )
+            )
+            postRepository.save(
+                post(
+                    userId = anotherUser.id,
+                    communityId = notMyCommunities[1].id,
+                    postCount = PostCount(0, 10, 0)
+                )
+            )
+            postRepository.save(
+                post(
+                    userId = anotherUser.id,
+                    communityId = notMyCommunities[2].id,
+                    postCount = PostCount(0, 10, 0)
+                )
+            )
+            postRepository.save(
+                post(
+                    userId = anotherUser.id,
+                    communityId = notMyCommunities[1].id,
+                    postCount = PostCount(0, 0, 0)
+                )
+            )
+            postRepository.save(
+                post(
+                    userId = anotherUser.id,
+                    communityId = notMyCommunities[1].id,
+                    postCount = PostCount(0, 0, 0)
+                )
+            )
+            postRepository.save(
+                post(
+                    userId = anotherUser.id,
+                    communityId = notMyCommunities[1].id,
+                    postCount = PostCount(0, 0, 0)
+                )
+            )
+        }
+
+        When("게시글을 조회하면") {
+            val actual = postService.getAll(user.id, PostScrollPageRequest(size = 30, isHot = true))
+
+            Then("자신이 속한 학과 커뮤니티중 좋아요를 10개 이상 받은 게시글만 조회된다") {
                 actual.size shouldBe 15
             }
         }
