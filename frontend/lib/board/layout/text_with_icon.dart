@@ -4,11 +4,14 @@ class TextWithIcon extends StatefulWidget {
   final IconData icon;
   final double iconSize;
   final String text;
+  final bool canTap;
+
   const TextWithIcon({
     super.key,
     required this.icon,
     required this.iconSize,
     required this.text,
+    required this.canTap,
   });
 
   @override
@@ -17,44 +20,46 @@ class TextWithIcon extends StatefulWidget {
 
 class _TextWithIconState extends State<TextWithIcon> {
   // TODO : if user click heart(write comment, favorite), then change icon.
-  bool heartClicked = false;
-  int heartCount = 0;
+  bool isClicked = false;
+  int textCount = 0;
 
   @override
   void initState() {
     super.initState();
-    heartCount = int.parse(widget.text);
+    textCount = int.parse(widget.text);
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (widget.icon == Icons.favorite_outline_rounded) {
-          setState(() {
-            // TODO: add heartCount to Server
-            if (heartClicked) {
-              heartCount -= 1;
-            } else {
-              heartCount += 1;
-            }
-            heartClicked = !heartClicked;
-          });
-        } else if (widget.icon == Icons.chat_outlined) {
-        } else if (widget.icon == Icons.star_outline_rounded) {}
+        if (widget.canTap) {
+          if (widget.icon == Icons.favorite_outline_rounded) {
+            setState(() {
+              // TODO: add heartCount to Server
+              if (isClicked) {
+                textCount -= 1;
+              } else {
+                textCount += 1;
+              }
+              isClicked = !isClicked;
+            });
+          } else if (widget.icon == Icons.chat_outlined) {
+          } else if (widget.icon == Icons.star_outline_rounded) {}
+        }
       },
       child: Row(
         children: [
           Icon(
-            heartClicked ? Icons.favorite : widget.icon,
+            isClicked ? Icons.favorite : widget.icon,
             size: widget.iconSize,
-            color: heartClicked ? Colors.red : null,
+            color: isClicked ? Colors.red : null,
           ),
           const SizedBox(
             width: 2,
           ),
           Text(
-            "$heartCount",
+            textCount != -1 ? "$textCount" : "",
             style: const TextStyle(
               fontSize: 12,
             ),

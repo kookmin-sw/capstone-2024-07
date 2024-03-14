@@ -4,7 +4,7 @@ import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/msg_board_model.dart';
 import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/category_circle_layout.dart';
-import 'package:frontend/board/provider/board_provider.dart';
+import 'package:frontend/board/provider/category_provider.dart';
 
 class MsgBoardListScreen extends StatefulWidget {
   static String get routeName => 'boardList';
@@ -165,7 +165,7 @@ class BoardListWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final clickedBoardList = ref.watch(boardStateProvider);
+    final clickedBoardList = ref.watch(categoryStateProvider);
     return Column(
       children: [
         const SizedBox(

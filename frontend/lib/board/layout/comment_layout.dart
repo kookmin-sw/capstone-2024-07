@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/model/cocomment_model.dart';
+import 'package:frontend/board/provider/add_comment_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/layout/cocoment_layout.dart';
@@ -7,6 +9,7 @@ import 'package:frontend/board/layout/text_with_icon.dart';
 
 class Comment extends StatefulWidget {
   final CommentModel comment;
+  // TODO: comment of comment
   const Comment({super.key, required this.comment});
 
   @override
@@ -14,7 +17,7 @@ class Comment extends StatefulWidget {
 }
 
 class _CommentState extends State<Comment> {
-  List<CoCommentModel> cocomentlistinstance = [];
+  final List<CoCommentModel> cocomentlistinstance = [];
 
   @override
   void initState() {
@@ -23,7 +26,7 @@ class _CommentState extends State<Comment> {
       "4",
       widget.comment.postId,
       widget.comment.commentId,
-      "4",
+      "1",
       "익명4",
       "맞아맞아",
       "2",
@@ -32,7 +35,7 @@ class _CommentState extends State<Comment> {
       "5",
       widget.comment.postId,
       widget.comment.commentId,
-      "5",
+      "1",
       "익명5",
       "맞아맞아맞아",
       "3",
@@ -83,13 +86,13 @@ class _CommentState extends State<Comment> {
                           icon: Icons.favorite_outline_rounded,
                           iconSize: 15,
                           text: widget.comment.likeCount,
+                          canTap: true,
                         ),
                         const SizedBox(
                           width: 13,
                         ),
-                        const Icon(
-                          Icons.chat_outlined,
-                          size: 15,
+                        Chat(
+                          commentId: widget.comment.commentId,
                         ),
                       ],
                     ),
@@ -107,6 +110,27 @@ class _CommentState extends State<Comment> {
               CoComment(cocoment: cocoment)
           ],
         ),
+      ),
+    );
+  }
+}
+
+class Chat extends ConsumerWidget {
+  final String commentId;
+  const Chat({super.key, required this.commentId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GestureDetector(
+      onTap: () {
+        // 대댓글 달기
+        ref.read(addCommentStateProvider.notifier).add(commentId);
+      },
+      child: const TextWithIcon(
+        icon: Icons.chat_outlined,
+        iconSize: 15,
+        text: "-1",
+        canTap: true,
       ),
     );
   }

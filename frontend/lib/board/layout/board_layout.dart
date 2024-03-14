@@ -65,6 +65,7 @@ class Board extends StatelessWidget {
                         icon: Icons.favorite_outline_rounded,
                         iconSize: 15,
                         text: board.heart,
+                        canTap: !canTap,
                       ),
                       const SizedBox(
                         width: 13,
@@ -73,6 +74,7 @@ class Board extends StatelessWidget {
                         icon: Icons.chat_outlined,
                         iconSize: 15,
                         text: board.comment,
+                        canTap: !canTap,
                       ),
                       const SizedBox(
                         width: 13,
@@ -81,6 +83,7 @@ class Board extends StatelessWidget {
                         icon: Icons.star_outline_rounded,
                         iconSize: 18,
                         text: board.favorite,
+                        canTap: !canTap,
                       ),
                       const SizedBox(
                         width: 13,

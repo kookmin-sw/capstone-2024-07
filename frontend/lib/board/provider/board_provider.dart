@@ -1,16 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/model/msg_board_model.dart';
 
-class BoardNotifier extends StateNotifier<List<String>> {
+class BoardNotifier extends StateNotifier<List<MsgBoardModel>> {
   BoardNotifier(this.ref) : super([]);
 
   final Ref ref;
 
-  Future<void> add(String category) async {
-    state = [...state, category];
-  }
-
-  Future<void> remove(String category) async {
-    state = List.from(state)..remove(category);
+  Future<void> add(MsgBoardModel board) async {
+    state = [...state, board];
   }
 
   Future<void> clear() async {
@@ -19,6 +16,6 @@ class BoardNotifier extends StateNotifier<List<String>> {
 }
 
 final boardStateProvider =
-    StateNotifierProvider<BoardNotifier, List<String>>((ref) {
+    StateNotifierProvider<BoardNotifier, List<MsgBoardModel>>((ref) {
   return BoardNotifier(ref);
 });
