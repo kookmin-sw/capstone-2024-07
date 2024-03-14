@@ -11,6 +11,7 @@ data class PostScrollPageRequest(
     val lastId: Long? = null,
     val communityId: Long? = null,
     val size: Int,
+    val isHot: Boolean = false,
 )
 
 /**
