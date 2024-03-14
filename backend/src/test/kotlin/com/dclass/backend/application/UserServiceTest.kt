@@ -20,7 +20,8 @@ class UserServiceTest : BehaviorSpec({
     val departmentRepository = mockk<DepartmentRepository>()
     val belongRepository = mockk<BelongRepository>()
 
-    val userService = UserService(userRepository, passwordGenerator, departmentRepository, belongRepository)
+    val userService =
+        UserService(userRepository, passwordGenerator, departmentRepository, belongRepository)
 
     Given("특정 회원의 개인정보가 있는 경우") {
         val user = user()
@@ -53,7 +54,10 @@ class UserServiceTest : BehaviorSpec({
         every { userRepository.getOrThrow(any()) } returns user
 
         When("기존 비밀번호와 함께 새 비밀번호를 변경하면") {
-            userService.editPassword(user.id, EditPasswordRequest(user.password, password, password))
+            userService.editPassword(
+                user.id,
+                EditPasswordRequest(user.password, password, password)
+            )
 
             Then("새 비밀번호로 변경된다") {
                 user.password shouldBe password
@@ -63,7 +67,10 @@ class UserServiceTest : BehaviorSpec({
         When("일치하지 않는 기존 비밀번호와 함께 새 비밀번호를 변경하면") {
             Then("예외가 발생한다") {
                 shouldThrow<UnidentifiedUserException> {
-                    userService.editPassword(user.id, EditPasswordRequest(WRONG_PASSWORD, password, password))
+                    userService.editPassword(
+                        user.id,
+                        EditPasswordRequest(WRONG_PASSWORD, password, password)
+                    )
                 }
             }
         }
@@ -71,7 +78,10 @@ class UserServiceTest : BehaviorSpec({
         When("이전 비밀번호는 일치하지만 새 비밀번호와 확인 비밀번호가 일치하지 않으면") {
             Then("예외가 발생한다") {
                 shouldThrow<IllegalArgumentException> {
-                    userService.editPassword(user.id, EditPasswordRequest(user.password, password, WRONG_PASSWORD))
+                    userService.editPassword(
+                        user.id,
+                        EditPasswordRequest(user.password, password, WRONG_PASSWORD)
+                    )
                 }
             }
         }
@@ -89,7 +99,6 @@ class UserServiceTest : BehaviorSpec({
         every { belongRepository.getOrThrow(any()) } returns Belong(
             user.id,
             listOf(department.id, department2.id),
-            major = department.id
         )
         every { departmentRepository.findAllById(any()) } returns listOf(department, department2)
 
@@ -123,19 +132,17 @@ class UserServiceTest : BehaviorSpec({
     Given("해당 회원이 선택한 전공이 하나인 경우엔") {
         val user = user(id = 1L)
         val department = department()
+        val department2 = department(id = 999, title = "")
 
         every { belongRepository.getOrThrow(any()) } returns Belong(
             user.id,
-            listOf(department.id),
-            major = department.id
+            listOf(department.id, department2.id),
         )
-        every { departmentRepository.findAllById(any()) } returns listOf(department)
+        every { departmentRepository.findAllById(any()) } returns listOf(department, department2)
 
         When("해당 회원의 정보를 조회하면") {
             val belong = belongRepository.getOrThrow(user.id)
-            shouldThrow<IllegalStateException> {
-                belong.switch()
-            }
+
             val actual = userService.getInformation(user.id)
 
             Then("부전공은 존재하지 않는다") {
