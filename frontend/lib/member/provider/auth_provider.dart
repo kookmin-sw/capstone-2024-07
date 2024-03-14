@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/board/view/msg_board_list_screen.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../common/view/root_tab.dart';
 import '../../common/view/splash_screen.dart';
 import '../model/member_model.dart';
 import '../view/login_screen.dart';
@@ -29,9 +29,14 @@ class AuthProvider extends ChangeNotifier {
 
   List<GoRoute> get routes => [
     GoRoute(
-      path: '/boardList',
-      name: MsgBoardListScreen.routeName,
-      builder: (context, state) => MsgBoardListScreen(),
+      path: '/',
+      name: RootTab.routeName,
+      builder: (context, state) {
+        final tabIndex = state.queryParameters['tabIndex'] != null
+            ? int.tryParse(state.queryParameters['tabIndex']!) ?? 0
+            : 0; // 기본적으로 첫 번째 탭을 보여준다.
+        return RootTab(initialIndex: tabIndex);
+      },
     ),
     GoRoute(
       path: '/splash',
@@ -66,7 +71,7 @@ class AuthProvider extends ChangeNotifier {
     // 1. MemberModel
     // 로그인 중이거나 현재 위치가 SplashScreen이면 홈으로 이동
     if (member is MemberModel) {
-      return loggingIn || state.location == '/splash' ? '/boardList' : null;
+      return loggingIn || state.location == '/splash' ? '/' : null;
     }
 
     // 2. MemberModelError
