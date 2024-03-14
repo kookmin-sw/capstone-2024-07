@@ -139,7 +139,7 @@ class PostIntegrationTest(
         When("인기 게시글을 조회하면") {
             val actual = postService.getAll(user.id, PostScrollPageRequest(size = 30, isHot = true))
 
-            Then("자신이 속한 학과 커뮤니티의 모든 게시글이 조회된다") {
+            Then("자신이 속한 학과 커뮤니티의 인기 게시글이 조회된다") {
                 actual.size shouldBe 15
             }
         }
