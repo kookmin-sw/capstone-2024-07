@@ -1,9 +1,7 @@
 package com.dclass.backend.ui.api
 
 import com.dclass.backend.application.CommentService
-import com.dclass.backend.application.dto.CommentRequest
-import com.dclass.backend.application.dto.CommentResponse
-import com.dclass.backend.application.dto.CreateCommentRequest
+import com.dclass.backend.application.dto.*
 import com.dclass.backend.domain.user.User
 import com.dclass.backend.security.LoginUser
 import jakarta.validation.Valid
@@ -26,5 +24,15 @@ class CommentController(
         return ResponseEntity.ok(ApiResponses.success(comment))
     }
 
+    @PutMapping("/{commentId}")
+    fun updateComment(
+        @LoginUser user: User,
+        @PathVariable commentId: Long,
+        @RequestBody request: CommentRequest
+    ): ResponseEntity<Unit> {
+        commentService.update(user.id, UpdateCommentRequest(commentId, request.content))
+        return ResponseEntity.noContent().build()
+    }
 
+    
 }
