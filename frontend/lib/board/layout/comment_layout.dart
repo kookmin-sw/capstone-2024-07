@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/model/cocomment_model.dart';
 import 'package:frontend/board/provider/cocomment_provider.dart';
-import 'package:frontend/board/provider/comment_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/layout/cocoment_layout.dart';
@@ -18,30 +17,11 @@ class Comment extends StatefulWidget {
 }
 
 class _CommentState extends State<Comment> with SingleTickerProviderStateMixin {
-  final List<CoCommentModel> cocomentlistinstance = [];
   late AnimationController animationController;
 
   @override
   void initState() {
     super.initState();
-    cocomentlistinstance.add(CoCommentModel(
-      "4",
-      widget.comment.postId,
-      widget.comment.commentId,
-      "1",
-      "익명4",
-      "맞아맞아",
-      "2",
-    ));
-    cocomentlistinstance.add(CoCommentModel(
-      "5",
-      widget.comment.postId,
-      widget.comment.commentId,
-      "2",
-      "익명5",
-      "맞아맞아맞아",
-      "3",
-    ));
     animationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 1));
   }
@@ -50,7 +30,6 @@ class _CommentState extends State<Comment> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return _Comment(
       widget: widget,
-      cocomentlistinstance: cocomentlistinstance,
       animationController: animationController,
     );
   }
@@ -60,16 +39,16 @@ class _Comment extends ConsumerWidget {
   const _Comment({
     super.key,
     required this.widget,
-    required this.cocomentlistinstance,
     required this.animationController,
   });
 
   final Comment widget;
-  final List<CoCommentModel> cocomentlistinstance;
   final AnimationController animationController;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    List<CoCommentModel> cocomentlistinstance =
+        ref.watch(cocommentStateProvider);
     // List<CommentModel> temp = ref.watch(commentStateProvider);
     bool uploadComment = false;
     // if (temp.isNotEmpty) {

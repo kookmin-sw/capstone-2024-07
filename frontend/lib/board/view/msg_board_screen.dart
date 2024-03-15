@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/model/msg_board_model.dart';
@@ -16,51 +17,9 @@ class MsgBoardScreen extends StatefulWidget {
 }
 
 class _MsgBoardScreenState extends State<MsgBoardScreen> {
-  List<CommentModel> commentlistinstance = [];
-
   @override
   void initState() {
     super.initState();
-    commentlistinstance.add(CommentModel(
-      "1",
-      widget.board.postId,
-      "1",
-      "익명1",
-      "ㅇㅈ",
-      "0",
-    ));
-    commentlistinstance.add(CommentModel(
-      "2",
-      widget.board.postId,
-      "2",
-      "익명2",
-      "ㅇㅈㅇㅈ",
-      "0",
-    ));
-    commentlistinstance.add(CommentModel(
-      "3",
-      widget.board.postId,
-      "3",
-      "익명3",
-      "ㅆㅇㅈ",
-      "0",
-    ));
-    commentlistinstance.add(CommentModel(
-      "4",
-      widget.board.postId,
-      "4",
-      "익명4",
-      "ㅆㅆㅇㅈ",
-      "0",
-    ));
-    commentlistinstance.add(CommentModel(
-      "5",
-      widget.board.postId,
-      "5",
-      "익명5",
-      "ㅆㅆㅆㅇㅈ",
-      "0",
-    ));
   }
 
   @override
@@ -75,26 +34,34 @@ class _MsgBoardScreenState extends State<MsgBoardScreen> {
             ),
           ),
         ),
-        body: Body(widget: widget, commentlistinstance: commentlistinstance));
+        body: Body(widget: widget));
   }
 }
 
 class Body extends ConsumerWidget {
-  const Body({
+  Body({
     super.key,
     required this.widget,
-    required this.commentlistinstance,
   });
 
   final MsgBoardScreen widget;
-  final List<CommentModel> commentlistinstance;
+  final TextEditingController textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<CommentModel> temp = ref.watch(commentStateProvider);
-    if (temp.isNotEmpty) {
-      commentlistinstance.add(temp.last);
+    List<CommentModel> commentlistinstance = [];
+    int count = 0;
+    for (var comment in ref.watch(commentStateProvider)) {
+      if (widget.board.postId == comment.postId) {
+        count += 1;
+        commentlistinstance.add(comment);
+      }
     }
+    ScrollController scrollController = ScrollController();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    });
+
     return Column(
       children: [
         Board(
@@ -104,6 +71,7 @@ class Body extends ConsumerWidget {
         ),
         Expanded(
           child: ListView.builder(
+            controller: scrollController,
             itemCount: commentlistinstance.length,
             shrinkWrap: true,
             itemBuilder: (context, index) {
@@ -118,60 +86,47 @@ class Body extends ConsumerWidget {
           padding: const EdgeInsets.only(bottom: 50),
           child: Row(
             children: [
-              UploadComment(
-                postId: widget.board.postId,
+              Expanded(
+                child: TextField(
+                  controller: textEditingController,
+                  decoration: InputDecoration(
+                    hintText: '입력',
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: BODY_TEXT_COLOR.withOpacity(0.5),
+                      ),
+                    ),
+                    suffixIcon: GestureDetector(
+                      child: Icon(
+                        Icons.send,
+                        color: PRIMARY_COLOR.withOpacity(0.5),
+                        size: 30,
+                      ),
+                      onTap: () {
+                        // TODO : Upload comment.
+                        ref.read(commentStateProvider.notifier).add(
+                              CommentModel(
+                                "5",
+                                widget.board.postId,
+                                (count + 1).toString(),
+                                "익명5",
+                                textEditingController.text,
+                                "0",
+                              ),
+                            );
+                        print(widget.board.postId);
+                        textEditingController.clear();
+                      },
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
         ),
       ],
-    );
-  }
-}
-
-class UploadComment extends ConsumerWidget {
-  final String postId;
-  final TextEditingController textEditingController = TextEditingController();
-
-  UploadComment({super.key, required this.postId});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Expanded(
-      child: TextField(
-        controller: textEditingController,
-        decoration: InputDecoration(
-          hintText: '입력',
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          border: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: BODY_TEXT_COLOR.withOpacity(0.5),
-            ),
-          ),
-          suffixIcon: GestureDetector(
-            child: Icon(
-              Icons.send,
-              color: PRIMARY_COLOR.withOpacity(0.5),
-              size: 30,
-            ),
-            onTap: () {
-              // TODO : Upload comment.
-              ref.read(commentStateProvider.notifier).add(
-                    CommentModel(
-                      "5",
-                      postId,
-                      "4",
-                      "익명4",
-                      textEditingController.text,
-                      "0",
-                    ),
-                  );
-              textEditingController.clear();
-            },
-          ),
-        ),
-      ),
     );
   }
 }
