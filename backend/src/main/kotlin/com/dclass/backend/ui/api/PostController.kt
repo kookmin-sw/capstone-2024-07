@@ -28,7 +28,7 @@ class PostController(
     @GetMapping
     fun getPosts(
         @LoginUser user: User,
-        request: PostScrollPageRequest
+        @RequestBody request: PostScrollPageRequest
     ): ResponseEntity<ApiResponses<List<PostResponse>>> {
         return ResponseEntity.ok(ApiResponses.success(postService.getAll(user.id, request)))
     }
@@ -36,7 +36,7 @@ class PostController(
     @PostMapping
     fun createPost(
         @LoginUser user: User,
-        request: CreatePostRequest
+        @RequestBody request: CreatePostRequest
     ): ResponseEntity<ApiResponses<PostResponse>> {
         return ResponseEntity.ok(ApiResponses.success(postService.create(user.id, request)))
     }
