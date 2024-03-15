@@ -6,6 +6,8 @@ import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/category_circle_layout.dart';
 import 'package:frontend/board/provider/board_provider.dart';
 
+import '../../member/view/mypage_screen.dart';
+
 class MsgBoardListScreen extends StatefulWidget {
   static String get routeName => 'boardList';
 
@@ -105,20 +107,19 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        shadowColor: Colors.black,
-        elevation: 3,
-        title: const Text(
-          "Decl",
-          style: TextStyle(
-            fontSize: 30,
-            color: PRIMARY_COLOR,
-            fontWeight: FontWeight.w500,
-          ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            _renderTop(),
+            Container(
+              height: MediaQuery.of(context).size.height - 111,
+              child: BoardListWidget(
+                  categorys: categorys,
+                  msgboardlistinstance: msgboardlistinstance),
+            ),
+          ],
         ),
       ),
-      body: BoardListWidget(
-          categorys: categorys, msgboardlistinstance: msgboardlistinstance),
       // body: SingleChildScrollView(
       //   child: Padding(
       //     padding: const EdgeInsets.symmetric(
@@ -144,6 +145,38 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
       // ),
     );
     //test
+  }
+
+  Widget _renderTop() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
+      height: 30.0,
+      width: MediaQuery.of(context).size.width,
+      child: Row(
+        children: [
+          SizedBox(width: 160.0),
+          Text(
+            "DeCl",
+            style: TextStyle(
+              color: PRIMARY_COLOR,
+              fontSize: 20.0,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          SizedBox(width: 80.0),
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => MypageScreen(),
+                ),
+              );
+            },
+            icon: Icon(Icons.person),
+          ),
+        ],
+      ),
+    );
   }
 }
 
