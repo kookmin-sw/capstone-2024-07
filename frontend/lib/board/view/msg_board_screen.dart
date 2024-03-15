@@ -156,7 +156,6 @@ class UploadComment extends ConsumerWidget {
               size: 30,
             ),
             onTap: () {
-              textEditingController.clear();
               // TODO : Upload comment.
               ref.read(commentStateProvider.notifier).add(
                     CommentModel(
@@ -168,6 +167,7 @@ class UploadComment extends ConsumerWidget {
                       "0",
                     ),
                   );
+              textEditingController.clear();
             },
           ),
         ),

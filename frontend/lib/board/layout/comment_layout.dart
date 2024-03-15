@@ -70,14 +70,14 @@ class _Comment extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<CommentModel> temp = ref.watch(commentStateProvider);
+    // List<CommentModel> temp = ref.watch(commentStateProvider);
     bool uploadComment = false;
-    if (temp.isNotEmpty) {
-      if (temp.last.postId == widget.comment.postId &&
-          temp.last.commentId == widget.comment.commentId) {
-        uploadComment = true;
-      }
-    }
+    // if (temp.isNotEmpty) {
+    //   if (temp.last.postId == widget.comment.postId &&
+    //       temp.last.commentId == widget.comment.commentId) {
+    //     uploadComment = true;
+    //   }
+    // }
     return uploadComment
         ? FadeTransition(
             opacity: Tween<double>(begin: 0.0, end: 3.0).animate(
