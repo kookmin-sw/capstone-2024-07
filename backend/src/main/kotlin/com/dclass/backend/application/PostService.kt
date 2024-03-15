@@ -1,5 +1,6 @@
 package com.dclass.backend.application
 
+import com.dclass.backend.application.dto.CreatePostRequest
 import com.dclass.backend.application.dto.PostResponse
 import com.dclass.backend.application.dto.PostScrollPageRequest
 import com.dclass.backend.domain.belong.BelongRepository
@@ -44,5 +45,16 @@ class PostService(
             }
         }
     }
-    
+
+    fun create(userId: Long, request: CreatePostRequest): PostResponse {
+        postValidator.validateCreatePost(userId, request.communityId)
+
+        val post = postRepository.save(request.toEntity(userId))
+
+        return postRepository.findPostById(post.id).apply {
+            images = runBlocking(Dispatchers.IO) {
+                images.map { async { awsPresigner.putPostObjectPresigned(it) } }.awaitAll()
+            }
+        }
+    }
 }
