@@ -1,15 +1,13 @@
 package com.dclass.backend.ui.api
 
 import com.dclass.backend.application.PostService
+import com.dclass.backend.application.dto.CreatePostRequest
 import com.dclass.backend.application.dto.PostResponse
 import com.dclass.backend.application.dto.PostScrollPageRequest
 import com.dclass.backend.domain.user.User
 import com.dclass.backend.security.LoginUser
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @RequestMapping("/api/post")
@@ -33,5 +31,13 @@ class PostController(
         request: PostScrollPageRequest
     ): ResponseEntity<ApiResponses<List<PostResponse>>> {
         return ResponseEntity.ok(ApiResponses.success(postService.getAll(user.id, request)))
+    }
+
+    @PostMapping
+    fun createPost(
+        @LoginUser user: User,
+        request: CreatePostRequest
+    ): ResponseEntity<ApiResponses<PostResponse>> {
+        return ResponseEntity.ok(ApiResponses.success(postService.create(user.id, request)))
     }
 }
