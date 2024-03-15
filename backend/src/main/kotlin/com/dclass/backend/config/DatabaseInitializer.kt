@@ -1,5 +1,7 @@
 package com.dclass.backend.config
 
+import com.dclass.backend.domain.community.Community
+import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.department.Department
 import com.dclass.backend.domain.department.DepartmentRepository
 import com.dclass.backend.domain.user.University
@@ -15,7 +17,8 @@ import org.springframework.stereotype.Component
 class DatabaseInitializer(
     private val database: Database,
     private val universityRepository: UniversityRepository,
-    private val departmentRepository: DepartmentRepository
+    private val departmentRepository: DepartmentRepository,
+    private val communityRepository: CommunityRepository
 ) : CommandLineRunner {
 
     override fun run(vararg args: String) {
@@ -30,7 +33,9 @@ class DatabaseInitializer(
     private fun populate() {
         populateUniversity()
         populateDepartment()
+        populateCommunity()
     }
+
 
     private fun populateUniversity() {
         val universities = listOf(
@@ -618,5 +623,22 @@ class DatabaseInitializer(
         )
 
         departmentRepository.saveAll(departments)
+    }
+
+    private fun populateCommunity() {
+
+        val departments = departmentRepository.findAll()
+            .forEach {
+                communityRepository.saveAll(
+                    listOf(
+                        Community(title = "자유게시판", departmentId = it.id),
+                        Community(title = "대학원게시판", departmentId = it.id),
+                        Community(title = "취준게시판", departmentId = it.id),
+                        Community(title = "스터디모집", departmentId = it.id),
+                        Community(title = "질문게시판", departmentId = it.id),
+                        Community(title = "홍보게시판", departmentId = it.id),
+                    )
+                )
+            }
     }
 }
