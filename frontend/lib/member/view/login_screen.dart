@@ -51,10 +51,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 _renderSubTitle(),
                 const SizedBox(height: 16.0),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(12.0, 10.0, 12.0, 20.0),
-                  child: Image.asset(
-                    'asset/imgs/students.jpeg', // 임시로 ai로 만든 이미지 넣어둠.. 추후 변경 예정
-                    width: MediaQuery.of(context).size.width / 2,
+                  padding: const EdgeInsets.fromLTRB(12.0, 50.0, 12.0, 50.0),
+                  child: Container(
+                    width: 220.0,
+                    height: 220.0,
+                    child: Image.asset(
+                      'asset/imgs/decle.png',
+                    ),
                   ),
                 ),
                 CustomTextFormField(
