@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/model/cocomment_model.dart';
-import 'package:frontend/board/provider/add_comment_provider.dart';
+import 'package:frontend/board/provider/cocomment_provider.dart';
+import 'package:frontend/board/provider/comment_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/layout/cocoment_layout.dart';
@@ -16,8 +17,9 @@ class Comment extends StatefulWidget {
   State<Comment> createState() => _CommentState();
 }
 
-class _CommentState extends State<Comment> {
+class _CommentState extends State<Comment> with SingleTickerProviderStateMixin {
   final List<CoCommentModel> cocomentlistinstance = [];
+  late AnimationController animationController;
 
   @override
   void initState() {
@@ -35,12 +37,77 @@ class _CommentState extends State<Comment> {
       "5",
       widget.comment.postId,
       widget.comment.commentId,
-      "1",
+      "2",
       "익명5",
       "맞아맞아맞아",
       "3",
     ));
+    animationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return _Comment(
+      widget: widget,
+      cocomentlistinstance: cocomentlistinstance,
+      animationController: animationController,
+    );
+  }
+}
+
+class _Comment extends ConsumerWidget {
+  const _Comment({
+    super.key,
+    required this.widget,
+    required this.cocomentlistinstance,
+    required this.animationController,
+  });
+
+  final Comment widget;
+  final List<CoCommentModel> cocomentlistinstance;
+  final AnimationController animationController;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    List<CommentModel> temp = ref.watch(commentStateProvider);
+    bool uploadComment = false;
+    if (temp.isNotEmpty) {
+      if (temp.last.postId == widget.comment.postId &&
+          temp.last.commentId == widget.comment.commentId) {
+        uploadComment = true;
+      }
+    }
+    return uploadComment
+        ? FadeTransition(
+            opacity: Tween<double>(begin: 0.0, end: 3.0).animate(
+                CurvedAnimation(
+                    parent: animationController,
+                    curve: Curves.fastLinearToSlowEaseIn)),
+            child: SlideTransition(
+                position: Tween<Offset>(
+                        begin: const Offset(0.0, -3.0),
+                        end: const Offset(0.0, 0.0))
+                    .animate(CurvedAnimation(
+                        parent: animationController,
+                        curve: Curves.fastLinearToSlowEaseIn)),
+                child: Contents(
+                    widget: widget,
+                    cocomentlistinstance: cocomentlistinstance)),
+          )
+        : Contents(widget: widget, cocomentlistinstance: cocomentlistinstance);
+  }
+}
+
+class Contents extends StatelessWidget {
+  const Contents({
+    super.key,
+    required this.widget,
+    required this.cocomentlistinstance,
+  });
+
+  final Comment widget;
+  final List<CoCommentModel> cocomentlistinstance;
 
   @override
   Widget build(BuildContext context) {
@@ -91,8 +158,27 @@ class _CommentState extends State<Comment> {
                         const SizedBox(
                           width: 13,
                         ),
-                        Chat(
-                          commentId: widget.comment.commentId,
+                        GestureDetector(
+                          onTap: () {
+                            // TODO: 대댓글 달기
+                            // ref
+                            //     .read(cocommentStateProvider.notifier)
+                            //     .add(CoCommentModel(
+                            //       "5",
+                            //       widget.comment.postId,
+                            //       widget.comment.commentId,
+                            //       "3",
+                            //       "익명5",
+                            //       "",
+                            //       "0",
+                            //     ));
+                          },
+                          child: const TextWithIcon(
+                            icon: Icons.chat_outlined,
+                            iconSize: 15,
+                            text: "-1",
+                            canTap: true,
+                          ),
                         ),
                       ],
                     ),
@@ -110,27 +196,6 @@ class _CommentState extends State<Comment> {
               CoComment(cocoment: cocoment)
           ],
         ),
-      ),
-    );
-  }
-}
-
-class Chat extends ConsumerWidget {
-  final String commentId;
-  const Chat({super.key, required this.commentId});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return GestureDetector(
-      onTap: () {
-        // 대댓글 달기
-        ref.read(addCommentStateProvider.notifier).add(commentId);
-      },
-      child: const TextWithIcon(
-        icon: Icons.chat_outlined,
-        iconSize: 15,
-        text: "-1",
-        canTap: true,
       ),
     );
   }
