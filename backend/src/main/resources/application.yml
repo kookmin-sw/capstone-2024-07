@@ -29,6 +29,11 @@ spring:
         format_sql: true
         default_batch_fetch_size: 10
 
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: trace
+
+
 springdoc:
   packages-to-scan: com.dclass.backend.ui
   default-consumes-media-type: application/json;charset=UTF-8
