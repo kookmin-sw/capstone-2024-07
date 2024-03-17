@@ -49,32 +49,7 @@ class _Comment extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     List<CoCommentModel> cocomentlistinstance =
         ref.watch(cocommentStateProvider);
-    // List<CommentModel> temp = ref.watch(commentStateProvider);
-    bool uploadComment = false;
-    // if (temp.isNotEmpty) {
-    //   if (temp.last.postId == widget.comment.postId &&
-    //       temp.last.commentId == widget.comment.commentId) {
-    //     uploadComment = true;
-    //   }
-    // }
-    return uploadComment
-        ? FadeTransition(
-            opacity: Tween<double>(begin: 0.0, end: 3.0).animate(
-                CurvedAnimation(
-                    parent: animationController,
-                    curve: Curves.fastLinearToSlowEaseIn)),
-            child: SlideTransition(
-                position: Tween<Offset>(
-                        begin: const Offset(0.0, -3.0),
-                        end: const Offset(0.0, 0.0))
-                    .animate(CurvedAnimation(
-                        parent: animationController,
-                        curve: Curves.fastLinearToSlowEaseIn)),
-                child: Contents(
-                    widget: widget,
-                    cocomentlistinstance: cocomentlistinstance)),
-          )
-        : Contents(widget: widget, cocomentlistinstance: cocomentlistinstance);
+    return Contents(widget: widget, cocomentlistinstance: cocomentlistinstance);
   }
 }
 

@@ -21,15 +21,18 @@ class TextWithIcon extends StatefulWidget {
 class _TextWithIconState extends State<TextWithIcon>
     with SingleTickerProviderStateMixin {
   // TODO : if user click heart(write comment, favorite), then change icon.
-  bool isClicked = false;
-  int textCount = 0;
+  bool isHeartClicked = false;
+  bool isQuestionClicked = false;
+  // ignore: prefer_typing_uninitialized_variables
+  var textCount;
 
   late AnimationController animationController;
 
   @override
   void initState() {
     super.initState();
-    textCount = int.parse(widget.text);
+    textCount = int.tryParse(widget.text);
+    textCount ??= widget.text;
     animationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 1));
   }
@@ -40,21 +43,21 @@ class _TextWithIconState extends State<TextWithIcon>
       children: [
         HeartAnim(
           animationController: animationController,
-          isClicked: isClicked,
+          isHeartClicked: isHeartClicked,
           widget: widget,
           s: 0.2,
           e: -1.5,
         ),
         HeartAnim(
           animationController: animationController,
-          isClicked: isClicked,
+          isHeartClicked: isHeartClicked,
           widget: widget,
           s: -0.2,
           e: -1.0,
         ),
         HeartAnim(
           animationController: animationController,
-          isClicked: isClicked,
+          isHeartClicked: isHeartClicked,
           widget: widget,
           s: 0.3,
           e: -1.2,
@@ -62,34 +65,47 @@ class _TextWithIconState extends State<TextWithIcon>
         GestureDetector(
           onTap: () {
             if (widget.canTap) {
-              if (widget.icon == Icons.favorite_outline_rounded) {
-                setState(() {
+              setState(() {
+                if (widget.icon == Icons.favorite_outline_rounded) {
                   // TODO: add heartCount to Server
-                  if (isClicked) {
+                  if (isHeartClicked) {
                     textCount -= 1;
                     animationController.reverse();
                   } else {
                     textCount += 1;
                     animationController.forward();
                   }
-                  isClicked = !isClicked;
-                });
-              } else if (widget.icon == Icons.chat_outlined) {
-              } else if (widget.icon == Icons.star_outline_rounded) {}
+                  isHeartClicked = !isHeartClicked;
+                } else if (widget.icon == Icons.chat_outlined) {
+                } else if (widget.icon == Icons.star_outline_rounded) {
+                } else if (widget.icon == Icons.image_rounded) {
+                } else if (widget.icon ==
+                    Icons.check_box_outline_blank_rounded) {
+                  isQuestionClicked = !isQuestionClicked;
+                }
+              });
             }
           },
           child: Row(
             children: [
               Icon(
-                isClicked ? Icons.favorite : widget.icon,
+                isHeartClicked
+                    ? Icons.favorite
+                    : isQuestionClicked
+                        ? Icons.check_box_rounded
+                        : widget.icon,
                 size: widget.iconSize,
-                color: isClicked ? Colors.red : null,
+                color: isHeartClicked
+                    ? Colors.red
+                    : isQuestionClicked
+                        ? Colors.blue.withOpacity(0.5)
+                        : null,
               ),
               const SizedBox(
                 width: 2,
               ),
               Text(
-                textCount != -1 ? "$textCount" : "",
+                textCount == -1 ? "" : "$textCount",
                 style: const TextStyle(
                   fontSize: 12,
                 ),
@@ -106,14 +122,14 @@ class HeartAnim extends StatelessWidget {
   const HeartAnim({
     super.key,
     required this.animationController,
-    required this.isClicked,
+    required this.isHeartClicked,
     required this.widget,
     required this.s,
     required this.e,
   });
 
   final AnimationController animationController;
-  final bool isClicked;
+  final bool isHeartClicked;
   final TextWithIcon widget;
   final double s, e;
 
@@ -128,11 +144,11 @@ class HeartAnim extends StatelessWidget {
                 .animate(CurvedAnimation(
                     parent: animationController,
                     curve: Curves.fastLinearToSlowEaseIn)),
-        child: isClicked
+        child: isHeartClicked
             ? Icon(
-                isClicked ? Icons.favorite : widget.icon,
+                isHeartClicked ? Icons.favorite : widget.icon,
                 size: widget.iconSize,
-                color: isClicked ? Colors.red : null,
+                color: isHeartClicked ? Colors.red : null,
               )
             : null,
       ),

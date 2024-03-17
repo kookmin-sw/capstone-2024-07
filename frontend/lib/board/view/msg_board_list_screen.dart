@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/provider/board_provider.dart';
+import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/msg_board_model.dart';
 import 'package:frontend/board/layout/board_layout.dart';
@@ -92,6 +93,7 @@ class BoardListWidget extends ConsumerWidget {
     final clickedBoardList = ref.watch(categoryStateProvider);
     List<MsgBoardModel> msgboardlistinstance = ref.watch(boardStateProvider);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         const SizedBox(
           height: 5,
@@ -142,6 +144,19 @@ class BoardListWidget extends ConsumerWidget {
                 height: 10,
               ),
             ],
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.all(50),
+          child: FloatingActionButton(
+            child: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const MsgBoardAddScreen(),
+                ),
+              );
+            },
           ),
         ),
       ],
