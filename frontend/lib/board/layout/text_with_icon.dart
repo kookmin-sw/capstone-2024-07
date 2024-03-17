@@ -28,7 +28,10 @@ class _TextWithIconState extends State<TextWithIcon>
   // TODO : if user click heart(write comment, favorite), then change icon.
   bool isHeartClicked = false;
   bool isQuestionClicked = false;
+<<<<<<< HEAD
 
+=======
+>>>>>>> ec83348 (feat : 글 작성 페이지)
   // ignore: prefer_typing_uninitialized_variables
   var textCount;
 
@@ -91,7 +94,10 @@ class _TextWithIconState extends State<TextWithIcon>
                 } else if (widget.icon == Icons.chat_outlined) {
                 } else if (widget.icon == Icons.star_outline_rounded) {
                 } else if (widget.icon == Icons.image_rounded) {
+<<<<<<< HEAD
                   getImage();
+=======
+>>>>>>> ec83348 (feat : 글 작성 페이지)
                 } else if (widget.icon ==
                     Icons.check_box_outline_blank_rounded) {
                   isQuestionClicked = !isQuestionClicked;
