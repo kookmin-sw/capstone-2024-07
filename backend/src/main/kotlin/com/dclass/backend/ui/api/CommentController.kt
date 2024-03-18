@@ -63,4 +63,15 @@ class CommentController(
         val comments = commentService.findAllByPostId(postId)
         return ResponseEntity.ok(ApiResponses.success(comments))
     }
+
+    @Operation(summary = "댓글 좋아요 API", description = "댓글에 좋아요를 누릅니다.")
+    @ApiResponse(responseCode = "204", description = "댓글 좋아요 성공")
+    @PostMapping("/{commentId}/likes")
+    fun likeComment(
+        @LoginUser user: User,
+        @PathVariable commentId: Long
+    ): ResponseEntity<Unit> {
+        commentService.like(user.id, commentId)
+        return ResponseEntity.noContent().build()
+    }
 }
