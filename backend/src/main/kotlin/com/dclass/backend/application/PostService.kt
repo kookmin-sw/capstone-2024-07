@@ -7,6 +7,7 @@ import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.post.PostRepository
+import com.dclass.backend.domain.post.getByIdOrThrow
 import com.dclass.backend.infra.s3.AwsPresigner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -37,7 +38,7 @@ class PostService(
     }
 
     fun getById(userId: Long, postId: Long): PostResponse {
-        postValidator.validateGetPost(userId, postId)
+        postValidator.validate(userId, postId)
 
         return postRepository.findPostById(postId).apply {
             images = runBlocking(Dispatchers.IO) {
@@ -56,5 +57,14 @@ class PostService(
                 images.map { async { awsPresigner.putPostObjectPresigned(it) } }.awaitAll()
             }
         }
+    }
+
+    fun likes(userId: Long, postId: Long): Int {
+        postValidator.validate(userId, postId)
+
+        val post = postRepository.getByIdOrThrow(postId)
+        post.addLike(userId)
+
+        return post.postLikesCount
     }
 }
