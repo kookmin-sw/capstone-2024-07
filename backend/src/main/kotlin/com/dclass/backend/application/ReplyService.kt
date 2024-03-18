@@ -33,6 +33,10 @@ class ReplyService(
         replyRepository.delete(reply)
     }
 
+    fun like(userId: Long, replyId: Long) {
+        val reply = find(replyId)
+        reply.like(userId)
+    }
 
     private fun find(replyId: Long): Reply {
         val reply = replyRepository.findByIdOrNull(replyId)
