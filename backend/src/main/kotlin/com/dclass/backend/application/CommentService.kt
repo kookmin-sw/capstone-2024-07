@@ -3,6 +3,8 @@ package com.dclass.backend.application
 import com.dclass.backend.application.dto.*
 import com.dclass.backend.domain.comment.Comment
 import com.dclass.backend.domain.comment.CommentRepository
+import com.dclass.backend.domain.post.PostRepository
+import com.dclass.backend.domain.post.getByIdOrThrow
 import com.dclass.backend.domain.reply.ReplyRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -12,9 +14,12 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class CommentService(
     private val commentRepository: CommentRepository,
-    private val replyRepository: ReplyRepository
+    private val replyRepository: ReplyRepository,
+    private val postRepository: PostRepository,
 ) {
     fun create(userId: Long, request: CreateCommentRequest): CommentResponse {
+        postRepository.getByIdOrThrow(request.postId).increaseCommentReplyCount(1)
+
         return commentRepository.save(Comment(userId, request.postId, request.content))
             .let(::CommentResponse)
     }
