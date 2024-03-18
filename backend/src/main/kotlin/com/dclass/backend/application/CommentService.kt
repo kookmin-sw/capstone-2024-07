@@ -4,6 +4,7 @@ import com.dclass.backend.application.dto.*
 import com.dclass.backend.domain.comment.Comment
 import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.reply.ReplyRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -19,15 +20,18 @@ class CommentService(
     }
 
     fun update(userId: Long, request: UpdateCommentRequest) {
-        val comment = find(request.commentId, userId)
-        comment.changeContent(request.content)
+        val comment = find(request.commentId)
+        comment.changeContent(request.content, userId)
     }
 
     fun delete(userId: Long, request: DeleteCommentRequest) {
-        val comment = find(request.commentId, userId)
+        val comment = find(request.commentId)
+        check(comment.userId == userId) {
+            "자신이 작성한 댓글만 삭제할 수 있습니다."
+        }
         commentRepository.delete(comment)
     }
-
+    
     @Transactional(readOnly = true)
     fun findAllByPostId(postId: Long): List<CommentReplyWithUserResponse> {
         val comments = commentRepository.findCommentWithUserByPostId(postId)
@@ -45,8 +49,8 @@ class CommentService(
         }
     }
 
-    private fun find(commentId: Long, userId: Long): Comment {
-        val comment = commentRepository.findCommentByIdAndUserId(commentId, userId)
+    private fun find(commentId: Long): Comment {
+        val comment = commentRepository.findByIdOrNull(commentId)
             ?: throw NoSuchElementException("해당 댓글이 존재하지 않습니다.")
         check(!comment.isDeleted(commentId)) {
             "삭제된 댓글입니다."
