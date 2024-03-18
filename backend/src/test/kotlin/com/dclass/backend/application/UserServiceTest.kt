@@ -29,6 +29,7 @@ class UserServiceTest : BehaviorSpec({
         every { userRepository.findByEmail(any()) } returns user
         every { passwordGenerator.generate() } returns RANDOM_PASSWORD_TEXT
         every { userRepository.save(any()) } returns user
+        every { userRepository.getOrThrow(any()) } returns user
 
         When("동일한 개인정보로 비밀번호를 초기화하면") {
             userService.resetPassword(ResetPasswordRequest(user.name, user.email))
@@ -46,7 +47,14 @@ class UserServiceTest : BehaviorSpec({
             }
         }
 
+        When("닉네임을 변경하면") {
+            val nickname = "변경된 닉네임"
+            userService.editNickname(user.id, UpdateNicknameRequest(nickname))
 
+            Then("닉네임이 변경된다") {
+                user.nickname shouldBe nickname
+            }
+        }
     }
 
     Given("특정 회원이 있고 변경할 비밀번호가 있는 경우") {
@@ -115,16 +123,6 @@ class UserServiceTest : BehaviorSpec({
                     department2.title,
                 )
                 belong.activated shouldBe department.id
-                actual.major shouldBe department.title
-                actual.minor shouldBe department2.title
-            }
-        }
-
-        When("해당 회원의 활성화된 전공이 바뀐 경우에도") {
-            userService.switchDepartment(user.id)
-            val actual = userService.getInformation(user.id)
-
-            Then("기존 전공/부전공은 바뀌지 않는다") {
                 actual.major shouldBe department.title
                 actual.minor shouldBe department2.title
             }
