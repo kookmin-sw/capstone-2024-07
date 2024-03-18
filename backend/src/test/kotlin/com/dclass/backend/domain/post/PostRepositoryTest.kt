@@ -23,7 +23,7 @@ class PostRepositoryTest(
         expect("lastId가 없으면 최신 게시글부터 조회한다") {
             val postScrollPageRequest = PostScrollPageRequest(
                 lastId = null,
-                communityId = 1L,
+                communityTitle = null,
                 size = 10,
             )
             val test = postRepository.findAll()
@@ -38,7 +38,7 @@ class PostRepositoryTest(
         expect("lastId가 있으면 lastId보다 작은 게시글부터 조회한다") {
             val postScrollPageRequest = PostScrollPageRequest(
                 lastId = lastId,
-                communityId = 1L,
+                communityTitle = null,
                 size = 10,
             )
             val actual = postRepository.findPostScrollPage(postScrollPageRequest)
