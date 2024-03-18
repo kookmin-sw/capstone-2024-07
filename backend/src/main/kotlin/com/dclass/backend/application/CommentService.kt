@@ -31,7 +31,12 @@ class CommentService(
         }
         commentRepository.delete(comment)
     }
-    
+
+    fun like(userId: Long, commentId: Long) {
+        val comment = find(commentId)
+        comment.like(userId)
+    }
+
     @Transactional(readOnly = true)
     fun findAllByPostId(postId: Long): List<CommentReplyWithUserResponse> {
         val comments = commentRepository.findCommentWithUserByPostId(postId)
