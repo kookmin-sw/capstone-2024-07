@@ -1,5 +1,6 @@
 package com.dclass.backend.application.dto
 
+import com.dclass.backend.domain.community.CommunityType
 import com.dclass.backend.domain.post.Post
 import com.dclass.backend.domain.post.PostCount
 import com.dclass.backend.domain.user.User
@@ -9,10 +10,14 @@ import java.time.LocalDateTime
 
 data class PostScrollPageRequest(
     val lastId: Long? = null,
-    val communityId: Long? = null,
+    var communityTitle: String? = null,
     val size: Int,
     val isHot: Boolean = false,
-)
+){
+    init {
+        communityTitle = CommunityType.from(communityTitle)?.value
+    }
+}
 
 /**
  * modifiedDateTime은 필요할까?
