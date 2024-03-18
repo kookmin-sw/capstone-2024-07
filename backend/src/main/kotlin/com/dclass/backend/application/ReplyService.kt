@@ -1,5 +1,7 @@
 package com.dclass.backend.application
 
+import com.dclass.backend.application.dto.CreateReplyRequest
+import com.dclass.backend.application.dto.ReplyResponse
 import com.dclass.backend.domain.reply.Reply
 import com.dclass.backend.domain.reply.ReplyRepository
 import org.springframework.stereotype.Service
@@ -10,6 +12,10 @@ import org.springframework.transaction.annotation.Transactional
 class ReplyService(
     private val replyRepository: ReplyRepository,
 ) {
+    fun create(userId: Long, request: CreateReplyRequest): ReplyResponse {
+        return replyRepository.save(Reply(userId, request.commentId, request.content))
+            .let(::ReplyResponse)
+    }
 
     private fun find(replyId: Long, userId: Long): Reply {
         val reply = replyRepository.findReplyByIdAndUserId(replyId, userId)
