@@ -58,7 +58,7 @@ class Reply(
     fun likedBy(userId: Long) =
         replyLikes.findUserById(userId)
 
-    fun addLike(userId: Long) {
+    fun like(userId: Long) {
         replyLikes.add(userId)
     }
 }
