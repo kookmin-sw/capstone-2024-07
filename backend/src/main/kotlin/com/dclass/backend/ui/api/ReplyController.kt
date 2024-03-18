@@ -1,10 +1,7 @@
 package com.dclass.backend.ui.api
 
 import com.dclass.backend.application.ReplyService
-import com.dclass.backend.application.dto.CreateReplyRequest
-import com.dclass.backend.application.dto.ReplyRequest
-import com.dclass.backend.application.dto.ReplyResponse
-import com.dclass.backend.application.dto.UpdateReplyRequest
+import com.dclass.backend.application.dto.*
 import com.dclass.backend.domain.user.User
 import com.dclass.backend.security.LoginUser
 import io.swagger.v3.oas.annotations.Operation
@@ -44,4 +41,14 @@ class ReplyController(
         return ResponseEntity.noContent().build()
     }
 
+    @Operation(summary = "대댓글 삭제 API", description = "대댓글을 삭제합니다.")
+    @ApiResponse(responseCode = "204", description = "대댓글 삭제 성공")
+    @DeleteMapping("/{replyId}")
+    fun deleteReply(
+        @LoginUser user: User,
+        @PathVariable replyId: Long
+    ): ResponseEntity<Unit> {
+        replyService.delete(user.id, DeleteReplyRequest(replyId))
+        return ResponseEntity.noContent().build()
+    }
 }
