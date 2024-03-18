@@ -53,6 +53,7 @@ class Reply(
         modifiedDateTime = LocalDateTime.now()
     }
 
+    fun isDeleted(replyId: Long) = deleted
 
     fun likedBy(userId: Long) =
         replyLikes.findUserById(userId)
