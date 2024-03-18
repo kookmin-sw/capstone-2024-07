@@ -40,4 +40,12 @@ class PostController(
     ): ResponseEntity<ApiResponses<PostResponse>> {
         return ResponseEntity.ok(ApiResponses.success(postService.create(user.id, request)))
     }
+
+    @PutMapping("/{postId}")
+    fun updateLikes(
+        @LoginUser user: User,
+        @PathVariable postId: Long
+    ): ResponseEntity<ApiResponses<Int>> {
+        return ResponseEntity.ok(ApiResponses.success(postService.likes(user.id, postId)))
+    }
 }
