@@ -1,7 +1,9 @@
 package com.dclass.backend.application
 
 import com.dclass.backend.application.dto.CreateReplyRequest
+import com.dclass.backend.application.dto.DeleteReplyRequest
 import com.dclass.backend.application.dto.ReplyResponse
+import com.dclass.backend.application.dto.UpdateReplyRequest
 import com.dclass.backend.domain.reply.Reply
 import com.dclass.backend.domain.reply.ReplyRepository
 import org.springframework.stereotype.Service
@@ -17,6 +19,11 @@ class ReplyService(
             .let(::ReplyResponse)
     }
 
+    fun update(userId: Long, request: UpdateReplyRequest) {
+        val reply = find(request.replyId, userId)
+        reply.changeContent(request.content)
+    }
+    
     private fun find(replyId: Long, userId: Long): Reply {
         val reply = replyRepository.findReplyByIdAndUserId(replyId, userId)
             ?: throw NoSuchElementException("해당 댓글이 존재하지 않습니다.")
