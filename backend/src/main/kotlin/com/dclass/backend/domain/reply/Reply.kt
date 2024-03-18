@@ -48,7 +48,10 @@ class Reply(
     var modifiedDateTime: LocalDateTime = modifiedDateTime
         private set
 
-    fun changeContent(content: String) {
+    fun changeContent(content: String, userId: Long) {
+        if (this.userId != userId) {
+            throw IllegalAccessException("댓글을 수정할 수 있는 권한이 없습니다.")
+        }
         this.content = content
         modifiedDateTime = LocalDateTime.now()
     }
@@ -59,6 +62,9 @@ class Reply(
         replyLikes.findUserById(userId)
 
     fun like(userId: Long) {
+        if (this.userId == userId) {
+            throw IllegalAccessException("자신이 작성한 댓글은 좋아요를 누를 수 없습니다.")
+        }
         replyLikes.add(userId)
     }
 }

@@ -52,12 +52,18 @@ class Comment(
         commentLikes.findUserById(userId)
 
     fun like(userId: Long) {
+        if (this.userId == userId) {
+            throw IllegalAccessException("본인이 작성한 댓글에는 좋아요를 누를 수 없습니다.")
+        }
         commentLikes.add(userId, id)
     }
 
     fun isDeleted(commentId: Long) = deleted
 
-    fun changeContent(content: String) {
+    fun changeContent(content: String, userId: Long) {
+        if (this.userId != userId) {
+            throw IllegalAccessException("댓글을 수정할 수 있는 권한이 없습니다.")
+        }
         this.content = content
         modifiedDateTime = LocalDateTime.now()
     }
