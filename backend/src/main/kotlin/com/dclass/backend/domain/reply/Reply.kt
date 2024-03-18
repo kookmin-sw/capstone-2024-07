@@ -1,7 +1,9 @@
 package com.dclass.backend.domain.reply
 
 import com.dclass.support.domain.BaseEntity
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Embedded
+import jakarta.persistence.Entity
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 import java.time.LocalDateTime
@@ -45,6 +47,12 @@ class Reply(
     @Column(nullable = false)
     var modifiedDateTime: LocalDateTime = modifiedDateTime
         private set
+
+    fun changeContent(content: String) {
+        this.content = content
+        modifiedDateTime = LocalDateTime.now()
+    }
+
 
     fun likedBy(userId: Long) =
         replyLikes.findUserById(userId)
