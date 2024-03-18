@@ -6,7 +6,7 @@ import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/category_circle_layout.dart';
 import 'package:frontend/board/provider/board_provider.dart';
 
-import '../../member/view/mypage_screen.dart';
+import '../../member/view/my_page_screen.dart';
 
 class MsgBoardListScreen extends StatefulWidget {
   static String get routeName => 'boardList';
