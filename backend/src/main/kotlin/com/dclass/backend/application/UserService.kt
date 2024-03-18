@@ -59,9 +59,5 @@ class UserService(
         )
     }
 
-    fun switchDepartment(id: Long) {
-        val belong = belongRepository.getOrThrow(id)
-        belong.switch()
-    }
 
 }
