@@ -153,7 +153,9 @@ class BoardListWidget extends ConsumerWidget {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => const MsgBoardAddScreen(),
+                  builder: (_) => const MsgBoardAddScreen(
+                    isEdit: false,
+                  ),
                 ),
               );
             },
