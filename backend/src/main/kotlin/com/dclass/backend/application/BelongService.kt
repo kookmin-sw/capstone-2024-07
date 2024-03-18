@@ -26,6 +26,7 @@ class BelongService(
     fun switchDepartment(userId: Long): SwitchDepartmentResponse {
         val belong = belongRepository.getOrThrow(userId)
         belong.switch()
-        return SwitchDepartmentResponse(departmentRepository.findByIdOrNull(belong.activated)!!.title)
+        return departmentRepository.findByIdOrNull(belong.activated)!!.title
+            .let(::SwitchDepartmentResponse)
     }
 }
