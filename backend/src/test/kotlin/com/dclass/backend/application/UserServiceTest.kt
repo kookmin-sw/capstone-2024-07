@@ -45,6 +45,8 @@ class UserServiceTest : BehaviorSpec({
                 }
             }
         }
+
+
     }
 
     Given("특정 회원이 있고 변경할 비밀번호가 있는 경우") {
