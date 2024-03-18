@@ -51,4 +51,13 @@ class ReplyController(
         replyService.delete(user.id, DeleteReplyRequest(replyId))
         return ResponseEntity.noContent().build()
     }
+
+    @PostMapping("/{replyId}/likes")
+    fun likeReply(
+        @LoginUser user: User,
+        @PathVariable replyId: Long
+    ): ResponseEntity<Unit> {
+        replyService.like(user.id, replyId)
+        return ResponseEntity.noContent().build()
+    }
 }
