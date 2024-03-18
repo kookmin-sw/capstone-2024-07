@@ -23,7 +23,12 @@ class ReplyService(
         val reply = find(request.replyId, userId)
         reply.changeContent(request.content)
     }
-    
+
+    fun delete(userId: Long, request: DeleteReplyRequest) {
+        val reply = find(request.replyId, userId)
+        replyRepository.delete(reply)
+    }
+
     private fun find(replyId: Long, userId: Long): Reply {
         val reply = replyRepository.findReplyByIdAndUserId(replyId, userId)
             ?: throw NoSuchElementException("해당 댓글이 존재하지 않습니다.")
