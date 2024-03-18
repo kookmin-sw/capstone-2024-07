@@ -49,7 +49,7 @@ class User(
     }
 
     fun resetPassword(name: String, password: String) {
-        identify(information.same(name)) {"사용자 정보가 일치하지 않습니다."}
+        identify(information.same(name)) { "사용자 정보가 일치하지 않습니다." }
         this.password = Password(password)
         registerEvent(PasswordResetEvent(id, name, email, password))
     }
@@ -57,6 +57,10 @@ class User(
     fun changePassword(oldPassword: Password, newPassword: Password) {
         identify(this.password == oldPassword) { "기존 비밀번호가 일치하지 않습니다." }
         this.password = newPassword
+    }
+
+    fun changeNickname(nickname: String) {
+        this.information = information.copy(nickname = nickname)
     }
 
     private fun identify(value: Boolean, lazyMessage: () -> Any = {}) {
