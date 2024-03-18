@@ -25,8 +25,8 @@ class PostService(
     private val awsPresigner: AwsPresigner
 ) {
     fun getAll(userId: Long, request: PostScrollPageRequest): List<PostResponse> {
-        val departmentIds = belongRepository.getOrThrow(userId).departmentIds
-        val communityIds = communityRepository.findByDepartmentIdIn(departmentIds)
+        val activatedDepartmentId = belongRepository.getOrThrow(userId).activated
+        val communityIds = communityRepository.findByDepartmentId(activatedDepartmentId)
             .map { it.id }
 
         return postRepository.findPostScrollPage(communityIds, request).onEach {
