@@ -28,8 +28,8 @@ class Belong(
     var modifiedDateTime: LocalDateTime = modifiedDateTime
         private set
 
-    val activated: Long?
-        get() = _departmentIds.firstOrNull()
+    val activated: Long
+        get() = _departmentIds.first()
 
 
     @Column(nullable = false)
