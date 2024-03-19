@@ -3,6 +3,7 @@ package com.dclass.backend.application
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
+import com.dclass.backend.domain.community.getByTitleOrThrow
 import com.dclass.backend.domain.post.PostRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -15,9 +16,10 @@ class PostValidator(
     private val communityRepository: CommunityRepository,
     private val postRepository: PostRepository
 ) {
-    fun validateCreatePost(userId: Long, communityId: Long) {
+    fun validateCreatePost(userId: Long, communityTitle: String) {
         val belong = belongRepository.getOrThrow(userId)
-        val community = communityRepository.findByIdOrNull(communityId)!!
+        val community = communityRepository.getByTitleOrThrow(communityTitle)
+
         check(belong.contain(community.departmentId)) { "해당 커뮤니티에 게시글을 작성할 수 없습니다." }
     }
 

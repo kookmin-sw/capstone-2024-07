@@ -57,13 +57,14 @@ data class PostResponse(
 }
 
 data class CreatePostRequest(
-    val communityId: Long,
+    var communityTitle: String,
     val title: String,
     val content: String,
     val isQuestion: Boolean,
     val images: List<String>,
 ) {
-    fun toEntity(userId: Long) = Post(
+
+    fun toEntity(userId: Long, communityId: Long) = Post(
         userId = userId,
         communityId = communityId,
         title = title,
@@ -71,6 +72,10 @@ data class CreatePostRequest(
         images = images.map { Image(it) },
         isQuestion = isQuestion,
     )
+
+    init {
+        communityTitle = CommunityType.from(communityTitle)!!.value
+    }
 }
 
 data class MetaData(

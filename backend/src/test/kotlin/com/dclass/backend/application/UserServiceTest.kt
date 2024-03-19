@@ -5,7 +5,12 @@ import com.dclass.backend.domain.belong.Belong
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.department.DepartmentRepository
-import com.dclass.backend.domain.user.*
+import com.dclass.backend.domain.user.Password
+import com.dclass.backend.domain.user.UserRepository
+import com.dclass.backend.domain.user.findByEmail
+import com.dclass.backend.domain.user.getOrThrow
+import com.dclass.backend.exception.user.UserException
+import com.dclass.backend.exception.user.UserExceptionType
 import com.dclass.support.fixtures.*
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -41,9 +46,9 @@ class UserServiceTest : BehaviorSpec({
 
         When("일치하지 않는 개인정보로 비밀번호를 초기화하면") {
             Then("예외가 발생한다") {
-                shouldThrow<UnidentifiedUserException> {
+                shouldThrow<UserException> {
                     userService.resetPassword(ResetPasswordRequest("가짜 이름", user.email))
-                }
+                }.exceptionType() shouldBe UserExceptionType.INVALID_USER_INFORMATION
             }
         }
 
@@ -76,12 +81,12 @@ class UserServiceTest : BehaviorSpec({
 
         When("일치하지 않는 기존 비밀번호와 함께 새 비밀번호를 변경하면") {
             Then("예외가 발생한다") {
-                shouldThrow<UnidentifiedUserException> {
+                shouldThrow<UserException> {
                     userService.editPassword(
                         user.id,
                         EditPasswordRequest(WRONG_PASSWORD, password, password)
                     )
-                }
+                }.exceptionType() shouldBe UserExceptionType.INVALID_PASSWORD_ACCESS_DENIED
             }
         }
 
