@@ -54,6 +54,7 @@ class PostService(
     fun create(userId: Long, request: CreatePostRequest): PostResponse {
         postValidator.validateCreatePost(userId, request.communityTitle)
 
+        // FIXME : communityTitle을 이용하여 communityId를 가져오는 로직이 중복되어있음
         val community = communityRepository.getByTitleOrThrow(request.communityTitle)
         val post = postRepository.save(request.toEntity(userId, community.id))
 
