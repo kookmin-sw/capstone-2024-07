@@ -53,7 +53,7 @@ class _Comment extends ConsumerWidget {
   }
 }
 
-class Contents extends StatelessWidget {
+class Contents extends ConsumerWidget {
   const Contents({
     super.key,
     required this.widget,
@@ -64,7 +64,7 @@ class Contents extends StatelessWidget {
   final List<CoCommentModel> cocomentlistinstance;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -108,6 +108,7 @@ class Contents extends StatelessWidget {
                           iconSize: 15,
                           text: widget.comment.likeCount,
                           canTap: true,
+                          ref: ref,
                         ),
                         const SizedBox(
                           width: 13,
@@ -127,11 +128,12 @@ class Contents extends StatelessWidget {
                             //       "0",
                             //     ));
                           },
-                          child: const TextWithIcon(
+                          child: TextWithIcon(
                             icon: Icons.chat_outlined,
                             iconSize: 15,
                             text: "-1",
                             canTap: true,
+                            ref: ref,
                           ),
                         ),
                       ],

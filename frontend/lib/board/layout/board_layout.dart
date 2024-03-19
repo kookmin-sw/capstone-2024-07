@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/msg_board_model.dart';
 import 'package:frontend/board/layout/category_circle_layout.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
 import 'package:frontend/board/view/msg_board_screen.dart';
 
-class Board extends StatelessWidget {
+class Board extends ConsumerWidget {
   final MsgBoardModel board;
   final bool canTap;
   final double titleSize;
@@ -17,7 +18,7 @@ class Board extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
         if (canTap) {
@@ -66,6 +67,7 @@ class Board extends StatelessWidget {
                         iconSize: 15,
                         text: board.heart,
                         canTap: !canTap,
+                        ref: ref,
                       ),
                       const SizedBox(
                         width: 13,
@@ -75,6 +77,7 @@ class Board extends StatelessWidget {
                         iconSize: 15,
                         text: board.comment,
                         canTap: !canTap,
+                        ref: ref,
                       ),
                       const SizedBox(
                         width: 13,
@@ -84,6 +87,7 @@ class Board extends StatelessWidget {
                         iconSize: 18,
                         text: board.favorite,
                         canTap: !canTap,
+                        ref: ref,
                       ),
                       const SizedBox(
                         width: 13,

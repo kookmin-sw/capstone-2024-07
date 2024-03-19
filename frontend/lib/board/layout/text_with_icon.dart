@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/provider/image_provider.dart';
+import 'package:image_picker/image_picker.dart';
 
 class TextWithIcon extends StatefulWidget {
   final IconData icon;
   final double iconSize;
   final String text;
   final bool canTap;
+  final WidgetRef ref;
 
   const TextWithIcon({
     super.key,
@@ -12,6 +16,7 @@ class TextWithIcon extends StatefulWidget {
     required this.iconSize,
     required this.text,
     required this.canTap,
+    required this.ref,
   });
 
   @override
@@ -23,10 +28,17 @@ class _TextWithIconState extends State<TextWithIcon>
   // TODO : if user click heart(write comment, favorite), then change icon.
   bool isHeartClicked = false;
   bool isQuestionClicked = false;
+
   // ignore: prefer_typing_uninitialized_variables
   var textCount;
 
   late AnimationController animationController;
+  final ImagePicker picker = ImagePicker();
+  Future getImage() async {
+    print("b");
+    List<XFile>? images = await picker.pickMultiImage();
+    widget.ref.read(imageStateProvider.notifier).add(images);
+  }
 
   @override
   void initState() {
@@ -79,6 +91,7 @@ class _TextWithIconState extends State<TextWithIcon>
                 } else if (widget.icon == Icons.chat_outlined) {
                 } else if (widget.icon == Icons.star_outline_rounded) {
                 } else if (widget.icon == Icons.image_rounded) {
+                  getImage();
                 } else if (widget.icon ==
                     Icons.check_box_outline_blank_rounded) {
                   isQuestionClicked = !isQuestionClicked;
