@@ -2,6 +2,7 @@ package com.dclass.backend.domain.user
 
 import com.dclass.backend.exception.user.UserException
 import com.dclass.backend.exception.user.UserExceptionType.INVALID_PASSWORD_ACCESS_DENIED
+import com.dclass.backend.exception.user.UserExceptionType.INVALID_USER_INFORMATION
 import com.dclass.support.domain.BaseRootEntity
 import jakarta.persistence.*
 
@@ -51,13 +52,13 @@ class User(
     }
 
     fun resetPassword(name: String, password: String) {
-        identify(information.same(name)) { "사용자 정보가 일치하지 않습니다." }
+        if (!information.same(name)) throw UserException(INVALID_USER_INFORMATION)
         this.password = Password(password)
         registerEvent(PasswordResetEvent(id, name, email, password))
     }
 
     fun changePassword(oldPassword: Password, newPassword: Password) {
-        identify(this.password == oldPassword) { "기존 비밀번호가 일치하지 않습니다." }
+        if (oldPassword != password) throw UserException(INVALID_PASSWORD_ACCESS_DENIED)
         this.password = newPassword
     }
 
