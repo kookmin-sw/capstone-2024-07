@@ -1,7 +1,8 @@
 package com.dclass.backend.security
 
-import com.dclass.backend.application.UserService
 import com.dclass.backend.domain.user.User
+import com.dclass.backend.domain.user.UserRepository
+import com.dclass.backend.domain.user.getByEmailOrThrow
 import org.springframework.core.MethodParameter
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component
@@ -15,7 +16,7 @@ private const val BEARER = "Bearer"
 @Component
 class LoginUserResolver(
     private val jwtTokenProvider: JwtTokenProvider,
-    private val userService: UserService
+    private val userRepository: UserRepository
 ) : HandlerMethodArgumentResolver {
 
     override fun supportsParameter(parameter: MethodParameter): Boolean {
@@ -33,7 +34,7 @@ class LoginUserResolver(
             throw LoginFailedException()
         }
         val userEmail = jwtTokenProvider.getSubject(token)
-        return userService.getByEmail(userEmail)
+        return userRepository.getByEmailOrThrow(userEmail)
     }
 
     private fun extractBearerToken(request: NativeWebRequest): String {
