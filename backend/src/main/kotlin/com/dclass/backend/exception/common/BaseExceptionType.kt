@@ -4,6 +4,6 @@ import org.springframework.http.HttpStatus
 
 interface BaseExceptionType {
     fun httpStatus(): HttpStatus
-    fun code(): Int
+    fun code(): String
     fun errorMessage(): String
 }
