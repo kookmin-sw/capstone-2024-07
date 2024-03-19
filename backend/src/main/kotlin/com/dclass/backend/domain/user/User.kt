@@ -1,5 +1,7 @@
 package com.dclass.backend.domain.user
 
+import com.dclass.backend.exception.user.UserException
+import com.dclass.backend.exception.user.UserExceptionType.INVALID_PASSWORD_ACCESS_DENIED
 import com.dclass.support.domain.BaseRootEntity
 import jakarta.persistence.*
 
@@ -45,7 +47,7 @@ class User(
     )
 
     fun authenticate(password: Password) {
-        require(password == this.password) { "사용자 정보가 일치하지 않습니다." }
+        if (password != this.password) throw UserException(INVALID_PASSWORD_ACCESS_DENIED)
     }
 
     fun resetPassword(name: String, password: String) {
