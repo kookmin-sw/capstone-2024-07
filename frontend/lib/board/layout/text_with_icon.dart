@@ -29,9 +29,13 @@ class _TextWithIconState extends State<TextWithIcon>
   bool isHeartClicked = false;
   bool isQuestionClicked = false;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> ec83348 (feat : 글 작성 페이지)
+=======
+
+>>>>>>> 91e13ec (feat : 사진 불러오기 기능 구현)
   // ignore: prefer_typing_uninitialized_variables
   var textCount;
 
@@ -95,9 +99,13 @@ class _TextWithIconState extends State<TextWithIcon>
                 } else if (widget.icon == Icons.star_outline_rounded) {
                 } else if (widget.icon == Icons.image_rounded) {
 <<<<<<< HEAD
+<<<<<<< HEAD
                   getImage();
 =======
 >>>>>>> ec83348 (feat : 글 작성 페이지)
+=======
+                  getImage();
+>>>>>>> 91e13ec (feat : 사진 불러오기 기능 구현)
                 } else if (widget.icon ==
                     Icons.check_box_outline_blank_rounded) {
                   isQuestionClicked = !isQuestionClicked;
