@@ -27,13 +27,11 @@ fun post(
 }
 
 fun postCount(
-    viewCount: Int = 10,
-    likeCount: Int = 20,
-    replyCount: Int = 30
+    replyCount: Int = 30,
+    likeCount: Int = 15
 ): PostCount {
     return PostCount(
-        viewCount = viewCount,
-        likeCount = likeCount,
-        commentReplyCount = replyCount
+        commentReplyCount = replyCount,
+        likeCount = likeCount
     )
 }

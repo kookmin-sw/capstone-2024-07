@@ -161,3 +161,8 @@ data class LoginUserResponse(
     val accessToken: String,
     val refreshToken: String
 )
+
+
+data class UpdateNicknameRequest(
+    val nickname: String
+)
