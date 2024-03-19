@@ -13,7 +13,7 @@ data class PostScrollPageRequest(
     var communityTitle: String? = null,
     val size: Int,
     val isHot: Boolean = false,
-){
+) {
     init {
         communityTitle = CommunityType.from(communityTitle)?.value
     }
@@ -71,4 +71,20 @@ data class CreatePostRequest(
         images = images.map { Image(it) },
         isQuestion = isQuestion,
     )
+}
+
+data class MetaData(
+    val count: Int,
+    val hasMore: Boolean
+)
+
+data class PostsResponse(
+    val data: List<PostResponse>,
+    val meta: MetaData
+) {
+    companion object {
+        fun of(data: List<PostResponse>, limit: Int): PostsResponse {
+            return PostsResponse(data, MetaData(limit, data.size >= limit))
+        }
+    }
 }
