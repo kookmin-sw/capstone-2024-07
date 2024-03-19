@@ -3,6 +3,7 @@ package com.dclass.backend.application
 import com.dclass.backend.application.dto.CreatePostRequest
 import com.dclass.backend.application.dto.PostResponse
 import com.dclass.backend.application.dto.PostScrollPageRequest
+import com.dclass.backend.application.dto.PostsResponse
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
@@ -25,16 +26,18 @@ class PostService(
     private val communityRepository: CommunityRepository,
     private val awsPresigner: AwsPresigner
 ) {
-    fun getAll(userId: Long, request: PostScrollPageRequest): List<PostResponse> {
+    fun getAll(userId: Long, request: PostScrollPageRequest): PostsResponse {
         val activatedDepartmentId = belongRepository.getOrThrow(userId).activated
         val communityIds = communityRepository.findByDepartmentId(activatedDepartmentId)
             .map { it.id }
 
-        return postRepository.findPostScrollPage(communityIds, request).onEach {
+        val posts = postRepository.findPostScrollPage(communityIds, request).onEach {
             it.images = runBlocking(Dispatchers.IO) {
                 it.images.map { async { awsPresigner.getPostObjectPresigned(it) } }.awaitAll()
             }
         }
+
+        return PostsResponse.of(posts, posts.size)
     }
 
     fun getById(userId: Long, postId: Long): PostResponse {
