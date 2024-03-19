@@ -3,10 +3,12 @@ package com.dclass.backend.application
 import com.dclass.backend.application.dto.CreatePostRequest
 import com.dclass.backend.application.dto.PostResponse
 import com.dclass.backend.application.dto.PostScrollPageRequest
+import com.dclass.backend.application.dto.PostsResponse
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.post.PostRepository
+import com.dclass.backend.domain.post.getByIdOrThrow
 import com.dclass.backend.infra.s3.AwsPresigner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -24,20 +26,22 @@ class PostService(
     private val communityRepository: CommunityRepository,
     private val awsPresigner: AwsPresigner
 ) {
-    fun getAll(userId: Long, request: PostScrollPageRequest): List<PostResponse> {
-        val departmentIds = belongRepository.getOrThrow(userId).departmentIds
-        val communityIds = communityRepository.findByDepartmentIdIn(departmentIds)
+    fun getAll(userId: Long, request: PostScrollPageRequest): PostsResponse {
+        val activatedDepartmentId = belongRepository.getOrThrow(userId).activated
+        val communityIds = communityRepository.findByDepartmentId(activatedDepartmentId)
             .map { it.id }
 
-        return postRepository.findPostScrollPage(communityIds, request).onEach {
+        val posts = postRepository.findPostScrollPage(communityIds, request).onEach {
             it.images = runBlocking(Dispatchers.IO) {
                 it.images.map { async { awsPresigner.getPostObjectPresigned(it) } }.awaitAll()
             }
         }
+
+        return PostsResponse.of(posts, posts.size)
     }
 
     fun getById(userId: Long, postId: Long): PostResponse {
-        postValidator.validateGetPost(userId, postId)
+        postValidator.validate(userId, postId)
 
         return postRepository.findPostById(postId).apply {
             images = runBlocking(Dispatchers.IO) {
@@ -56,5 +60,14 @@ class PostService(
                 images.map { async { awsPresigner.putPostObjectPresigned(it) } }.awaitAll()
             }
         }
+    }
+
+    fun likes(userId: Long, postId: Long): Int {
+        postValidator.validate(userId, postId)
+
+        val post = postRepository.getByIdOrThrow(postId)
+        post.addLike(userId)
+
+        return post.postLikesCount
     }
 }

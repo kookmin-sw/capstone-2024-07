@@ -21,7 +21,7 @@ class PostValidator(
         check(belong.contain(community.departmentId)) { "해당 커뮤니티에 게시글을 작성할 수 없습니다." }
     }
 
-    fun validateGetPost(userId: Long, postId: Long) {
+    fun validate(userId: Long, postId: Long) {
         val belong = belongRepository.getOrThrow(userId)
         val post = postRepository.findByIdOrNull(postId)
             ?: throw IllegalArgumentException("해당 게시글이 존재하지 않습니다.")

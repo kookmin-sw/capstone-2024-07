@@ -103,5 +103,14 @@ class UserRestController(
         val response = userService.getInformation(user.id)
         return ResponseEntity.ok(ApiResponses.success(response))
     }
+    
 
+    @PutMapping("/change-nickname")
+    fun changeNickname(
+        @RequestBody @Valid request: UpdateNicknameRequest,
+        @LoginUser user: User
+    ): ResponseEntity<Unit> {
+        userService.editNickname(user.id, request)
+        return ResponseEntity.noContent().build()
+    }
 }

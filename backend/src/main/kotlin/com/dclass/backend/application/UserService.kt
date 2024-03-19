@@ -2,6 +2,7 @@ package com.dclass.backend.application
 
 import com.dclass.backend.application.dto.EditPasswordRequest
 import com.dclass.backend.application.dto.ResetPasswordRequest
+import com.dclass.backend.application.dto.UpdateNicknameRequest
 import com.dclass.backend.application.dto.UserResponseWithDepartmentNames
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.belong.getOrThrow
@@ -59,9 +60,8 @@ class UserService(
         )
     }
 
-    fun switchDepartment(id: Long) {
-        val belong = belongRepository.getOrThrow(id)
-        belong.switch()
+    fun editNickname(id: Long, request: UpdateNicknameRequest) {
+        userRepository.getOrThrow(id).changeNickname(request.nickname)
     }
 
 }

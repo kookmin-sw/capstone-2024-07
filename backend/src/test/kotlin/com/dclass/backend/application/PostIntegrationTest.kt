@@ -132,7 +132,7 @@ class PostIntegrationTest(
             val actual = postService.getAll(user.id, PostScrollPageRequest(size = 30, isHot = false))
 
             Then("자신이 속한 학과 커뮤니티의 모든 게시글이 조회된다") {
-                actual.size shouldBe 30
+                actual.meta.count shouldBe 30
             }
         }
 
@@ -140,7 +140,7 @@ class PostIntegrationTest(
             val actual = postService.getAll(user.id, PostScrollPageRequest(size = 30, isHot = true))
 
             Then("자신이 속한 학과 커뮤니티의 인기 게시글이 조회된다") {
-                actual.size shouldBe 15
+                actual.meta.count shouldBe 15
             }
         }
     }

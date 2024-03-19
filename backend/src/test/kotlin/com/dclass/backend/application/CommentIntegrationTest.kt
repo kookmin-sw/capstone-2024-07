@@ -1,5 +1,6 @@
 package com.dclass.backend.application
 
+import com.dclass.backend.application.dto.UpdateCommentRequest
 import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.reply.ReplyRepository
 import com.dclass.backend.domain.user.UniversityRepository
@@ -20,7 +21,8 @@ class CommentIntegrationTest(
     private val commentRepository: CommentRepository,
     private val replyRepository: ReplyRepository,
     private val userRepository: UserRepository,
-    private val universityRepository: UniversityRepository
+    private val universityRepository: UniversityRepository,
+    private val replyService: ReplyService,
 ) : BehaviorSpec({
 
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
@@ -68,5 +70,33 @@ class CommentIntegrationTest(
                 count shouldBe 8
             }
         }
+
+        When("해당 게시글의 댓글을 수정하면") {
+            commentService.update(1, UpdateCommentRequest(comments[0].id, "저녁 메뉴 추천 받아요"))
+
+            Then("댓글이 수정된다") {
+                val comment = commentRepository.findCommentByIdAndUserId(comments[0].id, 1)
+                comment!!.content shouldBe "저녁 메뉴 추천 받아요"
+            }
+        }
+
+        When("댓글에 좋아요를 누르면") {
+            commentService.like(2, comments[0].id)
+
+            Then("해당 댓글의 좋아요 수가 증가한다") {
+                val comment = commentRepository.findCommentByIdAndUserId(comments[0].id, 1)
+                comment!!.commentLikes.count shouldBe 1
+            }
+        }
+
+        When("대댓글에 좋아요를 누르면") {
+            replyService.like(1, replies[0].id)
+
+            Then("해당 대댓글의 좋아요 수가 증가한다") {
+                val reply = replyRepository.findReplyByIdAndUserId(replies[0].id, 4)
+                reply!!.replyLikes.count shouldBe 1
+            }
+        }
+
     }
 })

@@ -11,12 +11,14 @@ class Post(
     @Column(nullable = false)
     val userId: Long,
 
-    @Column(nullable= false)
+    @Column(nullable = false)
     val communityId: Long,
 
     title: String = "",
 
     content: String = "",
+
+    postLikes: PostLikes = PostLikes(),
 
     images: List<Image> = emptyList(),
 
@@ -45,6 +47,13 @@ class Post(
     @CollectionTable(name = "post_images")
     private val _images: MutableList<Image> = images.toMutableList()
 
+    @Embedded
+    var postLikes: PostLikes = postLikes
+        private set
+
+    val postLikesCount: Int
+        get() = postLikes.count
+
     val images: List<Image>
         get() = _images
 
@@ -67,15 +76,12 @@ class Post(
         this.modifiedDateTime = LocalDateTime.now()
     }
 
-    fun increaseViewCount(cnt: Int) {
-        postCount = postCount.increaseViewCount(cnt)
-    }
-
-    fun increaseCommentReplyCount(cnt : Int) {
+    fun increaseCommentReplyCount(cnt: Int) {
         postCount = postCount.increaseCommentReplyCount(cnt)
     }
 
-    fun increaseLikeCount() {
-        postCount = postCount.increaseLikeCount()
+    fun addLike(userId: Long) {
+        postLikes.add(userId)
+        postCount.syncLikeCount(postLikesCount)
     }
 }
