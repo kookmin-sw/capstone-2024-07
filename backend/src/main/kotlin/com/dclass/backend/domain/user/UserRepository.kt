@@ -1,12 +1,14 @@
 package com.dclass.backend.domain.user
 
+import com.dclass.backend.exception.user.UserException
+import com.dclass.backend.exception.user.UserExceptionType
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.findByIdOrNull
 
 fun UserRepository.findByEmail(email: String): User? = findByInformationEmail(email)
 fun UserRepository.existsByEmail(email: String): Boolean = existsByInformationEmail(email)
 fun UserRepository.getOrThrow(id: Long): User = findByIdOrNull(id)
-    ?: throw NoSuchElementException("회원이 존재하지 않습니다. id: $id")
+    ?: throw UserException(UserExceptionType.NOT_FOUND_USER)
 
 
 interface UserRepository : JpaRepository<User, Long>, UserRepositorySupport {
