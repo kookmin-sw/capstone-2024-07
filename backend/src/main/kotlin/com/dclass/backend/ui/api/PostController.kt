@@ -29,7 +29,7 @@ class PostController(
     @GetMapping
     fun getPosts(
         @LoginUser user: User,
-        @RequestBody request: PostScrollPageRequest
+        request: PostScrollPageRequest
     ): ResponseEntity<ApiResponses<PostsResponse>> {
         return ResponseEntity.ok(ApiResponses.success(postService.getAll(user.id, request)))
     }
@@ -50,3 +50,4 @@ class PostController(
         return ResponseEntity.ok(ApiResponses.success(postService.likes(user.id, postId)))
     }
 }
+
