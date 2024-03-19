@@ -65,11 +65,4 @@ class User(
     fun changeNickname(nickname: String) {
         this.information = information.copy(nickname = nickname)
     }
-
-    private fun identify(value: Boolean, lazyMessage: () -> Any = {}) {
-        if (!value) {
-            val message = lazyMessage()
-            throw UnidentifiedUserException(message.toString())
-        }
-    }
 }
