@@ -10,7 +10,14 @@ import com.dclass.backend.domain.belong.Belong
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.department.DepartmentRepository
 import com.dclass.backend.domain.department.getByTitleOrThrow
-import com.dclass.backend.domain.user.*
+import com.dclass.backend.domain.user.UniversityRepository
+import com.dclass.backend.domain.user.UserRepository
+import com.dclass.backend.domain.user.existsByEmail
+import com.dclass.backend.domain.user.getByEmailOrThrow
+import com.dclass.backend.exception.university.UniversityException
+import com.dclass.backend.exception.university.UniversityExceptionType.NOT_FOUND_UNIVERSITY
+import com.dclass.backend.exception.user.UserException
+import com.dclass.backend.exception.user.UserExceptionType.ALREADY_EXIST_USER
 import com.dclass.backend.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -27,7 +34,10 @@ class UserAuthenticationService(
 ) {
     fun generateTokenByRegister(request: RegisterUserRequest): LoginUserResponse {
         require(request.password == request.confirmPassword) { "비밀번호가 일치하지 않습니다." }
-        check(!userRepository.existsByEmail(request.email)) { "이미 가입된 이메일입니다." }
+
+        if (userRepository.existsByEmail(request.email)) {
+            throw UserException(ALREADY_EXIST_USER)
+        }
 
         authenticationCodeRepository.getLastByEmail(request.email)
             .validate(request.authenticationCode)
@@ -52,8 +62,8 @@ class UserAuthenticationService(
     }
 
     fun generateTokenByLogin(request: AuthenticateUserRequest): LoginUserResponse {
-        val user = userRepository.findByEmail(request.email)
-            ?: throw UnidentifiedUserException("사용자 정보가 일치하지 않습니다.")
+        val user = userRepository.getByEmailOrThrow(request.email)
+
         user.authenticate(request.password)
 
         return LoginUserResponse(
@@ -63,8 +73,13 @@ class UserAuthenticationService(
     }
 
     fun generateAuthenticationCode(email: String): String {
-        check(!userRepository.existsByEmail(email)) { "이미 등록된 이메일입니다." }
-        check(universityRepository.existsByEmailSuffix(getEmailSuffix(email))) { "이메일이 등록되지 않은 대학교입니다." }
+        if (userRepository.existsByEmail(email)) {
+            throw UserException(ALREADY_EXIST_USER)
+        }
+        if (!universityRepository.existsByEmailSuffix(getEmailSuffix(email))) {
+            throw UniversityException(NOT_FOUND_UNIVERSITY)
+        }
+
         val authenticationCode = authenticationCodeRepository.save(AuthenticationCode(email))
         return authenticationCode.code
     }

@@ -13,6 +13,7 @@ enum class UserExceptionType(
     INVALID_USER_INFORMATION(HttpStatus.UNAUTHORIZED, "C02", "사용자 정보가 일치하지 않습니다."),
 
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "C40", "존재하지 않는 사용자입니다."),
+    ALREADY_EXIST_USER(HttpStatus.BAD_REQUEST, "C41", "이미 존재하는 사용자입니다."),
     ;
 
     override fun httpStatus(): HttpStatus {
