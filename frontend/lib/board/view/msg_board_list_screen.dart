@@ -45,16 +45,15 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
         child: Column(
           children: [
             _renderTop(),
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height - 111,
               child: BoardListWidget(
-                  categorys: categorys,
-                  msgboardlistinstance: msgboardlistinstance),
+                categorys: categorys,
+              ),
             ),
           ],
         ),
       ),
-      body: BoardListWidget(categorys: categorys),
       // body: SingleChildScrollView(
       //   child: Padding(
       //     padding: const EdgeInsets.symmetric(
@@ -84,13 +83,13 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
 
   Widget _renderTop() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
       height: 30.0,
       width: MediaQuery.of(context).size.width,
       child: Row(
         children: [
-          SizedBox(width: 160.0),
-          Text(
+          const SizedBox(width: 160.0),
+          const Text(
             "DeCl",
             style: TextStyle(
               color: PRIMARY_COLOR,
@@ -98,16 +97,16 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
               fontWeight: FontWeight.w900,
             ),
           ),
-          SizedBox(width: 80.0),
+          const SizedBox(width: 80.0),
           IconButton(
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => MypageScreen(),
+                  builder: (_) => const MypageScreen(),
                 ),
               );
             },
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
           ),
         ],
       ),
