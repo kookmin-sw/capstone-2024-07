@@ -7,13 +7,9 @@ import com.dclass.backend.application.dto.UserResponseWithDepartmentNames
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.department.DepartmentRepository
-import com.dclass.backend.domain.user.User
 import com.dclass.backend.domain.user.UserRepository
-import com.dclass.backend.domain.user.findByEmail
+import com.dclass.backend.domain.user.getByEmailOrThrow
 import com.dclass.backend.domain.user.getOrThrow
-import com.dclass.backend.exception.user.UserException
-import com.dclass.backend.exception.user.UserExceptionType.NOT_FOUND_USER
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -26,22 +22,27 @@ class UserService(
     private val departmentRepository: DepartmentRepository,
     private val belongRepository: BelongRepository,
 ) {
-
-
     fun resetPassword(request: ResetPasswordRequest) {
-        val user = getByEmail(request.email)
+        val user = userRepository.getByEmailOrThrow(request.email)
         user.resetPassword(request.name, passwordGenerator.generate())
         userRepository.save(user)
     }
 
     fun editPassword(id: Long, request: EditPasswordRequest) {
         require(request.password == request.confirmPassword) { "새 비밀번호가 일치하지 않습니다." }
-        userRepository.getOrThrow(id).changePassword(request.oldPassword, request.password)
+
+        val user = userRepository.getOrThrow(id)
+        user.changePassword(request.oldPassword, request.password)
+    }
+
+    fun editNickname(id: Long, request: UpdateNicknameRequest) {
+        val user = userRepository.getOrThrow(id)
+
+        user.changeNickname(request.nickname)
     }
 
     fun getInformation(id: Long): UserResponseWithDepartmentNames {
-        val user = userRepository.findByIdOrNull(id)
-            ?: throw IllegalArgumentException("회원이 존재하지 않습니다. id: $id")
+        val user = userRepository.getOrThrow(id)
 
         val belong = belongRepository.getOrThrow(id)
 
@@ -58,14 +59,4 @@ class UserService(
             groupBy[belong.minor]!!.title
         )
     }
-
-    fun getByEmail(email: String): User {
-        return userRepository.findByEmail(email)
-            ?: throw UserException(NOT_FOUND_USER)
-    }
-
-    fun editNickname(id: Long, request: UpdateNicknameRequest) {
-        userRepository.getOrThrow(id).changeNickname(request.nickname)
-    }
-
 }

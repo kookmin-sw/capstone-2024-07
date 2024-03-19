@@ -10,6 +10,8 @@ fun UserRepository.existsByEmail(email: String): Boolean = existsByInformationEm
 fun UserRepository.getOrThrow(id: Long): User = findByIdOrNull(id)
     ?: throw UserException(UserExceptionType.NOT_FOUND_USER)
 
+fun UserRepository.getByEmailOrThrow(email: String): User = findByInformationEmail(email)
+    ?: throw UserException(UserExceptionType.NOT_FOUND_USER)
 
 interface UserRepository : JpaRepository<User, Long>, UserRepositorySupport {
     fun findByInformationEmail(email: String): User?
