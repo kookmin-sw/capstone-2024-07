@@ -7,6 +7,7 @@ import com.dclass.backend.application.dto.PostsResponse
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
+import com.dclass.backend.domain.community.getByTitleOrThrow
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.post.getByIdOrThrow
 import com.dclass.backend.infra.s3.AwsPresigner
@@ -51,9 +52,10 @@ class PostService(
     }
 
     fun create(userId: Long, request: CreatePostRequest): PostResponse {
-        postValidator.validateCreatePost(userId, request.communityId)
+        postValidator.validateCreatePost(userId, request.communityTitle)
 
-        val post = postRepository.save(request.toEntity(userId))
+        val community = communityRepository.getByTitleOrThrow(request.communityTitle)
+        val post = postRepository.save(request.toEntity(userId, community.id))
 
         return postRepository.findPostById(post.id).apply {
             images = runBlocking(Dispatchers.IO) {
