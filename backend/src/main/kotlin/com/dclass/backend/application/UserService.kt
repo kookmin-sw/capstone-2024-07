@@ -11,6 +11,8 @@ import com.dclass.backend.domain.user.User
 import com.dclass.backend.domain.user.UserRepository
 import com.dclass.backend.domain.user.findByEmail
 import com.dclass.backend.domain.user.getOrThrow
+import com.dclass.backend.exception.user.UserException
+import com.dclass.backend.exception.user.UserExceptionType.NOT_FOUND_USER
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -24,10 +26,7 @@ class UserService(
     private val departmentRepository: DepartmentRepository,
     private val belongRepository: BelongRepository,
 ) {
-    fun getByEmail(email: String): User {
-        return userRepository.findByEmail(email)
-            ?: throw IllegalArgumentException("회원이 존재하지 않습니다. email: $email")
-    }
+
 
     fun resetPassword(request: ResetPasswordRequest) {
         val user = getByEmail(request.email)
@@ -58,6 +57,11 @@ class UserService(
             groupBy[belong.major]!!.title,
             groupBy[belong.minor]!!.title
         )
+    }
+
+    fun getByEmail(email: String): User {
+        return userRepository.findByEmail(email)
+            ?: throw UserException(NOT_FOUND_USER)
     }
 
     fun editNickname(id: Long, request: UpdateNicknameRequest) {
