@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/model/cocomment_model.dart';
+import 'package:frontend/board/provider/cocomment_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/layout/cocoment_layout.dart';
@@ -13,28 +16,55 @@ class Comment extends StatefulWidget {
   State<Comment> createState() => _CommentState();
 }
 
-class _CommentState extends State<Comment> {
-  List<CommentModel> cocomentlistinstance = [];
+class _CommentState extends State<Comment> with SingleTickerProviderStateMixin {
+  late AnimationController animationController;
 
   @override
   void initState() {
     super.initState();
-    cocomentlistinstance.add(CommentModel(
-      "1",
-      "익명4",
-      "맞아맞아",
-      "2",
-    ));
-    cocomentlistinstance.add(CommentModel(
-      "1",
-      "익명5",
-      "맞아맞아맞아",
-      "3",
-    ));
+    animationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
   }
 
   @override
   Widget build(BuildContext context) {
+    return _Comment(
+      widget: widget,
+      animationController: animationController,
+    );
+  }
+}
+
+class _Comment extends ConsumerWidget {
+  const _Comment({
+    super.key,
+    required this.widget,
+    required this.animationController,
+  });
+
+  final Comment widget;
+  final AnimationController animationController;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    List<CoCommentModel> cocomentlistinstance =
+        ref.watch(cocommentStateProvider);
+    return Contents(widget: widget, cocomentlistinstance: cocomentlistinstance);
+  }
+}
+
+class Contents extends ConsumerWidget {
+  const Contents({
+    super.key,
+    required this.widget,
+    required this.cocomentlistinstance,
+  });
+
+  final Comment widget;
+  final List<CoCommentModel> cocomentlistinstance;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -76,14 +106,35 @@ class _CommentState extends State<Comment> {
                         TextWithIcon(
                           icon: Icons.favorite_outline_rounded,
                           iconSize: 15,
-                          text: widget.comment.heart,
+                          text: widget.comment.likeCount,
+                          canTap: true,
+                          ref: ref,
                         ),
                         const SizedBox(
                           width: 13,
                         ),
-                        const Icon(
-                          Icons.chat_outlined,
-                          size: 15,
+                        GestureDetector(
+                          onTap: () {
+                            // TODO: 대댓글 달기
+                            // ref
+                            //     .read(cocommentStateProvider.notifier)
+                            //     .add(CoCommentModel(
+                            //       "5",
+                            //       widget.comment.postId,
+                            //       widget.comment.commentId,
+                            //       "3",
+                            //       "익명5",
+                            //       "",
+                            //       "0",
+                            //     ));
+                          },
+                          child: TextWithIcon(
+                            icon: Icons.chat_outlined,
+                            iconSize: 15,
+                            text: "-1",
+                            canTap: true,
+                            ref: ref,
+                          ),
                         ),
                       ],
                     ),

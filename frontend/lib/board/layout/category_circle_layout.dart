@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/common/const/colors.dart';
-import 'package:frontend/board/provider/board_provider.dart';
+import 'package:frontend/board/provider/category_provider.dart';
 
 class CategoryCircle extends ConsumerWidget {
   const CategoryCircle({
@@ -15,14 +15,14 @@ class CategoryCircle extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final clickedList = ref.watch(boardStateProvider);
+    final clickedList = ref.watch(categoryStateProvider);
     return GestureDetector(
       onTap: () {
         if (clickedList.contains(category)) {
-          ref.read(boardStateProvider.notifier).remove(category);
+          ref.read(categoryStateProvider.notifier).remove(category);
         } else {
-          ref.read(boardStateProvider.notifier).clear();
-          ref.read(boardStateProvider.notifier).add(category);
+          ref.read(categoryStateProvider.notifier).clear();
+          ref.read(categoryStateProvider.notifier).add(category);
         }
       },
       child: Container(

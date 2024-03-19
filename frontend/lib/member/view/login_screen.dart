@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/view/msg_board_list_screen.dart';
 import 'package:frontend/member/view/signup_screen.dart';
 
 import '../../common/const/colors.dart';
@@ -36,7 +37,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Center(
+                const Center(
                   child: Text(
                     'DeCl',
                     style: TextStyle(
@@ -75,44 +76,52 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   obscureText: true,
                 ),
                 const SizedBox(height: 16.0),
-                Container(
+                SizedBox(
                   height: 40.0,
                   child: ElevatedButton(
                     onPressed: state is MemberModelLoading //로딩중이면 로그인 버튼 못누르도록
                         ? null
                         : () async {
-                      ref.read(memberStateNotifierProvider.notifier)
-                          .login(email: email, password: password);
-                    },
+                            ref
+                                .read(memberStateNotifierProvider.notifier)
+                                .login(email: email, password: password);
+                          },
+                    // onPressed: () {
+                    //   Navigator.of(context).push(
+                    //     MaterialPageRoute(
+                    //       builder: (_) => const MsgBoardListScreen(),
+                    //     ),
+                    //   );
+                    // },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: PRIMARY_COLOR,
                     ),
-                    child: Text(
+                    child: const Text(
                       '로그인',
                     ),
                   ),
                 ),
-                SizedBox(height: 8.0),
-                Container(
+                const SizedBox(height: 8.0),
+                SizedBox(
                   height: 40.0,
                   child: TextButton(
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (_) => SignupScreen(),
+                          builder: (_) => const SignupScreen(),
                         ),
                       );
                     },
                     style: ButtonStyle(
                       foregroundColor: MaterialStateProperty.all(PRIMARY_COLOR),
                       side: MaterialStateProperty.all(
-                        BorderSide(
+                        const BorderSide(
                           color: PRIMARY_COLOR,
                           width: 1.0,
                         ),
                       ),
                     ),
-                    child: Text('회원가입'),
+                    child: const Text('회원가입'),
                   ),
                 ),
               ],
@@ -123,7 +132,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  Widget _renderTitle(){
+  Widget _renderTitle() {
     return const Text(
       '학과별 정보공유 커뮤니티, 디클',
       style: TextStyle(
@@ -134,8 +143,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  Widget _renderSubTitle(){
-    return Text(
+  Widget _renderSubTitle() {
+    return const Text(
       '학교 이메일과 비밀번호를 입력해서 로그인 해주세요!',
       style: TextStyle(
         fontSize: 16,

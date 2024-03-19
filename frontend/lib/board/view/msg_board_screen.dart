@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/model/msg_board_model.dart';
+import 'package:frontend/board/provider/comment_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/comment_layout.dart';
@@ -14,95 +17,116 @@ class MsgBoardScreen extends StatefulWidget {
 }
 
 class _MsgBoardScreenState extends State<MsgBoardScreen> {
-  List<CommentModel> commentlistinstance = [];
-
   @override
   void initState() {
     super.initState();
-    commentlistinstance.add(CommentModel(
-      "1",
-      "익명1",
-      "ㅇㅈ",
-      "0",
-    ));
-    commentlistinstance.add(CommentModel(
-      "2",
-      "익명2",
-      "ㅇㅈㅇㅈ",
-      "0",
-    ));
-    commentlistinstance.add(CommentModel(
-      "3",
-      "익명3",
-      "ㅆㅇㅈ",
-      "0",
-    ));
   }
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController textEditingController = TextEditingController();
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: PRIMARY_COLOR.withOpacity(0.1),
-        title: Text(
-          widget.board.category,
-          style: const TextStyle(
-            fontSize: 15,
+        appBar: AppBar(
+          backgroundColor: PRIMARY_COLOR.withOpacity(0.1),
+          title: Text(
+            widget.board.category,
+            style: const TextStyle(
+              fontSize: 15,
+            ),
           ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(bottom: 50),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                Board(
-                  board: widget.board,
-                  canTap: false,
-                  titleSize: 13,
-                ),
-                for (var comment in commentlistinstance)
-                  Comment(
-                    comment: comment,
-                  ),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: textEditingController,
-                    decoration: InputDecoration(
-                      hintText: '입력',
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: BODY_TEXT_COLOR.withOpacity(0.5),
-                        ),
+        body: Body(widget: widget));
+  }
+}
+
+class Body extends ConsumerWidget {
+  Body({
+    super.key,
+    required this.widget,
+  });
+
+  final MsgBoardScreen widget;
+  final TextEditingController textEditingController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    List<CommentModel> commentlistinstance = [];
+    int count = 0;
+    for (var comment in ref.watch(commentStateProvider)) {
+      if (widget.board.postId == comment.postId) {
+        count += 1;
+        commentlistinstance.add(comment);
+      }
+    }
+    ScrollController scrollController = ScrollController();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    });
+
+    return Column(
+      children: [
+        Board(
+          board: widget.board,
+          canTap: false,
+          titleSize: 13,
+        ),
+        Expanded(
+          child: ListView.builder(
+            controller: scrollController,
+            itemCount: commentlistinstance.length,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return Comment(
+                comment: commentlistinstance[index],
+              );
+            },
+          ),
+        ),
+        Container(
+          color: Colors.white,
+          padding: const EdgeInsets.only(bottom: 50),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: textEditingController,
+                  decoration: InputDecoration(
+                    hintText: '입력',
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: BODY_TEXT_COLOR.withOpacity(0.5),
                       ),
-                      suffixIcon: GestureDetector(
-                        child: Icon(
-                          Icons.send,
-                          color: PRIMARY_COLOR.withOpacity(0.5),
-                          size: 30,
-                        ),
-                        onTap: () {
-                          textEditingController.clear();
-                          // TODO : Upload comment.
-                        },
+                    ),
+                    suffixIcon: GestureDetector(
+                      child: Icon(
+                        Icons.send,
+                        color: PRIMARY_COLOR.withOpacity(0.5),
+                        size: 30,
                       ),
+                      onTap: () {
+                        // TODO : Upload comment.
+                        ref.read(commentStateProvider.notifier).add(
+                              CommentModel(
+                                "5",
+                                widget.board.postId,
+                                (count + 1).toString(),
+                                "익명5",
+                                textEditingController.text,
+                                "0",
+                              ),
+                            );
+                        print(widget.board.postId);
+                        textEditingController.clear();
+                      },
                     ),
                   ),
                 ),
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

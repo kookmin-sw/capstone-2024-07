@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/provider/board_provider.dart';
+import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/msg_board_model.dart';
 import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/category_circle_layout.dart';
-import 'package:frontend/board/provider/board_provider.dart';
+import 'package:frontend/board/provider/category_provider.dart';
 
 import '../../member/view/my_page_screen.dart';
 
@@ -21,7 +23,6 @@ class MsgBoardListScreen extends StatefulWidget {
 
 class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
   // late Future<List<MsgBoardListModel>> boards;
-  List<MsgBoardModel> msgboardlistinstance = [];
   List<String> categorys = [];
 
   @override
@@ -35,73 +36,6 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
     categorys.add("대학원");
     categorys.add("기타");
     categorys.add("공모전 공고");
-
-    msgboardlistinstance.add(MsgBoardModel(
-      "1",
-      "인기게시판",
-      "종강마렵다",
-      "ㅈㄱㄴssssssssssssssssssssssssssssssssssssssssssssssssssddddddddddddpppppabcdefg",
-      "20",
-      "3",
-      "0",
-      "24/03/04 13:45",
-      "익명",
-    ));
-    msgboardlistinstance.add(MsgBoardModel(
-      "2",
-      "인기게시판",
-      "종강종강",
-      "종강종강종강종강",
-      "15",
-      "2",
-      "0",
-      "24/03/04 14:45",
-      "익명",
-    ));
-    msgboardlistinstance.add(MsgBoardModel(
-      "3",
-      "인기게시판",
-      "토끼는 깡종강종강",
-      "거북이도 종강종강",
-      "10",
-      "4",
-      "0",
-      "24/03/04 15:45",
-      "익명",
-    ));
-    msgboardlistinstance.add(MsgBoardModel(
-      "4",
-      "인기게시판",
-      "교수님 정강이 때릴 사람 구합니다.",
-      "아이고 종강이야",
-      "5",
-      "3",
-      "0",
-      "24/03/04 16:45",
-      "익명",
-    ));
-    msgboardlistinstance.add(MsgBoardModel(
-      "5",
-      "인기게시판",
-      "슬슬 종강할 때 되지 않았나",
-      "눈치껏 종강하자",
-      "6",
-      "2",
-      "0",
-      "24/03/04 17:45",
-      "익명",
-    ));
-    msgboardlistinstance.add(MsgBoardModel(
-      "6",
-      "인기게시판",
-      "그냥 종강좀 해라",
-      "이만큼 했음 됬지 않늬",
-      "3",
-      "1",
-      "0",
-      "24/03/04 18:45",
-      "익명",
-    ));
   }
 
   @override
@@ -111,11 +45,11 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
         child: Column(
           children: [
             _renderTop(),
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height - 111,
               child: BoardListWidget(
-                  categorys: categorys,
-                  msgboardlistinstance: msgboardlistinstance),
+                categorys: categorys,
+              ),
             ),
           ],
         ),
@@ -149,13 +83,13 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
 
   Widget _renderTop() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
       height: 30.0,
       width: MediaQuery.of(context).size.width,
       child: Row(
         children: [
-          SizedBox(width: 160.0),
-          Text(
+          const SizedBox(width: 160.0),
+          const Text(
             "DeCl",
             style: TextStyle(
               color: PRIMARY_COLOR,
@@ -163,16 +97,16 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
               fontWeight: FontWeight.w900,
             ),
           ),
-          SizedBox(width: 80.0),
+          const SizedBox(width: 80.0),
           IconButton(
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => MypageScreen(),
+                  builder: (_) => const MypageScreen(),
                 ),
               );
             },
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
           ),
         ],
       ),
@@ -184,16 +118,16 @@ class BoardListWidget extends ConsumerWidget {
   const BoardListWidget({
     super.key,
     required this.categorys,
-    required this.msgboardlistinstance,
   });
 
   final List<String> categorys;
-  final List<MsgBoardModel> msgboardlistinstance;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final clickedBoardList = ref.watch(boardStateProvider);
+    final clickedBoardList = ref.watch(categoryStateProvider);
+    List<MsgBoardModel> msgboardlistinstance = ref.watch(boardStateProvider);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         const SizedBox(
           height: 5,
@@ -244,6 +178,21 @@ class BoardListWidget extends ConsumerWidget {
                 height: 10,
               ),
             ],
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.all(50),
+          child: FloatingActionButton(
+            child: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const MsgBoardAddScreen(
+                    isEdit: false,
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ],

@@ -1,5 +1,12 @@
 class CommentModel {
-  final String id, name, content, heart;
+  final String userid, postId, commentId, name, content, likeCount;
 
-  CommentModel(this.id, this.name, this.content, this.heart);
+  CommentModel(
+    this.userid,
+    this.postId,
+    this.commentId,
+    this.name,
+    this.content,
+    this.likeCount,
+  );
 }
