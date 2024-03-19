@@ -4,6 +4,7 @@ import com.dclass.backend.application.PostService
 import com.dclass.backend.application.dto.CreatePostRequest
 import com.dclass.backend.application.dto.PostResponse
 import com.dclass.backend.application.dto.PostScrollPageRequest
+import com.dclass.backend.application.dto.PostsResponse
 import com.dclass.backend.domain.user.User
 import com.dclass.backend.security.LoginUser
 import org.springframework.http.ResponseEntity
@@ -29,7 +30,7 @@ class PostController(
     fun getPosts(
         @LoginUser user: User,
         @RequestBody request: PostScrollPageRequest
-    ): ResponseEntity<ApiResponses<List<PostResponse>>> {
+    ): ResponseEntity<ApiResponses<PostsResponse>> {
         return ResponseEntity.ok(ApiResponses.success(postService.getAll(user.id, request)))
     }
 
