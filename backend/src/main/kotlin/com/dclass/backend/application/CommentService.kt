@@ -37,8 +37,8 @@ class CommentService(
         commentRepository.delete(comment)
     }
 
-    fun like(userId: Long, commentId: Long) {
-        val comment = find(commentId)
+    fun like(userId: Long, request: LikeCommentRequest) {
+        val comment = find(request.commentId)
         comment.like(userId)
     }
 

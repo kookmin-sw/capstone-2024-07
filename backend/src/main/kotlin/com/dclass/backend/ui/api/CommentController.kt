@@ -20,13 +20,12 @@ class CommentController(
 
     @Operation(summary = "댓글 생성 API", description = "게시글에 댓글을 생성합니다.")
     @ApiResponse(responseCode = "200", description = "댓글 생성 성공")
-    @PostMapping("/{postId}")
+    @PostMapping
     fun createComment(
         @LoginUser user: User,
-        @PathVariable postId: Long,
-        @RequestBody @Valid request: CommentRequest
+        @RequestBody @Valid request: CreateCommentRequest
     ): ResponseEntity<ApiResponses<CommentResponse>> {
-        val comment = commentService.create(user.id, CreateCommentRequest(postId, request.content))
+        val comment = commentService.create(user.id, request)
         return ResponseEntity.ok(ApiResponses.success(comment))
     }
 
@@ -66,12 +65,12 @@ class CommentController(
 
     @Operation(summary = "댓글 좋아요 API", description = "댓글에 좋아요를 누릅니다.")
     @ApiResponse(responseCode = "204", description = "댓글 좋아요 성공")
-    @PostMapping("/{commentId}/likes")
+    @PostMapping("/likes")
     fun likeComment(
         @LoginUser user: User,
-        @PathVariable commentId: Long
+        @RequestBody request: LikeCommentRequest
     ): ResponseEntity<Unit> {
-        commentService.like(user.id, commentId)
+        commentService.like(user.id, request)
         return ResponseEntity.noContent().build()
     }
 }

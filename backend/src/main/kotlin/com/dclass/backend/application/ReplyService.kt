@@ -1,9 +1,6 @@
 package com.dclass.backend.application
 
-import com.dclass.backend.application.dto.CreateReplyRequest
-import com.dclass.backend.application.dto.DeleteReplyRequest
-import com.dclass.backend.application.dto.ReplyResponse
-import com.dclass.backend.application.dto.UpdateReplyRequest
+import com.dclass.backend.application.dto.*
 import com.dclass.backend.domain.reply.Reply
 import com.dclass.backend.domain.reply.ReplyRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -33,8 +30,8 @@ class ReplyService(
         replyRepository.delete(reply)
     }
 
-    fun like(userId: Long, replyId: Long) {
-        val reply = find(replyId)
+    fun like(userId: Long, request: LikeReplyRequest) {
+        val reply = find(request.replyId)
         reply.like(userId)
     }
 
