@@ -21,7 +21,7 @@ class _BoardRepository implements BoardRepository {
   @override
   Future<CursorPaginationModel<MsgBoardResponseModel>> paginate(
     int lastId,
-    String communityTitle,
+    String? communityTitle,
     int size,
     bool isHot,
   ) async {
@@ -32,6 +32,7 @@ class _BoardRepository implements BoardRepository {
       r'size': size,
       r'isHot': isHot,
     };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{r'accessToken': 'true'};
     _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;

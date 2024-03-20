@@ -26,7 +26,7 @@ abstract class BoardRepository {
   })
   Future<CursorPaginationModel<MsgBoardResponseModel>> paginate(
       @Query('lastId') int lastId,
-      @Query('communityTitle') String communityTitle,
+      @Query('communityTitle') String? communityTitle,
       @Query('size') int size,
       @Query('isHot') bool isHot
       );
