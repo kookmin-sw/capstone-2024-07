@@ -3,10 +3,14 @@ package com.dclass.backend.domain.authenticationcode
 import com.dclass.support.domain.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 import java.time.Duration
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
+@SQLDelete(sql = "update authentication_code set deleted = true where id = ?")
+@SQLRestriction("deleted = false")
 @Entity
 class AuthenticationCode(
     @Column(nullable = false)
@@ -15,12 +19,15 @@ class AuthenticationCode(
     @Column(nullable = false, columnDefinition = "char(6)")
     val code: String = UUID.randomUUID().toString().take(6),
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     var authenticated: Boolean = false,
 
     @Column(nullable = false)
     val createdDateTime: LocalDateTime = LocalDateTime.now()
-): BaseEntity(){
+) : BaseEntity() {
+    
+    @Column(nullable = false)
+    private var deleted: Boolean = false
 
     private val expiryDateTime: LocalDateTime
         get() = createdDateTime + EXPIRY_MINUTE_TIME

@@ -5,7 +5,11 @@ import com.dclass.backend.exception.user.UserExceptionType.INVALID_PASSWORD_ACCE
 import com.dclass.backend.exception.user.UserExceptionType.INVALID_USER_INFORMATION
 import com.dclass.support.domain.BaseRootEntity
 import jakarta.persistence.*
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 
+@SQLDelete(sql = "update user set deleted = true where id = ?")
+@SQLRestriction("deleted = false")
 @Entity
 @Table(name = "users")
 class User(
@@ -23,6 +27,9 @@ class User(
 
     id: Long = 0L
 ) : BaseRootEntity<User>(id) {
+
+    @Column(nullable = false)
+    private var deleted: Boolean = false
 
     val name: String
         get() = information.name

@@ -2,8 +2,12 @@ package com.dclass.backend.domain.belong
 
 import com.dclass.support.domain.BaseEntity
 import jakarta.persistence.*
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 import java.time.LocalDateTime
 
+@SQLDelete(sql = "update belong set deleted = true where id = ?")
+@SQLRestriction("deleted = false")
 @Entity
 @Table
 class Belong(
@@ -16,6 +20,9 @@ class Belong(
 
     id: Long = 0L
 ) : BaseEntity(id) {
+
+    @Column(nullable = false)
+    private var deleted: Boolean = false
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "join_department")
