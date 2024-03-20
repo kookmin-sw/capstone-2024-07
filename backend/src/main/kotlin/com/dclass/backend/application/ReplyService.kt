@@ -1,9 +1,6 @@
 package com.dclass.backend.application
 
-import com.dclass.backend.application.dto.CreateReplyRequest
-import com.dclass.backend.application.dto.DeleteReplyRequest
-import com.dclass.backend.application.dto.ReplyResponse
-import com.dclass.backend.application.dto.UpdateReplyRequest
+import com.dclass.backend.application.dto.*
 import com.dclass.backend.domain.reply.ReplyRepository
 import com.dclass.backend.domain.reply.getByIdAndUserIdOrThrow
 import com.dclass.backend.domain.reply.getByIdOrThrow
@@ -33,9 +30,8 @@ class ReplyService(
         replyRepository.delete(reply)
     }
 
-    fun like(userId: Long, replyId: Long) {
-        val reply = replyRepository.getByIdOrThrow(replyId)
-
+    fun like(userId: Long, request: LikeReplyRequest) {
+        val reply = replyRepository.getByIdOrThrow(request.replyId)
         reply.like(userId)
     }
 }
