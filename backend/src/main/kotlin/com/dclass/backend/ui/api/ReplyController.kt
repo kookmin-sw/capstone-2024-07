@@ -23,9 +23,9 @@ class ReplyController(
     fun createReply(
         @LoginUser user: User,
         @RequestBody request: CreateReplyRequest
-    ): ResponseEntity<ApiResponses<ReplyResponse>> {
+    ): ResponseEntity<ReplyResponse> {
         val reply = replyService.create(user.id, request)
-        return ResponseEntity.ok(ApiResponses.success(reply))
+        return ResponseEntity.ok(reply)
     }
 
     @Operation(summary = "대댓글 수정 API", description = "대댓글을 수정합니다.")

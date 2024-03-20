@@ -21,33 +21,33 @@ class PostController(
     fun getPost(
         @LoginUser user: User,
         @PathVariable postId: Long
-    ): ResponseEntity<ApiResponses<PostResponse>> {
+    ): ResponseEntity<PostResponse> {
         val postResponse = postService.getById(user.id, postId)
-        return ResponseEntity.ok(ApiResponses.success(postResponse))
+        return ResponseEntity.ok(postResponse)
     }
 
     @GetMapping
     fun getPosts(
         @LoginUser user: User,
         request: PostScrollPageRequest
-    ): ResponseEntity<ApiResponses<PostsResponse>> {
-        return ResponseEntity.ok(ApiResponses.success(postService.getAll(user.id, request)))
+    ): ResponseEntity<PostsResponse> {
+        return ResponseEntity.ok(postService.getAll(user.id, request))
     }
 
     @PostMapping
     fun createPost(
         @LoginUser user: User,
         @RequestBody request: CreatePostRequest
-    ): ResponseEntity<ApiResponses<PostResponse>> {
-        return ResponseEntity.ok(ApiResponses.success(postService.create(user.id, request)))
+    ): ResponseEntity<PostResponse> {
+        return ResponseEntity.ok(postService.create(user.id, request))
     }
 
     @PutMapping("/{postId}")
     fun updateLikes(
         @LoginUser user: User,
         @PathVariable postId: Long
-    ): ResponseEntity<ApiResponses<Int>> {
-        return ResponseEntity.ok(ApiResponses.success(postService.likes(user.id, postId)))
+    ): ResponseEntity<Int> {
+        return ResponseEntity.ok(postService.likes(user.id, postId))
     }
 }
 

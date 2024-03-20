@@ -29,25 +29,25 @@ class UserRestController(
     @Operation(summary = "회원가입 API", description = "이메일 인증 후 회원가입을 진행합니다")
     @ApiResponse(responseCode = "200", description = "회원가입 성공")
     @PostMapping("/register")
-    fun generateToken(@RequestBody @Valid request: RegisterUserRequest): ResponseEntity<ApiResponses<LoginUserResponse>> {
+    fun generateToken(@RequestBody @Valid request: RegisterUserRequest): ResponseEntity<LoginUserResponse> {
         val token = userAuthenticationService.generateTokenByRegister(request)
-        return ResponseEntity.ok(ApiResponses.success(token))
+        return ResponseEntity.ok(token)
     }
 
     @Operation(summary = "로그인 API", description = "로그인을 진행합니다")
     @ApiResponse(responseCode = "200", description = "로그인 성공")
     @PostMapping("/login")
-    fun generateToken(@RequestBody @Valid request: AuthenticateUserRequest): ResponseEntity<ApiResponses<LoginUserResponse>> {
+    fun generateToken(@RequestBody @Valid request: AuthenticateUserRequest): ResponseEntity<LoginUserResponse> {
         val token = userAuthenticationService.generateTokenByLogin(request)
-        return ResponseEntity.ok(ApiResponses.success(token))
+        return ResponseEntity.ok(token)
     }
 
     @Operation(summary = "토큰 재발급 API", description = "리프레시 토큰을 이용하여 토큰을 재발급합니다")
     @ApiResponse(responseCode = "200", description = "토큰 재발급 성공")
     @PostMapping("/reissue-token")
-    fun generateToken(@RequestParam refreshToken: String): ResponseEntity<ApiResponses<LoginUserResponse>> {
+    fun generateToken(@RequestParam refreshToken: String): ResponseEntity<LoginUserResponse> {
         val token = blacklistService.reissueToken(refreshToken)
-        return ResponseEntity.ok(ApiResponses.success(token))
+        return ResponseEntity.ok(token)
     }
 
     @Operation(summary = "비밀번호 재설정 API", description = "비밀번호를 재설정한 후 변경된 비밀번호를 이메일로 전송합니다")
@@ -99,11 +99,11 @@ class UserRestController(
     @GetMapping("/me")
     fun getMyInformation(
         @LoginUser user: User
-    ): ResponseEntity<ApiResponses<UserResponseWithDepartmentNames>> {
+    ): ResponseEntity<UserResponseWithDepartmentNames> {
         val response = userService.getInformation(user.id)
-        return ResponseEntity.ok(ApiResponses.success(response))
+        return ResponseEntity.ok(response)
     }
-    
+
 
     @PutMapping("/change-nickname")
     fun changeNickname(

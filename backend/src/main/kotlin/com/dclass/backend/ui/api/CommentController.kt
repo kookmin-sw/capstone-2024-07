@@ -24,9 +24,9 @@ class CommentController(
     fun createComment(
         @LoginUser user: User,
         @RequestBody @Valid request: CreateCommentRequest
-    ): ResponseEntity<ApiResponses<CommentResponse>> {
+    ): ResponseEntity<CommentResponse> {
         val comment = commentService.create(user.id, request)
-        return ResponseEntity.ok(ApiResponses.success(comment))
+        return ResponseEntity.ok(comment)
     }
 
     @Operation(summary = "댓글 수정 API", description = "댓글을 수정합니다.")
@@ -58,9 +58,9 @@ class CommentController(
     fun getComments(
         @LoginUser user: User,
         @PathVariable postId: Long
-    ): ResponseEntity<ApiResponses<List<CommentReplyWithUserResponse>>> {
+    ): ResponseEntity<List<CommentReplyWithUserResponse>> {
         val comments = commentService.findAllByPostId(postId)
-        return ResponseEntity.ok(ApiResponses.success(comments))
+        return ResponseEntity.ok(comments)
     }
 
     @Operation(summary = "댓글 좋아요 API", description = "댓글에 좋아요를 누릅니다.")
