@@ -9,13 +9,27 @@ import jakarta.validation.constraints.NotNull
 import java.time.LocalDateTime
 
 data class ReplyRequest(
+
+    @Schema(
+        description = "대댓글의 내용",
+        example = "대댓글 내용"
+    )
     val content: String,
 )
 
 data class CreateReplyRequest(
+
+    @Schema(
+        description = "댓글의 고유 식별자",
+        example = "1"
+    )
     @field:NotNull
     val commentId: Long,
 
+    @Schema(
+        description = "대댓글의 내용",
+        example = "대댓글 내용"
+    )
     @field:NotNull
     val content: String,
 ) {
@@ -25,17 +39,33 @@ data class CreateReplyRequest(
 }
 
 data class UpdateReplyRequest(
+    @Schema(
+        description = "대댓글의 고유 식별자",
+        example = "1"
+    )
     val replyId: Long,
 
+    @Schema(
+        description = "대댓글의 내용",
+        example = "대댓글 내용"
+    )
     @field:NotNull
     val content: String,
 )
 
 data class DeleteReplyRequest(
+    @Schema(
+        description = "대댓글의 고유 식별자",
+        example = "1"
+    )
     val replyId: Long,
 )
 
 data class LikeReplyRequest(
+    @Schema(
+        description = "대댓글의 고유 식별자",
+        example = "1"
+    )
     val replyId: Long,
 )
 
@@ -87,12 +117,45 @@ data class ReplyResponse(
 }
 
 data class ReplyWithUserResponse(
+    @Schema(
+        description = "대댓글의 고유 식별자",
+        example = "1"
+    )
     val id: Long,
+
+    @Schema(
+        description = "대댓글을 작성한 유저의 고유 식별자",
+        example = "1"
+    )
     val userId: Long,
+
+    @Schema(
+        description = "대댓글을 작성한 유저의 정보",
+    )
     val userInformation: UserInformation,
+
+    @Schema(
+        description = "대댓글이 달린 댓글의 고유 식별자",
+        example = "1"
+    )
     val commentId: Long,
+
+    @Schema(
+        description = "대댓글의 내용",
+        example = "대댓글 내용"
+    )
     val content: String,
+
+    @Schema(
+        description = "대댓글의 좋아요 수",
+        example = "0"
+    )
     val likeCount: ReplyLikes,
+
+    @Schema(
+        description = "대댓글이 작성된 시각",
+        example = "2021-08-01T00:00:00"
+    )
     val createdAt: LocalDateTime,
 ) {
     constructor(reply: Reply, user: User) : this(

@@ -8,6 +8,9 @@ data class SwitchDepartmentResponse(
 )
 
 data class UpdateDepartmentRequest(
+    @Schema(description = "변경할 전공의 이름", example = "컴퓨터공학과")
     val major: String,
+
+    @Schema(description = "변경할 부전공의 이름", example = "경영학과")
     val minor: String,
 )
