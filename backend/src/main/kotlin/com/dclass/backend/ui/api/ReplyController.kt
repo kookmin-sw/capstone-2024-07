@@ -51,6 +51,8 @@ class ReplyController(
         return ResponseEntity.noContent().build()
     }
 
+    @Operation(summary = "대댓글 좋아요 API", description = "대댓글에 좋아요를 누릅니다.")
+    @ApiResponse(responseCode = "204", description = "대댓글 좋아요 성공")
     @PostMapping("/likes")
     fun likeReply(
         @LoginUser user: User,
