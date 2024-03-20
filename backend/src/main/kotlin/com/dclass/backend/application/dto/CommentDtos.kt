@@ -9,13 +9,25 @@ import jakarta.validation.constraints.NotNull
 import java.time.LocalDateTime
 
 data class CommentRequest(
+    @Schema(
+        description = "댓글의 내용",
+        example = "댓글 내용"
+    )
     @field:NotNull
     val content: String,
 )
 
 data class CreateCommentRequest(
+    @Schema(
+        description = "게시글의 고유 식별자",
+        example = "1"
+    )
     val postId: Long,
 
+    @Schema(
+        description = "댓글의 내용",
+        example = "댓글 내용"
+    )
     @field:NotNull
     val content: String,
 ) {
@@ -25,17 +37,33 @@ data class CreateCommentRequest(
 }
 
 data class UpdateCommentRequest(
+    @Schema(
+        description = "댓글의 고유 식별자",
+        example = "1"
+    )
     val commentId: Long,
 
+    @Schema(
+        description = "댓글의 내용",
+        example = "댓글 내용"
+    )
     @field:NotNull
     val content: String,
 )
 
 data class DeleteCommentRequest(
+    @Schema(
+        description = "댓글의 고유 식별자",
+        example = "1"
+    )
     val commentId: Long,
 )
 
 data class LikeCommentRequest(
+    @Schema(
+        description = "댓글의 고유 식별자",
+        example = "1"
+    )
     val commentId: Long,
 )
 
@@ -89,12 +117,46 @@ data class CommentResponse(
 
 
 data class CommentWithUserResponse(
+    @Schema(
+        description = "댓글의 고유 식별자",
+        example = "1"
+    )
     val id: Long,
+
+    @Schema(
+        description = "댓글을 작성한 유저의 정보",
+        example = "1"
+    )
     val userInformation: UserInformation,
+
+    @Schema(
+        description = "댓글이 달린 게시글의 고유 식별자",
+        example = "1"
+    )
     val postId: Long,
+
+    @Schema(
+        description = "댓글의 내용",
+        example = "댓글 내용"
+    )
     val content: String,
+
+    @Schema(
+        description = "댓글의 좋아요 수",
+        example = "1"
+    )
     val likeCount: CommentLikes,
+
+    @Schema(
+        description = "댓글의 좋아요 여부",
+        example = "true"
+    )
     val isLiked: Boolean,
+
+    @Schema(
+        description = "댓글이 작성된 시각",
+        example = "2021-08-01T00:00:00"
+    )
     val createdAt: LocalDateTime,
 ) {
     constructor(comment: Comment, user: User) : this(
