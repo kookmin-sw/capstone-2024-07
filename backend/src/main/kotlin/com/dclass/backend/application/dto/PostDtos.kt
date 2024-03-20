@@ -79,6 +79,13 @@ data class CreatePostRequest(
     }
 }
 
+data class UpdatePostRequest(
+    val postId: Long,
+    val title: String,
+    val content: String,
+    var images: List<String>,
+)
+
 data class DeletePostRequest(
     val postId: Long
 )
