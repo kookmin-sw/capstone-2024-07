@@ -3,8 +3,12 @@ package com.dclass.backend.domain.post
 import com.dclass.support.domain.BaseEntity
 import com.dclass.support.domain.Image
 import jakarta.persistence.*
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 import java.time.LocalDateTime
 
+@SQLDelete(sql = "update post set deleted = true where id = ?")
+@SQLRestriction("deleted = false")
 @Entity
 @Table
 class Post(
@@ -34,6 +38,9 @@ class Post(
 
     id: Long = 0L,
 ) : BaseEntity(id) {
+
+    @Column(nullable = false)
+    private var deleted: Boolean = false
 
     @Column(nullable = false, length = 100)
     var title: String = title
