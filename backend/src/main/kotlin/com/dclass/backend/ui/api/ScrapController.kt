@@ -7,10 +7,13 @@ import com.dclass.backend.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-@RestController("/api/scrap")
+
+@RequestMapping("/api/scrap")
+@RestController
 class ScrapController(
     private val scrapService: ScrapService
 ) {
+
 
     @GetMapping
     fun readAll(@LoginUser user: User): ResponseEntity<List<PostResponse>> {
