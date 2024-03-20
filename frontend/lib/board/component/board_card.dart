@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../common/const/colors.dart';
-import '../layout/text_with_icon.dart';
 import '../model/msg_board_response_model.dart';
+import 'TextWithIconForView.dart';
 
 class BoardCard extends StatelessWidget {
   final int id;
@@ -81,7 +81,7 @@ class BoardCard extends StatelessWidget {
                 _renderCategoryCircleUi(communityTitle),
                 Row(
                   children: [
-                    TextWithIcon(
+                    TextWithIconForView(
                       icon: Icons.favorite_outline_rounded,
                       iconSize: 15,
                       text: count.likeCount.toString(),
@@ -89,7 +89,7 @@ class BoardCard extends StatelessWidget {
                     const SizedBox(
                       width: 13,
                     ),
-                    TextWithIcon(
+                    TextWithIconForView(
                       icon: Icons.chat_outlined,
                       iconSize: 15,
                       text: count.commentReplyCount.toString(),
@@ -97,7 +97,7 @@ class BoardCard extends StatelessWidget {
                     const SizedBox(
                       width: 13,
                     ),
-                    TextWithIcon(
+                    TextWithIconForView(
                       icon: Icons.star_outline_rounded,
                       iconSize: 18,
                       text: 0.toString(),
