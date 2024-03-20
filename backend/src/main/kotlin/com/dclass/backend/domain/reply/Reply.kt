@@ -1,5 +1,7 @@
 package com.dclass.backend.domain.reply
 
+import com.dclass.backend.exception.reply.ReplyException
+import com.dclass.backend.exception.reply.ReplyExceptionType.SELF_LIKE
 import com.dclass.support.domain.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Embedded
@@ -48,10 +50,7 @@ class Reply(
     var modifiedDateTime: LocalDateTime = modifiedDateTime
         private set
 
-    fun changeContent(content: String, userId: Long) {
-        if (this.userId != userId) {
-            throw IllegalAccessException("댓글을 수정할 수 있는 권한이 없습니다.")
-        }
+    fun changeContent(content: String) {
         this.content = content
         modifiedDateTime = LocalDateTime.now()
     }
@@ -63,7 +62,7 @@ class Reply(
 
     fun like(userId: Long) {
         if (this.userId == userId) {
-            throw IllegalAccessException("자신이 작성한 댓글은 좋아요를 누를 수 없습니다.")
+            throw ReplyException(SELF_LIKE)
         }
         replyLikes.add(userId)
     }

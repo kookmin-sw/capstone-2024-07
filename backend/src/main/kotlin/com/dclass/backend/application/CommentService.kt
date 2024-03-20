@@ -1,12 +1,13 @@
 package com.dclass.backend.application
 
 import com.dclass.backend.application.dto.*
-import com.dclass.backend.domain.comment.Comment
 import com.dclass.backend.domain.comment.CommentRepository
+import com.dclass.backend.domain.comment.getByIdOrThrow
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.post.getByIdOrThrow
 import com.dclass.backend.domain.reply.ReplyRepository
-import org.springframework.data.repository.findByIdOrNull
+import com.dclass.backend.exception.comment.CommentException
+import com.dclass.backend.exception.comment.CommentExceptionType
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -17,28 +18,30 @@ class CommentService(
     private val replyRepository: ReplyRepository,
     private val postRepository: PostRepository,
 ) {
+    // TODO CommentValidator를 추가한다
     fun create(userId: Long, request: CreateCommentRequest): CommentResponse {
-        postRepository.getByIdOrThrow(request.postId).increaseCommentReplyCount(1)
-
-        return commentRepository.save(Comment(userId, request.postId, request.content))
+        val post = postRepository.getByIdOrThrow(request.postId)
+        post.increaseCommentReplyCount(1)
+        return commentRepository.save(request.toEntity(userId))
             .let(::CommentResponse)
     }
 
     fun update(userId: Long, request: UpdateCommentRequest) {
-        val comment = find(request.commentId)
-        comment.changeContent(request.content, userId)
+        val comment = commentRepository.findByIdAndUserId(request.commentId, userId)
+            ?: throw CommentException(CommentExceptionType.NOT_FOUND_COMMENT)
+
+        comment.changeContent(request.content)
     }
 
     fun delete(userId: Long, request: DeleteCommentRequest) {
-        val comment = find(request.commentId)
-        check(comment.userId == userId) {
-            "자신이 작성한 댓글만 삭제할 수 있습니다."
-        }
+        val comment = commentRepository.findByIdAndUserId(request.commentId, userId)
+            ?: throw CommentException(CommentExceptionType.NOT_FOUND_COMMENT)
+
         commentRepository.delete(comment)
     }
 
-    fun like(userId: Long, request: LikeCommentRequest) {
-        val comment = find(request.commentId)
+    fun like(userId: Long, commentId: Long) {
+        val comment = commentRepository.getByIdOrThrow(commentId)
         comment.like(userId)
     }
 
@@ -57,14 +60,5 @@ class CommentService(
                 replies = replies[it.id] ?: emptyList()
             )
         }
-    }
-
-    private fun find(commentId: Long): Comment {
-        val comment = commentRepository.findByIdOrNull(commentId)
-            ?: throw NoSuchElementException("해당 댓글이 존재하지 않습니다.")
-        check(!comment.isDeleted(commentId)) {
-            "삭제된 댓글입니다."
-        }
-        return comment
     }
 }

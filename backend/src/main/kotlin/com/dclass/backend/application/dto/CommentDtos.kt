@@ -18,7 +18,11 @@ data class CreateCommentRequest(
 
     @field:NotNull
     val content: String,
-)
+){
+    fun toEntity(userId: Long): Comment {
+        return Comment(userId, postId, content)
+    }
+}
 
 data class UpdateCommentRequest(
     val commentId: Long,

@@ -95,7 +95,7 @@ class CommentIntegrationTest(
             replyService.like(1, LikeReplyRequest(replies[0].id))
 
             Then("해당 대댓글의 좋아요 수가 증가한다") {
-                val reply = replyRepository.findReplyByIdAndUserId(replies[0].id, 4)
+                val reply = replyRepository.findByIdAndUserId(replies[0].id, 4)
                 reply!!.replyLikes.count shouldBe 1
             }
         }

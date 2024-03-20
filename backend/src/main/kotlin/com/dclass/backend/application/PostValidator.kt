@@ -3,9 +3,12 @@ package com.dclass.backend.application
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
+import com.dclass.backend.domain.community.getByIdOrThrow
 import com.dclass.backend.domain.community.getByTitleOrThrow
 import com.dclass.backend.domain.post.PostRepository
-import org.springframework.data.repository.findByIdOrNull
+import com.dclass.backend.domain.post.getByIdOrThrow
+import com.dclass.backend.exception.post.PostException
+import com.dclass.backend.exception.post.PostExceptionType.FORBIDDEN_POST
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -20,14 +23,18 @@ class PostValidator(
         val belong = belongRepository.getOrThrow(userId)
         val community = communityRepository.getByTitleOrThrow(communityTitle)
 
-        check(belong.contain(community.departmentId)) { "해당 커뮤니티에 게시글을 작성할 수 없습니다." }
+        if (!belong.contain(community.departmentId)) {
+            throw PostException(FORBIDDEN_POST)
+        }
     }
 
     fun validate(userId: Long, postId: Long) {
         val belong = belongRepository.getOrThrow(userId)
-        val post = postRepository.findByIdOrNull(postId)
-            ?: throw IllegalArgumentException("해당 게시글이 존재하지 않습니다.")
-        val community = communityRepository.findByIdOrNull(post.communityId)!!
-        check(belong.contain(community.departmentId)) { "해당 커뮤니티의 게시글을 조회할 수 없습니다." }
+        val post = postRepository.getByIdOrThrow(postId)
+        val community = communityRepository.getByIdOrThrow(post.communityId)
+
+        if (!belong.contain(community.departmentId)) {
+            throw PostException(FORBIDDEN_POST)
+        }
     }
 }

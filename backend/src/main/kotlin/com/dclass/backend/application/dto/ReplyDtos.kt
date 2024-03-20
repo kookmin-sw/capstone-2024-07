@@ -18,7 +18,11 @@ data class CreateReplyRequest(
 
     @field:NotNull
     val content: String,
-)
+){
+    fun toEntity(userId: Long): Reply {
+        return Reply(userId, commentId, content)
+    }
+}
 
 data class UpdateReplyRequest(
     val replyId: Long,

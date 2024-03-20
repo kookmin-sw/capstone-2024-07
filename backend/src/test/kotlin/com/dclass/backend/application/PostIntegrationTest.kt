@@ -7,6 +7,8 @@ import com.dclass.backend.domain.post.PostCount
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.user.UniversityRepository
 import com.dclass.backend.domain.user.UserRepository
+import com.dclass.backend.exception.post.PostException
+import com.dclass.backend.exception.post.PostExceptionType
 import com.dclass.support.fixtures.*
 import com.dclass.support.test.IntegrationTest
 import io.kotest.assertions.throwables.shouldThrow
@@ -14,7 +16,6 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.extensions.spring.SpringTestExtension
 import io.kotest.extensions.spring.SpringTestLifecycleMode
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.throwable.shouldHaveMessage
 import org.springframework.transaction.annotation.Transactional
 
 const val NEVER_EXIST_ID: Long = 999_999
@@ -73,9 +74,9 @@ class PostIntegrationTest(
 
         When("다른 학과에 속한 학생이 게시글을 조회하면") {
             Then("게시글이 조회되지 않는다") {
-                shouldThrow<IllegalStateException> {
+                shouldThrow<PostException> {
                     postService.getById(anotherUser.id, post.id)
-                }.shouldHaveMessage("해당 커뮤니티의 게시글을 조회할 수 없습니다.")
+                }.exceptionType() shouldBe PostExceptionType.FORBIDDEN_POST
             }
         }
     }
@@ -99,9 +100,27 @@ class PostIntegrationTest(
         )
 
         repeat(5) {
-            postRepository.save(post(userId = user.id, communityId = communities[0].id, postCount = PostCount()))
-            postRepository.save(post(userId = user.id, communityId = communities[1].id, postCount = PostCount()))
-            postRepository.save(post(userId = user.id, communityId = communities[2].id, postCount = PostCount()))
+            postRepository.save(
+                post(
+                    userId = user.id,
+                    communityId = communities[0].id,
+                    postCount = PostCount()
+                )
+            )
+            postRepository.save(
+                post(
+                    userId = user.id,
+                    communityId = communities[1].id,
+                    postCount = PostCount()
+                )
+            )
+            postRepository.save(
+                post(
+                    userId = user.id,
+                    communityId = communities[2].id,
+                    postCount = PostCount()
+                )
+            )
 
             postRepository.save(post(userId = user.id, communityId = communities[0].id))
             postRepository.save(post(userId = user.id, communityId = communities[1].id))
@@ -119,9 +138,27 @@ class PostIntegrationTest(
         )
 
         repeat(5) {
-            postRepository.save(post(userId = anotherUser.id, communityId = notMyCommunities[0].id, postCount = PostCount()))
-            postRepository.save(post(userId = anotherUser.id, communityId = notMyCommunities[1].id, postCount = PostCount()))
-            postRepository.save(post(userId = anotherUser.id, communityId = notMyCommunities[2].id, postCount = PostCount()))
+            postRepository.save(
+                post(
+                    userId = anotherUser.id,
+                    communityId = notMyCommunities[0].id,
+                    postCount = PostCount()
+                )
+            )
+            postRepository.save(
+                post(
+                    userId = anotherUser.id,
+                    communityId = notMyCommunities[1].id,
+                    postCount = PostCount()
+                )
+            )
+            postRepository.save(
+                post(
+                    userId = anotherUser.id,
+                    communityId = notMyCommunities[2].id,
+                    postCount = PostCount()
+                )
+            )
 
             postRepository.save(post(userId = anotherUser.id, communityId = notMyCommunities[0].id))
             postRepository.save(post(userId = anotherUser.id, communityId = notMyCommunities[1].id))
@@ -129,7 +166,8 @@ class PostIntegrationTest(
         }
 
         When("모든 게시글을 조회하면") {
-            val actual = postService.getAll(user.id, PostScrollPageRequest(size = 30, isHot = false))
+            val actual =
+                postService.getAll(user.id, PostScrollPageRequest(size = 30, isHot = false))
 
             Then("자신이 속한 학과 커뮤니티의 모든 게시글이 조회된다") {
                 actual.meta.count shouldBe 30
