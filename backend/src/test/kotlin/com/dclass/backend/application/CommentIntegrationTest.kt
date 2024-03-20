@@ -1,5 +1,7 @@
 package com.dclass.backend.application
 
+import com.dclass.backend.application.dto.LikeCommentRequest
+import com.dclass.backend.application.dto.LikeReplyRequest
 import com.dclass.backend.application.dto.UpdateCommentRequest
 import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.reply.ReplyRepository
@@ -81,7 +83,7 @@ class CommentIntegrationTest(
         }
 
         When("댓글에 좋아요를 누르면") {
-            commentService.like(2, comments[0].id)
+            commentService.like(2, LikeCommentRequest(comments[0].id))
 
             Then("해당 댓글의 좋아요 수가 증가한다") {
                 val comment = commentRepository.findCommentByIdAndUserId(comments[0].id, 1)
@@ -90,7 +92,7 @@ class CommentIntegrationTest(
         }
 
         When("대댓글에 좋아요를 누르면") {
-            replyService.like(1, replies[0].id)
+            replyService.like(1, LikeReplyRequest(replies[0].id))
 
             Then("해당 대댓글의 좋아요 수가 증가한다") {
                 val reply = replyRepository.findReplyByIdAndUserId(replies[0].id, 4)
