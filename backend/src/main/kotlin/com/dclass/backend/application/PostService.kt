@@ -9,6 +9,7 @@ import com.dclass.backend.domain.post.getByIdOrThrow
 import com.dclass.backend.exception.post.PostException
 import com.dclass.backend.exception.post.PostExceptionType.NOT_FOUND_POST
 import com.dclass.backend.infra.s3.AwsPresigner
+import com.dclass.support.domain.Image
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -53,6 +54,19 @@ class PostService(
         val community = postValidator.validateCreatePost(userId, request.communityTitle)
 
         val post = postRepository.save(request.toEntity(userId, community.id))
+
+        return postRepository.findPostById(post.id).apply {
+            images = runBlocking(Dispatchers.IO) {
+                images.map { async { awsPresigner.putPostObjectPresigned(it) } }.awaitAll()
+            }
+        }
+    }
+
+    fun update(userId: Long, request: UpdatePostRequest): PostResponse {
+        val post = postRepository.findByIdAndUserId(request.postId, userId)
+            ?: throw PostException(NOT_FOUND_POST)
+
+        post.update(request.title, request.content, request.images.map { Image(it) })
 
         return postRepository.findPostById(post.id).apply {
             images = runBlocking(Dispatchers.IO) {
