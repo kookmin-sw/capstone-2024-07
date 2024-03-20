@@ -1,14 +1,13 @@
 package com.dclass.backend.application
 
-import com.dclass.backend.application.dto.CreatePostRequest
-import com.dclass.backend.application.dto.PostResponse
-import com.dclass.backend.application.dto.PostScrollPageRequest
-import com.dclass.backend.application.dto.PostsResponse
+import com.dclass.backend.application.dto.*
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.post.getByIdOrThrow
+import com.dclass.backend.exception.post.PostException
+import com.dclass.backend.exception.post.PostExceptionType.NOT_FOUND_POST
 import com.dclass.backend.infra.s3.AwsPresigner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -60,6 +59,12 @@ class PostService(
                 images.map { async { awsPresigner.putPostObjectPresigned(it) } }.awaitAll()
             }
         }
+    }
+
+    fun delete(userId: Long, request: DeletePostRequest) {
+        val post = postRepository.findByIdAndUserId(request.postId, userId)
+            ?: throw PostException(NOT_FOUND_POST)
+        postRepository.delete(post)
     }
 
     fun likes(userId: Long, postId: Long): Int {
