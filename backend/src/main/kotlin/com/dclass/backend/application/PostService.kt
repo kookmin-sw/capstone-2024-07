@@ -9,10 +9,6 @@ import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.post.getByIdOrThrow
-import com.dclass.backend.exception.community.CommunityException
-import com.dclass.backend.exception.community.CommunityExceptionType.NOT_FOUND_COMMUNITY
-import com.dclass.backend.exception.post.PostException
-import com.dclass.backend.exception.post.PostExceptionType
 import com.dclass.backend.infra.s3.AwsPresigner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
