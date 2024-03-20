@@ -1,10 +1,7 @@
 package com.dclass.backend.ui.api
 
 import com.dclass.backend.application.PostService
-import com.dclass.backend.application.dto.CreatePostRequest
-import com.dclass.backend.application.dto.PostResponse
-import com.dclass.backend.application.dto.PostScrollPageRequest
-import com.dclass.backend.application.dto.PostsResponse
+import com.dclass.backend.application.dto.*
 import com.dclass.backend.domain.user.User
 import com.dclass.backend.security.LoginUser
 import org.springframework.http.ResponseEntity
@@ -48,6 +45,15 @@ class PostController(
         @PathVariable postId: Long
     ): ResponseEntity<Int> {
         return ResponseEntity.ok(postService.likes(user.id, postId))
+    }
+
+    @DeleteMapping("/{postId}")
+    fun deletePost(
+        @LoginUser user: User,
+        @PathVariable postId: Long
+    ): ResponseEntity<Unit> {
+        postService.delete(user.id, DeletePostRequest(postId))
+        return ResponseEntity.noContent().build()
     }
 }
 
