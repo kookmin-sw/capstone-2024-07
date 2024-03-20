@@ -105,6 +105,8 @@ class UserRestController(
     }
 
 
+    @Operation(summary = "닉네임 변경 API", description = "닉네임을 변경합니다")
+    @ApiResponse(responseCode = "204", description = "닉네임 변경 성공")
     @PutMapping("/change-nickname")
     fun changeNickname(
         @RequestBody @Valid request: UpdateNicknameRequest,
