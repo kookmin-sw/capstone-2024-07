@@ -3,6 +3,7 @@ package com.dclass.backend.domain.post
 import com.dclass.backend.application.dto.PostResponse
 import com.dclass.backend.application.dto.PostScrollPageRequest
 import com.dclass.backend.domain.community.Community
+import com.dclass.backend.domain.scrap.Scrap
 import com.dclass.backend.domain.user.User
 import com.dclass.backend.exception.post.PostException
 import com.dclass.backend.exception.post.PostExceptionType.NOT_FOUND_POST
@@ -24,6 +25,8 @@ interface PostRepository : JpaRepository<Post, Long>, PostRepositorySupport {
 interface PostRepositorySupport {
     fun findPostScrollPage(request: PostScrollPageRequest): List<Post>
     fun findPostById(id: Long): PostResponse
+    fun findScrapPostByUserId(userId: Long): List<PostResponse>
+
     fun findPostScrollPage(
         communityIds: List<Long>,
         request: PostScrollPageRequest
@@ -99,4 +102,25 @@ private class PostRepositoryImpl(
     private fun Jpql.isHot(request: PostScrollPageRequest): Predicatable? {
         return if (request.isHot) path(Post::postCount)(PostCount::likeCount).ge(10) else null
     }
+
+    override fun findScrapPostByUserId(userId: Long): List<PostResponse> {
+        val query = jpql {
+            selectNew<PostResponse>(
+                entity(Post::class),
+                entity(User::class),
+                path(Community::title)
+            ).from(
+                entity(Post::class),
+                join(Community::class).on(path(Post::communityId).equal(path(Community::id))),
+                join(User::class).on(path(Post::userId).equal(path(User::id))),
+                join(Scrap::class).on(path(Post::id).equal(path(Scrap::postId)))
+            ).whereAnd(
+                path(Scrap::userId).equal(userId)
+            ).orderBy(
+                path(Post::id).desc()
+            )
+        }
+        return em.createQuery(query, context).resultList
+    }
+
 }
