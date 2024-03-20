@@ -4,6 +4,8 @@ import com.dclass.backend.application.dto.PostResponse
 import com.dclass.backend.application.dto.PostScrollPageRequest
 import com.dclass.backend.domain.community.Community
 import com.dclass.backend.domain.user.User
+import com.dclass.backend.exception.post.PostException
+import com.dclass.backend.exception.post.PostExceptionType.NOT_FOUND_POST
 import com.linecorp.kotlinjdsl.dsl.jpql.Jpql
 import com.linecorp.kotlinjdsl.dsl.jpql.jpql
 import com.linecorp.kotlinjdsl.querymodel.jpql.predicate.Predicatable
@@ -11,10 +13,10 @@ import com.linecorp.kotlinjdsl.render.jpql.JpqlRenderContext
 import com.linecorp.kotlinjdsl.support.spring.data.jpa.extension.createQuery
 import jakarta.persistence.EntityManager
 import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.repository.findByIdOrNull
 
-fun PostRepository.getByIdOrThrow(id: Long): Post = findByIdOrNull(id)
-    ?: throw NoSuchElementException("게시글이 존재하지 않습니다. id: $id")
+fun PostRepository.getByIdOrThrow(id: Long): Post = findById(id).orElseThrow {
+    PostException(NOT_FOUND_POST)
+}
 
 interface PostRepository : JpaRepository<Post, Long>, PostRepositorySupport {
 }

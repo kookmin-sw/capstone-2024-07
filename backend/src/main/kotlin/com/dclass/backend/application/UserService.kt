@@ -10,6 +10,8 @@ import com.dclass.backend.domain.department.DepartmentRepository
 import com.dclass.backend.domain.user.UserRepository
 import com.dclass.backend.domain.user.getByEmailOrThrow
 import com.dclass.backend.domain.user.getOrThrow
+import com.dclass.backend.exception.department.DepartmentException
+import com.dclass.backend.exception.department.DepartmentExceptionType.NOT_FOUND_DEPARTMENT
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -50,7 +52,7 @@ class UserService(
 
         val groupBy = belong.departmentIds.associateWith { departmentId ->
             departments.find { it.id == departmentId }
-                ?: throw IllegalArgumentException("학과가 존재하지 않습니다: $departmentId")
+                ?: throw DepartmentException(NOT_FOUND_DEPARTMENT)
         }
 
         return UserResponseWithDepartmentNames(
