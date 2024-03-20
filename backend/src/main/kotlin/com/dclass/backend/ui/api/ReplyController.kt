@@ -19,13 +19,12 @@ class ReplyController(
 
     @Operation(summary = "대댓글 생성 API", description = "댓글에 대댓글을 생성합니다.")
     @ApiResponse(responseCode = "200", description = "대댓글 생성 성공")
-    @PostMapping("/{commentId}")
+    @PostMapping
     fun createReply(
         @LoginUser user: User,
-        @PathVariable commentId: Long,
-        @RequestBody request: ReplyRequest
+        @RequestBody request: CreateReplyRequest
     ): ResponseEntity<ApiResponses<ReplyResponse>> {
-        val reply = replyService.create(user.id, CreateReplyRequest(commentId, request.content))
+        val reply = replyService.create(user.id, request)
         return ResponseEntity.ok(ApiResponses.success(reply))
     }
 
@@ -52,12 +51,12 @@ class ReplyController(
         return ResponseEntity.noContent().build()
     }
 
-    @PostMapping("/{replyId}/likes")
+    @PostMapping("/likes")
     fun likeReply(
         @LoginUser user: User,
-        @PathVariable replyId: Long
+        @RequestBody request: LikeReplyRequest
     ): ResponseEntity<Unit> {
-        replyService.like(user.id, replyId)
+        replyService.like(user.id, request)
         return ResponseEntity.noContent().build()
     }
 }
