@@ -80,6 +80,10 @@ class Post(
         postCount = postCount.increaseCommentReplyCount(cnt)
     }
 
+    fun increaseScrapCount(cnt: Int) {
+        postCount = postCount.increaseScrapCount(cnt)
+    }
+
     fun addLike(userId: Long) {
         postLikes.add(userId)
         postCount.syncLikeCount(postLikesCount)
