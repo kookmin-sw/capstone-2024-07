@@ -31,6 +31,10 @@ data class DeleteReplyRequest(
     val replyId: Long,
 )
 
+data class LikeReplyRequest(
+    val replyId: Long,
+)
+
 data class ReplyResponse(
     @Schema(
         description = "댓글의 고유 식별자",

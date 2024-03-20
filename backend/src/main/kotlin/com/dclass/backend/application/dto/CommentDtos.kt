@@ -31,6 +31,10 @@ data class DeleteCommentRequest(
     val commentId: Long,
 )
 
+data class LikeCommentRequest(
+    val commentId: Long,
+)
+
 data class CommentResponse(
     @Schema(
         description = "댓글의 고유 식별자",
