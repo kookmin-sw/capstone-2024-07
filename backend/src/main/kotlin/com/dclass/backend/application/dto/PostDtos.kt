@@ -89,7 +89,7 @@ data class PostsResponse(
 ) {
     companion object {
         fun of(data: List<PostResponse>, limit: Int): PostsResponse {
-            return PostsResponse(data, MetaData(limit, data.size >= limit))
+            return PostsResponse(data, MetaData(data.size, data.size >= limit))
         }
     }
 }
