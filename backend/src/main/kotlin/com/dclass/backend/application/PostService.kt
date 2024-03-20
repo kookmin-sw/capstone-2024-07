@@ -55,15 +55,7 @@ class PostService(
     }
 
     fun create(userId: Long, request: CreatePostRequest): PostResponse {
-        // NOTE : 사용자가 속한 학과 커뮤니티에만 게시글을 작성합니다
-        val belong = belongRepository.getOrThrow(userId)
-        val community =
-            communityRepository.findByDepartmentIdAndTitle(belong.activated, request.communityTitle)
-                ?: throw CommunityException(NOT_FOUND_COMMUNITY)
-
-        if (!belong.contain(community.departmentId)) {
-            throw PostException(PostExceptionType.FORBIDDEN_POST)
-        }
+        val community = postValidator.validateCreatePost(userId, request.communityTitle)
 
         val post = postRepository.save(request.toEntity(userId, community.id))
 

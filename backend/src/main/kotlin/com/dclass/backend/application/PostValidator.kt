@@ -2,6 +2,7 @@ package com.dclass.backend.application
 
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.belong.getOrThrow
+import com.dclass.backend.domain.community.Community
 import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.community.getByIdOrThrow
 import com.dclass.backend.domain.post.PostRepository
@@ -18,6 +19,18 @@ class PostValidator(
     private val communityRepository: CommunityRepository,
     private val postRepository: PostRepository
 ) {
+    fun validateCreatePost(userId: Long, communityTitle: String): Community {
+        val belong = belongRepository.getOrThrow(userId)
+        val community =
+            communityRepository.findByDepartmentIdAndTitle(belong.activated, communityTitle)
+                ?: throw PostException(FORBIDDEN_POST)
+
+        if (!belong.contain(community.departmentId)) {
+            throw PostException(FORBIDDEN_POST)
+        }
+        return community
+    }
+
     fun validate(userId: Long, postId: Long) {
         val belong = belongRepository.getOrThrow(userId)
         val post = postRepository.getByIdOrThrow(postId)
