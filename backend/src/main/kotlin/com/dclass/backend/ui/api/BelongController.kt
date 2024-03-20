@@ -25,8 +25,8 @@ class BelongController(
     @PutMapping("/switch-departments")
     fun switchDepartments(
         @LoginUser user: User
-    ): ResponseEntity<ApiResponses<SwitchDepartmentResponse>> {
-        return ResponseEntity.ok(ApiResponses.success(belongService.switchDepartment(user.id)))
+    ): ResponseEntity<SwitchDepartmentResponse> {
+        return ResponseEntity.ok(belongService.switchDepartment(user.id))
     }
 
     @Operation(summary = "학과 변경 API", description = "학과를 변경합니다")
