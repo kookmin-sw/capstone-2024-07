@@ -88,12 +88,20 @@ private class PostRepositoryImpl(
                 path(Post::id).lessThan(request.lastId ?: Long.MAX_VALUE),
                 path(Post::communityId).`in`(communityIds),
                 request.communityTitle?.let { path(Community::title).equal(it) },
-                isHot(request)
+                isHot(request),
+                isSearch(request)
             ).orderBy(
                 path(Post::id).desc()
             )
         }
         return em.createQuery(query, context).setMaxResults(request.size).resultList
+    }
+
+    private fun Jpql.isSearch(request: PostScrollPageRequest): Predicatable? {
+        return if (request.keyword != null) or(
+            path(Post::title).like("%${request.keyword}%"),
+            path(Post::content).like("%${request.keyword}%")
+        ) else null
     }
 
     private fun Jpql.isHot(request: PostScrollPageRequest): Predicatable? {
