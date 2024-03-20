@@ -47,6 +47,15 @@ class PostController(
         return ResponseEntity.ok(postService.likes(user.id, postId))
     }
 
+    @PutMapping
+    fun updatePost(
+        @LoginUser user: User,
+        @RequestBody request: UpdatePostRequest
+    ): ResponseEntity<Unit> {
+        postService.update(user.id, request)
+        return ResponseEntity.noContent().build()
+    }
+
     @DeleteMapping("/{postId}")
     fun deletePost(
         @LoginUser user: User,
