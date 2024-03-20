@@ -13,6 +13,7 @@ data class PostScrollPageRequest(
     var communityTitle: String? = null,
     val size: Int,
     val isHot: Boolean = false,
+    val keyword: String? = null,
 ) {
     init {
         communityTitle = CommunityType.from(communityTitle)?.value
