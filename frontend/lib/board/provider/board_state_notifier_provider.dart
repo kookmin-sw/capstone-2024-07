@@ -29,14 +29,14 @@ class BoardStateNotifier extends StateNotifier<CursorPaginationModelBase>{
 
   final BoardRepository repository;
   int lastId;
-  String communityTitle;
+  String? communityTitle;
   int size;
   bool isHot;
 
   BoardStateNotifier({
     required this.repository,
     required this.lastId,
-    required this.communityTitle,
+    this.communityTitle,
     required this.size,
     required this.isHot,
   }) : super(CursorPaginationModelLoading()){
