@@ -20,6 +20,7 @@ fun PostRepository.getByIdOrThrow(id: Long): Post = findById(id).orElseThrow {
 }
 
 interface PostRepository : JpaRepository<Post, Long>, PostRepositorySupport {
+    fun findByIdAndUserId(postId: Long, userId: Long): Post?
 }
 
 interface PostRepositorySupport {
