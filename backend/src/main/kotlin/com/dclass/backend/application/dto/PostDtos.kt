@@ -79,6 +79,10 @@ data class CreatePostRequest(
     }
 }
 
+data class DeletePostRequest(
+    val postId: Long
+)
+
 data class MetaData(
     val count: Int,
     val hasMore: Boolean
