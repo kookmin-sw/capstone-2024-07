@@ -7,9 +7,12 @@ import com.dclass.backend.application.dto.PostsResponse
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
-import com.dclass.backend.domain.community.getByTitleOrThrow
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.post.getByIdOrThrow
+import com.dclass.backend.exception.community.CommunityException
+import com.dclass.backend.exception.community.CommunityExceptionType.NOT_FOUND_COMMUNITY
+import com.dclass.backend.exception.post.PostException
+import com.dclass.backend.exception.post.PostExceptionType
 import com.dclass.backend.infra.s3.AwsPresigner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -52,10 +55,16 @@ class PostService(
     }
 
     fun create(userId: Long, request: CreatePostRequest): PostResponse {
-        postValidator.validateCreatePost(userId, request.communityTitle)
+        // NOTE : 사용자가 속한 학과 커뮤니티에만 게시글을 작성합니다
+        val belong = belongRepository.getOrThrow(userId)
+        val community =
+            communityRepository.findByDepartmentIdAndTitle(belong.activated, request.communityTitle)
+                ?: throw CommunityException(NOT_FOUND_COMMUNITY)
 
-        // FIXME : communityTitle을 이용하여 communityId를 가져오는 로직이 중복되어있음
-        val community = communityRepository.getByTitleOrThrow(request.communityTitle)
+        if (!belong.contain(community.departmentId)) {
+            throw PostException(PostExceptionType.FORBIDDEN_POST)
+        }
+
         val post = postRepository.save(request.toEntity(userId, community.id))
 
         return postRepository.findPostById(post.id).apply {
