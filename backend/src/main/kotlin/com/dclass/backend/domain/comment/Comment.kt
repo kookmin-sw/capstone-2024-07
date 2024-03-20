@@ -1,5 +1,7 @@
 package com.dclass.backend.domain.comment
 
+import com.dclass.backend.exception.comment.CommentException
+import com.dclass.backend.exception.comment.CommentExceptionType
 import com.dclass.support.domain.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Embedded
@@ -53,17 +55,14 @@ class Comment(
 
     fun like(userId: Long) {
         if (this.userId == userId) {
-            throw IllegalAccessException("본인이 작성한 댓글에는 좋아요를 누를 수 없습니다.")
+            throw CommentException(CommentExceptionType.SELF_LIKE)
         }
-        commentLikes.add(userId, id)
+        commentLikes.add(userId)
     }
 
     fun isDeleted(commentId: Long) = deleted
 
-    fun changeContent(content: String, userId: Long) {
-        if (this.userId != userId) {
-            throw IllegalAccessException("댓글을 수정할 수 있는 권한이 없습니다.")
-        }
+    fun changeContent(content: String) {
         this.content = content
         modifiedDateTime = LocalDateTime.now()
     }

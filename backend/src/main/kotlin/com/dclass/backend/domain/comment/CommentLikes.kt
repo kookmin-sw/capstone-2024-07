@@ -19,7 +19,7 @@ class CommentLikes(
     val count: Int
         get() = _likes.size
 
-    fun add(userId: Long, commentId: Long) {
+    fun add(userId: Long) {
         _likes.removeIf { it.usersId == userId }
         _likes.add(CommentLike(userId))
     }
