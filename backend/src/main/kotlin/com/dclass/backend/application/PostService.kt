@@ -41,7 +41,7 @@ class PostService(
             }
         }
 
-        return PostsResponse.of(posts, posts.size)
+        return PostsResponse.of(posts, request.size)
     }
 
     fun getById(userId: Long, postId: Long): PostResponse {
