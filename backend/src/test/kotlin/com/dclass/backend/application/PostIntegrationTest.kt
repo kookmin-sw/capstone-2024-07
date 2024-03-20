@@ -125,6 +125,7 @@ class PostIntegrationTest(
             postRepository.save(post(userId = user.id, communityId = communities[0].id))
             postRepository.save(post(userId = user.id, communityId = communities[1].id))
             postRepository.save(post(userId = user.id, communityId = communities[2].id))
+            postRepository.save(post(title = "검색용 제목", content = "내용입니다", userId = user.id, communityId = communities[2].id))
         }
 
         val anotherUser = userRepository.save(user(university = univ))
@@ -163,6 +164,7 @@ class PostIntegrationTest(
             postRepository.save(post(userId = anotherUser.id, communityId = notMyCommunities[0].id))
             postRepository.save(post(userId = anotherUser.id, communityId = notMyCommunities[1].id))
             postRepository.save(post(userId = anotherUser.id, communityId = notMyCommunities[2].id))
+            postRepository.save(post(title = "검색용 제목", content = "내용입니다", userId = anotherUser.id, communityId = notMyCommunities[2].id))
         }
 
         When("모든 게시글을 조회하면") {
@@ -178,7 +180,17 @@ class PostIntegrationTest(
             val actual = postService.getAll(user.id, PostScrollPageRequest(size = 30, isHot = true))
 
             Then("자신이 속한 학과 커뮤니티의 인기 게시글이 조회된다") {
-                actual.meta.count shouldBe 15
+                actual.meta.count shouldBe 20
+            }
+        }
+
+        When("특정 게시글을 검색하면") {
+            val actual = postService.getAll(user.id, PostScrollPageRequest(size = 30, isHot = false, keyword = "검색용"))
+            val actual2 = postService.getAll(user.id, PostScrollPageRequest(size = 30, isHot = false, keyword = "내용"))
+
+            Then("검색된 게시글이 조회된다") {
+                actual.meta.count shouldBe 5
+                actual2.meta.count shouldBe 5
             }
         }
     }
