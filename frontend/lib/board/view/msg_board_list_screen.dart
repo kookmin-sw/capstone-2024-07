@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/board/provider/board_provider.dart';
-import 'package:frontend/board/view/msg_board_add_screen.dart';
+import 'package:frontend/board/component/board_card.dart';
+import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/common/const/colors.dart';
-import 'package:frontend/board/model/msg_board_model.dart';
-import 'package:frontend/board/layout/board_layout.dart';
+import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/board/layout/category_circle_layout.dart';
-import 'package:frontend/board/provider/category_provider.dart';
+import 'package:frontend/common/model/cursor_pagination_model.dart';
 
 import '../../member/view/my_page_screen.dart';
 
-class MsgBoardListScreen extends StatefulWidget {
+class MsgBoardListScreen extends ConsumerStatefulWidget {
   static String get routeName => 'boardList';
 
   const MsgBoardListScreen({
@@ -18,24 +17,28 @@ class MsgBoardListScreen extends StatefulWidget {
   });
 
   @override
-  State<MsgBoardListScreen> createState() => _MsgBoardListScreenState();
+  ConsumerState<MsgBoardListScreen> createState() => _MsgBoardListScreenState();
 }
 
-class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
+class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
   // late Future<List<MsgBoardListModel>> boards;
+  List<MsgBoardResponseModel> msgboardlistinstance = [];
   List<String> categorys = [];
+
+  final ScrollController controller = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    // TODO: add board = http
-    categorys.add("인기게시판");
-    categorys.add("자유게시판");
-    categorys.add("전공게시판");
-    categorys.add("취업");
-    categorys.add("대학원");
-    categorys.add("기타");
-    categorys.add("공모전 공고");
+    controller.addListener(scrollListener);
+  }
+
+  void scrollListener() {
+    if (controller.offset > controller.position.maxScrollExtent - 150) {
+      ref.read(boardStateNotifierProvider.notifier).paginate(
+        fetchMore: true,
+      );
+    }
   }
 
   @override
@@ -45,38 +48,20 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
         child: Column(
           children: [
             _renderTop(),
-            SizedBox(
-              height: MediaQuery.of(context).size.height - 111,
-              child: BoardListWidget(
-                categorys: categorys,
-              ),
+            _renderCategories(),
+            Expanded(
+              child: _renderBoardList(),
             ),
           ],
         ),
       ),
-      // body: SingleChildScrollView(
-      //   child: Padding(
-      //     padding: const EdgeInsets.symmetric(
-      //       horizontal: 50,
-      //       vertical: 50,
-      //     ),
-      //     child: FutureBuilder(
-      //       future: boards,
-      //       builder: (context, snapshot) {
-      //         if (snapshot.hasData) {
-      //           return const Column(
-      //             children: [
-      //               // TODO : Future
-      //               // for(var board in snapshot.data!)
-      //               //   board.category
-      //             ],
-      //           );
-      //         }
-      //         return const Center(child: Text("..."));
-      //       },
-      //     ),
-      //   ),
-      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          print("floating button clicked!!!");
+        },
+        child: const Icon(Icons.add),
+        backgroundColor: PRIMARY_COLOR,
+      ),
     );
     //test
   }
@@ -84,7 +69,7 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
   Widget _renderTop() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
-      height: 30.0,
+      height: 50.0,
       width: MediaQuery.of(context).size.width,
       child: Row(
         children: [
@@ -102,100 +87,92 @@ class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => const MypageScreen(),
+                  builder: (_) => MypageScreen(),
                 ),
               );
             },
-            icon: const Icon(Icons.person),
+            icon: const Icon(
+              Icons.person,
+            ),
           ),
         ],
       ),
     );
   }
-}
 
-class BoardListWidget extends ConsumerWidget {
-  const BoardListWidget({
-    super.key,
-    required this.categorys,
-  });
-
-  final List<String> categorys;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final clickedBoardList = ref.watch(categoryStateProvider);
-    List<MsgBoardModel> msgboardlistinstance = ref.watch(boardStateProvider);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        const SizedBox(
-          height: 5,
-        ),
-        SizedBox(
-          height: 35,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              for (var category in categorys)
-                Padding(
-                  padding: const EdgeInsets.all(7),
-                  child: CategoryCircle(
-                    category: category,
-                    type: true,
-                  ),
-                )
-            ],
-          ),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: BODY_TEXT_COLOR.withOpacity(0.5),
-                width: 1,
+  Widget _renderCategories() {
+    return SizedBox(
+      height: 50,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          for (var category in categorys)
+            Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: CategoryCircle(
+                category: category,
+                type: true,
               ),
-            ),
-          ),
+            )
+        ],
+      ),
+    );
+  }
+
+  Widget _renderBoardList() {
+    final data = ref.watch(boardStateNotifierProvider);
+
+    if(data is CursorPaginationModelLoading){
+      return const Center(
+        child: CircularProgressIndicator(
+          color: PRIMARY_COLOR,
         ),
-        Expanded(
-          child: ListView(
-            children: [
-              for (var board in msgboardlistinstance)
-                if (clickedBoardList.isEmpty)
-                  Board(
-                    board: board,
-                    canTap: true,
-                    titleSize: 11,
-                  )
-                else if (clickedBoardList.contains(board.category))
-                  Board(
-                    board: board,
-                    canTap: true,
-                    titleSize: 11,
-                  ),
-              const SizedBox(
-                height: 10,
-              ),
-            ],
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.all(50),
-          child: FloatingActionButton(
-            child: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => const MsgBoardAddScreen(
-                    isEdit: false,
-                  ),
+      );
+    }
+
+    if (data is CursorPaginationModelError) {
+      return Center(
+        child: Text("데이터를 불러올 수 없습니다."),
+      );
+    }
+
+    final cp = data as CursorPaginationModel;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: ListView.separated(
+        controller: controller,
+        itemCount: cp.data.length + 1,
+        itemBuilder: (_, index) {
+          if (index == cp.data.length) {
+            return Center(
+              child: cp is CursorPaginationModelFetchingMore
+                  ? CircularProgressIndicator(
+                color: PRIMARY_COLOR,
+              )
+                  : Text(
+                'Copyright 2024. Decl Team all rights reserved.\n',
+                style: TextStyle(
+                  color: BODY_TEXT_COLOR,
+                  fontSize: 12.0,
                 ),
-              );
+              ),
+            );
+          }
+
+          final pItem = cp.data[index];
+
+          return GestureDetector(
+            child: BoardCard.fromModel(msgBoardResponseModel: pItem),
+            onTap: () async {
+              print("click!!");
             },
-          ),
-        ),
-      ],
+          );
+        },
+        separatorBuilder: (_, index) {
+          return SizedBox(height: 16.0);
+        },
+      ),
     );
   }
 }
