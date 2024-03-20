@@ -8,6 +8,7 @@ import 'package:frontend/board/layout/category_circle_layout.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
 
 import '../../member/view/my_page_screen.dart';
+import 'msg_board_add_screen.dart';
 
 class MsgBoardListScreen extends ConsumerStatefulWidget {
   static String get routeName => 'boardList';
@@ -57,7 +58,13 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print("floating button clicked!!!");
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const MsgBoardAddScreen(
+                isEdit: false,
+              ),
+            ),
+          );
         },
         child: const Icon(Icons.add),
         backgroundColor: PRIMARY_COLOR,
