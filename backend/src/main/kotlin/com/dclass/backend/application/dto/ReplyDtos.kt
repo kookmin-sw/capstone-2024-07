@@ -18,7 +18,7 @@ data class CreateReplyRequest(
 
     @field:NotNull
     val content: String,
-){
+) {
     fun toEntity(userId: Long): Reply {
         return Reply(userId, commentId, content)
     }
@@ -32,6 +32,10 @@ data class UpdateReplyRequest(
 )
 
 data class DeleteReplyRequest(
+    val replyId: Long,
+)
+
+data class LikeReplyRequest(
     val replyId: Long,
 )
 
