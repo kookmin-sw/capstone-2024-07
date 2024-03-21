@@ -25,6 +25,7 @@ class CategoryCircle extends ConsumerWidget {
           ref.read(isHotProvider.notifier).state = true;
         } else {
           ref.read(categoryTitleProvider.notifier).state = categoryCode;
+          ref.read(isHotProvider.notifier).state = false;
         }
 
       },
