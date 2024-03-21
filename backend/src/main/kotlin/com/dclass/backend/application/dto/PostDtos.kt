@@ -41,7 +41,7 @@ data class PostScrollPageRequest(
     val keyword: String? = null,
 ) {
     init {
-        communityTitle = CommunityType.from(communityTitle)!!.name
+        communityTitle = CommunityType.from(communityTitle)?.name
     }
 }
 
@@ -140,9 +140,6 @@ data class PostResponse(
         post.createdDateTime
     )
 
-    init {
-        communityTitle = CommunityType.from(communityTitle)!!.value
-    }
 }
 
 data class CreatePostRequest(
