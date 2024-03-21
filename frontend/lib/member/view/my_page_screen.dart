@@ -3,7 +3,7 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-import '../../common/component/NoticePopupDialog.dart';
+import '../../common/component/notice_popup_dialog.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/default_layout.dart';
 import '../model/member_model.dart';
@@ -94,7 +94,7 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
                       const SizedBox(
                         width: 30.0,
                       ),
-                      Text('KIRI'),
+                      Text('DeCl'),
                     ],
                   ),
                   const SizedBox(

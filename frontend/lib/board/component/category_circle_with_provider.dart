@@ -1,40 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/common/const/colors.dart';
-import 'package:frontend/board/provider/category_provider.dart';
 
-class CategoryCircle extends ConsumerWidget {
-  const CategoryCircle({
+import '../../common/const/colors.dart';
+import '../provider/api_category_provider.dart';
+
+class CategoryCircleWithProvider extends ConsumerWidget {
+  const CategoryCircleWithProvider({
     super.key,
     required this.category,
+    required this.categoryCode,
     required this.type,
   });
 
   final String category;
+  final String categoryCode;
   final bool type;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final clickedList = ref.watch(categoryStateProvider);
     return GestureDetector(
       onTap: () {
-        if (clickedList.contains(category)) {
-          ref.read(categoryStateProvider.notifier).remove(category);
+        if(categoryCode=="HOT"){
+          ref.read(categoryTitleProvider.notifier).state = null;
+          ref.read(isHotProvider.notifier).state = true;
         } else {
-          ref.read(categoryStateProvider.notifier).clear();
-          ref.read(categoryStateProvider.notifier).add(category);
+          ref.read(categoryTitleProvider.notifier).state = categoryCode;
+          ref.read(isHotProvider.notifier).state = false;
         }
+
       },
       child: Container(
         // category circle
         decoration: BoxDecoration(
           color: !type
               ? PRIMARY_COLOR.withOpacity(0.1)
-              : !clickedList.contains(category)
-              ? BODY_TEXT_COLOR.withOpacity(0.1)
-              : Colors.white,
+              : BODY_TEXT_COLOR.withOpacity(0.1),
           borderRadius: BorderRadius.circular(50),
-          border: type && clickedList.contains(category)
+          border: type
               ? Border.all(
             color: PRIMARY_COLOR,
           )
@@ -42,10 +44,12 @@ class CategoryCircle extends ConsumerWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 3),
-          child: Text(
-            category,
-            style: const TextStyle(
-              fontSize: 10,
+          child: Center(
+            child: Text(
+              category,
+              style: const TextStyle(
+                fontSize: 10,
+              ),
             ),
           ),
         ),
