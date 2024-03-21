@@ -1,11 +1,15 @@
 package com.dclass.backend.config
 
+import com.dclass.backend.domain.belong.Belong
+import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.community.Community
 import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.department.Department
 import com.dclass.backend.domain.department.DepartmentRepository
 import com.dclass.backend.domain.user.University
 import com.dclass.backend.domain.user.UniversityRepository
+import com.dclass.backend.domain.user.User
+import com.dclass.backend.domain.user.UserRepository
 import jakarta.transaction.Transactional
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Profile
@@ -18,7 +22,9 @@ class DatabaseInitializer(
     private val database: Database,
     private val universityRepository: UniversityRepository,
     private val departmentRepository: DepartmentRepository,
-    private val communityRepository: CommunityRepository
+    private val communityRepository: CommunityRepository,
+    private val belongRepository: BelongRepository,
+    private val userRepository: UserRepository
 ) : CommandLineRunner {
 
     override fun run(vararg args: String) {
@@ -34,6 +40,7 @@ class DatabaseInitializer(
         populateUniversity()
         populateDepartment()
         populateCommunity()
+        populateUser()
     }
 
 
@@ -623,6 +630,95 @@ class DatabaseInitializer(
         )
 
         departmentRepository.saveAll(departments)
+
+
+    }
+
+    private fun populateUser() {
+
+        val university = universityRepository.findById(205).get()!!
+
+
+        val users = listOf(
+            User(
+                name = "김덕배",
+                email = "duck@kookmin.ac.kr",
+                nickname = "duckduck",
+                password = "123123a",
+                university = university,
+            ),
+            User(
+                name = "홍길동",
+                email = "hong@kookmin.ac.kr",
+                nickname = "honggildong",
+                password = "123123a",
+                university = university,
+            ),
+            User(
+                name = "김철수",
+                email = "chulsu@kookmin.ac.kr",
+                nickname = "chulsukim",
+                password = "5678efgh",
+                university = university
+            ),
+            User(
+                name = "이영희",
+                email = "zerotwo@kookmin.ac.kr",
+                nickname = "zerotwo",
+                password = "9012ijkl",
+                university = university,
+            ),
+            User(
+                name = "박민수",
+                email = "minsu@kookmin.ac.kr",
+                nickname = "minsupark",
+                password = "3456mnop",
+                university = university,
+            ),
+            User(
+                name = "최영희",
+                email = "younghee@kookmin.ac.kr",
+                nickname = "youngheec",
+                password = "7890qrst",
+                university = university,
+            ),
+            User(
+                name = "김응수",
+                email = "yeswater@kookmin.ac.kr",
+                nickname = "yeswater",
+                password = "4567uvwx",
+                university = university,
+            ),
+            User(
+                name = "김민수",
+                email = "minsoo@kookmin.ac.kr",
+                nickname = "mskim",
+                password = "1234abcd",
+                university = university,
+            ),
+            User(
+                name = "이다은",
+                email = "daeun@kookmin.ac.kr",
+                nickname = "daeunlee",
+                password = "9012ijkl",
+                university = university,
+            ),
+            User(
+                name = "이승민",
+                email = "seungmin@kookmin.ac.kr",
+                nickname = "seungmine",
+                password = "7890qrst",
+                university = university,
+            )
+        )
+
+        val savedUser = userRepository.saveAll(users)
+
+        belongRepository.saveAll(
+            savedUser.map {
+                Belong(userId = it.id, ids = listOf(75, 163))
+            }
+        )
     }
 
     private fun populateCommunity() {
