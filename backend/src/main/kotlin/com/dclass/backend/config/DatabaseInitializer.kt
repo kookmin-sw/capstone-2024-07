@@ -6,6 +6,9 @@ import com.dclass.backend.domain.community.Community
 import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.department.Department
 import com.dclass.backend.domain.department.DepartmentRepository
+import com.dclass.backend.domain.post.Post
+import com.dclass.backend.domain.post.PostLikes
+import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.user.University
 import com.dclass.backend.domain.user.UniversityRepository
 import com.dclass.backend.domain.user.User
@@ -14,6 +17,7 @@ import jakarta.transaction.Transactional
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
+import java.time.LocalDateTime
 
 @Profile("local")
 @Transactional
@@ -24,7 +28,8 @@ class DatabaseInitializer(
     private val departmentRepository: DepartmentRepository,
     private val communityRepository: CommunityRepository,
     private val belongRepository: BelongRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val postRepository: PostRepository,
 ) : CommandLineRunner {
 
     override fun run(vararg args: String) {
@@ -41,6 +46,7 @@ class DatabaseInitializer(
         populateDepartment()
         populateCommunity()
         populateUser()
+        populateDummyPosts()
     }
 
 
@@ -737,4 +743,37 @@ class DatabaseInitializer(
                 )
             }
     }
+
+
+    private fun populateDummyPosts() {
+        val users = userRepository.findAll()
+        val communityIds = (445L..450L).toList()
+
+
+        val dummyPosts = mutableListOf<Post>()
+
+        var number = 1
+
+        for (user in users) {
+            for (i in 1..10) {
+                val communityId = communityIds.random()
+                val community = communityRepository.findById(communityId).get()
+                val post = createDummyPost(user, community, number)
+                dummyPosts.add(post)
+                number++
+            }
+        }
+
+        postRepository.saveAll(dummyPosts)
+    }
+
+    private fun createDummyPost(user: User, community: Community, number: Int): Post {
+        val title = "Dummy Post Title ${number}"
+        val content = "Dummy Post Content"
+        val createdDateTime = LocalDateTime.now()
+
+        return Post(user.id, community.id, title, content, PostLikes(), createdDateTime = createdDateTime)
+    }
+
+
 }
