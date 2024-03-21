@@ -41,7 +41,7 @@ data class PostScrollPageRequest(
     val keyword: String? = null,
 ) {
     init {
-        communityTitle = CommunityType.from(communityTitle)?.value
+        communityTitle = CommunityType.from(communityTitle)!!.name
     }
 }
 
@@ -83,7 +83,7 @@ data class PostResponse(
         description = "게시글이 속한 커뮤니티의 타이틀",
         example = "자유게시판"
     )
-    val communityTitle: String,
+    var communityTitle: String,
 
     @Schema(
         description = "게시글의 제목",
@@ -139,6 +139,10 @@ data class PostResponse(
         post.isQuestion,
         post.createdDateTime
     )
+
+    init {
+        communityTitle = CommunityType.from(communityTitle)!!.value
+    }
 }
 
 data class CreatePostRequest(
@@ -183,7 +187,7 @@ data class CreatePostRequest(
     )
 
     init {
-        communityTitle = CommunityType.from(communityTitle)!!.value
+        communityTitle = CommunityType.from(communityTitle)!!.name
     }
 }
 

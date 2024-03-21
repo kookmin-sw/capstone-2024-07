@@ -733,12 +733,12 @@ class DatabaseInitializer(
             .forEach {
                 communityRepository.saveAll(
                     listOf(
-                        Community(title = "자유게시판", departmentId = it.id),
-                        Community(title = "대학원게시판", departmentId = it.id),
-                        Community(title = "취준게시판", departmentId = it.id),
-                        Community(title = "스터디모집", departmentId = it.id),
-                        Community(title = "질문게시판", departmentId = it.id),
-                        Community(title = "홍보게시판", departmentId = it.id),
+                        Community(title = "FREE", departmentId = it.id),
+                        Community(title = "GRADUATE", departmentId = it.id),
+                        Community(title = "JOB", departmentId = it.id),
+                        Community(title = "STUDY", departmentId = it.id),
+                        Community(title = "QUESTION", departmentId = it.id),
+                        Community(title = "PROMOTION", departmentId = it.id),
                     )
                 )
             }
