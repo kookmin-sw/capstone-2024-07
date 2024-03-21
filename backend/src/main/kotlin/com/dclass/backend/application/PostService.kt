@@ -9,7 +9,6 @@ import com.dclass.backend.domain.post.getByIdOrThrow
 import com.dclass.backend.exception.post.PostException
 import com.dclass.backend.exception.post.PostExceptionType.NOT_FOUND_POST
 import com.dclass.backend.infra.s3.AwsPresigner
-import com.dclass.support.domain.Image
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -62,7 +61,8 @@ class PostService(
         }
     }
 
-    fun update(userId: Long, request: UpdatePostRequest): PostResponse {
+    // TODO: 게시글 update시 image 처리 로직 수정
+    /*fun update(userId: Long, request: UpdatePostRequest): PostResponse {
         val post = postRepository.findByIdAndUserId(request.postId, userId)
             ?: throw PostException(NOT_FOUND_POST)
 
@@ -73,7 +73,7 @@ class PostService(
                 images.map { async { awsPresigner.putPostObjectPresigned(it) } }.awaitAll()
             }
         }
-    }
+    }*/
 
     fun delete(userId: Long, request: DeletePostRequest) {
         val post = postRepository.findByIdAndUserId(request.postId, userId)
