@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
 import 'package:frontend/board/provider/image_provider.dart';
 import 'package:frontend/common/const/colors.dart';
@@ -18,6 +19,7 @@ class _MsgBoardAddScreenState extends State<MsgBoardAddScreen> {
   bool canUpload = false;
   bool writedTitle = false;
   bool writedContent = false;
+  String selectCategory = "인기게시판";
 
   @override
   Widget build(BuildContext context) {
@@ -65,13 +67,62 @@ class _MsgBoardAddScreenState extends State<MsgBoardAddScreen> {
                           });
                         },
                         decoration: InputDecoration(
+                            border: InputBorder.none,
                             hintText: "제목",
                             disabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
                                     color: BODY_TEXT_COLOR.withOpacity(0.5)))),
                       ),
                     ),
+                    SizedBox(
+                      height: 25,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15, right: 10),
+                          child: DropdownButton(
+                            value: selectCategory,
+                            icon: const Icon(Icons.arrow_drop_down_outlined),
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 10,
+                            ),
+                            underline: Container(),
+                            elevation: 0,
+                            dropdownColor: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(20),
+                            items: categorysList
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (value) => {
+                              setState(() {
+                                if (value != null) {
+                                  selectCategory = value;
+                                }
+                              })
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: BODY_TEXT_COLOR.withOpacity(0.3),
+                        width: 1,
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(
                   height: 10,

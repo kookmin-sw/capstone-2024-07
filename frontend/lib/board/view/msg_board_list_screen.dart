@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/provider/board_provider.dart';
 import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/common/const/colors.dart';
@@ -23,19 +24,12 @@ class MsgBoardListScreen extends StatefulWidget {
 
 class _MsgBoardListScreenState extends State<MsgBoardListScreen> {
   // late Future<List<MsgBoardListModel>> boards;
-  List<String> categorys = [];
+  List<String> categorys = categorysList;
 
   @override
   void initState() {
     super.initState();
     // TODO: add board = http
-    categorys.add("인기게시판");
-    categorys.add("자유게시판");
-    categorys.add("전공게시판");
-    categorys.add("취업");
-    categorys.add("대학원");
-    categorys.add("기타");
-    categorys.add("공모전 공고");
   }
 
   @override
