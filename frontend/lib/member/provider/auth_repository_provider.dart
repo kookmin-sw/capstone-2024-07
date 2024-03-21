@@ -37,7 +37,7 @@ class AuthRepository {
         },
       ),
     );
-    return LoginResponse.fromJson(resp.data["body"]);
+    return LoginResponse.fromJson(resp.data);
   }
 
   Future<TokenResponse> token() async {
@@ -50,6 +50,6 @@ class AuthRepository {
       ),
     );
 
-    return TokenResponse.fromJson(resp.data["body"]);
+    return TokenResponse.fromJson(resp.data);
   }
 }
