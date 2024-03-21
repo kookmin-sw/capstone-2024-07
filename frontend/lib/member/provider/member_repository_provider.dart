@@ -32,6 +32,6 @@ class MemberRepository{
       ),
     );
 
-    return MemberModel.fromJson(resp.data['body']);
+    return MemberModel.fromJson(resp.data);
   }
 }

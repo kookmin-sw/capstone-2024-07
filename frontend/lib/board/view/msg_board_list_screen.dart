@@ -22,9 +22,7 @@ class MsgBoardListScreen extends ConsumerStatefulWidget {
 }
 
 class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
-  // late Future<List<MsgBoardListModel>> boards;
-  List<MsgBoardResponseModel> msgboardlistinstance = [];
-  List<String> categorys = [];
+  List<String> categorys = ["자유게시판", "대학원게시판", "스터디모집", "질문게시판", "홍보게시판"];
 
   final ScrollController controller = ScrollController();
 
@@ -108,20 +106,32 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
   }
 
   Widget _renderCategories() {
-    return SizedBox(
-      height: 50,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: [
-          for (var category in categorys)
-            Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: CategoryCircle(
-                category: category,
-                type: true,
-              ),
-            )
-        ],
+    Map<String, String> categoryCodes = {
+      "자유게시판": "FREE",
+      "대학원게시판": "GRADUATE",
+      "스터디모집": "STUDY",
+      "질문게시판": "QUESTION",
+      "홍보게시판": "PROMOTION",
+    };
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: SizedBox(
+        height: 50,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: [
+            for (var category in categorys)
+              Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: CategoryCircle(
+                  category: category,
+                  categoryCode: categoryCodes[category]!,
+                  type: true,
+                ),
+              )
+          ],
+        ),
       ),
     );
   }
