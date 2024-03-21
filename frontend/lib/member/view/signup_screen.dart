@@ -7,7 +7,7 @@ import 'package:frontend/common/provider/dio_provider.dart';
 import 'package:frontend/member/component/custom_text_form_field.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../common/component/NoticePopupDialog.dart';
+import '../../common/component/notice_popup_dialog.dart';
 import '../../common/const/colors.dart';
 import '../provider/first_major_state_notifier_provider.dart';
 import '../provider/second_major_state_notifier_provider.dart';

@@ -8,6 +8,7 @@ import 'package:frontend/board/layout/category_circle_layout.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
 
 import '../../member/view/my_page_screen.dart';
+import '../component/category_circle_with_provider.dart';
 import 'msg_board_add_screen.dart';
 
 class MsgBoardListScreen extends ConsumerStatefulWidget {
@@ -125,7 +126,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
             for (var category in categorys)
               Padding(
                 padding: const EdgeInsets.all(6.0),
-                child: CategoryCircle(
+                child: CategoryCircleWithProvider(
                   category: category,
                   categoryCode: categoryCodes[category]!,
                   type: true,
@@ -156,41 +157,38 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
 
     final cp = data as CursorPaginationModel;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: ListView.separated(
-        controller: controller,
-        itemCount: cp.data.length + 1,
-        itemBuilder: (_, index) {
-          if (index == cp.data.length) {
-            return Center(
-              child: cp is CursorPaginationModelFetchingMore
-                  ? CircularProgressIndicator(
-                color: PRIMARY_COLOR,
-              )
-                  : Text(
-                'Copyright 2024. Decl Team all rights reserved.\n',
-                style: TextStyle(
-                  color: BODY_TEXT_COLOR,
-                  fontSize: 12.0,
-                ),
+    return ListView.separated(
+      controller: controller,
+      itemCount: cp.data.length + 1,
+      itemBuilder: (_, index) {
+        if (index == cp.data.length) {
+          return Center(
+            child: cp is CursorPaginationModelFetchingMore
+                ? CircularProgressIndicator(
+              color: PRIMARY_COLOR,
+            )
+                : Text(
+              'Copyright 2024. Decl Team all rights reserved.\n',
+              style: TextStyle(
+                color: BODY_TEXT_COLOR,
+                fontSize: 12.0,
               ),
-            );
-          }
-
-          final pItem = cp.data[index];
-
-          return GestureDetector(
-            child: BoardCard.fromModel(msgBoardResponseModel: pItem),
-            onTap: () async {
-              print("click!!");
-            },
+            ),
           );
-        },
-        separatorBuilder: (_, index) {
-          return SizedBox(height: 16.0);
-        },
-      ),
+        }
+
+        final pItem = cp.data[index];
+
+        return GestureDetector(
+          child: BoardCard.fromModel(msgBoardResponseModel: pItem),
+          onTap: () async {
+            print("click!!");
+          },
+        );
+      },
+      separatorBuilder: (_, index) {
+        return SizedBox(height: 16.0);
+      },
     );
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../common/const/colors.dart';
 import '../model/msg_board_response_model.dart';
-import 'TextWithIconForView.dart';
+import 'text_with_icon_for_view.dart';
 
 class BoardCard extends StatelessWidget {
   final int id;
