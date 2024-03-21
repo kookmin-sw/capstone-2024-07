@@ -12,7 +12,7 @@ enum class CommunityType(val value: String) {
             if (value.isNullOrBlank()) {
                 return null;
             }
-            return enumValues<CommunityType>().find { it.value == value }
+            return enumValues<CommunityType>().find { it.name == value }
                 ?: throw CommunityException(NOT_FOUND_COMMUNITY)
         }
     }
