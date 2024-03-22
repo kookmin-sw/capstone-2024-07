@@ -114,7 +114,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: SizedBox(
-        height: 50,
+        height: 40,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
