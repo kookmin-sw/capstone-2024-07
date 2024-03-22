@@ -11,7 +11,8 @@ enum class AuthenticationCodeExceptionType(
 
     NOT_EQUAL_CODE(HttpStatus.BAD_REQUEST, "A01", "인증 코드가 일치하지 않습니다"),
     ALREADY_VERIFIED(HttpStatus.BAD_REQUEST, "A02", "이미 인증된 코드입니다"),
-    EXPIRED_CODE(HttpStatus.BAD_REQUEST, "A03", "만료된 코드입니다"),
+    NOT_VERIFIED(HttpStatus.BAD_REQUEST, "A03", "인증되지 않은 코드입니다"),
+    EXPIRED_CODE(HttpStatus.BAD_REQUEST, "A04", "만료된 코드입니다"),
     ;
 
     override fun httpStatus(): HttpStatus {
