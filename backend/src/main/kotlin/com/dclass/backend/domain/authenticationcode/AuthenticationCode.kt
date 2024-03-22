@@ -1,5 +1,7 @@
 package com.dclass.backend.domain.authenticationcode
 
+import com.dclass.backend.exception.authenticationcode.AuthenticationCodeException
+import com.dclass.backend.exception.authenticationcode.AuthenticationCodeExceptionType.*
 import com.dclass.support.domain.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -25,7 +27,7 @@ class AuthenticationCode(
     @Column(nullable = false)
     val createdDateTime: LocalDateTime = LocalDateTime.now()
 ) : BaseEntity() {
-    
+
     @Column(nullable = false)
     private var deleted: Boolean = false
 
@@ -33,15 +35,25 @@ class AuthenticationCode(
         get() = createdDateTime + EXPIRY_MINUTE_TIME
 
     fun authenticate(code: String) {
-        require(this.code == code) { "인증 코드가 일치하지 않습니다." }
-        check(!authenticated) { "이미 인증되었습니다." }
-        check(expiryDateTime > LocalDateTime.now()) { "인증 코드가 만료되었습니다." }
+        if (this.code != code) {
+            throw AuthenticationCodeException(NOT_EQUAL_CODE)
+        }
+        if (authenticated) {
+            throw AuthenticationCodeException(ALREADY_VERIFIED)
+        }
+        if (expiryDateTime < LocalDateTime.now()) {
+            throw AuthenticationCodeException(EXPIRED_CODE)
+        }
         authenticated = true
     }
 
     fun validate(code: String) {
-        check(this.code == code) { "인증 코드가 일치하지 않습니다." }
-        check(authenticated) { "인증되지 않았습니다." }
+        if (this.code != code) {
+            throw AuthenticationCodeException(NOT_EQUAL_CODE)
+        }
+        if (!authenticated) {
+            throw AuthenticationCodeException(NOT_VERIFIED)
+        }
     }
 
     companion object {
