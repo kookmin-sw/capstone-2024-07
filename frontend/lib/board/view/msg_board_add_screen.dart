@@ -19,7 +19,7 @@ class _MsgBoardAddScreenState extends State<MsgBoardAddScreen> {
   bool canUpload = false;
   bool writedTitle = false;
   bool writedContent = false;
-  String selectCategory = "인기게시판";
+  String selectCategory = "자유게시판";
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,46 @@ class _MsgBoardAddScreenState extends State<MsgBoardAddScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: ((context) {
+                    return AlertDialog(
+                      content: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("'$selectCategory'에 글을 등록할까요?"),
+                        ],
+                      ),
+                      actions: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("네"),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            Container(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("아니요"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  }));
+            },
             child: Text(
               "완료",
               style: TextStyle(
@@ -165,13 +204,13 @@ class _MsgBoardAddScreenState extends State<MsgBoardAddScreen> {
                     });
                   },
                   style: const TextStyle(
-                    fontSize: 10,
+                    fontSize: 11,
                   ),
                   decoration: const InputDecoration(
                     hintText: "지금 가장 고민이 되거나 궁금한 내용이 무엇인가요?",
                     border: InputBorder.none,
                     hintStyle: TextStyle(
-                      fontSize: 10,
+                      fontSize: 11,
                     ),
                   ),
                 ),
