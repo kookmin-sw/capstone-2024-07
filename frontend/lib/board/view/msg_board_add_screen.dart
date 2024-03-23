@@ -11,6 +11,8 @@ import 'package:frontend/board/provider/isquestion_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:http/http.dart' as http;
+
 class MsgBoardAddScreen extends StatefulWidget {
   final bool isEdit;
   const MsgBoardAddScreen({super.key, required this.isEdit});
@@ -71,7 +73,7 @@ class _MsgBoardAddScreenState extends State<MsgBoardAddScreen> {
                                     for (int i = 0;
                                         i < realImages.length;
                                         i++) {
-                                      images.add("image$i");
+                                      images.add("image$i.jpg");
                                     }
                                     final requestData = {
                                       'communityTitle':
@@ -83,10 +85,13 @@ class _MsgBoardAddScreenState extends State<MsgBoardAddScreen> {
                                     };
                                     MsgBoardResponseModel resp =
                                         await boardAddAPI.post(requestData);
-                                    print(resp);
                                     // TODO : resp의 image 링크에 image들 올려야 함
-                                    for (String url in resp.images) {
-                                      print(url);
+                                    for (int i = 0;
+                                        i < resp.images.length;
+                                        i++) {
+                                      final String url = resp.images[i];
+                                      UploadFile()
+                                          .call(url, File(realImages[i].path));
                                     }
                                     Navigator.of(context).pop();
                                     Navigator.of(context).pop();
@@ -376,5 +381,19 @@ class ImageViewer extends ConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+class UploadFile {
+  Future<void> call(String url, File image) async {
+    try {
+      var response =
+          await http.put(Uri.parse(url), body: image.readAsBytesSync());
+      if (response.statusCode == 200) {
+        print("uploadfile 정상!");
+      }
+    } catch (e) {
+      print("uploadfile 에러 : $e");
+    }
   }
 }
