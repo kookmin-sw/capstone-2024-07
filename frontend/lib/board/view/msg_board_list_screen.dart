@@ -5,6 +5,7 @@ import 'package:frontend/board/component/board_card.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/view/msg_board_add_screen.dart';
+import 'package:frontend/board/view/msg_board_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/board/layout/category_circle_layout.dart';
@@ -172,13 +173,20 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
           );
         }
 
-        final pItem = cp.data[index];
+        final MsgBoardResponseModel pItem = cp.data[index];
 
         return GestureDetector(
           child: BoardCard.fromModel(msgBoardResponseModel: pItem),
           onTap: () async {
             // 상세페이지
-            print("click!!");
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MsgBoardScreen(
+                        board: pItem,
+                      ),
+                  fullscreenDialog: true),
+            );
           },
         );
       },

@@ -3,13 +3,15 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/model/msg_board_model.dart';
+import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/board/provider/comment_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/comment_layout.dart';
+import 'package:frontend/member/provider/member_state_notifier_provider.dart';
 
 class MsgBoardScreen extends StatefulWidget {
-  final MsgBoardModel board;
+  final MsgBoardResponseModel board;
   const MsgBoardScreen({super.key, required this.board});
 
   @override
@@ -28,7 +30,7 @@ class _MsgBoardScreenState extends State<MsgBoardScreen> {
         appBar: AppBar(
           backgroundColor: PRIMARY_COLOR.withOpacity(0.1),
           title: Text(
-            widget.board.category,
+            widget.board.communityTitle,
             style: const TextStyle(
               fontSize: 15,
             ),
@@ -52,7 +54,7 @@ class Body extends ConsumerWidget {
     List<CommentModel> commentlistinstance = [];
     int count = 0;
     for (var comment in ref.watch(commentStateProvider)) {
-      if (widget.board.postId == comment.postId) {
+      if (widget.board.id == comment.postId) {
         count += 1;
         commentlistinstance.add(comment);
       }
@@ -66,7 +68,6 @@ class Body extends ConsumerWidget {
       children: [
         Board(
           board: widget.board,
-          canTap: false,
           titleSize: 13,
         ),
         Expanded(
@@ -106,17 +107,16 @@ class Body extends ConsumerWidget {
                       ),
                       onTap: () {
                         // TODO : Upload comment.
-                        ref.read(commentStateProvider.notifier).add(
-                              CommentModel(
-                                "5",
-                                widget.board.postId,
-                                (count + 1).toString(),
-                                "익명5",
-                                textEditingController.text,
-                                "0",
-                              ),
-                            );
-                        print(widget.board.postId);
+                        // ref.read(commentStateProvider.notifier).add(
+                        //       CommentModel(
+                        //         내 id,
+                        //         widget.board.id.toString(),
+                        //         (count + 1).toString(),
+                        //         "익명5",
+                        //         textEditingController.text,
+                        //         "0",
+                        //       ),
+                        //     );
                         textEditingController.clear();
                       },
                     ),

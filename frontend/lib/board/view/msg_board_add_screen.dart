@@ -389,11 +389,11 @@ class UploadFile {
     try {
       var response =
           await http.put(Uri.parse(url), body: image.readAsBytesSync());
-      if (response.statusCode == 200) {
-        print("uploadfile 정상!");
+      if (response.statusCode != 200) {
+        debugPrint("upload file 응답 : ${response.statusCode}");
       }
     } catch (e) {
-      print("uploadfile 에러 : $e");
+      debugPrint("upload file 에러 : $e");
     }
   }
 }

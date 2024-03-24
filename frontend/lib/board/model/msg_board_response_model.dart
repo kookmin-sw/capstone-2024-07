@@ -40,10 +40,12 @@ class MsgBoardResponseModel {
 class ReactCountModel {
   final int commentReplyCount;
   final int likeCount;
+  final int scrapCount;
 
   ReactCountModel({
     required this.commentReplyCount,
     required this.likeCount,
+    required this.scrapCount,
   });
 
   factory ReactCountModel.fromJson(Map<String, dynamic> json) =>

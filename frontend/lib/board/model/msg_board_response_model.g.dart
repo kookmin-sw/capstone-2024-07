@@ -45,10 +45,12 @@ ReactCountModel _$ReactCountModelFromJson(Map<String, dynamic> json) =>
     ReactCountModel(
       commentReplyCount: json['commentReplyCount'] as int,
       likeCount: json['likeCount'] as int,
+      scrapCount: json['scrapCount'] as int,
     );
 
 Map<String, dynamic> _$ReactCountModelToJson(ReactCountModel instance) =>
     <String, dynamic>{
       'commentReplyCount': instance.commentReplyCount,
       'likeCount': instance.likeCount,
+      'scrapCount': instance.scrapCount,
     };
