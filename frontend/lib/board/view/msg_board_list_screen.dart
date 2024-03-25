@@ -8,7 +8,6 @@ import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/board/view/msg_board_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
-import 'package:frontend/board/layout/category_circle_layout.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
 
 import '../../member/view/my_page_screen.dart';

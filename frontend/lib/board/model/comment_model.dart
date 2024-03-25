@@ -10,11 +10,11 @@ class CommentModel {
   final String content;
   final LikeCount likeCount;
   final bool isLiked;
-  final String createAt;
-  final ReplyModel replies;
+  final String createdAt;
+  final List<ReplyModel> replies;
 
   CommentModel(this.id, this.userInformation, this.postId, this.content,
-      this.likeCount, this.isLiked, this.createAt, this.replies);
+      this.likeCount, this.isLiked, this.createdAt, this.replies);
 
   factory CommentModel.fromJson(Map<String, dynamic> json) =>
       _$CommentModelFromJson(json);
@@ -70,5 +70,5 @@ class ReplyModel {
     this.createdAt,
   );
   factory ReplyModel.fromJson(Map<String, dynamic> json) =>
-      _$RepliesFromJson(json);
+      _$ReplyModelFromJson(json);
 }

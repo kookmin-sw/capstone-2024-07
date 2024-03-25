@@ -51,17 +51,6 @@ class Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<CommentModel> comments = [];
-    ref
-        .watch(commentStateProvider)
-        .get(widget.board.id.toString())
-        .then((value) => comments = value);
-
-    ScrollController scrollController = ScrollController();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      scrollController.jumpTo(scrollController.position.maxScrollExtent);
-    });
-
     return Column(
       children: [
         Board(
@@ -69,14 +58,32 @@ class Body extends ConsumerWidget {
           titleSize: 13,
         ),
         Expanded(
-          child: ListView.builder(
-            controller: scrollController,
-            itemCount: comments.length,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return Comment(
-                comment: comments[index],
-              );
+          child: FutureBuilder(
+            future:
+                ref.watch(commentStateProvider).get(widget.board.id.toString()),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                List<CommentModel> comments = snapshot.data ?? [];
+                ScrollController scrollController = ScrollController();
+                SchedulerBinding.instance.addPostFrameCallback((_) {
+                  scrollController
+                      .jumpTo(scrollController.position.maxScrollExtent);
+                });
+                return ListView.builder(
+                  controller: scrollController,
+                  itemCount: comments.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Comment(
+                      comment: comments[index],
+                    );
+                  },
+                );
+              }
             },
           ),
         ),
@@ -104,9 +111,9 @@ class Body extends ConsumerWidget {
                         size: 30,
                       ),
                       onTap: () {
-                        // TODO : Upload comment.
+                        // Upload comment.
                         final requestData = {
-                          'postId': widget.board.id,
+                          'postId': widget.board.id.toInt(),
                           'content': textEditingController.text,
                         };
                         ref.watch(commentStateProvider).post(requestData);

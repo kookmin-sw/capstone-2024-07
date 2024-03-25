@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart' hide Headers;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/model/comment_model.dart';
+import 'package:frontend/board/model/comment_response_model.dart';
 import 'package:frontend/common/const/data.dart';
 import 'package:frontend/common/provider/dio_provider.dart';
 import 'package:retrofit/http.dart';
@@ -25,11 +26,11 @@ abstract class CommentNotifier {
     @Path('postId') String postId,
   );
 
-  @POST('/api/comments/')
+  @POST('/api/comments')
   @Headers({
     'accessToken': 'true',
   })
-  void post(
+  Future<CommentResponseModel> post(
     @Body() Map<String, dynamic> data,
   );
 }

@@ -13,8 +13,10 @@ CommentModel _$CommentModelFromJson(Map<String, dynamic> json) => CommentModel(
       json['content'] as String,
       LikeCount.fromJson(json['likeCount'] as Map<String, dynamic>),
       json['isLiked'] as bool,
-      json['createAt'] as String,
-      ReplyModel.fromJson(json['replies'] as Map<String, dynamic>),
+      json['createdAt'] as String,
+      (json['replies'] as List<dynamic>)
+          .map((e) => ReplyModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$CommentModelToJson(CommentModel instance) =>
@@ -25,7 +27,7 @@ Map<String, dynamic> _$CommentModelToJson(CommentModel instance) =>
       'content': instance.content,
       'likeCount': instance.likeCount,
       'isLiked': instance.isLiked,
-      'createAt': instance.createAt,
+      'createdAt': instance.createdAt,
       'replies': instance.replies,
     };
 
@@ -53,7 +55,7 @@ Map<String, dynamic> _$LikeCountToJson(LikeCount instance) => <String, dynamic>{
       'count': instance.count,
     };
 
-ReplyModel _$RepliesFromJson(Map<String, dynamic> json) => ReplyModel(
+ReplyModel _$ReplyModelFromJson(Map<String, dynamic> json) => ReplyModel(
       json['id'] as int,
       json['userId'] as int,
       UserInformation.fromJson(json['userInformation'] as Map<String, dynamic>),
@@ -63,7 +65,8 @@ ReplyModel _$RepliesFromJson(Map<String, dynamic> json) => ReplyModel(
       json['createdAt'] as String,
     );
 
-Map<String, dynamic> _$RepliesToJson(ReplyModel instance) => <String, dynamic>{
+Map<String, dynamic> _$ReplyModelToJson(ReplyModel instance) =>
+    <String, dynamic>{
       'id': instance.id,
       'userId': instance.userId,
       'userInformation': instance.userInformation,
