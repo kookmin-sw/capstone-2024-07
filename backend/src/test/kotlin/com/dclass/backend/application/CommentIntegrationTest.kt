@@ -3,14 +3,14 @@ package com.dclass.backend.application
 import com.dclass.backend.application.dto.LikeCommentRequest
 import com.dclass.backend.application.dto.LikeReplyRequest
 import com.dclass.backend.application.dto.UpdateCommentRequest
+import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.comment.CommentRepository
+import com.dclass.backend.domain.community.CommunityRepository
+import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.reply.ReplyRepository
 import com.dclass.backend.domain.user.UniversityRepository
 import com.dclass.backend.domain.user.UserRepository
-import com.dclass.support.fixtures.comment
-import com.dclass.support.fixtures.reply
-import com.dclass.support.fixtures.university
-import com.dclass.support.fixtures.user
+import com.dclass.support.fixtures.*
 import com.dclass.support.test.IntegrationTest
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.extensions.spring.SpringTestExtension
@@ -25,6 +25,9 @@ class CommentIntegrationTest(
     private val userRepository: UserRepository,
     private val universityRepository: UniversityRepository,
     private val replyService: ReplyService,
+    private val belongRepository: BelongRepository,
+    private val postRepository: PostRepository,
+    private val communityRepository: CommunityRepository,
 ) : BehaviorSpec({
 
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
@@ -35,6 +38,9 @@ class CommentIntegrationTest(
 
         repeat(10) {
             userRepository.save(user(university = univ))
+            belongRepository.save(belong(userId = it + 1L))
+            postRepository.save(post())
+            communityRepository.save(community())
         }
 
         val comments = commentRepository.saveAll(

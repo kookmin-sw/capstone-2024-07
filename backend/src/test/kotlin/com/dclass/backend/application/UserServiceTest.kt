@@ -126,6 +126,7 @@ class UserServiceTest : BehaviorSpec({
                     userRepository.findByIdOrNull(user.id)!!,
                     department.title,
                     department2.title,
+                    department.title,
                 )
                 belong.activated shouldBe department.id
                 actual.major shouldBe department.title
