@@ -11,16 +11,17 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class ReplyService(
     private val replyRepository: ReplyRepository,
+    private val replyValidator: ReplyValidator,
 ) {
     //TODO ReplyValidator를 추가한다
     fun create(userId: Long, request: CreateReplyRequest): ReplyResponse {
+        replyValidator.validateCreateReply(userId, request.commentId)
         return replyRepository.save(request.toEntity(userId))
             .let(::ReplyResponse)
     }
 
     fun update(userId: Long, request: UpdateReplyRequest) {
         val reply = replyRepository.getByIdAndUserIdOrThrow(request.replyId, userId)
-
         reply.changeContent(request.content)
     }
 
@@ -31,6 +32,7 @@ class ReplyService(
     }
 
     fun like(userId: Long, request: LikeReplyRequest) {
+        replyValidator.validateLikeReply(userId, request.replyId)
         val reply = replyRepository.getByIdOrThrow(request.replyId)
         reply.like(userId)
     }
