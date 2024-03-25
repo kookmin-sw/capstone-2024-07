@@ -6,18 +6,26 @@ import 'package:frontend/common/model/cursor_pagination_model.dart';
 
 import 'api_category_provider.dart';
 
-final boardStateNotifierProvider = StateNotifierProvider<BoardStateNotifier, CursorPaginationModelBase>((ref){
-  final repository = ref.watch(boardRepositoryProvider);
-  const initialLastPostId = 9223372036854775807; //maxValue를 담아 넘겨야 하나...?
-  final communityTitle = ref.watch(categoryTitleProvider);
-  final isHot = ref.watch(isHotProvider);
-  const size = 10;
+final boardStateNotifierProvider =
+    StateNotifierProvider<BoardStateNotifier, CursorPaginationModelBase>(
+  (ref) {
+    final repository = ref.watch(boardRepositoryProvider);
+    const initialLastPostId = 9223372036854775807; //maxValue를 담아 넘겨야 하나...?
+    final communityTitle = ref.watch(categoryTitleProvider);
+    final isHot = ref.watch(isHotProvider);
+    const size = 10;
 
-  final notifier = BoardStateNotifier(repository: repository, lastId: initialLastPostId, communityTitle: communityTitle, size: size, isHot: isHot);
-  return notifier;
-},);
+    final notifier = BoardStateNotifier(
+        repository: repository,
+        lastId: initialLastPostId,
+        communityTitle: communityTitle,
+        size: size,
+        isHot: isHot);
+    return notifier;
+  },
+);
 
-class BoardStateNotifier extends StateNotifier<CursorPaginationModelBase>{
+class BoardStateNotifier extends StateNotifier<CursorPaginationModelBase> {
   bool _mounted = true;
   bool _fetchingData = false;
 
@@ -39,7 +47,7 @@ class BoardStateNotifier extends StateNotifier<CursorPaginationModelBase>{
     this.communityTitle,
     required this.size,
     required this.isHot,
-  }) : super(CursorPaginationModelLoading()){
+  }) : super(CursorPaginationModelLoading()) {
     paginate();
   }
 
@@ -54,7 +62,6 @@ class BoardStateNotifier extends StateNotifier<CursorPaginationModelBase>{
     // true - CursorPaginationModelLoading
     bool forceRefetch = false,
   }) async {
-
     // Notifier가 dispose된 상태라면 작업을 수행하지 않는다.
     // 첫번째 확인 -> 메서드 시작시
     if (!isMounted) return;
@@ -63,7 +70,7 @@ class BoardStateNotifier extends StateNotifier<CursorPaginationModelBase>{
     if (_fetchingData) return;
     _fetchingData = true;
 
-    try{
+    try {
       // 5가지 가능성 (state의 상태) -> CursorPaginationModelBase를 상속하는 클래스가 5개이기 때문이다.
       // 1) CursorPaginationModel - 정상적으로 데이터가 있는 상태
       // 2) CursorPaginationModelLoading - 데이터가 로딩중인 상태 (현재 캐시 없음)
@@ -104,7 +111,6 @@ class BoardStateNotifier extends StateNotifier<CursorPaginationModelBase>{
 
         // paginate 파라미터 변경
         lastId = pState.data.last.id;
-
       } else {
         // fetchMore가 false -> 데이터를 처음부터 가져오는 상황
         // 만약 데이터가 있는 상황이라면 기존 데이터를 보존한 채로 api 요청을 진행
@@ -122,7 +128,8 @@ class BoardStateNotifier extends StateNotifier<CursorPaginationModelBase>{
       }
 
       // resp: 새로 받아온 데이터
-      final resp = await repository.paginate(lastId, communityTitle, size, isHot);
+      final resp =
+          await repository.paginate(lastId, communityTitle, size, isHot);
 
       // Notifier가 dispose된 상태라면 작업을 수행하지 않는다.
       // 두번째 확인 -> 비동기 작업 후
@@ -140,13 +147,13 @@ class BoardStateNotifier extends StateNotifier<CursorPaginationModelBase>{
             ...resp.data,
           ],
         );
-      } else{
+      } else {
         // state가 CursorPaginationModelFetchingMore이 아니면
         // 즉, CursorPaginationModelRefetching이거나 CursorPaginationModelLoading이면
         //fetchMore이 아닐 경우에는 pagination 파라미터가 변경되지 않으므로, resp가 맨처음 그대로다!
         state = resp;
       }
-    } catch(e){
+    } catch (e) {
       // Notifier가 dispose된 상태라면 작업을 수행하지 않는다.
       // 세번째 확인 -> 에러 발생 후
       if (!isMounted) return;

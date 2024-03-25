@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:frontend/board/component/board_card.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
+import 'package:frontend/board/const/categorys.dart';
+import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/board/layout/category_circle_layout.dart';
@@ -9,7 +12,6 @@ import 'package:frontend/common/model/cursor_pagination_model.dart';
 
 import '../../member/view/my_page_screen.dart';
 import '../component/category_circle_with_provider.dart';
-import 'msg_board_add_screen.dart';
 
 class MsgBoardListScreen extends ConsumerStatefulWidget {
   static String get routeName => 'boardList';
@@ -23,8 +25,8 @@ class MsgBoardListScreen extends ConsumerStatefulWidget {
 }
 
 class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
-  List<String> categorys = ["인기게시판", "자유게시판", "대학원게시판", "스터디모집", "질문게시판", "홍보게시판"];
-
+  // late Future<List<MsgBoardListModel>> boards;
+  List<String> categorys = categorysList;
   final ScrollController controller = ScrollController();
 
   @override
@@ -36,8 +38,8 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
   void scrollListener() {
     if (controller.offset > controller.position.maxScrollExtent - 150) {
       ref.read(boardStateNotifierProvider.notifier).paginate(
-        fetchMore: true,
-      );
+            fetchMore: true,
+          );
     }
   }
 
@@ -47,10 +49,10 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            _renderTop(),
-            _renderCategories(),
+            renderTop(),
+            renderCategories(),
             Expanded(
-              child: _renderBoardList(),
+              child: renderBoardList(),
             ),
           ],
         ),
@@ -65,14 +67,14 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
             ),
           );
         },
-        child: const Icon(Icons.add),
         backgroundColor: PRIMARY_COLOR,
+        child: const Icon(Icons.add),
       ),
     );
     //test
   }
 
-  Widget _renderTop() {
+  Widget renderTop() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
       height: 50.0,
@@ -93,7 +95,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => MypageScreen(),
+                  builder: (_) => const MypageScreen(),
                 ),
               );
             },
@@ -106,15 +108,8 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
     );
   }
 
-  Widget _renderCategories() {
-    Map<String, String> categoryCodes = {
-      "인기게시판": "HOT",
-      "자유게시판": "FREE",
-      "대학원게시판": "GRADUATE",
-      "스터디모집": "STUDY",
-      "질문게시판": "QUESTION",
-      "홍보게시판": "PROMOTION",
-    };
+  Widget renderCategories() {
+    Map<String, String> categoryCodes = categoryCodesList;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -138,10 +133,10 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
     );
   }
 
-  Widget _renderBoardList() {
+  Widget renderBoardList() {
     final data = ref.watch(boardStateNotifierProvider);
 
-    if(data is CursorPaginationModelLoading){
+    if (data is CursorPaginationModelLoading) {
       return const Center(
         child: CircularProgressIndicator(
           color: PRIMARY_COLOR,
@@ -150,7 +145,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
     }
 
     if (data is CursorPaginationModelError) {
-      return Center(
+      return const Center(
         child: Text("데이터를 불러올 수 없습니다."),
       );
     }
@@ -164,16 +159,16 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
         if (index == cp.data.length) {
           return Center(
             child: cp is CursorPaginationModelFetchingMore
-                ? CircularProgressIndicator(
-              color: PRIMARY_COLOR,
-            )
-                : Text(
-              'Copyright 2024. Decl Team all rights reserved.\n',
-              style: TextStyle(
-                color: BODY_TEXT_COLOR,
-                fontSize: 12.0,
-              ),
-            ),
+                ? const CircularProgressIndicator(
+                    color: PRIMARY_COLOR,
+                  )
+                : const Text(
+                    'Copyright 2024. Decl Team all rights reserved.\n',
+                    style: TextStyle(
+                      color: BODY_TEXT_COLOR,
+                      fontSize: 12.0,
+                    ),
+                  ),
           );
         }
 
@@ -182,12 +177,13 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
         return GestureDetector(
           child: BoardCard.fromModel(msgBoardResponseModel: pItem),
           onTap: () async {
+            // 상세페이지
             print("click!!");
           },
         );
       },
       separatorBuilder: (_, index) {
-        return SizedBox(height: 16.0);
+        return const SizedBox(height: 16.0);
       },
     );
   }

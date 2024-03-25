@@ -17,9 +17,8 @@ final boardRepositoryProvider = Provider<BoardRepository>((ref) {
 
 @RestApi()
 abstract class BoardRepository {
-
   factory BoardRepository(Dio dio, {String baseUrl}) = _BoardRepository;
-  
+
   @GET('/api/post')
   @Headers({
     'accessToken': 'true',
@@ -28,6 +27,5 @@ abstract class BoardRepository {
       @Query('lastId') int lastId,
       @Query('communityTitle') String? communityTitle,
       @Query('size') int size,
-      @Query('isHot') bool isHot
-      );
+      @Query('isHot') bool isHot);
 }
