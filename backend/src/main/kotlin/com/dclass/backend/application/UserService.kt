@@ -55,10 +55,13 @@ class UserService(
                 ?: throw DepartmentException(NOT_FOUND_DEPARTMENT)
         }
 
+
+
         return UserResponseWithDepartmentNames(
             user,
             groupBy[belong.major]!!.title,
-            groupBy[belong.minor]!!.title
+            groupBy[belong.minor]!!.title,
+            groupBy[belong.activated]!!.title
         )
     }
 }
