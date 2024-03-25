@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/const/colors.dart';
 import '../provider/api_category_provider.dart';
-import '../provider/board_provider.dart';
 import '../provider/category_provider.dart';
 
 class CategoryCircleWithProvider extends ConsumerWidget {

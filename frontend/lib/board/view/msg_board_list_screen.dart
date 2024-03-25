@@ -6,10 +6,9 @@ import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/common/const/colors.dart';
-import 'package:frontend/board/model/msg_board_response_model.dart';
-import 'package:frontend/board/layout/category_circle_layout.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
 
+import '../../common/const/data.dart';
 import '../../member/view/my_page_screen.dart';
 import '../component/category_circle_with_provider.dart';
 
@@ -109,8 +108,6 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
   }
 
   Widget renderCategories() {
-    Map<String, String> categoryCodes = categoryCodesList;
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: SizedBox(
