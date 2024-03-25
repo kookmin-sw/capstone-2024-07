@@ -367,7 +367,6 @@ class ImageViewer extends ConsumerWidget {
                 margin: const EdgeInsets.only(
                   right: 10,
                 ),
-                padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.black.withOpacity(0.2),
