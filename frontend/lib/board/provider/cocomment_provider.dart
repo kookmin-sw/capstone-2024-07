@@ -1,32 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/board/model/cocomment_model.dart';
+import 'package:frontend/board/model/comment_model.dart';
 
-class CoCommentNotifier extends StateNotifier<List<CoCommentModel>> {
-  CoCommentNotifier(this.ref)
-      : super([
-          CoCommentModel(
-            "4",
-            "1",
-            "1",
-            "1",
-            "익명4",
-            "맞아맞아",
-            "2",
-          ),
-          CoCommentModel(
-            "5",
-            "1",
-            "1",
-            "2",
-            "익명5",
-            "맞아맞아맞아",
-            "3",
-          ),
-        ]);
+class ReplyNotifier extends StateNotifier<List<ReplyModel>> {
+  ReplyNotifier(this.ref) : super([]);
 
   final Ref ref;
 
-  Future<void> add(CoCommentModel cocoment) async {
+  Future<void> add(ReplyModel cocoment) async {
     state = [...state, cocoment];
   }
 
@@ -35,7 +15,7 @@ class CoCommentNotifier extends StateNotifier<List<CoCommentModel>> {
   }
 }
 
-final cocommentStateProvider =
-    StateNotifierProvider<CoCommentNotifier, List<CoCommentModel>>((ref) {
-  return CoCommentNotifier(ref);
+final replyStateProvider =
+    StateNotifierProvider<ReplyNotifier, List<ReplyModel>>((ref) {
+  return ReplyNotifier(ref);
 });

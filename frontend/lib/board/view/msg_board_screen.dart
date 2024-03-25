@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/model/comment_model.dart';
-import 'package:frontend/board/model/msg_board_model.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/board/provider/comment_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/comment_layout.dart';
-import 'package:frontend/member/provider/member_state_notifier_provider.dart';
 
 class MsgBoardScreen extends StatefulWidget {
   final MsgBoardResponseModel board;
@@ -36,7 +34,9 @@ class _MsgBoardScreenState extends State<MsgBoardScreen> {
             ),
           ),
         ),
-        body: Body(widget: widget));
+        body: Body(
+          widget: widget,
+        ));
   }
 }
 
@@ -51,14 +51,12 @@ class Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<CommentModel> commentlistinstance = [];
-    int count = 0;
-    for (var comment in ref.watch(commentStateProvider)) {
-      if (widget.board.id == comment.postId) {
-        count += 1;
-        commentlistinstance.add(comment);
-      }
-    }
+    List<CommentModel> comments = [];
+    ref
+        .watch(commentStateProvider)
+        .get(widget.board.id.toString())
+        .then((value) => comments = value);
+
     ScrollController scrollController = ScrollController();
     SchedulerBinding.instance.addPostFrameCallback((_) {
       scrollController.jumpTo(scrollController.position.maxScrollExtent);
@@ -73,11 +71,11 @@ class Body extends ConsumerWidget {
         Expanded(
           child: ListView.builder(
             controller: scrollController,
-            itemCount: commentlistinstance.length,
+            itemCount: comments.length,
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return Comment(
-                comment: commentlistinstance[index],
+                comment: comments[index],
               );
             },
           ),
@@ -107,16 +105,11 @@ class Body extends ConsumerWidget {
                       ),
                       onTap: () {
                         // TODO : Upload comment.
-                        // ref.read(commentStateProvider.notifier).add(
-                        //       CommentModel(
-                        //         내 id,
-                        //         widget.board.id.toString(),
-                        //         (count + 1).toString(),
-                        //         "익명5",
-                        //         textEditingController.text,
-                        //         "0",
-                        //       ),
-                        //     );
+                        final requestData = {
+                          'postId': widget.board.id,
+                          'content': textEditingController.text,
+                        };
+                        ref.watch(commentStateProvider).post(requestData);
                         textEditingController.clear();
                       },
                     ),
