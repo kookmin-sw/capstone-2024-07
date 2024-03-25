@@ -197,9 +197,15 @@ data class CommentReplyWithUserResponse(
 
     @Schema(
         description = "댓글의 좋아요 수",
-        example = "1"
+        example = """
+        {
+            "likes": [1, 2],
+            "count": 2
+        }
+        """
     )
     val likeCount: CommentLikes,
+
 
     @Schema(
         description = "댓글의 좋아요 여부",
@@ -215,9 +221,29 @@ data class CommentReplyWithUserResponse(
 
     @Schema(
         description = "댓글의 답글 목록",
-        example = "1"
+        example = """
+        [
+            {
+                "id": 1,
+                "userId": 1,
+                "userInformation": {
+                    "name": "이름",
+                    "email": "이메일",
+                    "nickname": "닉네임"
+                },
+                "commentId": 1,
+                "content": "대댓글 내용",
+                "likeCount": {
+                    "likes": [1, 2],
+                    "count": 2
+                },
+                "createdAt": "2021-08-01T00:00:00"
+            }
+        ]
+    """
     )
     val replies: List<ReplyWithUserResponse>
+
 ) {
     constructor(
         commentWithUserResponse: CommentWithUserResponse,
