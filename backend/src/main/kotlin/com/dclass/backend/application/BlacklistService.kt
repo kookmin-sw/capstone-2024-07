@@ -3,6 +3,8 @@ package com.dclass.backend.application
 import com.dclass.backend.application.dto.LoginUserResponse
 import com.dclass.backend.domain.blacklist.Blacklist
 import com.dclass.backend.domain.blacklist.BlacklistRepository
+import com.dclass.backend.exception.token.TokenException
+import com.dclass.backend.exception.token.TokenExceptionType.TOKEN_NOT_FOUND_IN_BLACKLIST
 import com.dclass.backend.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -15,9 +17,9 @@ class BlacklistService(
     private val jwtTokenProvider: JwtTokenProvider,
 ) {
     fun reissueToken(refreshToken: String): LoginUserResponse {
-        require(jwtTokenProvider.isValidToken(refreshToken)) { "유효하지 않은 토큰입니다." }
+        jwtTokenProvider.isValidToken(refreshToken)
         blacklistRepository.findByInvalidRefreshToken(refreshToken)
-            ?.let { throw IllegalArgumentException("이미 로그아웃한 사용자입니다.") }
+            ?.let { throw TokenException(TOKEN_NOT_FOUND_IN_BLACKLIST) }
             ?: blacklistRepository.save(Blacklist(refreshToken))
 
         val email = jwtTokenProvider.getSubject(refreshToken)
