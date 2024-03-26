@@ -7,8 +7,11 @@ import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
+import 'package:frontend/member/provider/selected_major_provider.dart';
 
 import '../../common/const/data.dart';
+import '../../member/model/member_model.dart';
+import '../../member/provider/member_state_notifier_provider.dart';
 import '../../member/view/my_page_screen.dart';
 import '../component/category_circle_with_provider.dart';
 
@@ -73,14 +76,62 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
     //test
   }
 
+  Widget renderMajorSelectBox() {
+    final memberState = ref.watch(memberStateNotifierProvider);
+
+    String major = "";
+    String minor = "";
+
+    if (memberState is MemberModel) {
+      major = memberState.major;
+      minor = memberState.minor;
+    }
+
+    final majors = [major, minor].where((s) => s.isNotEmpty).toList(); // 빈 문자열 제거
+    final selectedMajor = ref.watch(selectedMajorProvider);
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: selectedMajor,
+          onChanged: (String? newValue) {
+            if (newValue != null) {
+              ref.watch(selectedMajorProvider.notifier).state = newValue;
+              // 활성화된 전공을 변경하는 API 요청 보내고 다시 paginate할 것
+            }
+          },
+          icon: const Icon(Icons.arrow_drop_down),
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+          ),
+          items: majors.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(
+                value,
+                overflow: TextOverflow.fade,
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
   Widget renderTop() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
       height: 50.0,
       width: MediaQuery.of(context).size.width,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SizedBox(width: 160.0),
+          renderMajorSelectBox(),
           const Text(
             "DeCl",
             style: TextStyle(
@@ -89,17 +140,19 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
               fontWeight: FontWeight.w900,
             ),
           ),
-          const SizedBox(width: 80.0),
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => const MypageScreen(),
-                ),
-              );
-            },
-            icon: const Icon(
-              Icons.person,
+          SizedBox(
+            width: 100,
+            child: IconButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const MypageScreen(),
+                  ),
+                );
+              },
+              icon: const Icon(
+                Icons.person,
+              ),
             ),
           ),
         ],
