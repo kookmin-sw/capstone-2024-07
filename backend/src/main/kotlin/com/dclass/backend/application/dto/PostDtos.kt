@@ -188,7 +188,7 @@ data class CreatePostRequest(
     }
 }
 
-/*data class UpdatePostRequest(
+data class UpdatePostRequest(
     @Schema(
         description = "게시글의 고유 식별자",
         example = "1"
@@ -212,7 +212,7 @@ data class CreatePostRequest(
         example = "['이미지 URL']"
     )
     var images: List<String>,
-)*/
+)
 
 data class DeletePostRequest(
     @Schema(

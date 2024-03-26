@@ -57,9 +57,8 @@ class PostController(
     ): ResponseEntity<Int> {
         return ResponseEntity.ok(postService.likes(user.id, postId))
     }
-
-    // TODO: 게시글 update시 image 처리 로직 수정
-    /*@Operation(summary = "게시글 수정 API", description = "게시글을 수정합니다.")
+    
+    @Operation(summary = "게시글 수정 API", description = "게시글을 수정합니다.")
     @ApiResponse(responseCode = "204", description = "게시글 수정 성공")
     @PutMapping
     fun updatePost(
@@ -68,7 +67,7 @@ class PostController(
     ): ResponseEntity<Unit> {
         postService.update(user.id, request)
         return ResponseEntity.noContent().build()
-    }*/
+    }
 
     @Operation(summary = "게시글 삭제 API", description = "게시글을 삭제합니다.")
     @ApiResponse(responseCode = "204", description = "게시글 삭제 성공")
