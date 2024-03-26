@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/board/model/cocomment_model.dart';
 import 'package:frontend/board/provider/cocomment_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/comment_model.dart';
-import 'package:frontend/board/layout/cocoment_layout.dart';
+import 'package:frontend/board/layout/reply_layout.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
 
 class Comment extends StatefulWidget {
   final CommentModel comment;
-  // TODO: comment of comment
   const Comment({super.key, required this.comment});
 
   @override
@@ -37,7 +35,6 @@ class _CommentState extends State<Comment> with SingleTickerProviderStateMixin {
 
 class _Comment extends ConsumerWidget {
   const _Comment({
-    super.key,
     required this.widget,
     required this.animationController,
   });
@@ -47,9 +44,8 @@ class _Comment extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<CoCommentModel> cocomentlistinstance =
-        ref.watch(cocommentStateProvider);
-    return Contents(widget: widget, cocomentlistinstance: cocomentlistinstance);
+    List<ReplyModel> replies = ref.watch(replyStateProvider);
+    return Contents(widget: widget, replies: replies);
   }
 }
 
@@ -57,11 +53,11 @@ class Contents extends ConsumerWidget {
   const Contents({
     super.key,
     required this.widget,
-    required this.cocomentlistinstance,
+    required this.replies,
   });
 
   final Comment widget;
-  final List<CoCommentModel> cocomentlistinstance;
+  final List<ReplyModel> replies;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -87,7 +83,7 @@ class Contents extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  widget.comment.name,
+                  widget.comment.userInformation.nickname,
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -106,7 +102,7 @@ class Contents extends ConsumerWidget {
                         TextWithIcon(
                           icon: Icons.favorite_outline_rounded,
                           iconSize: 15,
-                          text: widget.comment.likeCount,
+                          text: widget.comment.likeCount.count.toString(),
                           canTap: true,
                           ref: ref,
                         ),
@@ -116,17 +112,6 @@ class Contents extends ConsumerWidget {
                         GestureDetector(
                           onTap: () {
                             // TODO: 대댓글 달기
-                            // ref
-                            //     .read(cocommentStateProvider.notifier)
-                            //     .add(CoCommentModel(
-                            //       "5",
-                            //       widget.comment.postId,
-                            //       widget.comment.commentId,
-                            //       "3",
-                            //       "익명5",
-                            //       "",
-                            //       "0",
-                            //     ));
                           },
                           child: TextWithIcon(
                             icon: Icons.chat_outlined,
@@ -148,8 +133,7 @@ class Contents extends ConsumerWidget {
                 fontSize: 10,
               ),
             ),
-            for (var cocoment in cocomentlistinstance)
-              CoComment(cocoment: cocoment)
+            for (var reply in replies) Reply(reply: reply)
           ],
         ),
       ),

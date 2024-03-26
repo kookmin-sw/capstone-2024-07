@@ -6,7 +6,9 @@ import 'package:frontend/board/component/board_card.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/view/msg_board_add_screen.dart';
+import 'package:frontend/board/view/msg_board_screen.dart';
 import 'package:frontend/common/const/colors.dart';
+import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
 import 'package:frontend/common/provider/dio_provider.dart';
 import 'package:frontend/member/provider/selected_major_provider.dart';
@@ -101,7 +103,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
     final dio = ref.watch(dioProvider);
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -120,10 +122,12 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                     },
                   ),
                 );
-                if(resp.statusCode==200){
+                if (resp.statusCode == 200) {
                   // 다시 paginate api 요청을 보낸다.
                   ref.read(selectedMajorProvider.notifier).state = newValue;
-                  ref.read(boardStateNotifierProvider.notifier).paginate(forceRefetch: true);
+                  ref
+                      .read(boardStateNotifierProvider.notifier)
+                      .paginate(forceRefetch: true);
                 }
               } catch (e) {
                 showDialog(
@@ -142,7 +146,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
             }
           },
           icon: const Icon(Icons.keyboard_arrow_down_rounded),
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 16,
           ),
@@ -260,13 +264,20 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
           );
         }
 
-        final pItem = cp.data[index];
+        final MsgBoardResponseModel pItem = cp.data[index];
 
         return GestureDetector(
           child: BoardCard.fromModel(msgBoardResponseModel: pItem),
           onTap: () async {
             // 상세페이지
-            print("click!!");
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MsgBoardScreen(
+                        board: pItem,
+                      ),
+                  fullscreenDialog: true),
+            );
           },
         );
       },

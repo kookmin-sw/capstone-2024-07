@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/model/comment_model.dart';
-import 'package:frontend/board/model/msg_board_model.dart';
+import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/board/provider/comment_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/comment_layout.dart';
 
 class MsgBoardScreen extends StatefulWidget {
-  final MsgBoardModel board;
+  final MsgBoardResponseModel board;
   const MsgBoardScreen({super.key, required this.board});
 
   @override
@@ -28,13 +28,15 @@ class _MsgBoardScreenState extends State<MsgBoardScreen> {
         appBar: AppBar(
           backgroundColor: PRIMARY_COLOR.withOpacity(0.1),
           title: Text(
-            widget.board.category,
+            widget.board.communityTitle,
             style: const TextStyle(
               fontSize: 15,
             ),
           ),
         ),
-        body: Body(widget: widget));
+        body: Body(
+          widget: widget,
+        ));
   }
 }
 
@@ -49,35 +51,39 @@ class Body extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<CommentModel> commentlistinstance = [];
-    int count = 0;
-    for (var comment in ref.watch(commentStateProvider)) {
-      if (widget.board.postId == comment.postId) {
-        count += 1;
-        commentlistinstance.add(comment);
-      }
-    }
-    ScrollController scrollController = ScrollController();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      scrollController.jumpTo(scrollController.position.maxScrollExtent);
-    });
-
     return Column(
       children: [
         Board(
           board: widget.board,
-          canTap: false,
           titleSize: 13,
         ),
         Expanded(
-          child: ListView.builder(
-            controller: scrollController,
-            itemCount: commentlistinstance.length,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return Comment(
-                comment: commentlistinstance[index],
-              );
+          child: FutureBuilder(
+            future:
+                ref.watch(commentStateProvider).get(widget.board.id.toString()),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                List<CommentModel> comments = snapshot.data ?? [];
+                ScrollController scrollController = ScrollController();
+                SchedulerBinding.instance.addPostFrameCallback((_) {
+                  scrollController
+                      .jumpTo(scrollController.position.maxScrollExtent);
+                });
+                return ListView.builder(
+                  controller: scrollController,
+                  itemCount: comments.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Comment(
+                      comment: comments[index],
+                    );
+                  },
+                );
+              }
             },
           ),
         ),
@@ -105,18 +111,12 @@ class Body extends ConsumerWidget {
                         size: 30,
                       ),
                       onTap: () {
-                        // TODO : Upload comment.
-                        ref.read(commentStateProvider.notifier).add(
-                              CommentModel(
-                                "5",
-                                widget.board.postId,
-                                (count + 1).toString(),
-                                "익명5",
-                                textEditingController.text,
-                                "0",
-                              ),
-                            );
-                        print(widget.board.postId);
+                        // Upload comment.
+                        final requestData = {
+                          'postId': widget.board.id.toInt(),
+                          'content': textEditingController.text,
+                        };
+                        ref.watch(commentStateProvider).post(requestData);
                         textEditingController.clear();
                       },
                     ),

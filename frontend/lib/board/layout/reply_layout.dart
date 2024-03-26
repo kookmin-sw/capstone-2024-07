@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/board/model/cocomment_model.dart';
+import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/common/const/colors.dart';
 
-class CoComment extends StatelessWidget {
-  final CoCommentModel cocoment;
-  const CoComment({
+class Reply extends StatelessWidget {
+  final ReplyModel reply;
+  const Reply({
     super.key,
-    required this.cocoment,
+    required this.reply,
   });
 
   @override
@@ -43,14 +43,14 @@ class CoComment extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        cocoment.name,
+                        reply.userInformation.name,
                         style: const TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        cocoment.content,
+                        reply.content,
                         style: const TextStyle(
                           fontSize: 10,
                         ),
