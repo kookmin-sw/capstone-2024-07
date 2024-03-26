@@ -7,6 +7,7 @@ import com.dclass.backend.application.dto.*
 import com.dclass.backend.application.mail.MailService
 import com.dclass.backend.config.ACCESS_TOKEN_SECURITY_SCHEME_KEY
 import com.dclass.backend.domain.user.User
+import com.dclass.backend.security.AuthToken
 import com.dclass.backend.security.LoginUser
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -45,7 +46,7 @@ class UserRestController(
     @Operation(summary = "토큰 재발급 API", description = "리프레시 토큰을 이용하여 토큰을 재발급합니다")
     @ApiResponse(responseCode = "200", description = "토큰 재발급 성공")
     @PostMapping("/reissue-token")
-    fun generateToken(@RequestHeader(name = "Authorization") refreshToken: String): ResponseEntity<LoginUserResponse> {
+    fun generateToken(@AuthToken refreshToken: String): ResponseEntity<LoginUserResponse> {
         val token = blacklistService.reissueToken(refreshToken)
         return ResponseEntity.ok(token)
     }
