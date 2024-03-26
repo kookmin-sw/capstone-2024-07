@@ -166,9 +166,9 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
       height: 50.0,
       width: MediaQuery.of(context).size.width,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           renderMajorSelectBox(),
+          const SizedBox(width: 34.0),
           const Text(
             "DeCl",
             style: TextStyle(
@@ -177,6 +177,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
               fontWeight: FontWeight.w900,
             ),
           ),
+          const SizedBox(width: 46.0),
           SizedBox(
             width: 100,
             child: IconButton(
