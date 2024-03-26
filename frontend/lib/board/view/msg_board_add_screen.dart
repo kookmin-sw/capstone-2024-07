@@ -5,6 +5,7 @@ import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
+import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/provider/image_provider.dart';
 import 'package:frontend/board/provider/isquestion_provider.dart';
 import 'package:frontend/common/const/colors.dart';
@@ -12,15 +13,15 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:http/http.dart' as http;
 
-class MsgBoardAddScreen extends StatefulWidget {
+class MsgBoardAddScreen extends ConsumerStatefulWidget {
   final bool isEdit;
   const MsgBoardAddScreen({super.key, required this.isEdit});
 
   @override
-  State<MsgBoardAddScreen> createState() => _MsgBoardAddScreenState();
+  ConsumerState<MsgBoardAddScreen> createState() => _MsgBoardAddScreenState();
 }
 
-class _MsgBoardAddScreenState extends State<MsgBoardAddScreen> {
+class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   late BoardAdd boardAddAPI;
   bool canUpload = false;
   bool writedTitle = false;
@@ -94,6 +95,10 @@ class _MsgBoardAddScreenState extends State<MsgBoardAddScreen> {
                                     }
                                     Navigator.of(context).pop();
                                     Navigator.of(context).pop();
+                                    ref
+                                        .read(
+                                            boardStateNotifierProvider.notifier)
+                                        .paginate(forceRefetch: true);
                                   },
                                   child: const Text("네"),
                                 ),
