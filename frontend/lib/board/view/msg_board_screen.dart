@@ -8,18 +8,33 @@ import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/comment_layout.dart';
 
-class MsgBoardScreen extends StatefulWidget {
+class MsgBoardScreen extends ConsumerStatefulWidget {
   final MsgBoardResponseModel board;
   const MsgBoardScreen({super.key, required this.board});
 
   @override
-  State<MsgBoardScreen> createState() => _MsgBoardScreenState();
+  ConsumerState<MsgBoardScreen> createState() => _MsgBoardScreenState();
 }
 
-class _MsgBoardScreenState extends State<MsgBoardScreen> {
+class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
   @override
   void initState() {
     super.initState();
+  }
+
+  final TextEditingController textEditingController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
+  bool isAddNewComment = false;
+
+  void addNewComment() async {
+    final requestData = {
+      'postId': widget.board.id.toInt(),
+      'content': textEditingController.text,
+    };
+    await ref.watch(commentStateProvider).post(requestData);
+    setState(() {
+      isAddNewComment = true;
+    });
   }
 
   @override
@@ -34,99 +49,81 @@ class _MsgBoardScreenState extends State<MsgBoardScreen> {
             ),
           ),
         ),
-        body: Body(
-          widget: widget,
-        ));
-  }
-}
-
-class Body extends ConsumerWidget {
-  Body({
-    super.key,
-    required this.widget,
-  });
-
-  final MsgBoardScreen widget;
-  final TextEditingController textEditingController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
-        Board(
-          board: widget.board,
-          titleSize: 13,
-        ),
-        Expanded(
-          child: FutureBuilder(
-            future:
-                ref.watch(commentStateProvider).get(widget.board.id.toString()),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                List<CommentModel> comments = snapshot.data ?? [];
-                ScrollController scrollController = ScrollController();
-                SchedulerBinding.instance.addPostFrameCallback((_) {
-                  scrollController
-                      .jumpTo(scrollController.position.maxScrollExtent);
-                });
-                return ListView.builder(
-                  controller: scrollController,
-                  itemCount: comments.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Comment(
-                      comment: comments[index],
-                    );
-                  },
-                );
-              }
-            },
-          ),
-        ),
-        Container(
-          color: Colors.white,
-          padding: const EdgeInsets.only(bottom: 50),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: textEditingController,
-                  decoration: InputDecoration(
-                    hintText: '입력',
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 20),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: BODY_TEXT_COLOR.withOpacity(0.5),
-                      ),
-                    ),
-                    suffixIcon: GestureDetector(
-                      child: Icon(
-                        Icons.send,
-                        color: PRIMARY_COLOR.withOpacity(0.5),
-                        size: 30,
-                      ),
-                      onTap: () {
-                        // Upload comment.
-                        final requestData = {
-                          'postId': widget.board.id.toInt(),
-                          'content': textEditingController.text,
-                        };
-                        ref.watch(commentStateProvider).post(requestData);
-                        textEditingController.clear();
+        body: Column(
+          children: [
+            Board(
+              board: widget.board,
+              titleSize: 13,
+            ),
+            Expanded(
+              child: FutureBuilder(
+                future: ref
+                    .watch(commentStateProvider)
+                    .get(widget.board.id.toString()),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    List<CommentModel> comments = snapshot.data ?? [];
+                    ScrollController scrollController = ScrollController();
+                    if (isAddNewComment) {
+                      SchedulerBinding.instance.addPostFrameCallback((_) {
+                        scrollController
+                            .jumpTo(scrollController.position.maxScrollExtent);
+                      });
+                    }
+                    return ListView.builder(
+                      controller: scrollController,
+                      itemCount: comments.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Comment(
+                          comment: comments[index],
+                        );
                       },
+                    );
+                  }
+                },
+              ),
+            ),
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.only(bottom: 50),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: textEditingController,
+                      decoration: InputDecoration(
+                        hintText: '입력',
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 20),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: BODY_TEXT_COLOR.withOpacity(0.5),
+                          ),
+                        ),
+                        suffixIcon: GestureDetector(
+                          child: Icon(
+                            Icons.send,
+                            color: PRIMARY_COLOR.withOpacity(0.5),
+                            size: 30,
+                          ),
+                          onTap: () {
+                            // Upload comment.
+                            addNewComment();
+                            textEditingController.clear();
+                          },
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
-      ],
-    );
+            ),
+          ],
+        ));
   }
 }
