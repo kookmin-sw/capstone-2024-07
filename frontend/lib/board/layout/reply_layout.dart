@@ -76,7 +76,7 @@ class Reply extends ConsumerWidget {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      // TODO: 알림설정 및 신고 기능
+                                      // TODO: 댓글 수정, 삭제, 알림설정
                                     },
                                     child: TextWithIcon(
                                       icon: Icons.more_horiz,
