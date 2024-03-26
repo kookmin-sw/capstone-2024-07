@@ -45,8 +45,8 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
   void scrollListener() {
     if (controller.offset > controller.position.maxScrollExtent - 150) {
       ref.read(boardStateNotifierProvider.notifier).paginate(
-            fetchMore: true,
-          );
+        fetchMore: true,
+      );
     }
   }
 
@@ -83,6 +83,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
 
   Widget renderMajorSelectBox() {
     final memberState = ref.watch(memberStateNotifierProvider);
+    String selectedMajor = ref.watch(selectedMajorProvider.notifier).state;
 
     String major = "";
     String minor = "";
@@ -92,12 +93,13 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
       minor = memberState.minor;
     }
 
-    final majors =
-        [major, minor].where((s) => s.isNotEmpty).toList(); // 빈 문자열 제거
-    final selectedMajor = ref.watch(selectedMajorProvider);
-
-    if (!majors.contains(selectedMajor) && selectedMajor.isNotEmpty) {
-      majors.add(selectedMajor);
+    List<String> majors = [];
+    if(selectedMajor == major) {
+      majors = [selectedMajor, minor].where((s) => s.isNotEmpty).toList();
+    } else if(selectedMajor == minor){
+      majors = [selectedMajor, major].where((s) => s.isNotEmpty).toList();
+    } else if(minor==""){
+      majors = [major].where((s) => s.isNotEmpty).toList();
     }
 
     final dio = ref.watch(dioProvider);
@@ -111,7 +113,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
         child: DropdownButton<String>(
           value: selectedMajor,
           onChanged: (String? newValue) async {
-            if (newValue != null) {
+            if (newValue != null && selectedMajor!=newValue) {
               try {
                 // 활성화된 전공을 변경하는 API 요청을 보낸다.
                 final resp = await dio.put(
@@ -124,7 +126,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                 );
                 if (resp.statusCode == 200) {
                   // 다시 paginate api 요청을 보낸다.
-                  ref.read(selectedMajorProvider.notifier).state = newValue;
+                  ref.read(selectedMajorProvider.notifier).state = resp.data["activated"];
                   ref
                       .read(boardStateNotifierProvider.notifier)
                       .paginate(forceRefetch: true);
@@ -252,15 +254,15 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
           return Center(
             child: cp is CursorPaginationModelFetchingMore
                 ? const CircularProgressIndicator(
-                    color: PRIMARY_COLOR,
-                  )
+              color: PRIMARY_COLOR,
+            )
                 : const Text(
-                    'Copyright 2024. Decl Team all rights reserved.\n',
-                    style: TextStyle(
-                      color: BODY_TEXT_COLOR,
-                      fontSize: 12.0,
-                    ),
-                  ),
+              'Copyright 2024. Decl Team all rights reserved.\n',
+              style: TextStyle(
+                color: BODY_TEXT_COLOR,
+                fontSize: 12.0,
+              ),
+            ),
           );
         }
 
@@ -274,8 +276,8 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
               context,
               MaterialPageRoute(
                   builder: (context) => MsgBoardScreen(
-                        board: pItem,
-                      ),
+                    board: pItem,
+                  ),
                   fullscreenDialog: true),
             );
           },
