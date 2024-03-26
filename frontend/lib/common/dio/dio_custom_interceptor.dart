@@ -74,6 +74,7 @@ class CustomInterceptor extends Interceptor {
     }
 
     final isStatus401 = err.response?.statusCode == 401;
+    // 나중에 백엔드 예외처리되면 적절하게 수정!
 
     // 토큰을 새로 발급받으려다가 에러가 난거라면 refreshToken 자체에 문제가 있다!
     final isPathRefresh = err.requestOptions.path == '/api/users/reissue-token';

@@ -4,7 +4,6 @@ import com.dclass.backend.application.dto.*
 import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.comment.getByIdOrThrow
 import com.dclass.backend.domain.post.PostRepository
-import com.dclass.backend.domain.post.getByIdOrThrow
 import com.dclass.backend.domain.reply.ReplyRepository
 import com.dclass.backend.exception.comment.CommentException
 import com.dclass.backend.exception.comment.CommentExceptionType
@@ -17,10 +16,10 @@ class CommentService(
     private val commentRepository: CommentRepository,
     private val replyRepository: ReplyRepository,
     private val postRepository: PostRepository,
+    private val commentValidator: CommentValidator,
 ) {
-    // TODO CommentValidator를 추가한다
     fun create(userId: Long, request: CreateCommentRequest): CommentResponse {
-        val post = postRepository.getByIdOrThrow(request.postId)
+        val post = commentValidator.validateCreateComment(userId, request.postId)
         post.increaseCommentReplyCount(1)
         return commentRepository.save(request.toEntity(userId))
             .let(::CommentResponse)
@@ -41,6 +40,7 @@ class CommentService(
     }
 
     fun like(userId: Long, request: LikeCommentRequest) {
+        commentValidator.validateLikeComment(userId, request.commentId)
         val comment = commentRepository.getByIdOrThrow(request.commentId)
         comment.like(userId)
     }

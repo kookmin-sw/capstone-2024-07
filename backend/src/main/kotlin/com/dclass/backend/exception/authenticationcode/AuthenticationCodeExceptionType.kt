@@ -1,17 +1,18 @@
-package com.dclass.backend.exception.reply
+package com.dclass.backend.exception.authenticationcode
 
 import com.dclass.backend.exception.common.BaseExceptionType
 import org.springframework.http.HttpStatus
 
-enum class ReplyExceptionType(
+enum class AuthenticationCodeExceptionType(
     private val httpStatus: HttpStatus,
     private val code: String,
     private val errorMessage: String
 ) : BaseExceptionType {
 
-    FORBIDDEN_REPLY(HttpStatus.FORBIDDEN, "R00", "대댓글에 대한 권한이 없습니다."),
-    NOT_FOUND_REPLY(HttpStatus.NOT_FOUND, "R01", "존재하지 않는 댓글입니다."),
-    SELF_LIKE(HttpStatus.BAD_REQUEST, "R02", "본인이 작성한 대댓글에는 좋아요를 누를 수 없습니다.")
+    NOT_EQUAL_CODE(HttpStatus.BAD_REQUEST, "A01", "인증 코드가 일치하지 않습니다"),
+    ALREADY_VERIFIED(HttpStatus.BAD_REQUEST, "A02", "이미 인증된 코드입니다"),
+    NOT_VERIFIED(HttpStatus.BAD_REQUEST, "A03", "인증되지 않은 코드입니다"),
+    EXPIRED_CODE(HttpStatus.BAD_REQUEST, "A04", "만료된 코드입니다"),
     ;
 
     override fun httpStatus(): HttpStatus {

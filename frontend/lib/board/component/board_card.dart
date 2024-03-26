@@ -43,7 +43,7 @@ class BoardCard extends StatelessWidget {
       universityName: msgBoardResponseModel.universityName,
       communityId: msgBoardResponseModel.communityId,
       communityTitle: msgBoardResponseModel.communityTitle,
-      postTitle: msgBoardResponseModel.postContent,
+      postTitle: msgBoardResponseModel.postTitle,
       postContent: msgBoardResponseModel.postContent,
       images: msgBoardResponseModel.images,
       count: msgBoardResponseModel.count,

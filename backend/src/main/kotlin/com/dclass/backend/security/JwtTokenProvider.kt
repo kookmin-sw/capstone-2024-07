@@ -1,9 +1,10 @@
 package com.dclass.backend.security
 
-import io.jsonwebtoken.JwtException
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
+import com.dclass.backend.exception.token.TokenException
+import com.dclass.backend.exception.token.TokenExceptionType.*
+import io.jsonwebtoken.*
 import io.jsonwebtoken.security.Keys
+import io.jsonwebtoken.security.SignatureException
 import org.springframework.stereotype.Component
 import java.util.*
 import javax.crypto.SecretKey
@@ -26,11 +27,15 @@ class JwtTokenProvider(
     }
 
     fun createToken(payload: String, validity: Long): String {
-        return Jwts.builder()
-            .setSubject(payload)
-            .setExpiration(Date(System.currentTimeMillis() + validity))
-            .signWith(signingKey)
-            .compact()
+        return try {
+            Jwts.builder()
+                .setSubject(payload)
+                .setExpiration(Date(System.currentTimeMillis() + validity))
+                .signWith(signingKey)
+                .compact()
+        } catch (e: IllegalArgumentException) {
+            throw TokenException(CANNOT_CREATE_TOKEN)
+        }
     }
 
     fun getSubject(token: String): String {
@@ -43,10 +48,16 @@ class JwtTokenProvider(
         return try {
             getClaimsJws(token)
             true
-        } catch (e: JwtException) {
-            false
+        } catch (e: SignatureException) {
+            throw TokenException(INVALID_TOKEN)
+        } catch (e: MalformedJwtException) {
+            throw TokenException(WRONG_TOKEN_TYPE)
+        } catch (e: ExpiredJwtException) {
+            throw TokenException(EXPIRED_TOKEN)
+        } catch (e: UnsupportedJwtException) {
+            throw TokenException(UNSUPPORTED_TOKEN)
         } catch (e: IllegalArgumentException) {
-            false
+            throw TokenException(NOT_FOUND_TOKEN)
         }
     }
 

@@ -2,6 +2,8 @@ package com.dclass.backend.config
 
 import com.dclass.backend.domain.belong.Belong
 import com.dclass.backend.domain.belong.BelongRepository
+import com.dclass.backend.domain.comment.Comment
+import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.community.Community
 import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.department.Department
@@ -9,6 +11,8 @@ import com.dclass.backend.domain.department.DepartmentRepository
 import com.dclass.backend.domain.post.Post
 import com.dclass.backend.domain.post.PostLikes
 import com.dclass.backend.domain.post.PostRepository
+import com.dclass.backend.domain.reply.Reply
+import com.dclass.backend.domain.reply.ReplyRepository
 import com.dclass.backend.domain.user.University
 import com.dclass.backend.domain.user.UniversityRepository
 import com.dclass.backend.domain.user.User
@@ -30,6 +34,8 @@ class DatabaseInitializer(
     private val belongRepository: BelongRepository,
     private val userRepository: UserRepository,
     private val postRepository: PostRepository,
+    private val commentRepository: CommentRepository,
+    private val replyRepository: ReplyRepository,
 ) : CommandLineRunner {
 
     override fun run(vararg args: String) {
@@ -47,6 +53,8 @@ class DatabaseInitializer(
         populateCommunity()
         populateUser()
         populateDummyPosts()
+        populateDummyComments()
+        populateDummyReplies()
     }
 
 
@@ -773,6 +781,56 @@ class DatabaseInitializer(
         val createdDateTime = LocalDateTime.now()
 
         return Post(user.id, community.id, title, content, PostLikes(), createdDateTime = createdDateTime)
+    }
+
+    private fun populateDummyComments() {
+        val users = userRepository.findAll()
+        val posts = postRepository.findAll()
+
+        val dummyComments = mutableListOf<Comment>()
+
+        var num = 1
+        for (user in users) {
+            for (post in posts) {
+                val comment = createDummyComment(user, post, num)
+                dummyComments.add(comment)
+                num++
+            }
+        }
+
+        commentRepository.saveAll(dummyComments)
+    }
+
+    private fun createDummyComment(user: User, post: Post, num: Int): Comment {
+        val content = "댓글 ${num}"
+        val createdDateTime = LocalDateTime.now()
+
+        return Comment(user.id, post.id, content, createdDateTime = createdDateTime)
+    }
+
+    private fun populateDummyReplies() {
+        val users = userRepository.findAll()
+        val comments = commentRepository.findAll()
+
+        val dummyReplies = mutableListOf<Reply>()
+
+        var num = 1
+        for (user in users) {
+            for (comment in comments) {
+                val reply = createDummyReply(user, comment, num)
+                dummyReplies.add(reply)
+                num++
+            }
+        }
+
+        replyRepository.saveAll(dummyReplies)
+    }
+
+    private fun createDummyReply(user: User, comment: Comment, num: Int): Reply {
+        val content = "대댓글 ${num}"
+        val createdDateTime = LocalDateTime.now()
+
+        return Reply(user.id, comment.id, content, createdDateTime = createdDateTime)
     }
 
 

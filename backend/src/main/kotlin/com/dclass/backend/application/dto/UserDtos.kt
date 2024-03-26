@@ -106,8 +106,10 @@ data class UserResponseWithDepartmentNames(
         example = "소프트웨어학과"
     )
     val minor: String = "",
+
+    val activatedDepartment: String,
 ) {
-    constructor(user: User, major: String, minor: String) : this(
+    constructor(user: User, major: String, minor: String, activatedDepartment: String) : this(
         user.id,
         user.name,
         user.email,
@@ -115,6 +117,7 @@ data class UserResponseWithDepartmentNames(
         user.universityName,
         major = major,
         minor = minor,
+        activatedDepartment = activatedDepartment
     )
 }
 

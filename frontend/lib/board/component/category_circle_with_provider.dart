@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/const/colors.dart';
 import '../provider/api_category_provider.dart';
+import '../provider/category_provider.dart';
 
 class CategoryCircleWithProvider extends ConsumerWidget {
   const CategoryCircleWithProvider({
@@ -18,6 +19,8 @@ class CategoryCircleWithProvider extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final clickedList = ref.watch(categoryStateProvider);
+
     return GestureDetector(
       onTap: () {
         if(categoryCode=="HOT"){
@@ -28,27 +31,38 @@ class CategoryCircleWithProvider extends ConsumerWidget {
           ref.read(isHotProvider.notifier).state = false;
         }
 
-      },
+        if (clickedList.contains(category)) {
+          ref.read(categoryStateProvider.notifier).remove(category);
+        } else {
+          ref.read(categoryStateProvider.notifier).clear();
+          ref.read(categoryStateProvider.notifier).add(category);
+        }
+        },
       child: Container(
         // category circle
         decoration: BoxDecoration(
           color: !type
               ? PRIMARY_COLOR.withOpacity(0.1)
-              : BODY_TEXT_COLOR.withOpacity(0.1),
+              : !clickedList.contains(category)
+              ? BODY_TEXT_COLOR.withOpacity(0.1)
+              : Colors.white,
           borderRadius: BorderRadius.circular(50),
-          border: type
+          border: type && clickedList.contains(category)
               ? Border.all(
             color: PRIMARY_COLOR,
           )
               : null,
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 3),
-          child: Center(
-            child: Text(
-              category,
-              style: const TextStyle(
-                fontSize: 10,
+        child: Container(
+          height: 40.0,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 3),
+            child: Center(
+              child: Text(
+                category,
+                style: const TextStyle(
+                  fontSize: 10,
+                ),
               ),
             ),
           ),

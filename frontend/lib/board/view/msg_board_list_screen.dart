@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,7 +10,13 @@ import 'package:frontend/board/view/msg_board_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
+import 'package:frontend/common/provider/dio_provider.dart';
+import 'package:frontend/member/provider/selected_major_provider.dart';
 
+import '../../common/component/notice_popup_dialog.dart';
+import '../../common/const/data.dart';
+import '../../member/model/member_model.dart';
+import '../../member/provider/member_state_notifier_provider.dart';
 import '../../member/view/my_page_screen.dart';
 import '../component/category_circle_with_provider.dart';
 
@@ -74,6 +81,89 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
     //test
   }
 
+  Widget renderMajorSelectBox() {
+    final memberState = ref.watch(memberStateNotifierProvider);
+
+    String major = "";
+    String minor = "";
+
+    if (memberState is MemberModel) {
+      major = memberState.major;
+      minor = memberState.minor;
+    }
+
+    final majors =
+        [major, minor].where((s) => s.isNotEmpty).toList(); // 빈 문자열 제거
+    final selectedMajor = ref.watch(selectedMajorProvider);
+
+    if (!majors.contains(selectedMajor) && selectedMajor.isNotEmpty) {
+      majors.add(selectedMajor);
+    }
+
+    final dio = ref.watch(dioProvider);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: selectedMajor,
+          onChanged: (String? newValue) async {
+            if (newValue != null) {
+              try {
+                // 활성화된 전공을 변경하는 API 요청을 보낸다.
+                final resp = await dio.put(
+                  'http://$ip/api/belongs/switch-departments',
+                  options: Options(
+                    headers: {
+                      'accessToken': 'true',
+                    },
+                  ),
+                );
+                if (resp.statusCode == 200) {
+                  // 다시 paginate api 요청을 보낸다.
+                  ref.read(selectedMajorProvider.notifier).state = newValue;
+                  ref
+                      .read(boardStateNotifierProvider.notifier)
+                      .paginate(forceRefetch: true);
+                }
+              } catch (e) {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return NoticePopupDialog(
+                      message: "오류발생",
+                      buttonText: "닫기",
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
+              }
+            }
+          },
+          icon: const Icon(Icons.keyboard_arrow_down_rounded),
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+          ),
+          items: majors.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(
+                value,
+                overflow: TextOverflow.fade,
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
   Widget renderTop() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
@@ -81,7 +171,8 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
       width: MediaQuery.of(context).size.width,
       child: Row(
         children: [
-          const SizedBox(width: 160.0),
+          renderMajorSelectBox(),
+          const SizedBox(width: 34.0),
           const Text(
             "DeCl",
             style: TextStyle(
@@ -90,17 +181,20 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
               fontWeight: FontWeight.w900,
             ),
           ),
-          const SizedBox(width: 80.0),
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => const MypageScreen(),
-                ),
-              );
-            },
-            icon: const Icon(
-              Icons.person,
+          const SizedBox(width: 46.0),
+          SizedBox(
+            width: 100,
+            child: IconButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const MypageScreen(),
+                  ),
+                );
+              },
+              icon: const Icon(
+                Icons.person,
+              ),
             ),
           ),
         ],
@@ -109,12 +203,10 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
   }
 
   Widget renderCategories() {
-    Map<String, String> categoryCodes = categoryCodesList;
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: SizedBox(
-        height: 50,
+        height: 40,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [

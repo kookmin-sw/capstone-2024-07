@@ -1,5 +1,8 @@
 package com.dclass.backend.domain.belong
 
+import com.dclass.backend.exception.belong.BelongException
+import com.dclass.backend.exception.belong.BelongExceptionType.CHANGE_INTERVAL_VIOLATION
+import com.dclass.backend.exception.belong.BelongExceptionType.MAX_BELONG
 import com.dclass.support.domain.BaseEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
@@ -51,12 +54,18 @@ class Belong(
 
 
     init {
-        require(departmentIds.size <= 2) { "학과는 최대 두 개까지 선택 가능합니다." }
+        if (departmentIds.size > 2) {
+            throw BelongException(MAX_BELONG)
+        }
     }
 
     fun update(ids: List<Long>) {
-        require(ids.size <= 2) { "학과는 최대 두개까지 선택가능합니다" }
-        check(periodValidation()) { "학과 변경은 90일마다 가능합니다." }
+        if (ids.size > 2) {
+            throw BelongException(MAX_BELONG)
+        }
+        if (!periodValidation()) {
+            throw BelongException(CHANGE_INTERVAL_VIOLATION)
+        }
         _departmentIds.clear()
         _departmentIds.addAll(ids)
         modifiedDateTime = LocalDateTime.now()

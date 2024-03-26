@@ -3,6 +3,8 @@ package com.dclass.backend.security
 import com.dclass.backend.domain.user.User
 import com.dclass.backend.domain.user.UserRepository
 import com.dclass.backend.domain.user.getByEmailOrThrow
+import com.dclass.backend.exception.token.TokenException
+import com.dclass.backend.exception.token.TokenExceptionType.*
 import org.springframework.core.MethodParameter
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component
@@ -30,19 +32,17 @@ class LoginUserResolver(
         binderFactory: WebDataBinderFactory?
     ): User {
         val token = extractBearerToken(webRequest)
-        if (!jwtTokenProvider.isValidToken(token)) {
-            throw LoginFailedException()
-        }
+        jwtTokenProvider.isValidToken(token)
         val userEmail = jwtTokenProvider.getSubject(token)
         return userRepository.getByEmailOrThrow(userEmail)
     }
 
     private fun extractBearerToken(request: NativeWebRequest): String {
         val authorization =
-            request.getHeader(HttpHeaders.AUTHORIZATION) ?: throw LoginFailedException()
+            request.getHeader(HttpHeaders.AUTHORIZATION) ?: throw TokenException(NOT_FOUND_TOKEN)
         val (tokenType, token) = splitToTokenFormat(authorization)
         if (tokenType != BEARER) {
-            throw LoginFailedException()
+            throw TokenException(WRONG_TOKEN_TYPE)
         }
         return token
     }
@@ -52,7 +52,7 @@ class LoginUserResolver(
             val tokenFormat = authorization.split(" ")
             tokenFormat[0] to tokenFormat[1]
         } catch (e: IndexOutOfBoundsException) {
-            throw LoginFailedException()
+            throw TokenException(UNSUPPORTED_TOKEN)
         }
     }
 }
