@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/board/provider/cocomment_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/layout/reply_layout.dart';
@@ -44,7 +43,7 @@ class _Comment extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<ReplyModel> replies = ref.watch(replyStateProvider);
+    List<ReplyModel> replies = widget.comment.replies;
     return Contents(widget: widget, replies: replies);
   }
 }
@@ -103,7 +102,6 @@ class Contents extends ConsumerWidget {
                           icon: Icons.favorite_outline_rounded,
                           iconSize: 15,
                           text: widget.comment.likeCount.count.toString(),
-                          canTap: true,
                           ref: ref,
                         ),
                         const SizedBox(
@@ -116,8 +114,21 @@ class Contents extends ConsumerWidget {
                           child: TextWithIcon(
                             icon: Icons.chat_outlined,
                             iconSize: 15,
+                            text: widget.comment.replies.length.toString(),
+                            ref: ref,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 13,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            // TODO: 알림설정 및 신고 기능
+                          },
+                          child: TextWithIcon(
+                            icon: Icons.more_horiz,
+                            iconSize: 20,
                             text: "-1",
-                            canTap: true,
                             ref: ref,
                           ),
                         ),
