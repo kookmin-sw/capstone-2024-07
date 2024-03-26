@@ -51,7 +51,6 @@ class Board extends ConsumerWidget {
                       icon: Icons.favorite_outline_rounded,
                       iconSize: 15,
                       text: board.count.likeCount.toString(),
-                      canTap: true,
                       ref: ref,
                     ),
                     const SizedBox(
@@ -61,7 +60,6 @@ class Board extends ConsumerWidget {
                       icon: Icons.chat_outlined,
                       iconSize: 15,
                       text: board.count.commentReplyCount.toString(),
-                      canTap: true,
                       ref: ref,
                     ),
                     const SizedBox(
@@ -71,7 +69,6 @@ class Board extends ConsumerWidget {
                       icon: Icons.star_outline_rounded,
                       iconSize: 18,
                       text: board.count.scrapCount.toString(),
-                      canTap: true,
                       ref: ref,
                     ),
                     const SizedBox(

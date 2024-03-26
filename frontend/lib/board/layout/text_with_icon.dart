@@ -8,7 +8,6 @@ class TextWithIcon extends StatefulWidget {
   final IconData icon;
   final double iconSize;
   final String text;
-  final bool canTap;
   final WidgetRef ref;
 
   const TextWithIcon({
@@ -16,7 +15,6 @@ class TextWithIcon extends StatefulWidget {
     required this.icon,
     required this.iconSize,
     required this.text,
-    required this.canTap,
     required this.ref,
   });
 
@@ -76,37 +74,34 @@ class _TextWithIconState extends State<TextWithIcon>
         ),
         GestureDetector(
           onTap: () {
-            if (widget.canTap) {
-              setState(() {
-                if (widget.icon == Icons.favorite_outline_rounded) {
-                  // TODO: add heartCount to Server
-                  if (isHeartClicked) {
-                    textCount -= 1;
-                    heartAnimationController.reverse();
-                  } else {
-                    textCount += 1;
-                    heartAnimationController.forward();
-                  }
-                  isHeartClicked = !isHeartClicked;
-                } else if (widget.icon == Icons.chat_outlined) {
-                } else if (widget.icon == Icons.star_outline_rounded) {
-                  if (isFavoriteClicked) {
-                    textCount -= 1;
-                  } else {
-                    textCount += 1;
-                  }
-                  isFavoriteClicked = !isFavoriteClicked;
-                } else if (widget.icon == Icons.image_rounded) {
-                  getImage();
-                } else if (widget.icon ==
-                    Icons.check_box_outline_blank_rounded) {
-                  isQuestionClicked = !isQuestionClicked;
-                  widget.ref
-                      .read(isQuestionStateProvider.notifier)
-                      .set(isQuestionClicked);
+            setState(() {
+              if (widget.icon == Icons.favorite_outline_rounded) {
+                // TODO: add heartCount to Server
+                if (isHeartClicked) {
+                  textCount -= 1;
+                  heartAnimationController.reverse();
+                } else {
+                  textCount += 1;
+                  heartAnimationController.forward();
                 }
-              });
-            }
+                isHeartClicked = !isHeartClicked;
+              } else if (widget.icon == Icons.chat_outlined) {
+              } else if (widget.icon == Icons.star_outline_rounded) {
+                if (isFavoriteClicked) {
+                  textCount -= 1;
+                } else {
+                  textCount += 1;
+                }
+                isFavoriteClicked = !isFavoriteClicked;
+              } else if (widget.icon == Icons.image_rounded) {
+                getImage();
+              } else if (widget.icon == Icons.check_box_outline_blank_rounded) {
+                isQuestionClicked = !isQuestionClicked;
+                widget.ref
+                    .read(isQuestionStateProvider.notifier)
+                    .set(isQuestionClicked);
+              }
+            });
           },
           child: Row(
             children: [

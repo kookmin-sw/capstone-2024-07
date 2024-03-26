@@ -316,7 +316,6 @@ class BottomView extends ConsumerWidget {
                     icon: Icons.image_rounded,
                     iconSize: 17,
                     text: "사진",
-                    canTap: true,
                     ref: ref,
                   ),
                   const SizedBox(
@@ -326,7 +325,6 @@ class BottomView extends ConsumerWidget {
                     icon: Icons.check_box_outline_blank_rounded,
                     iconSize: 17,
                     text: "질문",
-                    canTap: true,
                     ref: ref,
                   ),
                 ],
