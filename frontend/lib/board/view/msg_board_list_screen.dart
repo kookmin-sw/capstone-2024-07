@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -7,8 +8,10 @@ import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
+import 'package:frontend/common/provider/dio_provider.dart';
 import 'package:frontend/member/provider/selected_major_provider.dart';
 
+import '../../common/component/notice_popup_dialog.dart';
 import '../../common/const/data.dart';
 import '../../member/model/member_model.dart';
 import '../../member/provider/member_state_notifier_provider.dart';
@@ -87,8 +90,15 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
       minor = memberState.minor;
     }
 
-    final majors = [major, minor].where((s) => s.isNotEmpty).toList(); // 빈 문자열 제거
+    final majors =
+        [major, minor].where((s) => s.isNotEmpty).toList(); // 빈 문자열 제거
     final selectedMajor = ref.watch(selectedMajorProvider);
+
+    if (!majors.contains(selectedMajor) && selectedMajor.isNotEmpty) {
+      majors.add(selectedMajor);
+    }
+
+    final dio = ref.watch(dioProvider);
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -98,13 +108,40 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: selectedMajor,
-          onChanged: (String? newValue) {
+          onChanged: (String? newValue) async {
             if (newValue != null) {
-              ref.watch(selectedMajorProvider.notifier).state = newValue;
-              // 활성화된 전공을 변경하는 API 요청 보내고 다시 paginate할 것
+              try {
+                // 활성화된 전공을 변경하는 API 요청을 보낸다.
+                final resp = await dio.put(
+                  'http://$ip/api/belongs/switch-departments',
+                  options: Options(
+                    headers: {
+                      'accessToken': 'true',
+                    },
+                  ),
+                );
+                if(resp.statusCode==200){
+                  // 다시 paginate api 요청을 보낸다.
+                  ref.read(selectedMajorProvider.notifier).state = newValue;
+                  ref.read(boardStateNotifierProvider.notifier).paginate(forceRefetch: true);
+                }
+              } catch (e) {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return NoticePopupDialog(
+                      message: "오류발생",
+                      buttonText: "닫기",
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
+              }
             }
           },
-          icon: const Icon(Icons.arrow_drop_down),
+          icon: const Icon(Icons.keyboard_arrow_down_rounded),
           style: TextStyle(
             color: Colors.black,
             fontSize: 16,
