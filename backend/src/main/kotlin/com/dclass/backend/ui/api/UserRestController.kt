@@ -45,7 +45,7 @@ class UserRestController(
     @Operation(summary = "토큰 재발급 API", description = "리프레시 토큰을 이용하여 토큰을 재발급합니다")
     @ApiResponse(responseCode = "200", description = "토큰 재발급 성공")
     @PostMapping("/reissue-token")
-    fun generateToken(@RequestParam refreshToken: String): ResponseEntity<LoginUserResponse> {
+    fun generateToken(@RequestHeader(name = "Authorization") refreshToken: String): ResponseEntity<LoginUserResponse> {
         val token = blacklistService.reissueToken(refreshToken)
         return ResponseEntity.ok(token)
     }
