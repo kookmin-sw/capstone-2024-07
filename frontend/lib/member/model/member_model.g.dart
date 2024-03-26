@@ -14,6 +14,7 @@ MemberModel _$MemberModelFromJson(Map<String, dynamic> json) => MemberModel(
       universityName: json['universityName'] as String,
       major: json['major'] as String,
       minor: json['minor'] as String,
+      activatedDepartment: json['activatedDepartment'] as String,
     );
 
 Map<String, dynamic> _$MemberModelToJson(MemberModel instance) =>
@@ -25,4 +26,5 @@ Map<String, dynamic> _$MemberModelToJson(MemberModel instance) =>
       'universityName': instance.universityName,
       'major': instance.major,
       'minor': instance.minor,
+      'activatedDepartment': instance.activatedDepartment,
     };
