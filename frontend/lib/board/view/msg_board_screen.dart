@@ -54,10 +54,12 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: PRIMARY10_COLOR,
-          title: Text(
-            widget.board.communityTitle,
-            style: const TextStyle(
-              fontSize: 15,
+          title: Center(
+            child: Text(
+              widget.board.communityTitle,
+              style: const TextStyle(
+                fontSize: 15,
+              ),
             ),
           ),
           actions: [
