@@ -11,7 +11,6 @@ import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
 import 'package:frontend/common/provider/dio_provider.dart';
-import 'package:frontend/member/provider/selected_major_provider.dart';
 
 import '../../common/component/notice_popup_dialog.dart';
 import '../../common/const/data.dart';
@@ -83,23 +82,23 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
 
   Widget renderMajorSelectBox() {
     final memberState = ref.watch(memberStateNotifierProvider);
-    String selectedMajor = ref.watch(selectedMajorProvider.notifier).state;
 
     String major = "";
     String minor = "";
+    String activatedMajor = "";
 
     if (memberState is MemberModel) {
       major = memberState.major;
       minor = memberState.minor;
+      activatedMajor = memberState.activatedDepartment;
     }
 
     List<String> majors = [];
-    if (selectedMajor == major) {
-      majors = [selectedMajor, minor].where((s) => s.isNotEmpty).toList();
-    } else if (selectedMajor == minor) {
-      majors = [selectedMajor, major].where((s) => s.isNotEmpty).toList();
-    } else if (minor == "") {
-      majors = [major].where((s) => s.isNotEmpty).toList();
+    if(activatedMajor == major){
+      majors.add(major);
+      if(minor.isNotEmpty) majors.add(minor);
+    } else{
+      majors = [minor, major];
     }
 
     final dio = ref.watch(dioProvider);
@@ -111,9 +110,9 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
-          value: selectedMajor,
+          value: activatedMajor,
           onChanged: (String? newValue) async {
-            if (newValue != null && selectedMajor != newValue) {
+            if (newValue != null && activatedMajor != newValue) {
               try {
                 // 활성화된 전공을 변경하는 API 요청을 보낸다.
                 final resp = await dio.put(
@@ -126,8 +125,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                 );
                 if (resp.statusCode == 200) {
                   // 다시 paginate api 요청을 보낸다.
-                  ref.read(selectedMajorProvider.notifier).state =
-                      resp.data["activated"];
+                  ref.read(memberStateNotifierProvider.notifier).getMe();
                   ref
                       .read(boardStateNotifierProvider.notifier)
                       .paginate(forceRefetch: true);
