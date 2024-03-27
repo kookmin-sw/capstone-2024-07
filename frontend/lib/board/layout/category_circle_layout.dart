@@ -29,15 +29,15 @@ class CategoryCircle extends ConsumerWidget {
         // category circle
         decoration: BoxDecoration(
           color: !type
-              ? PRIMARY_COLOR.withOpacity(0.1)
+              ? PRIMARY10_COLOR
               : !clickedList.contains(category)
-              ? BODY_TEXT_COLOR.withOpacity(0.1)
-              : Colors.white,
+                  ? BODY_TEXT_COLOR.withOpacity(0.1)
+                  : Colors.white,
           borderRadius: BorderRadius.circular(50),
           border: type && clickedList.contains(category)
               ? Border.all(
-            color: PRIMARY_COLOR,
-          )
+                  color: PRIMARY_COLOR,
+                )
               : null,
         ),
         child: Padding(

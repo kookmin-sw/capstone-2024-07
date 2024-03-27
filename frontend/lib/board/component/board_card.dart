@@ -119,7 +119,7 @@ class BoardCard extends StatelessWidget {
                 children: [
                   Text(
                     postTitle,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12.0,
                       fontWeight: FontWeight.bold,
                     ),
@@ -151,7 +151,7 @@ class BoardCard extends StatelessWidget {
     return Container(
       // category circle
       decoration: BoxDecoration(
-        color: PRIMARY_COLOR.withOpacity(0.1),
+        color: PRIMARY10_COLOR,
         borderRadius: BorderRadius.circular(50),
       ),
       child: Padding(
