@@ -253,7 +253,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                     });
                   },
                   style: const TextStyle(
-                    fontSize: 11,
+                    fontSize: 12,
                   ),
                   decoration: const InputDecoration(
                     hintText: "지금 가장 고민이 되거나 궁금한 내용이 무엇인가요?",

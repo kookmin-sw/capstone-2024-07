@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/board/provider/comment_provider.dart';
@@ -53,13 +54,12 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     int selectIndex = ref.watch(replyStateProvider);
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           backgroundColor: PRIMARY10_COLOR,
-          title: Center(
-            child: Text(
-              widget.board.communityTitle,
-              style: const TextStyle(
-                fontSize: 15,
-              ),
+          title: Text(
+            categoryCodesReverseList[widget.board.communityTitle].toString(),
+            style: const TextStyle(
+              fontSize: 15,
             ),
           ),
           actions: [

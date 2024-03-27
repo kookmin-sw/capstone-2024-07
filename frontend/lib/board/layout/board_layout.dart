@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/category_circle_layout.dart';
@@ -42,7 +43,8 @@ class Board extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CategoryCircle(
-                  category: board.communityTitle,
+                  category:
+                      categoryCodesReverseList[board.communityTitle].toString(),
                   type: false,
                 ),
                 Row(
