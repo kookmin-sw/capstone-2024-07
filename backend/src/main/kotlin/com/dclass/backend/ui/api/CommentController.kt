@@ -46,7 +46,7 @@ class CommentController(
     @DeleteMapping("/{commentId}")
     fun deleteComment(
         @LoginUser user: User,
-        @PathVariable commentId: Long
+        @PathVariable commentId: Long,
     ): ResponseEntity<Unit> {
         commentService.delete(user.id, DeleteCommentRequest(commentId))
         return ResponseEntity.noContent().build()

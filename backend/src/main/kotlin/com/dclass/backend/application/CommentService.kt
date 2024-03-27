@@ -4,6 +4,7 @@ import com.dclass.backend.application.dto.*
 import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.comment.getByIdOrThrow
 import com.dclass.backend.domain.post.PostRepository
+import com.dclass.backend.domain.post.getByIdOrThrow
 import com.dclass.backend.domain.reply.ReplyRepository
 import com.dclass.backend.exception.comment.CommentException
 import com.dclass.backend.exception.comment.CommentExceptionType
@@ -35,8 +36,9 @@ class CommentService(
     fun delete(userId: Long, request: DeleteCommentRequest) {
         val comment = commentRepository.findByIdAndUserId(request.commentId, userId)
             ?: throw CommentException(CommentExceptionType.NOT_FOUND_COMMENT)
-
+        val post = postRepository.getByIdOrThrow(comment.postId)
         commentRepository.delete(comment)
+        post.increaseCommentReplyCount(-1)
     }
 
     fun like(userId: Long, request: LikeCommentRequest) {
