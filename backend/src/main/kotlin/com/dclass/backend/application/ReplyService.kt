@@ -1,6 +1,8 @@
 package com.dclass.backend.application
 
 import com.dclass.backend.application.dto.*
+import com.dclass.backend.domain.post.PostRepository
+import com.dclass.backend.domain.post.getByIdOrThrow
 import com.dclass.backend.domain.reply.ReplyRepository
 import com.dclass.backend.domain.reply.getByIdAndUserIdOrThrow
 import com.dclass.backend.domain.reply.getByIdOrThrow
@@ -12,10 +14,12 @@ import org.springframework.transaction.annotation.Transactional
 class ReplyService(
     private val replyRepository: ReplyRepository,
     private val replyValidator: ReplyValidator,
+    private val postRepository: PostRepository,
 ) {
-    //TODO ReplyValidator를 추가한다
     fun create(userId: Long, request: CreateReplyRequest): ReplyResponse {
-        replyValidator.validateCreateReply(userId, request.commentId)
+        val comment = replyValidator.validateCreateReply(userId, request.commentId)
+        val post = postRepository.getByIdOrThrow(comment.postId)
+        post.increaseCommentReplyCount(1)
         return replyRepository.save(request.toEntity(userId))
             .let(::ReplyResponse)
     }
@@ -27,7 +31,9 @@ class ReplyService(
 
     fun delete(userId: Long, request: DeleteReplyRequest) {
         val reply = replyRepository.getByIdAndUserIdOrThrow(request.replyId, userId)
-
+        val comment = replyValidator.validateDeleteReply(userId, reply.commentId)
+        val post = postRepository.getByIdOrThrow(comment.postId)
+        post.increaseCommentReplyCount(-1)
         replyRepository.delete(reply)
     }
 
