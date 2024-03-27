@@ -15,3 +15,12 @@ Map<String, String> categoryCodesList = {
   "질문게시판": "QUESTION",
   "홍보게시판": "PROMOTION",
 };
+
+Map<String, String> categoryCodesReverseList = {
+  "HOT": "인기게시판",
+  "FREE": "자유게시판",
+  "GRADUATE": "대학원게시판",
+  "STUDY": "스터디모집",
+  "QUESTION": "질문게시판",
+  "PROMOTION": "홍보게시판",
+};
