@@ -5,61 +5,31 @@ import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/layout/reply_layout.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
 
-class Comment extends StatefulWidget {
+class Comment extends ConsumerStatefulWidget {
   final CommentModel comment;
-  const Comment({super.key, required this.comment});
+  final bool selectComment;
+  const Comment(
+      {super.key, required this.comment, required this.selectComment});
 
   @override
-  State<Comment> createState() => _CommentState();
+  ConsumerState<Comment> createState() => _CommentState();
 }
 
-class _CommentState extends State<Comment> with SingleTickerProviderStateMixin {
+class _CommentState extends ConsumerState<Comment>
+    with SingleTickerProviderStateMixin {
   late AnimationController animationController;
+  List<ReplyModel> replies = [];
 
   @override
   void initState() {
     super.initState();
     animationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    replies = widget.comment.replies;
   }
 
   @override
   Widget build(BuildContext context) {
-    return _Comment(
-      widget: widget,
-      animationController: animationController,
-    );
-  }
-}
-
-class _Comment extends ConsumerWidget {
-  const _Comment({
-    required this.widget,
-    required this.animationController,
-  });
-
-  final Comment widget;
-  final AnimationController animationController;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    List<ReplyModel> replies = widget.comment.replies;
-    return Contents(widget: widget, replies: replies);
-  }
-}
-
-class Contents extends ConsumerWidget {
-  const Contents({
-    super.key,
-    required this.widget,
-    required this.replies,
-  });
-
-  final Comment widget;
-  final List<ReplyModel> replies;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -83,9 +53,10 @@ class Contents extends ConsumerWidget {
               children: [
                 Text(
                   widget.comment.userInformation.nickname,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
+                    color: widget.selectComment ? PRIMARY_COLOR : null,
                   ),
                 ),
                 Container(
@@ -102,35 +73,25 @@ class Contents extends ConsumerWidget {
                           icon: Icons.favorite_outline_rounded,
                           iconSize: 15,
                           text: widget.comment.likeCount.count.toString(),
-                          ref: ref,
+                          commentId: -1,
                         ),
                         const SizedBox(
                           width: 13,
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            // TODO: 대댓글 달기
-                          },
-                          child: TextWithIcon(
-                            icon: Icons.chat_outlined,
-                            iconSize: 15,
-                            text: widget.comment.replies.length.toString(),
-                            ref: ref,
-                          ),
+                        TextWithIcon(
+                          icon: Icons.chat_outlined,
+                          iconSize: 15,
+                          text: widget.comment.replies.length.toString(),
+                          commentId: widget.comment.id,
                         ),
                         const SizedBox(
                           width: 13,
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            // TODO: 댓글 수정, 삭제, 알림설정
-                          },
-                          child: TextWithIcon(
-                            icon: Icons.more_horiz,
-                            iconSize: 20,
-                            text: "-1",
-                            ref: ref,
-                          ),
+                        const TextWithIcon(
+                          icon: Icons.more_horiz,
+                          iconSize: 20,
+                          text: "-1",
+                          commentId: -1,
                         ),
                       ],
                     ),
@@ -140,8 +101,9 @@ class Contents extends ConsumerWidget {
             ),
             Text(
               widget.comment.content,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 10,
+                color: widget.selectComment ? PRIMARY_COLOR : null,
               ),
             ),
             for (var reply in replies) Reply(reply: reply)

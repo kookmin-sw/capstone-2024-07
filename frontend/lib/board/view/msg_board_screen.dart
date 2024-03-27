@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/board/provider/comment_provider.dart';
+import 'package:frontend/board/provider/reply_notifier_provider.dart';
+import 'package:frontend/board/provider/reply_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/comment_layout.dart';
@@ -37,8 +39,18 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     });
   }
 
+  void addNewReply(int commentId) async {
+    final requestData = {
+      'commentId': commentId,
+      'content': textEditingController.text,
+    };
+    await ref.watch(replyProvider).post(requestData);
+    ref.read(replyStateProvider.notifier).add(-1);
+  }
+
   @override
   Widget build(BuildContext context) {
+    int selectIndex = ref.watch(replyStateProvider);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: PRIMARY_COLOR.withOpacity(0.1),
@@ -79,8 +91,10 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                       itemCount: comments.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
+                        print("$selectIndex ${comments[index].id}");
                         return Comment(
                           comment: comments[index],
+                          selectComment: selectIndex == comments[index].id,
                         );
                       },
                     );
@@ -112,8 +126,12 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                             size: 30,
                           ),
                           onTap: () {
-                            // Upload comment.
-                            addNewComment();
+                            if (selectIndex == -1) {
+                              // Upload comment.
+                              addNewComment();
+                            } else {
+                              addNewReply(selectIndex);
+                            }
                             textEditingController.clear();
                           },
                         ),
