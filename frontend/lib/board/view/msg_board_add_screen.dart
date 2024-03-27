@@ -218,7 +218,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50),
-                    color: PRIMARY_COLOR.withOpacity(0.2),
+                    color: PRIMARY20_COLOR,
                   ),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,

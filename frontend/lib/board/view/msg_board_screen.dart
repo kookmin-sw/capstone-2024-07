@@ -53,13 +53,23 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     int selectIndex = ref.watch(replyStateProvider);
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: PRIMARY_COLOR.withOpacity(0.1),
+          backgroundColor: PRIMARY10_COLOR,
           title: Text(
             widget.board.communityTitle,
             style: const TextStyle(
               fontSize: 15,
             ),
           ),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.notifications_none_rounded),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.more_horiz),
+            ),
+          ],
         ),
         body: Column(
           children: [
@@ -120,9 +130,9 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                           ),
                         ),
                         suffixIcon: GestureDetector(
-                          child: Icon(
+                          child: const Icon(
                             Icons.send,
-                            color: PRIMARY_COLOR.withOpacity(0.5),
+                            color: PRIMARY50_COLOR,
                             size: 30,
                           ),
                           onTap: () {
