@@ -30,7 +30,7 @@ class ScrapValidator(
         val post = postRepository.getByIdOrThrow(postId)
         val community = communityRepository.getByIdOrThrow(post.communityId)
 
-        if (belong.contain(community.departmentId)) {
+        if (!belong.contain(community.departmentId)) {
             throw ScrapException(PERMISSION_DENIED)
         }
         return post
