@@ -69,21 +69,16 @@ class Reply extends ConsumerWidget {
                                     icon: Icons.favorite_outline_rounded,
                                     iconSize: 15,
                                     text: reply.likeCount.count.toString(),
-                                    ref: ref,
+                                    commentId: -1,
                                   ),
                                   const SizedBox(
                                     width: 13,
                                   ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      // TODO: 댓글 수정, 삭제, 알림설정
-                                    },
-                                    child: TextWithIcon(
-                                      icon: Icons.more_horiz,
-                                      iconSize: 20,
-                                      text: "-1",
-                                      ref: ref,
-                                    ),
+                                  const TextWithIcon(
+                                    icon: Icons.more_horiz,
+                                    iconSize: 20,
+                                    text: "-1",
+                                    commentId: -1,
                                   ),
                                 ],
                               ),

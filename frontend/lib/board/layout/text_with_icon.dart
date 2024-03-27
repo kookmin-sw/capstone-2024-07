@@ -2,27 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/provider/isquestion_provider.dart';
 import 'package:frontend/board/provider/image_provider.dart';
+import 'package:frontend/board/provider/reply_notifier_provider.dart';
 import 'package:image_picker/image_picker.dart';
 
-class TextWithIcon extends StatefulWidget {
+class TextWithIcon extends ConsumerStatefulWidget {
   final IconData icon;
   final double iconSize;
   final String text;
-  final WidgetRef ref;
+  final int commentId;
 
   const TextWithIcon({
     super.key,
     required this.icon,
     required this.iconSize,
     required this.text,
-    required this.ref,
+    required this.commentId,
   });
 
   @override
-  State<TextWithIcon> createState() => _TextWithIconState();
+  ConsumerState<TextWithIcon> createState() => _TextWithIconState();
 }
 
-class _TextWithIconState extends State<TextWithIcon>
+class _TextWithIconState extends ConsumerState<TextWithIcon>
     with SingleTickerProviderStateMixin {
   // TODO : if user click heart(write comment, favorite), then change icon.
   bool isHeartClicked = false;
@@ -35,7 +36,7 @@ class _TextWithIconState extends State<TextWithIcon>
   final ImagePicker picker = ImagePicker();
   Future getImage() async {
     List<XFile>? images = await picker.pickMultiImage();
-    widget.ref.read(imageStateProvider.notifier).add(images);
+    ref.read(imageStateProvider.notifier).add(images);
   }
 
   @override
@@ -85,7 +86,50 @@ class _TextWithIconState extends State<TextWithIcon>
                   heartAnimationController.forward();
                 }
                 isHeartClicked = !isHeartClicked;
-              } else if (widget.icon == Icons.chat_outlined) {
+              } else if (widget.icon == Icons.chat_outlined &&
+                  widget.commentId != -1) {
+                ref.read(replyStateProvider.notifier).add(widget.commentId);
+                showDialog(
+                    context: context,
+                    builder: ((context) {
+                      return AlertDialog(
+                        content: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("이 댓글에 대댓글을 달까요?"),
+                          ],
+                        ),
+                        actions: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("네"),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              Container(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    ref
+                                        .read(replyStateProvider.notifier)
+                                        .add(-1);
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("아니요"),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    }));
               } else if (widget.icon == Icons.star_outline_rounded) {
                 if (isFavoriteClicked) {
                   textCount -= 1;
@@ -97,7 +141,7 @@ class _TextWithIconState extends State<TextWithIcon>
                 getImage();
               } else if (widget.icon == Icons.check_box_outline_blank_rounded) {
                 isQuestionClicked = !isQuestionClicked;
-                widget.ref
+                ref
                     .read(isQuestionStateProvider.notifier)
                     .set(isQuestionClicked);
               }

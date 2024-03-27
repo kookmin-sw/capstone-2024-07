@@ -310,22 +310,22 @@ class BottomView extends ConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
+              const Row(
                 children: [
                   TextWithIcon(
                     icon: Icons.image_rounded,
                     iconSize: 17,
                     text: "사진",
-                    ref: ref,
+                    commentId: -1,
                   ),
-                  const SizedBox(
+                  SizedBox(
                     width: 10,
                   ),
                   TextWithIcon(
                     icon: Icons.check_box_outline_blank_rounded,
                     iconSize: 17,
                     text: "질문",
-                    ref: ref,
+                    commentId: -1,
                   ),
                 ],
               ),
