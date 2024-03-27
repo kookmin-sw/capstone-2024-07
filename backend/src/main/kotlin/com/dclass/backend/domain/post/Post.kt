@@ -1,5 +1,7 @@
 package com.dclass.backend.domain.post
 
+import com.dclass.backend.exception.post.PostException
+import com.dclass.backend.exception.post.PostExceptionType
 import com.dclass.support.domain.BaseEntity
 import com.dclass.support.domain.Image
 import jakarta.persistence.*
@@ -92,7 +94,10 @@ class Post(
     }
 
     fun addLike(userId: Long) {
+        if (this.userId == userId) {
+            throw PostException(PostExceptionType.SELF_LIKE)
+        }
         postLikes.add(userId)
-        postCount.syncLikeCount(postLikesCount)
+        postCount = postCount.syncLikeCount(postLikesCount)
     }
 }
