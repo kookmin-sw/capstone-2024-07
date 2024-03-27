@@ -45,8 +45,8 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
   void scrollListener() {
     if (controller.offset > controller.position.maxScrollExtent - 150) {
       ref.read(boardStateNotifierProvider.notifier).paginate(
-        fetchMore: true,
-      );
+            fetchMore: true,
+          );
     }
   }
 
@@ -74,7 +74,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
             ),
           );
         },
-        backgroundColor: PRIMARY_COLOR,
+        backgroundColor: PRIMARY50_COLOR,
         child: const Icon(Icons.add),
       ),
     );
@@ -94,11 +94,11 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
     }
 
     List<String> majors = [];
-    if(selectedMajor == major) {
+    if (selectedMajor == major) {
       majors = [selectedMajor, minor].where((s) => s.isNotEmpty).toList();
-    } else if(selectedMajor == minor){
+    } else if (selectedMajor == minor) {
       majors = [selectedMajor, major].where((s) => s.isNotEmpty).toList();
-    } else if(minor==""){
+    } else if (minor == "") {
       majors = [major].where((s) => s.isNotEmpty).toList();
     }
 
@@ -113,7 +113,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
         child: DropdownButton<String>(
           value: selectedMajor,
           onChanged: (String? newValue) async {
-            if (newValue != null && selectedMajor!=newValue) {
+            if (newValue != null && selectedMajor != newValue) {
               try {
                 // 활성화된 전공을 변경하는 API 요청을 보낸다.
                 final resp = await dio.put(
@@ -126,7 +126,8 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                 );
                 if (resp.statusCode == 200) {
                   // 다시 paginate api 요청을 보낸다.
-                  ref.read(selectedMajorProvider.notifier).state = resp.data["activated"];
+                  ref.read(selectedMajorProvider.notifier).state =
+                      resp.data["activated"];
                   ref
                       .read(boardStateNotifierProvider.notifier)
                       .paginate(forceRefetch: true);
@@ -172,9 +173,9 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
       height: 50.0,
       width: MediaQuery.of(context).size.width,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           renderMajorSelectBox(),
-          const SizedBox(width: 34.0),
           const Text(
             "DeCl",
             style: TextStyle(
@@ -183,9 +184,9 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
               fontWeight: FontWeight.w900,
             ),
           ),
-          const SizedBox(width: 46.0),
+          const SizedBox(width: 1.0),
           SizedBox(
-            width: 100,
+            width: 70,
             child: IconButton(
               onPressed: () {
                 Navigator.of(context).push(
@@ -206,7 +207,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
 
   Widget renderCategories() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 5),
       child: SizedBox(
         height: 40,
         child: ListView(
@@ -214,7 +215,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
           children: [
             for (var category in categorys)
               Padding(
-                padding: const EdgeInsets.all(6.0),
+                padding: const EdgeInsets.all(7.0),
                 child: CategoryCircleWithProvider(
                   category: category,
                   categoryCode: categoryCodes[category]!,
@@ -254,15 +255,15 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
           return Center(
             child: cp is CursorPaginationModelFetchingMore
                 ? const CircularProgressIndicator(
-              color: PRIMARY_COLOR,
-            )
+                    color: PRIMARY_COLOR,
+                  )
                 : const Text(
-              'Copyright 2024. Decl Team all rights reserved.\n',
-              style: TextStyle(
-                color: BODY_TEXT_COLOR,
-                fontSize: 12.0,
-              ),
-            ),
+                    'Copyright 2024. Decl Team all rights reserved.\n',
+                    style: TextStyle(
+                      color: BODY_TEXT_COLOR,
+                      fontSize: 12.0,
+                    ),
+                  ),
           );
         }
 
@@ -276,15 +277,15 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
               context,
               MaterialPageRoute(
                   builder: (context) => MsgBoardScreen(
-                    board: pItem,
-                  ),
+                        board: pItem,
+                      ),
                   fullscreenDialog: true),
             );
           },
         );
       },
       separatorBuilder: (_, index) {
-        return const SizedBox(height: 16.0);
+        return const SizedBox(height: 1.0);
       },
     );
   }
