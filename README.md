@@ -4,7 +4,7 @@
 - 디클(Department class)은 전국의 대학생들이 학과를 중심으로 모여 소통할 수 있는 학과별 커뮤니티 서비스입니다. 모든 유저가 자신의 소속 학교나 동아리가 아닌 학과별로 자유롭게 모여 같은 학과끼리만 이해할 수 있는 깊은 고민과 전공 관련 정보를 공유할 수 있게 돕고자 합니다.
 
 ### 2. 소개 영상
-[중간 평가 발표용 시연영상](https://youtu.be/4zNbyYo_4bg)
+- [중간 평가 발표용 시연영상](https://youtu.be/4zNbyYo_4bg)
 
 ### 3. 팀 소개
 
@@ -53,7 +53,7 @@
 
 - 로컬 MYSQL 설치하기(M1 기준)
   - 백엔드 파일 경로로 진입
-  
+
     ```
     cd backend
     ```
@@ -61,10 +61,16 @@
     ```
     docker-compose up -d
     ```
-  - `backend/src/main/resources/application.yml`에서 `spring.datasource.url` 포트를 `docker-compose.yml`에 따라 수정
+  - `backend/src/main/resources/application.yml` 포트 수정
+      ```yml
+      spring:
+        datasource:
+          url: jdbc:mysql://localhost:{HOST_PORT}/dclass?serverTimezone=UTC
+      ```
 
 - AWS 설정하기
   - `backend/src/main/resources`에 `application-security.yml` 파일 생성 후 아래 내용 작성
+
      ```yml
      aws:
        access-key: <YOUR_AWS_ACCESS_KEY>
@@ -77,10 +83,11 @@
 
 - 로컬 실행하기
   - `backend`에서 아래 명령어 실행
+
     ```
     ./gradlew bootRun —args='—spring.profiles.active=local'
     ```
-    
+
 
 #### Frontend
 
@@ -94,14 +101,17 @@
 
 - 로컬 실행하기
   - 프론트엔드 파일 경로로 진입
+
     ```
     cd frontend
     ```
   - 패키지 설치
+
     ```
     flutter pub get
     ```
   - 프로젝트 실행
+
     ```
     flutter run
     ```
