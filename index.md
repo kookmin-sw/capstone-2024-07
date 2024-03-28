@@ -70,6 +70,7 @@
 
 - AWS 설정하기
   - `backend/src/main/resources`에 `application-security.yml` 파일 생성 후 아래 내용 작성
+  
      ```yml
      aws:
        access-key: <YOUR_AWS_ACCESS_KEY>
@@ -82,6 +83,7 @@
 
 - 로컬 실행하기
   - `backend`에서 아래 명령어 실행
+  
     ```
     ./gradlew bootRun —args='—spring.profiles.active=local'
     ```
@@ -99,14 +101,17 @@
 
 - 로컬 실행하기
   - 프론트엔드 파일 경로로 진입
+  
     ```
     cd frontend
     ```
   - 패키지 설치
+  
     ```
     flutter pub get
     ```
   - 프로젝트 실행
+  
     ```
     flutter run
     ```
