@@ -44,11 +44,6 @@ interface PostRepositorySupport {
         userId: Long,
         request: PostScrollPageRequest
     ): List<PostResponse>
-
-    fun findRepliedPostByUserId(
-        userId: Long,
-        request: PostScrollPageRequest
-    ): List<PostResponse>
 }
 
 private class PostRepositoryImpl(
@@ -186,7 +181,7 @@ private class PostRepositoryImpl(
             ).where(
                 path(Comment::userId).equal(userId)
             ).asSubquery()
-            
+
             selectNew<PostResponse>(
                 entity(Post::class),
                 entity(User::class),
@@ -203,39 +198,6 @@ private class PostRepositoryImpl(
                     ),
                     path(Post::id).lessThan(request.lastId ?: Long.MAX_VALUE),
                 )
-            ).orderBy(
-                path(Post::id).desc()
-            )
-        }
-        return em.createQuery(query, context).setMaxResults(request.size).resultList
-    }
-
-    override fun findRepliedPostByUserId(
-        userId: Long,
-        request: PostScrollPageRequest
-    ): List<PostResponse> {
-        val query = jpql {
-
-            val subquery = select(
-                path(Comment::postId)
-            ).from(
-                entity(Comment::class),
-                join(Reply::class).on(path(Comment::id).equal(path(Reply::commentId)))
-            ).where(
-                path(Comment::userId).equal(userId)
-            ).asSubquery()
-
-            selectNew<PostResponse>(
-                entity(Post::class),
-                entity(User::class),
-                path(Community::title)
-            ).from(
-                entity(Post::class),
-                join(Community::class).on(path(Post::communityId).equal(path(Community::id))),
-                join(User::class).on(path(Post::userId).equal(path(User::id)))
-            ).whereAnd(
-                path(Post::id).`in`(subquery),
-                path(Post::id).lessThan(request.lastId ?: Long.MAX_VALUE),
             ).orderBy(
                 path(Post::id).desc()
             )
