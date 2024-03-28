@@ -40,12 +40,18 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: PRIMARY10_COLOR,
         shadowColor: Colors.black,
         elevation: 3,
+        iconTheme: const IconThemeData(
+          color: Colors.black,
+        ),
         title: const Text(
           "컴퓨터공학과 | 글 작성",
           style: TextStyle(
             fontSize: 15,
+            color: Colors.black,
+            fontWeight: FontWeight.normal,
           ),
         ),
         actions: [

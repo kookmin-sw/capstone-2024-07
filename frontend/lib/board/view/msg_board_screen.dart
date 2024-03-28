@@ -56,10 +56,17 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: PRIMARY10_COLOR,
+          iconTheme: const IconThemeData(
+            color: Colors.black,
+          ),
+          shadowColor: Colors.black,
+          elevation: 3,
           title: Text(
             categoryCodesReverseList[widget.board.communityTitle].toString(),
             style: const TextStyle(
               fontSize: 15,
+              color: Colors.black,
+              fontWeight: FontWeight.normal,
             ),
           ),
           actions: [
