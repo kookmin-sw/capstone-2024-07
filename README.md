@@ -70,5 +70,28 @@
 
 
 - 로컬 실행하기
-  - `backend`에서 `./gradlew bootRun —args='—spring.profiles.active=local'`실행
+- `backend`에서 `./gradlew bootRun —args='—spring.profiles.active=local'`실행
 
+#### Frontend
+
+- Prerequisite
+  - [Flutter 3.13.0](https://docs.flutter.dev/get-started/install)
+  - [Dart 3.1.0](https://dart.dev/get-dart)
+  - [안드로이드 스튜디오](https://developer.android.com/codelabs/basic-android-kotlin-compose-install-android-studio?hl=ko#0)
+
+- 에뮬레이터 (혹은 시뮬레이터) 실행
+  - 안드로이드 스튜디오에서 device manager -> virtual -> create device -> 실행
+
+- 로컬 실행하기
+  - 프론트엔드 파일 경로로 진입
+    ```
+    cd frontend
+    ```
+  - 패키지 설치
+    ```
+    flutter pub get
+    ```
+  - 프로젝트 실행
+    ```
+    flutter run
+    ```
