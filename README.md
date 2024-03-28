@@ -56,7 +56,7 @@
 </table>
 
 ### 4. 서비스 구조도
-<img src="https://github.com/kookmin-sw/capstone-2024-07/assets/83686088/0e6c20cd-eef2-45ff-8f05-c00bec14f6b5" width="700px;" height="700px;" alt="서비스 구조도"/>
+<img src="https://github.com/kookmin-sw/capstone-2024-07/assets/83686088/8d9ddcba-ab42-4729-9d15-b37dcd4d883e" width="700px;" height="600px;" alt="서비스 구조도"/>
 
 ### 5. 사용법
 
