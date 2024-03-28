@@ -53,6 +53,7 @@
 
 - 로컬 MYSQL 설치하기(M1 기준)
   - 백엔드 파일 경로로 진입
+  
     ```
     cd backend
     ```
@@ -66,12 +67,12 @@
   - `backend/src/main/resources`에 `application-security.yml` 파일 생성 후 아래 내용 작성
      ```yml
      aws:
-     access-key: <YOUR_AWS_ACCESS_KEY>
-     secret-key: <YOUR_AWS_SECRET_KEY>
+       access-key: <YOUR_AWS_ACCESS_KEY>
+       secret-key: <YOUR_AWS_SECRET_KEY>
    
-     s3:
-     bucket: <YOUR_BUCKET_NAME>
-     region: "ap-northeast-2"
+       s3:
+         bucket: <YOUR_BUCKET_NAME>
+         region: "ap-northeast-2"
      ```
 
 - 로컬 실행하기
