@@ -37,7 +37,9 @@
 ```
 
 ### 4. 서비스 구조도
-<img src="https://github.com/kookmin-sw/capstone-2024-07/assets/83686088/8d9ddcba-ab42-4729-9d15-b37dcd4d883e" width="700px;" height="600px;" alt="서비스 구조도"/>
+
+![image](https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/77daf964-e42f-4075-bb41-3f1b76fc7d08)
+
 
 ### 5. 사용법
 
@@ -47,9 +49,12 @@
     - Java 17
     - docker compose
 
+
 - 로컬 MYSQL 설치하기(M1 기준)
     - `backend` 에서 `docker-compose up -d`를 실행
     - `backend/src/main/resources/application.yml`에서 `spring.datasource.url` 포트를 `docker-compose.yml`에 따라 수정
+
+
 - AWS 설정하기
     - `backend/src/main/resources`에 `application-security.yml` 파일 생성 후 아래 내용 작성
 
@@ -62,6 +67,8 @@
         bucket: <YOUR_BUCKET_NAME>
         region: "ap-northeast-2" 
   ```
+  
+
 - 로컬 실행하기
     - `backend`에서 `./gradlew bootRun —args='—spring.profiles.active=local'`실행
 
