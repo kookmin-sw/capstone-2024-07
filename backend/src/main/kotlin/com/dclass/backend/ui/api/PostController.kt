@@ -57,7 +57,17 @@ class PostController(
     ): ResponseEntity<PostsResponse> {
         return ResponseEntity.ok(postService.getScrapped(user.id, request))
     }
-    
+
+    @Operation(summary = "댓글 단 게시글 목록 조회 API", description = "댓글 단 게시글 목록을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "댓글 단 게시글 목록 조회 성공")
+    @GetMapping("/commented")
+    fun getCommentedPosts(
+        @LoginUser user: User,
+        request: PostScrollPageRequest
+    ): ResponseEntity<PostsResponse> {
+        return ResponseEntity.ok(postService.getCommentedAndReplied(user.id, request))
+    }
+
     @Operation(summary = "게시글 생성 API", description = "게시글을 생성합니다.")
     @ApiResponse(responseCode = "200", description = "게시글 생성 성공")
     @PostMapping
