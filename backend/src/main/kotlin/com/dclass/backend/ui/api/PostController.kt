@@ -48,7 +48,16 @@ class PostController(
         return ResponseEntity.ok(postService.getByUserId(user.id, request))
     }
 
-
+    @Operation(summary = "스크랩한 게시글 목록 조회 API", description = "스크랩한 게시글 목록을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "스크랩한 게시글 목록 조회 성공")
+    @GetMapping("/scrapped")
+    fun getScrappedPosts(
+        @LoginUser user: User,
+        request: PostScrollPageRequest
+    ): ResponseEntity<PostsResponse> {
+        return ResponseEntity.ok(postService.getScrapped(user.id, request))
+    }
+    
     @Operation(summary = "게시글 생성 API", description = "게시글을 생성합니다.")
     @ApiResponse(responseCode = "200", description = "게시글 생성 성공")
     @PostMapping
