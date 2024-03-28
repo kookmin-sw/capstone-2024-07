@@ -48,7 +48,16 @@ class PostService(
         }
         return PostsResponse.of(posts, request.size)
     }
-    
+
+    fun getScrapped(userId: Long, request: PostScrollPageRequest): PostsResponse {
+        val posts = postRepository.findScrapPostByUserId(userId).onEach {
+            it.images = runBlocking(Dispatchers.IO) {
+                it.images.map { async { awsPresigner.getPostObjectPresigned(it) } }.awaitAll()
+            }
+        }
+        return PostsResponse.of(posts, request.size)
+    }
+
 
     fun getById(userId: Long, postId: Long): PostResponse {
         postValidator.validate(userId, postId)
