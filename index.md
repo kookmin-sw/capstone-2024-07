@@ -4,6 +4,7 @@
 - 디클(Department class)은 전국의 대학생들이 학과를 중심으로 모여 소통할 수 있는 학과별 커뮤니티 서비스입니다. 모든 유저가 자신의 소속 학교나 동아리가 아닌 학과별로 자유롭게 모여 같은 학과끼리만 이해할 수 있는 깊은 고민과 전공 관련 정보를 공유할 수 있게 돕고자 합니다.
 
 ### 2. 소개 영상
+[중간 평가 발표용 시연영상](https://youtu.be/4zNbyYo_4bg)
 
 ### 3. 팀 소개
 
@@ -46,29 +47,61 @@
 #### Backend
 
 - Prerequisite
-    - Java 17
-    - docker compose
+  - Java 17
+  - docker compose
 
 
 - 로컬 MYSQL 설치하기(M1 기준)
-    - `backend` 에서 `docker-compose up -d`를 실행
-    - `backend/src/main/resources/application.yml`에서 `spring.datasource.url` 포트를 `docker-compose.yml`에 따라 수정
+  - 백엔드 파일 경로로 진입
 
+    ```
+    cd backend
+    ```
+  - `docker-compose`를 데몬으로 실행
+    ```
+    docker-compose up -d
+    ```
+  - `backend/src/main/resources/application.yml`에서 `spring.datasource.url` 포트를 `docker-compose.yml`에 따라 수정
 
 - AWS 설정하기
-    - `backend/src/main/resources`에 `application-security.yml` 파일 생성 후 아래 내용 작성
-
-  ```yml
-  aws:
-    access-key: <YOUR_AWS_ACCESS_KEY>
-    secret-key: <YOUR_AWS_SECRET_KEY>
-      
-    s3:
-        bucket: <YOUR_BUCKET_NAME>
-        region: "ap-northeast-2" 
-  ```
-  
+  - `backend/src/main/resources`에 `application-security.yml` 파일 생성 후 아래 내용 작성
+     ```yml
+     aws:
+       access-key: <YOUR_AWS_ACCESS_KEY>
+       secret-key: <YOUR_AWS_SECRET_KEY>
+   
+       s3:
+         bucket: <YOUR_BUCKET_NAME>
+         region: "ap-northeast-2"
+     ```
 
 - 로컬 실행하기
-    - `backend`에서 `./gradlew bootRun —args='—spring.profiles.active=local'`실행
+  - `backend`에서 아래 명령어 실행
+    ```
+    ./gradlew bootRun —args='—spring.profiles.active=local'
+    ```
 
+
+#### Frontend
+
+- Prerequisite
+  - [Flutter 3.13.0](https://docs.flutter.dev/get-started/install)
+  - [Dart 3.1.0](https://dart.dev/get-dart)
+  - [안드로이드 스튜디오](https://developer.android.com/codelabs/basic-android-kotlin-compose-install-android-studio?hl=ko#0)
+
+- 에뮬레이터 (혹은 시뮬레이터) 실행
+  - 안드로이드 스튜디오에서 device manager → virtual → create device → 실행
+
+- 로컬 실행하기
+  - 프론트엔드 파일 경로로 진입
+    ```
+    cd frontend
+    ```
+  - 패키지 설치
+    ```
+    flutter pub get
+    ```
+  - 프로젝트 실행
+    ```
+    flutter run
+    ```
