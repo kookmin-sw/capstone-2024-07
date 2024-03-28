@@ -51,26 +51,34 @@
 
 
 - 로컬 MYSQL 설치하기(M1 기준)
-  - `backend` 에서 `docker-compose up -d`를 실행
+  - 백엔드 파일 경로로 진입
+    ```
+    cd backend
+    ```
+  - `docker-compose`를 데몬으로 실행
+    ```
+    docker-compose up -d
+    ```
   - `backend/src/main/resources/application.yml`에서 `spring.datasource.url` 포트를 `docker-compose.yml`에 따라 수정
-
 
 - AWS 설정하기
   - `backend/src/main/resources`에 `application-security.yml` 파일 생성 후 아래 내용 작성
-
-  ```yml
-  aws:
-    access-key: <YOUR_AWS_ACCESS_KEY>
-    secret-key: <YOUR_AWS_SECRET_KEY>
-      
-    s3:
-        bucket: <YOUR_BUCKET_NAME>
-        region: "ap-northeast-2" 
-  ```
-
+     ```yml
+     aws:
+     access-key: <YOUR_AWS_ACCESS_KEY>
+     secret-key: <YOUR_AWS_SECRET_KEY>
+   
+     s3:
+     bucket: <YOUR_BUCKET_NAME>
+     region: "ap-northeast-2"
+     ```
 
 - 로컬 실행하기
-- `backend`에서 `./gradlew bootRun —args='—spring.profiles.active=local'`실행
+  - `backend`에서 아래 명령어 실행
+    ```
+    ./gradlew bootRun —args='—spring.profiles.active=local'
+    ```
+    
 
 #### Frontend
 
@@ -80,7 +88,7 @@
   - [안드로이드 스튜디오](https://developer.android.com/codelabs/basic-android-kotlin-compose-install-android-studio?hl=ko#0)
 
 - 에뮬레이터 (혹은 시뮬레이터) 실행
-  - 안드로이드 스튜디오에서 device manager -> virtual -> create device -> 실행
+  - 안드로이드 스튜디오에서 device manager → virtual → create device → 실행
 
 - 로컬 실행하기
   - 프론트엔드 파일 경로로 진입
