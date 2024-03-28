@@ -4,6 +4,7 @@ import com.dclass.backend.application.dto.PostResponse
 import com.dclass.backend.application.dto.PostScrollPageRequest
 import com.dclass.backend.domain.comment.Comment
 import com.dclass.backend.domain.community.Community
+import com.dclass.backend.domain.reply.Reply
 import com.dclass.backend.domain.scrap.Scrap
 import com.dclass.backend.domain.user.User
 import com.dclass.backend.exception.post.PostException
@@ -39,7 +40,12 @@ interface PostRepositorySupport {
         request: PostScrollPageRequest
     ): List<PostResponse>
 
-    fun findCommentedPostByUserId(
+    fun findCommentedAndRepliedPostByUserId(
+        userId: Long,
+        request: PostScrollPageRequest
+    ): List<PostResponse>
+
+    fun findRepliedPostByUserId(
         userId: Long,
         request: PostScrollPageRequest
     ): List<PostResponse>
@@ -157,7 +163,7 @@ private class PostRepositoryImpl(
         return em.createQuery(query, context).resultList
     }
 
-    override fun findCommentedPostByUserId(
+    override fun findCommentedAndRepliedPostByUserId(
         userId: Long,
         request: PostScrollPageRequest
     ): List<PostResponse> {
@@ -166,7 +172,55 @@ private class PostRepositoryImpl(
             val subquery = select(
                 path(Comment::postId)
             ).from(
+                entity(Comment::class),
+                join(Reply::class).on(path(Comment::id).equal(path(Reply::commentId)))
+            ).whereOr(
+                path(Reply::userId).equal(userId),
+                path(Comment::userId).equal(userId)
+            ).asSubquery()
+
+            val subquery2 = select(
+                path(Comment::postId)
+            ).from(
                 entity(Comment::class)
+            ).where(
+                path(Comment::userId).equal(userId)
+            ).asSubquery()
+            
+            selectNew<PostResponse>(
+                entity(Post::class),
+                entity(User::class),
+                path(Community::title)
+            ).from(
+                entity(Post::class),
+                join(Community::class).on(path(Post::communityId).equal(path(Community::id))),
+                join(User::class).on(path(Post::userId).equal(path(User::id)))
+            ).where(
+                and(
+                    or(
+                        path(Post::id).`in`(subquery),
+                        path(Post::id).`in`(subquery2)
+                    ),
+                    path(Post::id).lessThan(request.lastId ?: Long.MAX_VALUE),
+                )
+            ).orderBy(
+                path(Post::id).desc()
+            )
+        }
+        return em.createQuery(query, context).setMaxResults(request.size).resultList
+    }
+
+    override fun findRepliedPostByUserId(
+        userId: Long,
+        request: PostScrollPageRequest
+    ): List<PostResponse> {
+        val query = jpql {
+
+            val subquery = select(
+                path(Comment::postId)
+            ).from(
+                entity(Comment::class),
+                join(Reply::class).on(path(Comment::id).equal(path(Reply::commentId)))
             ).where(
                 path(Comment::userId).equal(userId)
             ).asSubquery()
