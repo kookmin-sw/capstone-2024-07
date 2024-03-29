@@ -37,12 +37,17 @@
 📌 Role: 백엔드, 인프라
 ```
 
-### 4. 서비스 구조도
+### 4. 기술 스택
+
+![image](https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/1b424798-1341-4b62-b5a4-7fe7e9c8464b)
+
+
+### 5. 서비스 구조도
 
 ![image](https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/77daf964-e42f-4075-bb41-3f1b76fc7d08)
 
 
-### 5. 사용법
+### 6. 사용법
 
 #### Backend
 
