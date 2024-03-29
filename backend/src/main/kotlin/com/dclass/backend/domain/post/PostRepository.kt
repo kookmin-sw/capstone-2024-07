@@ -189,14 +189,9 @@ private class PostRepositoryImpl(
                 entity(Post::class),
                 join(Community::class).on(path(Post::communityId).equal(path(Community::id))),
                 join(User::class).on(path(Post::userId).equal(path(User::id)))
-            ).where(
-                and(
-                    or(
-                        path(Post::id).`in`(subquery),
-                        path(Post::id).`in`(subquery2)
-                    ),
-                    path(Post::id).lessThan(request.lastId ?: Long.MAX_VALUE),
-                )
+            ).whereAnd(
+                path(Post::id).`in`(subquery).or(path(Post::id).`in`(subquery2)),
+                path(Post::id).lessThan(request.lastId ?: Long.MAX_VALUE),
             ).orderBy(
                 path(Post::id).desc()
             )
