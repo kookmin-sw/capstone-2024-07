@@ -39,7 +39,7 @@
 
 ### 4. 기술 스택
 
-![stack](https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/04adb072-cdf5-4c1a-8439-4b5c1596982e)
+![image](https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/0ea694d8-91b5-45e4-a877-2559832de7df)
 
 
 ### 5. 서비스 구조도
