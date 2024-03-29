@@ -39,7 +39,7 @@
 
 ### 4. 기술 스택
 
-![image](https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/0ea694d8-91b5-45e4-a877-2559832de7df)
+![image](https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/1b424798-1341-4b62-b5a4-7fe7e9c8464b)
 
 
 ### 5. 서비스 구조도
@@ -75,7 +75,7 @@
 
 - AWS 설정하기
   - `backend/src/main/resources`에 `application-security.yml` 파일 생성 후 아래 내용 작성
-  
+
      ```yml
      aws:
        access-key: <YOUR_AWS_ACCESS_KEY>
@@ -88,7 +88,7 @@
 
 - 로컬 실행하기
   - `backend`에서 아래 명령어 실행
-  
+
     ```
     ./gradlew bootRun —args='—spring.profiles.active=local'
     ```
@@ -106,17 +106,17 @@
 
 - 로컬 실행하기
   - 프론트엔드 파일 경로로 진입
-  
+
     ```
     cd frontend
     ```
   - 패키지 설치
-  
+
     ```
     flutter pub get
     ```
   - 프로젝트 실행
-  
+
     ```
     flutter run
     ```
