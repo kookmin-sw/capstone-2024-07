@@ -169,9 +169,8 @@ private class PostRepositoryImpl(
             ).from(
                 entity(Comment::class),
                 join(Reply::class).on(path(Comment::id).equal(path(Reply::commentId)))
-            ).whereOr(
+            ).where(
                 path(Reply::userId).equal(userId),
-                path(Comment::userId).equal(userId)
             ).asSubquery()
 
             val subquery2 = select(
