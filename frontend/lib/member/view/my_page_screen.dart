@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/member/view/my_scrap_screen.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../common/component/notice_popup_dialog.dart';
@@ -263,7 +264,7 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => MyCommentScreen(),
+                builder: (_) => MyScrapScreen(),
               ),
             );
           },
