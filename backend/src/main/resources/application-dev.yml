@@ -1,0 +1,39 @@
+spring:
+  config:
+    activate:
+      on-profile: "dev"
+
+  flyway:
+    enabled: false
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/dclass?serverTimezone=UTC
+    username: dclass-user
+    password: password
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 10
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: trace
+
+
+springdoc:
+  packages-to-scan: com.dclass.backend.ui
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha
+---
