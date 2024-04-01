@@ -258,6 +258,16 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
             );
           },
         ),
+        _MenuButton(
+          title: "스크랩한 글",
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => MyCommentScreen(),
+              ),
+            );
+          },
+        ),
       ],
     );
   }
