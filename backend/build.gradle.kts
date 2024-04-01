@@ -43,6 +43,10 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
 //    implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0")
 
+    //flyway
+    implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-mysql")
+
     //swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 
