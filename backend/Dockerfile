@@ -1,17 +1,9 @@
-FROM openjdk:17-jdk-slim as builder
+FROM amazoncorretto:17-alpine-jdk
 
-COPY ./ ./
+ARG JAR_FILE=build/libs/backend-0.0.1-SNAPSHOT.jar
 
-RUN chmod +x ./gradlew
+ADD ${JAR_FILE} backend.jar
 
-RUN ./gradlew bootJar
+ENV TZ=Asia/Seoul
 
-
-FROM openjdk:17-jdk-slim
-
-WORKDIR /app
-
-COPY --from=builder ./build/libs/*.jar ./server.jar
-
-ENTRYPOINT ["java","-Dspring.profiles.active=dev","-jar","./server.jar"]
-
+ENTRYPOINT ["java", "-jar","-Dspring.profiles.active=prod","/backend.jar"]
