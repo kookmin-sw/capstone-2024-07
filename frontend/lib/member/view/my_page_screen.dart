@@ -19,7 +19,7 @@ class MypageScreen extends ConsumerStatefulWidget {
 }
 
 class _MypageScreenState extends ConsumerState<MypageScreen> {
-  void onMyInfoPressed(String email, String universityName, String nickname){
+  void onMyInfoPressed(String email, String universityName, String nickname) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -118,7 +118,8 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
     );
   }
 
-  void onContactPressed() async { //이메일은 추후 디클 전용 이메일로 변경해도 좋을듯 합니다!
+  void onContactPressed() async {
+    //이메일은 추후 디클 전용 이메일로 변경해도 좋을듯 합니다!
     final Email email = Email(
         body: '문의할 사항을 아래에 작성해주세요.',
         subject: '[Decl 문의]',
@@ -217,7 +218,6 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
       email = memberState.email;
     }
 
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -262,7 +262,7 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
     );
   }
 
-  Widget _buildNoticeInfo(WidgetRef ref, BuildContext context){
+  Widget _buildNoticeInfo(WidgetRef ref, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -291,7 +291,7 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
         ),
         _MenuButton(
           title: "로그아웃",
-          onPressed: (){
+          onPressed: () {
             noticeBeforeLogoutDialog();
           },
         ),
@@ -310,13 +310,18 @@ class _Top extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(
-            'DeCl',
-            style: TextStyle(
-              fontSize: 34,
-              fontWeight: FontWeight.w500,
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(
+              Icons.keyboard_arrow_left,
               color: PRIMARY_COLOR,
             ),
+          ),
+          const Icon(
+            Icons.home_outlined,
+            color: PRIMARY_COLOR,
           ),
         ],
       ),
@@ -381,11 +386,11 @@ class _MenuButton extends StatelessWidget {
         decoration: BoxDecoration(
           border: border == null
               ? Border(
-            top: BorderSide(color: Colors.transparent),
-            bottom: BorderSide(color: Colors.grey.shade400),
-            left: BorderSide(color: Colors.transparent),
-            right: BorderSide(color: Colors.transparent),
-          )
+                  top: BorderSide(color: Colors.transparent),
+                  bottom: BorderSide(color: Colors.grey.shade400),
+                  left: BorderSide(color: Colors.transparent),
+                  right: BorderSide(color: Colors.transparent),
+                )
               : border,
         ),
         width: MediaQuery.of(context).size.width,
