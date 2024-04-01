@@ -41,3 +41,4 @@ out/
 
 ### application.properties ###
 application-security.yml
+application-prod.yml
