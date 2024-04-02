@@ -3,11 +3,14 @@ package com.dclass.backend.application
 import com.dclass.backend.application.dto.*
 import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.comment.getByIdOrThrow
+import com.dclass.backend.domain.notification.NotificationCommentEvent
+import com.dclass.backend.domain.notification.NotificationType
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.post.getByIdOrThrow
 import com.dclass.backend.domain.reply.ReplyRepository
 import com.dclass.backend.exception.comment.CommentException
 import com.dclass.backend.exception.comment.CommentExceptionType
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -18,12 +21,23 @@ class CommentService(
     private val replyRepository: ReplyRepository,
     private val postRepository: PostRepository,
     private val commentValidator: CommentValidator,
+    private val eventPublisher: ApplicationEventPublisher,
 ) {
     fun create(userId: Long, request: CreateCommentRequest): CommentResponse {
-        val post = commentValidator.validateCreateComment(userId, request.postId)
-        post.increaseCommentReplyCount(1)
-        return commentRepository.save(request.toEntity(userId))
-            .let(::CommentResponse)
+        val dto = commentValidator.validateCreateComment(userId, request.postId)
+        dto.post.increaseCommentReplyCount(1)
+        val comment = commentRepository.save(request.toEntity(userId))
+        eventPublisher.publishEvent(
+            NotificationCommentEvent(
+                dto.post.userId,
+                request.postId,
+                comment.id,
+                request.content,
+                dto.communityTitle,
+                NotificationType.COMMENT
+            )
+        )
+        return CommentResponse(comment)
     }
 
     fun update(userId: Long, request: UpdateCommentRequest) {
