@@ -25,16 +25,19 @@ class ReplyService(
         val replyValidatorDto = replyValidator.validateCreateReply(userId, request.commentId)
         val postUserId = postRepository.getByIdOrThrow(replyValidatorDto.postId).userId
         val reply = replyRepository.save(request.toEntity(userId))
-        eventPublisher.publishEvent(
-            NotificationCommentEvent(
-                postUserId,
-                replyValidatorDto.postId,
-                request.commentId,
-                request.content,
-                replyValidatorDto.communityTitle,
-                NotificationType.COMMENT
+        if (userId != postUserId) {
+            eventPublisher.publishEvent(
+                NotificationCommentEvent(
+                    postUserId,
+                    replyValidatorDto.postId,
+                    request.commentId,
+                    request.content,
+                    replyValidatorDto.communityTitle,
+                    NotificationType.COMMENT
+                )
             )
-        )
+        }
+
         eventPublisher.publishEvent(
             NotificationReplyEvent(
                 replyValidatorDto.commentUserId,
@@ -46,6 +49,7 @@ class ReplyService(
                 NotificationType.REPLY
             )
         )
+
         return ReplyResponse(reply)
 
     }
