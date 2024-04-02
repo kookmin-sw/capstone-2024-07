@@ -1,9 +1,14 @@
 package com.dclass.backend.application
 
 import com.dclass.backend.application.dto.*
+import com.dclass.backend.domain.notification.NotificationCommentEvent
+import com.dclass.backend.domain.notification.NotificationType
+import com.dclass.backend.domain.post.PostRepository
+import com.dclass.backend.domain.post.getByIdOrThrow
 import com.dclass.backend.domain.reply.ReplyRepository
 import com.dclass.backend.domain.reply.getByIdAndUserIdOrThrow
 import com.dclass.backend.domain.reply.getByIdOrThrow
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -12,12 +17,26 @@ import org.springframework.transaction.annotation.Transactional
 class ReplyService(
     private val replyRepository: ReplyRepository,
     private val replyValidator: ReplyValidator,
+    private val postRepository: PostRepository,
+    private val eventPublisher: ApplicationEventPublisher
 ) {
-    //TODO ReplyValidator를 추가한다
     fun create(userId: Long, request: CreateReplyRequest): ReplyResponse {
-        replyValidator.validateCreateReply(userId, request.commentId)
-        return replyRepository.save(request.toEntity(userId))
-            .let(::ReplyResponse)
+        val replyValidatorDto = replyValidator.validateCreateReply(userId, request.commentId)
+        val postUserId = postRepository.getByIdOrThrow(replyValidatorDto.postId).userId
+        val reply = replyRepository.save(request.toEntity(userId))
+        eventPublisher.publishEvent(
+            NotificationCommentEvent(
+                postUserId,
+                replyValidatorDto.postId,
+                request.commentId,
+                request.content,
+                replyValidatorDto.communityTitle,
+                NotificationType.COMMENT
+            )
+        )
+
+        return ReplyResponse(reply)
+
     }
 
     fun update(userId: Long, request: UpdateReplyRequest) {
