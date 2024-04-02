@@ -2,6 +2,7 @@ package com.dclass.backend.domain.notification
 
 import com.dclass.backend.application.NotificationService
 import com.dclass.backend.application.dto.NotificationCommentRequest
+import com.dclass.backend.application.dto.NotificationReplyRequest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,5 +29,20 @@ class NotificationListener(
             )
         }
 
+    @TransactionalEventListener
+    fun sendNotificationForReply(event: NotificationReplyEvent) =
+        CoroutineScope(Dispatchers.IO).launch {
+            notificationService.send(
+                NotificationReplyRequest(
+                    userId = event.userId,
+                    postId = event.postId,
+                    commentId = event.commentId,
+                    replyId = event.replyId,
+                    content = event.content,
+                    communityTitle = event.community,
+                    type = event.type
+                )
+            )
+        }
 
 }
