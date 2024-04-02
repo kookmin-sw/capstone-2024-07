@@ -68,4 +68,23 @@ class BelongServiceTest : BehaviorSpec({
             }
         }
     }
+
+    Given("특정 회원이 학과에 소속된 경우") {
+        val userId = 1L
+
+        val belong = belong(userId = userId, modifiedDateTime = UPDATEABLE)
+        every { belongRepository.getOrThrow(userId) } returns belong
+        every { departmentRepository.findById(any())} returns Optional.of(department())
+        val department = departmentRepository.getByIdOrThrow(belong.activated)
+
+        When("활성화된 학과를 변경하면") {
+            val actual = belongService.switchDepartment(userId)
+
+            Then("활성화된 학과가 변경된다") {
+                belong.activated shouldBe 2L
+                belong.major shouldBe 1L
+                actual.activated shouldBe department.title
+            }
+        }
+    }
 })
