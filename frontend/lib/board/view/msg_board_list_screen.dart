@@ -216,7 +216,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                 padding: const EdgeInsets.all(7.0),
                 child: CategoryCircleWithProvider(
                   category: category,
-                  categoryCode: categoryCodes[category]!,
+                  categoryCode: categoryCodesList[category]!,
                   type: true,
                 ),
               )
