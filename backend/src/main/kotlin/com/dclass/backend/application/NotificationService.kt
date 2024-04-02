@@ -3,6 +3,7 @@ package com.dclass.backend.application
 import com.dclass.backend.application.dto.NotificationRequest
 import com.dclass.backend.domain.emitter.EmitterRepository
 import com.dclass.backend.domain.notification.NotificationRepository
+import com.dclass.backend.domain.notification.getOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
@@ -44,7 +45,11 @@ class NotificationService(
             }
         }
     }
-
+    
+    fun readNotification(id: Long) {
+        val notification = notificationRepository.getOrThrow(id)
+        notification.read()
+    }
 
     private fun makeTimeIncludeId(id: Long): String {
         return "${id}_${System.currentTimeMillis()}"
