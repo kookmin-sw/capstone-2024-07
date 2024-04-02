@@ -12,14 +12,14 @@ import '../provider/member_state_notifier_provider.dart';
 import 'my_comment_screen.dart';
 import 'my_post_screen.dart';
 
-class MypageScreen extends ConsumerStatefulWidget {
-  const MypageScreen({super.key});
+class MyPageScreen extends ConsumerStatefulWidget {
+  const MyPageScreen({super.key});
 
   @override
-  ConsumerState<MypageScreen> createState() => _MypageScreenState();
+  ConsumerState<MyPageScreen> createState() => _MypageScreenState();
 }
 
-class _MypageScreenState extends ConsumerState<MypageScreen> {
+class _MypageScreenState extends ConsumerState<MyPageScreen> {
   void onMyInfoPressed(String email, String universityName, String nickname) {
     showDialog(
       context: context,
