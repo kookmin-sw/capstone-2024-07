@@ -250,7 +250,7 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
           },
         ),
         _MenuButton(
-          title: "내가 댓글단 글",
+          title: "댓글단 글",
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
