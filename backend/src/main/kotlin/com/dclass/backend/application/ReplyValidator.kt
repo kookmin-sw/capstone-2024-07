@@ -1,5 +1,6 @@
 package com.dclass.backend.application
 
+import com.dclass.backend.application.dto.ReplyValidatorDto
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.comment.CommentRepository
@@ -24,8 +25,8 @@ class ReplyValidator(
     private val commentRepository: CommentRepository,
     private val replyRepository: ReplyRepository,
 ) {
-    fun validateCreateReply(userId: Long, commentId: Long) {
-        validateCommon(userId, commentId)
+    fun validateCreateReply(userId: Long, commentId: Long): ReplyValidatorDto {
+        return validateCommon(userId, commentId)
     }
 
     fun validateLikeReply(userId: Long, replyId: Long) {
@@ -33,7 +34,7 @@ class ReplyValidator(
         validateCommon(userId, reply.commentId)
     }
 
-    private fun validateCommon(userId: Long, commentId: Long) {
+    private fun validateCommon(userId: Long, commentId: Long): ReplyValidatorDto {
         val belong = belongRepository.getOrThrow(userId)
         val comment = commentRepository.getByIdOrThrow(commentId)
         val post = postRepository.getByIdOrThrow(comment.postId)
@@ -42,5 +43,7 @@ class ReplyValidator(
         if (!belong.contain(community.departmentId)) {
             throw ReplyException(ReplyExceptionType.FORBIDDEN_REPLY)
         }
+
+        return ReplyValidatorDto(post.id, comment.userId, community.title)
     }
 }
