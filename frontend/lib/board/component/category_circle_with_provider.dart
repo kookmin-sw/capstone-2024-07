@@ -14,7 +14,7 @@ class CategoryCircleWithProvider extends ConsumerWidget {
   });
 
   final String category;
-  final String categoryCode;
+  final String? categoryCode;
   final bool type;
 
   @override
@@ -26,16 +26,19 @@ class CategoryCircleWithProvider extends ConsumerWidget {
         if (categoryCode == "HOT") {
           ref.read(categoryTitleProvider.notifier).state = null;
           ref.read(isHotProvider.notifier).state = true;
+        } else if (categoryCode == "ALL") {
+          ref.read(categoryTitleProvider.notifier).state = null;
+          ref.read(isHotProvider.notifier).state = false;
         } else {
           ref.read(categoryTitleProvider.notifier).state = categoryCode;
           ref.read(isHotProvider.notifier).state = false;
-        }
 
-        if (clickedList.contains(category)) {
-          ref.read(categoryStateProvider.notifier).remove(category);
-        } else {
-          ref.read(categoryStateProvider.notifier).clear();
-          ref.read(categoryStateProvider.notifier).add(category);
+          if (clickedList.contains(category)) {
+            ref.read(categoryStateProvider.notifier).remove(category);
+          } else {
+            ref.read(categoryStateProvider.notifier).clear();
+            ref.read(categoryStateProvider.notifier).add(category);
+          }
         }
       },
       child: Container(
