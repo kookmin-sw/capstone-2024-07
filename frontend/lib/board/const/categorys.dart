@@ -1,14 +1,16 @@
 const List<String> categorysList = [
+  "전체",
   "인기게시판",
   "자유게시판",
   "대학원게시판",
   "취준게시판",
   "스터디모집",
   "질문게시판",
-  "홍보게시판"
+  "홍보게시판",
 ];
 
 Map<String, String> categoryCodesList = {
+  "전체": "ALL",
   "인기게시판": "HOT",
   "자유게시판": "FREE",
   "대학원게시판": "GRADUATE",
