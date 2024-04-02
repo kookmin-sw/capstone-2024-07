@@ -168,3 +168,9 @@ data class ReplyWithUserResponse(
         createdAt = reply.createdDateTime
     )
 }
+
+data class ReplyValidatorDto(
+    val postId: Long,
+    val commentUserId: Long,
+    val communityTitle: String,
+)
