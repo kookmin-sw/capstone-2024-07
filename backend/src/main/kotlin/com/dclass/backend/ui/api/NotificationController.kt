@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 
 @RestController
@@ -30,4 +27,14 @@ class NotificationController(
         return ResponseEntity.ok(emitter)
     }
 
+    @Operation(summary = "알림 조회 API", description = "알림을 조회합니다")
+    @ApiResponse(responseCode = "200", description = "알림 조회 성공")
+    @GetMapping("/{notificationId}")
+    fun readNotification(
+        @LoginUser user: User,
+        @PathVariable notificationId: Long
+    ): ResponseEntity<Unit> {
+        notificationService.readNotification(notificationId)
+        return ResponseEntity.ok().build()
+    }
 }
