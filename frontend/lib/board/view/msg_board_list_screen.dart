@@ -189,7 +189,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => const MypageScreen(),
+                    builder: (_) => const MyPageScreen(),
                   ),
                 );
               },
