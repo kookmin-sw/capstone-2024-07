@@ -27,16 +27,18 @@ class CommentService(
         val dto = commentValidator.validateCreateComment(userId, request.postId)
         dto.post.increaseCommentReplyCount(1)
         val comment = commentRepository.save(request.toEntity(userId))
-        eventPublisher.publishEvent(
-            NotificationCommentEvent(
-                dto.post.userId,
-                request.postId,
-                comment.id,
-                request.content,
-                dto.communityTitle,
-                NotificationType.COMMENT
+        if (userId != dto.post.userId) {
+            eventPublisher.publishEvent(
+                NotificationCommentEvent(
+                    dto.post.userId,
+                    dto.post.id,
+                    comment.id,
+                    request.content,
+                    dto.communityTitle,
+                    NotificationType.COMMENT
+                )
             )
-        )
+        }
         return CommentResponse(comment)
     }
 
