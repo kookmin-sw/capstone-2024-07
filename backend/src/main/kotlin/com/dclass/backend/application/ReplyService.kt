@@ -2,6 +2,7 @@ package com.dclass.backend.application
 
 import com.dclass.backend.application.dto.*
 import com.dclass.backend.domain.notification.NotificationCommentEvent
+import com.dclass.backend.domain.notification.NotificationReplyEvent
 import com.dclass.backend.domain.notification.NotificationType
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.post.getByIdOrThrow
@@ -34,7 +35,17 @@ class ReplyService(
                 NotificationType.COMMENT
             )
         )
-
+        eventPublisher.publishEvent(
+            NotificationReplyEvent(
+                replyValidatorDto.commentUserId,
+                replyValidatorDto.postId,
+                request.commentId,
+                reply.id,
+                request.content,
+                replyValidatorDto.communityTitle,
+                NotificationType.REPLY
+            )
+        )
         return ReplyResponse(reply)
 
     }
