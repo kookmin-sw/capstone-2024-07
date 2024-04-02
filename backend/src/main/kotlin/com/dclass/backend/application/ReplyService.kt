@@ -37,19 +37,19 @@ class ReplyService(
                 )
             )
         }
-
-        eventPublisher.publishEvent(
-            NotificationReplyEvent(
-                replyValidatorDto.commentUserId,
-                replyValidatorDto.postId,
-                request.commentId,
-                reply.id,
-                request.content,
-                replyValidatorDto.communityTitle,
-                NotificationType.REPLY
+        if (userId != replyValidatorDto.commentUserId) {
+            eventPublisher.publishEvent(
+                NotificationReplyEvent(
+                    replyValidatorDto.commentUserId,
+                    replyValidatorDto.postId,
+                    request.commentId,
+                    reply.id,
+                    request.content,
+                    replyValidatorDto.communityTitle,
+                    NotificationType.REPLY
+                )
             )
-        )
-
+        }
         return ReplyResponse(reply)
 
     }
