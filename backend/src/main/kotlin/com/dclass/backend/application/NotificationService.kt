@@ -1,6 +1,8 @@
 package com.dclass.backend.application
 
+import com.dclass.backend.application.dto.NotificationRequest
 import com.dclass.backend.domain.emitter.EmitterRepository
+import com.dclass.backend.domain.notification.NotificationRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
@@ -9,6 +11,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 @Transactional
 class NotificationService(
     val emitterRepository: EmitterRepository,
+    val notificationRepository: NotificationRepository,
 ) {
     private val DEFAULT_TIMEOUT = 60L * 1000L * 60L
 
@@ -25,6 +28,21 @@ class NotificationService(
         }
 
         return emitter;
+    }
+
+
+    fun send(request: NotificationRequest) {
+        val notification = notificationRepository.save(request.toEntity())
+
+        val eventId = makeTimeIncludeId(request.userId)
+        val emitters = emitterRepository.findAllEmitterStartWithByUserId(request.userId.toString())
+        emitters.forEach { (key, emitter) ->
+            run {
+                val response = request.createResponse(notification.id, notification.createdAt)
+                emitterRepository.saveEventCache(key, notification)
+                sendNotification(emitter, eventId, key, response)
+            }
+        }
     }
 
 
