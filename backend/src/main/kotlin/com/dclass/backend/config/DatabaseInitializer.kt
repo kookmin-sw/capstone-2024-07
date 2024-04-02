@@ -1,5 +1,8 @@
 package com.dclass.backend.config
 
+import com.dclass.backend.application.CommentService
+import com.dclass.backend.application.PostService
+import com.dclass.backend.application.ReplyService
 import com.dclass.backend.domain.belong.Belong
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.comment.Comment
@@ -36,6 +39,9 @@ class DatabaseInitializer(
     private val postRepository: PostRepository,
     private val commentRepository: CommentRepository,
     private val replyRepository: ReplyRepository,
+    private val commentService: CommentService,
+    private val replyService: ReplyService,
+    private val postService: PostService,
 ) : CommandLineRunner {
 
     override fun run(vararg args: String) {
@@ -795,6 +801,7 @@ class DatabaseInitializer(
                 val comment = createDummyComment(user, post, num)
                 dummyComments.add(comment)
                 num++
+                post.increaseCommentReplyCount(1)
             }
         }
 
@@ -811,6 +818,7 @@ class DatabaseInitializer(
     private fun populateDummyReplies() {
         val users = userRepository.findAll()
         val comments = commentRepository.findAll()
+        val posts = postRepository.findAll()
 
         val dummyReplies = mutableListOf<Reply>()
 
@@ -820,11 +828,15 @@ class DatabaseInitializer(
                 val reply = createDummyReply(user, comment, num)
                 dummyReplies.add(reply)
                 num++
+
+                val post = posts.find { it.id == comment.postId }
+                post?.increaseCommentReplyCount(1)
             }
         }
 
         replyRepository.saveAll(dummyReplies)
     }
+
 
     private fun createDummyReply(user: User, comment: Comment, num: Int): Reply {
         val content = "대댓글 ${num}"
