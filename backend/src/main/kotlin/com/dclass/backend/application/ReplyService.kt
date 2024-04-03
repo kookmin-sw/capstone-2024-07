@@ -4,6 +4,8 @@ import com.dclass.backend.application.dto.*
 import com.dclass.backend.domain.notification.NotificationCommentEvent
 import com.dclass.backend.domain.notification.NotificationReplyEvent
 import com.dclass.backend.domain.notification.NotificationType
+import com.dclass.backend.domain.post.PostRepository
+import com.dclass.backend.domain.post.getByIdOrThrow
 import com.dclass.backend.domain.reply.ReplyRepository
 import com.dclass.backend.domain.reply.getByIdAndUserIdOrThrow
 import com.dclass.backend.domain.reply.getByIdOrThrow
@@ -16,7 +18,8 @@ import org.springframework.transaction.annotation.Transactional
 class ReplyService(
     private val replyRepository: ReplyRepository,
     private val replyValidator: ReplyValidator,
-    private val eventPublisher: ApplicationEventPublisher
+    private val eventPublisher: ApplicationEventPublisher,
+    private val postRepository: PostRepository
 ) {
     fun create(userId: Long, request: CreateReplyRequest): ReplyResponse {
         val dto = replyValidator.validateCreateReply(userId, request.commentId)
