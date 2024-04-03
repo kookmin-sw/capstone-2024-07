@@ -171,6 +171,7 @@ data class ReplyWithUserResponse(
 
 data class ReplyValidatorDto(
     val postId: Long,
+    val postUserId: Long,
     val commentUserId: Long,
     val communityTitle: String,
 )
