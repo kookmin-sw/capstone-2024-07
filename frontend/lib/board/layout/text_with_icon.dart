@@ -34,9 +34,15 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
 
   late AnimationController heartAnimationController;
   final ImagePicker picker = ImagePicker();
-  Future getImage() async {
-    List<XFile>? images = await picker.pickMultiImage();
+  Future<bool> getImage() async {
+    List<XFile> images = [];
+    try {
+      images = await picker.pickMultiImage();
+    } catch (e) {
+      return true; // permission access need!
+    }
     ref.read(imageStateProvider.notifier).add(images);
+    return false;
   }
 
   @override
@@ -138,7 +144,39 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                 }
                 isFavoriteClicked = !isFavoriteClicked;
               } else if (widget.icon == Icons.image_rounded) {
-                getImage();
+                getImage().then((value) => {
+                      if (value)
+                        {
+                          showDialog(
+                              context: context,
+                              builder: ((context) {
+                                return AlertDialog(
+                                  content: const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text("사진 접근 허용을 해주세요!"),
+                                    ],
+                                  ),
+                                  actions: <Widget>[
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text("확인"),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              }))
+                        }
+                    });
               } else if (widget.icon == Icons.check_box_outline_blank_rounded) {
                 isQuestionClicked = !isQuestionClicked;
                 ref
