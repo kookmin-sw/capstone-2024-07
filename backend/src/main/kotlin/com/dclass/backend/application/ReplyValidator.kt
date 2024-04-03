@@ -44,6 +44,6 @@ class ReplyValidator(
             throw ReplyException(ReplyExceptionType.FORBIDDEN_REPLY)
         }
 
-        return ReplyValidatorDto(post.id, comment.userId, community.title)
+        return ReplyValidatorDto(post.id, post.userId, comment.userId, community.title)
     }
 }
