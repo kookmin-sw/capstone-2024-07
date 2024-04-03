@@ -208,18 +208,6 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
   }
 
   Widget _buildAccountInfo(WidgetRef ref, BuildContext context) {
-    final memberState = ref.watch(memberStateNotifierProvider);
-
-    String nickname = "";
-    String universityName = "";
-    String email = "";
-
-    if (memberState is MemberModel) {
-      nickname = memberState.nickname;
-      universityName = memberState.universityName;
-      email = memberState.email;
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
