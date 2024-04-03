@@ -29,14 +29,7 @@ class CommentService(
         val comment = commentRepository.save(request.toEntity(userId))
         if (userId != dto.post.userId) {
             eventPublisher.publishEvent(
-                NotificationCommentEvent(
-                    dto.post.userId,
-                    dto.post.id,
-                    comment.id,
-                    request.content,
-                    dto.communityTitle,
-                    NotificationType.COMMENT
-                )
+                NotificationCommentEvent.of(dto, comment.id, request.content, NotificationType.COMMENT)
             )
         }
         return CommentResponse(comment)
