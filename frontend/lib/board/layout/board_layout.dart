@@ -54,6 +54,9 @@ class Board extends ConsumerWidget {
                       iconSize: 15,
                       text: board.count.likeCount.toString(),
                       commentId: -1,
+                      postId: board.id,
+                      replyId: -1,
+                      isLiked: false,
                     ),
                     const SizedBox(
                       width: 13,
@@ -63,6 +66,9 @@ class Board extends ConsumerWidget {
                       iconSize: 15,
                       text: board.count.commentReplyCount.toString(),
                       commentId: -1,
+                      postId: -1,
+                      replyId: -1,
+                      isLiked: false,
                     ),
                     const SizedBox(
                       width: 13,
@@ -72,6 +78,9 @@ class Board extends ConsumerWidget {
                       iconSize: 18,
                       text: board.count.scrapCount.toString(),
                       commentId: -1,
+                      postId: board.id,
+                      replyId: -1,
+                      isLiked: false,
                     ),
                     const SizedBox(
                       width: 13,

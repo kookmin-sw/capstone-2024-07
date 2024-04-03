@@ -70,15 +70,21 @@ class Reply extends ConsumerWidget {
                                     iconSize: 15,
                                     text: reply.likeCount.count.toString(),
                                     commentId: -1,
+                                    postId: -1,
+                                    replyId: reply.id,
+                                    isLiked: false,
                                   ),
                                   const SizedBox(
                                     width: 13,
                                   ),
-                                  const TextWithIcon(
+                                  TextWithIcon(
                                     icon: Icons.more_horiz,
                                     iconSize: 20,
                                     text: "-1",
                                     commentId: -1,
+                                    postId: -1,
+                                    replyId: reply.id,
+                                    isLiked: false,
                                   ),
                                 ],
                               ),

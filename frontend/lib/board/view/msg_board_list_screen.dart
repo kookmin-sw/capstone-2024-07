@@ -67,8 +67,23 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => const MsgBoardAddScreen(
+              builder: (_) => MsgBoardAddScreen(
                 isEdit: false,
+                board: MsgBoardResponseModel(
+                  id: 0,
+                  userId: 0,
+                  userNickname: "",
+                  universityName: "",
+                  communityId: 0,
+                  communityTitle: "",
+                  postTitle: "",
+                  postContent: "",
+                  images: [],
+                  count: ReactCountModel(
+                      commentReplyCount: 0, likeCount: 0, scrapCount: 0),
+                  isQuestion: false,
+                  createdDateTime: "",
+                ),
               ),
             ),
           );
@@ -94,10 +109,10 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
     }
 
     List<String> majors = [];
-    if(activatedMajor == major){
+    if (activatedMajor == major) {
       majors.add(major);
-      if(minor.isNotEmpty) majors.add(minor);
-    } else{
+      if (minor.isNotEmpty) majors.add(minor);
+    } else {
       majors = [minor, major];
     }
 
