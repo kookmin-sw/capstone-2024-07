@@ -8,7 +8,7 @@ import 'package:retrofit/http.dart';
 
 part 'comment_provider.g.dart';
 
-final commentStateProvider = Provider<CommentNotifier>((ref) {
+final commentProvider = Provider<CommentNotifier>((ref) {
   final dio = ref.watch(dioProvider);
 
   return CommentNotifier(dio, baseUrl: 'http://$ip');
@@ -31,6 +31,23 @@ abstract class CommentNotifier {
     'accessToken': 'true',
   })
   Future<CommentResponseModel> post(
+    @Body() Map<String, dynamic> data,
+  );
+
+  @POST('/api/comments/likes')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<void> heart(
+    @Body() Map<String, dynamic> data,
+  );
+
+  @PUT('/api/comments/{commentId}')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<void> modify(
+    @Path() int commentId,
     @Body() Map<String, dynamic> data,
   );
 }

@@ -23,4 +23,29 @@ abstract class ReplyNotifier {
   Future<void> post(
     @Body() Map<String, dynamic> data,
   );
+
+  @PUT('/api/replies/{replyId}')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<void> modify(
+    @Path() int replyId,
+    @Body() Map<String, dynamic> data,
+  );
+
+  @DELETE('/api/replies/{replyId}')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<void> delete(
+    @Path() int replyId,
+  );
+
+  @POST('/api/replies/likes')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<void> heart(
+    @Body() Map<String, dynamic> data,
+  );
 }

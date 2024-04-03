@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/provider/board_add_provider.dart';
+import 'package:frontend/board/provider/comment_provider.dart';
 import 'package:frontend/board/provider/isquestion_provider.dart';
 import 'package:frontend/board/provider/image_provider.dart';
+import 'package:frontend/board/provider/comment_notifier_provider.dart';
 import 'package:frontend/board/provider/reply_notifier_provider.dart';
+import 'package:frontend/board/provider/reply_provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 class TextWithIcon extends ConsumerStatefulWidget {
@@ -10,6 +14,9 @@ class TextWithIcon extends ConsumerStatefulWidget {
   final double iconSize;
   final String text;
   final int commentId;
+  final int postId;
+  final int replyId;
+  final bool isLiked;
 
   const TextWithIcon({
     super.key,
@@ -17,6 +24,9 @@ class TextWithIcon extends ConsumerStatefulWidget {
     required this.iconSize,
     required this.text,
     required this.commentId,
+    required this.postId,
+    required this.replyId,
+    required this.isLiked,
   });
 
   @override
@@ -48,6 +58,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
   @override
   void initState() {
     super.initState();
+    isHeartClicked = widget.isLiked;
     textCount = int.tryParse(widget.text);
     textCount ??= widget.text;
     heartAnimationController =
@@ -83,18 +94,58 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
           onTap: () {
             setState(() {
               if (widget.icon == Icons.favorite_outline_rounded) {
-                // TODO: add heartCount to Server
                 if (isHeartClicked) {
-                  textCount -= 1;
-                  heartAnimationController.reverse();
+                  showDialog(
+                      context: context,
+                      builder: ((context) {
+                        return AlertDialog(
+                          content: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("이미 좋아요를 눌렀습니다."),
+                            ],
+                          ),
+                          actions: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text("확인"),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      }));
                 } else {
                   textCount += 1;
                   heartAnimationController.forward();
+                  isHeartClicked = true;
+                  // TODO: add heartCount to Server
+                  if (widget.postId != -1) {
+                    ref.watch(boardAddProvider).heart(widget.postId);
+                  } else if (widget.commentId != -1) {
+                    final requestData = {
+                      'commentId': widget.commentId,
+                    };
+                    ref.watch(commentProvider).heart(requestData);
+                  } else if (widget.replyId != -1) {
+                    final requestData = {
+                      'replyId': widget.replyId,
+                    };
+                    ref.watch(replyProvider).heart(requestData);
+                  }
                 }
-                isHeartClicked = !isHeartClicked;
               } else if (widget.icon == Icons.chat_outlined &&
                   widget.commentId != -1) {
-                ref.read(replyStateProvider.notifier).add(widget.commentId);
+                ref
+                    .read(commentStateProvider.notifier)
+                    .add(0, widget.commentId);
                 showDialog(
                     context: context,
                     builder: ((context) {
@@ -124,8 +175,8 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                                 child: ElevatedButton(
                                   onPressed: () {
                                     ref
-                                        .read(replyStateProvider.notifier)
-                                        .add(-1);
+                                        .read(commentStateProvider.notifier)
+                                        .add(0, -1);
                                     Navigator.of(context).pop();
                                   },
                                   child: const Text("아니요"),
@@ -182,6 +233,46 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                 ref
                     .read(isQuestionStateProvider.notifier)
                     .set(isQuestionClicked);
+              } else if (widget.icon == Icons.more_horiz) {
+                if (widget.commentId != -1) {
+                  ref
+                      .read(commentStateProvider.notifier)
+                      .add(1, widget.commentId);
+                } else if (widget.replyId != -1) {
+                  ref.read(replyStateProvider.notifier).add(widget.replyId);
+                }
+                showDialog(
+                    context: context,
+                    builder: ((context) {
+                      return AlertDialog(
+                        actions: <Widget>[
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("삭제하기"),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              Container(
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("수정하기"),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    }));
               }
             });
           },

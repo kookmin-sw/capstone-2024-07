@@ -25,4 +25,28 @@ abstract class BoardAdd {
   Future<MsgBoardResponseModel> post(
     @Body() Map<String, dynamic> data,
   );
+
+  @PUT('/api/post/{postId}')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<int> heart(
+    @Path('postId') int postId,
+  );
+
+  @DELETE('/api/post/{postId}')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<void> delete(
+    @Path('postId') int postId,
+  );
+
+  @PUT('/api/post')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<void> modify(
+    @Body() Map<String, dynamic> data,
+  );
 }

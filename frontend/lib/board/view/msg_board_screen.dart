@@ -4,9 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
+import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/comment_provider.dart';
+import 'package:frontend/board/provider/comment_notifier_provider.dart';
 import 'package:frontend/board/provider/reply_notifier_provider.dart';
 import 'package:frontend/board/provider/reply_provider.dart';
+import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/comment_layout.dart';
@@ -34,7 +37,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
       'postId': widget.board.id.toInt(),
       'content': textEditingController.text,
     };
-    await ref.watch(commentStateProvider).post(requestData);
+    await ref.watch(commentProvider).post(requestData);
     setState(() {
       isAddNewComment = true;
     });
@@ -45,13 +48,30 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
       'commentId': commentId,
       'content': textEditingController.text,
     };
-    await ref.watch(replyProvider).post(requestData);
+    await ref.watch(commentProvider).post(requestData);
+    ref.read(commentStateProvider.notifier).add(0, -1);
+  }
+
+  void modifyComment(int commentId) async {
+    final requestData = {
+      'content': textEditingController.text,
+    };
+    await ref.watch(commentProvider).modify(commentId, requestData);
+    ref.read(commentStateProvider.notifier).add(1, -1);
+  }
+
+  void modifyReply(int replyId) async {
+    final requestData = {
+      'content': textEditingController.text,
+    };
+    await ref.watch(replyProvider).modify(replyId, requestData);
     ref.read(replyStateProvider.notifier).add(-1);
   }
 
   @override
   Widget build(BuildContext context) {
-    int selectIndex = ref.watch(replyStateProvider);
+    List<int> selectCommentIndex = ref.watch(commentStateProvider);
+    int selectReplyIndex = ref.watch(replyStateProvider);
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -75,7 +95,88 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
               icon: const Icon(Icons.notifications_none_rounded),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: ((context) {
+                      return AlertDialog(
+                        actionsPadding: EdgeInsets.zero,
+                        backgroundColor: PRIMARY10_COLOR,
+                        actions: <Widget>[
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        elevation: 0,
+                                        backgroundColor: Colors.transparent,
+                                      ),
+                                      onPressed: () {
+                                        ref
+                                            .watch(boardAddProvider)
+                                            .delete(widget.board.id);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text(
+                                        "삭제하기",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      color: BODY_TEXT_COLOR.withOpacity(0.3),
+                                      width: 1,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        elevation: 0,
+                                        backgroundColor: Colors.transparent,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (_) => MsgBoardAddScreen(
+                                              isEdit: true,
+                                              board: widget.board,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: const Text(
+                                        "수정하기",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    }));
+              },
               icon: const Icon(Icons.more_horiz),
             ),
           ],
@@ -88,9 +189,8 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
             ),
             Expanded(
               child: FutureBuilder(
-                future: ref
-                    .watch(commentStateProvider)
-                    .get(widget.board.id.toString()),
+                future:
+                    ref.watch(commentProvider).get(widget.board.id.toString()),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
@@ -110,10 +210,10 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                       itemCount: comments.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        print("$selectIndex ${comments[index].id}");
                         return Comment(
                           comment: comments[index],
-                          selectComment: selectIndex == comments[index].id,
+                          selectComment:
+                              selectCommentIndex == comments[index].id,
                         );
                       },
                     );
@@ -145,11 +245,19 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                             size: 30,
                           ),
                           onTap: () {
-                            if (selectIndex == -1) {
+                            if (selectCommentIndex == -1 &&
+                                selectReplyIndex == -1) {
                               // Upload comment.
                               addNewComment();
-                            } else {
-                              addNewReply(selectIndex);
+                            } else if (selectCommentIndex[0] != -1) {
+                              // Upload Reply
+                              addNewReply(selectCommentIndex[0]);
+                            } else if (selectCommentIndex[1] != -1) {
+                              // Modify Comment
+                              modifyComment(selectCommentIndex[1]);
+                            } else if (selectReplyIndex != -1) {
+                              //Modify Reply
+                              modifyReply(selectReplyIndex);
                             }
                             textEditingController.clear();
                           },

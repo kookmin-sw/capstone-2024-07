@@ -15,7 +15,9 @@ import 'package:http/http.dart' as http;
 
 class MsgBoardAddScreen extends ConsumerStatefulWidget {
   final bool isEdit;
-  const MsgBoardAddScreen({super.key, required this.isEdit});
+  final MsgBoardResponseModel board;
+  const MsgBoardAddScreen(
+      {super.key, required this.isEdit, required this.board});
 
   @override
   ConsumerState<MsgBoardAddScreen> createState() => _MsgBoardAddScreenState();
@@ -34,6 +36,14 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   @override
   void initState() {
     super.initState();
+    if (widget.isEdit) {
+      selectCategory =
+          categoryCodesReverseList[widget.board.communityTitle].toString();
+    }
+
+    title = widget.board.postTitle;
+    content = widget.board.postContent;
+    isQuestion = widget.board.isQuestion;
   }
 
   @override
@@ -65,7 +75,9 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                         content: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("'$selectCategory'에 글을 등록할까요?"),
+                            widget.isEdit
+                                ? Text("$selectCategory에 글을 수정할까요?")
+                                : Text("'$selectCategory'에 글을 등록할까요?"),
                           ],
                         ),
                         actions: <Widget>[
@@ -94,31 +106,40 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                           .endsWith("gif")) {
                                         images.add("image$i.gif");
                                       }
+                                      if (widget.isEdit) {
+                                      } else {
+                                        List<String> images = [];
+                                        for (int i = 0;
+                                            i < realImages.length;
+                                            i++) {
+                                          images.add("image$i.jpg");
+                                        }
+                                        final requestData = {
+                                          'communityTitle':
+                                              categoryCodesList[selectCategory],
+                                          'title': title,
+                                          'content': content,
+                                          'isQuestion': isQuestion,
+                                          'images': images,
+                                        };
+                                        MsgBoardResponseModel resp =
+                                            await boardAddAPI.post(requestData);
+                                        // TODO : resp의 image 링크에 image들 올려야 함
+                                        for (int i = 0;
+                                            i < resp.images.length;
+                                            i++) {
+                                          final String url = resp.images[i];
+                                          UploadFile().call(
+                                              url, File(realImages[i].path));
+                                        }
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
+                                        ref
+                                            .read(boardStateNotifierProvider
+                                                .notifier)
+                                            .paginate(forceRefetch: true);
+                                      }
                                     }
-                                    final requestData = {
-                                      'communityTitle':
-                                          categoryCodesList[selectCategory],
-                                      'title': title,
-                                      'content': content,
-                                      'isQuestion': isQuestion,
-                                      'images': images,
-                                    };
-                                    MsgBoardResponseModel resp =
-                                        await boardAddAPI.post(requestData);
-                                    // TODO : resp의 image 링크에 image들 올려야 함
-                                    for (int i = 0;
-                                        i < resp.images.length;
-                                        i++) {
-                                      final String url = resp.images[i];
-                                      UploadFile()
-                                          .call(url, File(realImages[i].path));
-                                    }
-                                    Navigator.of(context).pop();
-                                    Navigator.of(context).pop();
-                                    ref
-                                        .read(
-                                            boardStateNotifierProvider.notifier)
-                                        .paginate(forceRefetch: true);
                                   },
                                   child: const Text("네"),
                                 ),
@@ -337,6 +358,9 @@ class BottomView extends ConsumerWidget {
                     iconSize: 17,
                     text: "사진",
                     commentId: -1,
+                    postId: -1,
+                    replyId: -1,
+                    isLiked: false,
                   ),
                   SizedBox(
                     width: 10,
@@ -346,12 +370,19 @@ class BottomView extends ConsumerWidget {
                     iconSize: 17,
                     text: "질문",
                     commentId: -1,
+                    postId: -1,
+                    replyId: -1,
+                    isLiked: false,
                   ),
                 ],
               ),
               if (widget.isEdit)
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    ref.watch(boardAddProvider).delete(widget.board.id);
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
                   child: const Text(
                     "삭제",
                     style: TextStyle(
