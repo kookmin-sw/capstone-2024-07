@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/member/view/my_info_screen.dart';
 import 'package:frontend/member/view/my_scrap_screen.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -230,7 +231,11 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
         _MenuButton(
           title: "내 정보",
           onPressed: () {
-            onMyInfoPressed(email, universityName, nickname);
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => MyInfoScreen(),
+              ),
+            );
           },
           border: Border(
             top: BorderSide(color: Colors.grey.shade400),
