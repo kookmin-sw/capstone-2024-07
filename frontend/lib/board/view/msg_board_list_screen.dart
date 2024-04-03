@@ -11,7 +11,6 @@ import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
 import 'package:frontend/common/provider/dio_provider.dart';
-import 'package:frontend/member/provider/selected_major_provider.dart';
 
 import '../../common/component/notice_popup_dialog.dart';
 import '../../common/const/data.dart';
@@ -74,7 +73,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
             ),
           );
         },
-        backgroundColor: PRIMARY_COLOR,
+        backgroundColor: PRIMARY50_COLOR,
         child: const Icon(Icons.add),
       ),
     );
@@ -86,18 +85,20 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
 
     String major = "";
     String minor = "";
+    String activatedMajor = "";
 
     if (memberState is MemberModel) {
       major = memberState.major;
       minor = memberState.minor;
+      activatedMajor = memberState.activatedDepartment;
     }
 
-    final majors =
-        [major, minor].where((s) => s.isNotEmpty).toList(); // 빈 문자열 제거
-    final selectedMajor = ref.watch(selectedMajorProvider);
-
-    if (!majors.contains(selectedMajor) && selectedMajor.isNotEmpty) {
-      majors.add(selectedMajor);
+    List<String> majors = [];
+    if(activatedMajor == major){
+      majors.add(major);
+      if(minor.isNotEmpty) majors.add(minor);
+    } else{
+      majors = [minor, major];
     }
 
     final dio = ref.watch(dioProvider);
@@ -109,9 +110,9 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
-          value: selectedMajor,
+          value: activatedMajor,
           onChanged: (String? newValue) async {
-            if (newValue != null) {
+            if (newValue != null && activatedMajor != newValue) {
               try {
                 // 활성화된 전공을 변경하는 API 요청을 보낸다.
                 final resp = await dio.put(
@@ -124,7 +125,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                 );
                 if (resp.statusCode == 200) {
                   // 다시 paginate api 요청을 보낸다.
-                  ref.read(selectedMajorProvider.notifier).state = newValue;
+                  ref.read(memberStateNotifierProvider.notifier).getMe();
                   ref
                       .read(boardStateNotifierProvider.notifier)
                       .paginate(forceRefetch: true);
@@ -170,9 +171,9 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
       height: 50.0,
       width: MediaQuery.of(context).size.width,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           renderMajorSelectBox(),
-          const SizedBox(width: 34.0),
           const Text(
             "DeCl",
             style: TextStyle(
@@ -181,14 +182,14 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
               fontWeight: FontWeight.w900,
             ),
           ),
-          const SizedBox(width: 46.0),
+          const SizedBox(width: 1.0),
           SizedBox(
-            width: 100,
+            width: 70,
             child: IconButton(
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => const MypageScreen(),
+                    builder: (_) => const MyPageScreen(),
                   ),
                 );
               },
@@ -204,7 +205,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
 
   Widget renderCategories() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 5),
       child: SizedBox(
         height: 40,
         child: ListView(
@@ -212,10 +213,10 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
           children: [
             for (var category in categorys)
               Padding(
-                padding: const EdgeInsets.all(6.0),
+                padding: const EdgeInsets.all(7.0),
                 child: CategoryCircleWithProvider(
                   category: category,
-                  categoryCode: categoryCodes[category]!,
+                  categoryCode: categoryCodesList[category]!,
                   type: true,
                 ),
               )
@@ -282,7 +283,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
         );
       },
       separatorBuilder: (_, index) {
-        return const SizedBox(height: 16.0);
+        return const SizedBox(height: 1.0);
       },
     );
   }

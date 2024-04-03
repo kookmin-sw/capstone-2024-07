@@ -40,12 +40,18 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: PRIMARY10_COLOR,
         shadowColor: Colors.black,
         elevation: 3,
+        iconTheme: const IconThemeData(
+          color: Colors.black,
+        ),
         title: const Text(
           "컴퓨터공학과 | 글 작성",
           style: TextStyle(
             fontSize: 15,
+            color: Colors.black,
+            fontWeight: FontWeight.normal,
           ),
         ),
         actions: [
@@ -73,7 +79,21 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                     for (int i = 0;
                                         i < realImages.length;
                                         i++) {
-                                      images.add("image$i.jpg");
+                                      if (realImages[i].path.endsWith("jpg")) {
+                                        images.add("image$i.jpg");
+                                      } else if (realImages[i]
+                                          .path
+                                          .endsWith("png")) {
+                                        images.add("image$i.png");
+                                      } else if (realImages[i]
+                                          .path
+                                          .endsWith("jpeg")) {
+                                        images.add("image$i.jpeg");
+                                      } else if (realImages[i]
+                                          .path
+                                          .endsWith("gif")) {
+                                        images.add("image$i.gif");
+                                      }
                                     }
                                     final requestData = {
                                       'communityTitle':
@@ -218,7 +238,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50),
-                    color: PRIMARY_COLOR.withOpacity(0.2),
+                    color: PRIMARY20_COLOR,
                   ),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -253,13 +273,13 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                     });
                   },
                   style: const TextStyle(
-                    fontSize: 11,
+                    fontSize: 12,
                   ),
                   decoration: const InputDecoration(
                     hintText: "지금 가장 고민이 되거나 궁금한 내용이 무엇인가요?",
                     border: InputBorder.none,
                     hintStyle: TextStyle(
-                      fontSize: 11,
+                      fontSize: 12,
                     ),
                   ),
                 ),
@@ -310,24 +330,22 @@ class BottomView extends ConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
+              const Row(
                 children: [
                   TextWithIcon(
                     icon: Icons.image_rounded,
                     iconSize: 17,
                     text: "사진",
-                    canTap: true,
-                    ref: ref,
+                    commentId: -1,
                   ),
-                  const SizedBox(
+                  SizedBox(
                     width: 10,
                   ),
                   TextWithIcon(
                     icon: Icons.check_box_outline_blank_rounded,
                     iconSize: 17,
                     text: "질문",
-                    canTap: true,
-                    ref: ref,
+                    commentId: -1,
                   ),
                 ],
               ),
@@ -359,31 +377,39 @@ class ImageViewer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     List<XFile> images = ref.watch(imageStateProvider);
     msgBoardAddScreenState.realImages = images;
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: SizedBox(
-        height: 100,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: [
-            for (var image in images)
-              Container(
-                margin: const EdgeInsets.only(
-                  right: 10,
+    try {
+      return Padding(
+        padding: const EdgeInsets.all(10),
+        child: SizedBox(
+          height: 100,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              for (var image in images)
+                Container(
+                  margin: const EdgeInsets.only(
+                    right: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.black.withOpacity(0.2),
+                  ),
+                  width: 100,
+                  child: Image.file(
+                    File(image.path),
+                  ),
                 ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.black.withOpacity(0.2),
-                ),
-                width: 100,
-                child: Image.file(
-                  File(image.path),
-                ),
-              ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      debugPrint("ImageViewer error! ${images[0].path}");
+      return const SizedBox(
+        height: 100,
+        width: 100,
+      );
+    }
   }
 }
 

@@ -38,6 +38,36 @@ class PostController(
         return ResponseEntity.ok(postService.getAll(user.id, request))
     }
 
+    @Operation(summary = "내 게시글 목록 조회 API", description = "내 게시글 목록을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "내 게시글 목록 조회 성공")
+    @GetMapping("/mine")
+    fun getMyPosts(
+        @LoginUser user: User,
+        request: PostScrollPageRequest
+    ): ResponseEntity<PostsResponse> {
+        return ResponseEntity.ok(postService.getByUserId(user.id, request))
+    }
+
+    @Operation(summary = "스크랩한 게시글 목록 조회 API", description = "스크랩한 게시글 목록을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "스크랩한 게시글 목록 조회 성공")
+    @GetMapping("/scrapped")
+    fun getScrappedPosts(
+        @LoginUser user: User,
+        request: PostScrollPageRequest
+    ): ResponseEntity<PostsResponse> {
+        return ResponseEntity.ok(postService.getScrapped(user.id, request))
+    }
+
+    @Operation(summary = "댓글 단 게시글 목록 조회 API", description = "댓글 단 게시글 목록을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "댓글 단 게시글 목록 조회 성공")
+    @GetMapping("/commented")
+    fun getCommentedPosts(
+        @LoginUser user: User,
+        request: PostScrollPageRequest
+    ): ResponseEntity<PostsResponse> {
+        return ResponseEntity.ok(postService.getCommentedAndReplied(user.id, request))
+    }
+
     @Operation(summary = "게시글 생성 API", description = "게시글을 생성합니다.")
     @ApiResponse(responseCode = "200", description = "게시글 생성 성공")
     @PostMapping
@@ -57,7 +87,7 @@ class PostController(
     ): ResponseEntity<Int> {
         return ResponseEntity.ok(postService.likes(user.id, postId))
     }
-    
+
     @Operation(summary = "게시글 수정 API", description = "게시글을 수정합니다.")
     @ApiResponse(responseCode = "204", description = "게시글 수정 성공")
     @PutMapping

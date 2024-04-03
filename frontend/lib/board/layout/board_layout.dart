@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/category_circle_layout.dart';
@@ -42,7 +43,8 @@ class Board extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CategoryCircle(
-                  category: board.communityTitle,
+                  category:
+                      categoryCodesReverseList[board.communityTitle].toString(),
                   type: false,
                 ),
                 Row(
@@ -51,8 +53,7 @@ class Board extends ConsumerWidget {
                       icon: Icons.favorite_outline_rounded,
                       iconSize: 15,
                       text: board.count.likeCount.toString(),
-                      canTap: true,
-                      ref: ref,
+                      commentId: -1,
                     ),
                     const SizedBox(
                       width: 13,
@@ -61,8 +62,7 @@ class Board extends ConsumerWidget {
                       icon: Icons.chat_outlined,
                       iconSize: 15,
                       text: board.count.commentReplyCount.toString(),
-                      canTap: true,
-                      ref: ref,
+                      commentId: -1,
                     ),
                     const SizedBox(
                       width: 13,
@@ -71,8 +71,7 @@ class Board extends ConsumerWidget {
                       icon: Icons.star_outline_rounded,
                       iconSize: 18,
                       text: board.count.scrapCount.toString(),
-                      canTap: true,
-                      ref: ref,
+                      commentId: -1,
                     ),
                     const SizedBox(
                       width: 13,

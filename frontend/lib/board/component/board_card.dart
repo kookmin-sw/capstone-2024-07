@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../common/const/colors.dart';
+import '../const/categorys.dart';
 import '../model/msg_board_response_model.dart';
 import 'text_with_icon_for_view.dart';
 
@@ -54,6 +55,7 @@ class BoardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -78,7 +80,7 @@ class BoardCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _renderCategoryCircleUi(communityTitle),
+                _renderCategoryCircleUi(categoryCodesReverseList[communityTitle] ?? communityTitle),
                 Row(
                   children: [
                     TextWithIconForView(
@@ -119,7 +121,7 @@ class BoardCard extends StatelessWidget {
                 children: [
                   Text(
                     postTitle,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 12.0,
                       fontWeight: FontWeight.bold,
                     ),
@@ -151,7 +153,7 @@ class BoardCard extends StatelessWidget {
     return Container(
       // category circle
       decoration: BoxDecoration(
-        color: PRIMARY_COLOR.withOpacity(0.1),
+        color: PRIMARY10_COLOR,
         borderRadius: BorderRadius.circular(50),
       ),
       child: Padding(

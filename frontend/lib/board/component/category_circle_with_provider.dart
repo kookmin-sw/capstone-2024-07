@@ -14,7 +14,7 @@ class CategoryCircleWithProvider extends ConsumerWidget {
   });
 
   final String category;
-  final String categoryCode;
+  final String? categoryCode;
   final bool type;
 
   @override
@@ -23,37 +23,40 @@ class CategoryCircleWithProvider extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () {
-        if(categoryCode=="HOT"){
+        if (categoryCode == "HOT") {
           ref.read(categoryTitleProvider.notifier).state = null;
           ref.read(isHotProvider.notifier).state = true;
+        } else if (categoryCode == "ALL") {
+          ref.read(categoryTitleProvider.notifier).state = null;
+          ref.read(isHotProvider.notifier).state = false;
         } else {
           ref.read(categoryTitleProvider.notifier).state = categoryCode;
           ref.read(isHotProvider.notifier).state = false;
-        }
 
-        if (clickedList.contains(category)) {
-          ref.read(categoryStateProvider.notifier).remove(category);
-        } else {
-          ref.read(categoryStateProvider.notifier).clear();
-          ref.read(categoryStateProvider.notifier).add(category);
+          if (clickedList.contains(category)) {
+            ref.read(categoryStateProvider.notifier).remove(category);
+          } else {
+            ref.read(categoryStateProvider.notifier).clear();
+            ref.read(categoryStateProvider.notifier).add(category);
+          }
         }
-        },
+      },
       child: Container(
         // category circle
         decoration: BoxDecoration(
           color: !type
-              ? PRIMARY_COLOR.withOpacity(0.1)
+              ? PRIMARY10_COLOR
               : !clickedList.contains(category)
-              ? BODY_TEXT_COLOR.withOpacity(0.1)
-              : Colors.white,
+                  ? BODY_TEXT_COLOR.withOpacity(0.1)
+                  : Colors.white,
           borderRadius: BorderRadius.circular(50),
           border: type && clickedList.contains(category)
               ? Border.all(
-            color: PRIMARY_COLOR,
-          )
+                  color: PRIMARY_COLOR,
+                )
               : null,
         ),
-        child: Container(
+        child: SizedBox(
           height: 40.0,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 3),

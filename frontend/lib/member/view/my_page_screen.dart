@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/member/view/my_scrap_screen.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../common/component/notice_popup_dialog.dart';
@@ -11,15 +12,15 @@ import '../provider/member_state_notifier_provider.dart';
 import 'my_comment_screen.dart';
 import 'my_post_screen.dart';
 
-class MypageScreen extends ConsumerStatefulWidget {
-  const MypageScreen({super.key});
+class MyPageScreen extends ConsumerStatefulWidget {
+  const MyPageScreen({super.key});
 
   @override
-  ConsumerState<MypageScreen> createState() => _MypageScreenState();
+  ConsumerState<MyPageScreen> createState() => _MypageScreenState();
 }
 
-class _MypageScreenState extends ConsumerState<MypageScreen> {
-  void onMyInfoPressed(String email, String universityName, String nickname){
+class _MypageScreenState extends ConsumerState<MyPageScreen> {
+  void onMyInfoPressed(String email, String universityName, String nickname) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -118,7 +119,8 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
     );
   }
 
-  void onContactPressed() async { //이메일은 추후 디클 전용 이메일로 변경해도 좋을듯 합니다!
+  void onContactPressed() async {
+    //이메일은 추후 디클 전용 이메일로 변경해도 좋을듯 합니다!
     final Email email = Email(
         body: '문의할 사항을 아래에 작성해주세요.',
         subject: '[Decl 문의]',
@@ -217,7 +219,6 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
       email = memberState.email;
     }
 
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -249,7 +250,7 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
           },
         ),
         _MenuButton(
-          title: "내가 댓글단 글",
+          title: "댓글단 글",
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
@@ -258,11 +259,21 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
             );
           },
         ),
+        _MenuButton(
+          title: "스크랩한 글",
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => MyScrapScreen(),
+              ),
+            );
+          },
+        ),
       ],
     );
   }
 
-  Widget _buildNoticeInfo(WidgetRef ref, BuildContext context){
+  Widget _buildNoticeInfo(WidgetRef ref, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -291,7 +302,7 @@ class _MypageScreenState extends ConsumerState<MypageScreen> {
         ),
         _MenuButton(
           title: "로그아웃",
-          onPressed: (){
+          onPressed: () {
             noticeBeforeLogoutDialog();
           },
         ),
@@ -310,13 +321,18 @@ class _Top extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(
-            'DeCl',
-            style: TextStyle(
-              fontSize: 34,
-              fontWeight: FontWeight.w500,
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(
+              Icons.keyboard_arrow_left,
               color: PRIMARY_COLOR,
             ),
+          ),
+          const Icon(
+            Icons.home_outlined,
+            color: PRIMARY_COLOR,
           ),
         ],
       ),
@@ -381,11 +397,11 @@ class _MenuButton extends StatelessWidget {
         decoration: BoxDecoration(
           border: border == null
               ? Border(
-            top: BorderSide(color: Colors.transparent),
-            bottom: BorderSide(color: Colors.grey.shade400),
-            left: BorderSide(color: Colors.transparent),
-            right: BorderSide(color: Colors.transparent),
-          )
+                  top: BorderSide(color: Colors.transparent),
+                  bottom: BorderSide(color: Colors.grey.shade400),
+                  left: BorderSide(color: Colors.transparent),
+                  right: BorderSide(color: Colors.transparent),
+                )
               : border,
         ),
         width: MediaQuery.of(context).size.width,

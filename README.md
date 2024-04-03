@@ -1,76 +1,122 @@
-# Welcome to GitHub
+## 디클 (Decl)
 
-캡스톤 팀 생성을 축하합니다.
-
-## 팀소개 및 페이지를 꾸며주세요.
-
-- 프로젝트 소개
-  - 프로젝트 설치방법 및 데모, 사용방법, 프리뷰등을 readme.md에 작성.
-  - Api나 사용방법등 내용이 많을경우 wiki에 꾸미고 링크 추가.
-
-- 팀페이지 꾸미기
-  - 프로젝트 소개 및 팀원 소개
-  - index.md 예시보고 수정.
-
-- GitHub Pages 리파지토리 Settings > Options > GitHub Pages 
-  - Source를 marster branch
-  - Theme Chooser에서 태마선택
-  - 수정후 팀페이지 확인하여 점검.
-
-**팀페이지 주소** -> https://kookmin-sw.github.io/ '{{자신의 리파지토리 아이디}}'
-
-**예시)** 2023년 0조  https://kookmin-sw.github.io/capstone-2023-00/
-
-
-## 내용에 아래와 같은 내용들을 추가하세요.
-
-### 1. 프로잭트 소개
-
-프로젝트
+### 1. 프로젝트 소개
+- 디클(Department class)은 전국의 대학생들이 학과를 중심으로 모여 소통할 수 있는 학과별 커뮤니티 서비스입니다. 모든 유저가 자신의 소속 학교나 동아리가 아닌 학과별로 자유롭게 모여 같은 학과끼리만 이해할 수 있는 깊은 고민과 전공 관련 정보를 공유할 수 있게 돕고자 합니다.
 
 ### 2. 소개 영상
-
-프로젝트 소개하는 영상을 추가하세요
+- [중간 평가 발표용 시연영상](https://youtu.be/4zNbyYo_4bg)
 
 ### 3. 팀 소개
 
-팀을 소개하세요.
+|                                                                         Frontend                                                                          |                                                                         Frontend                                                                          |                                                                          Backend                                                                          |                                                                          Backend                                                                          |
+| :-------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| <img src="https://github.com/kookmin-sw/capstone-2024-07/assets/83686088/20e5982d-d7b3-4dda-8762-74059308bb9c" width="200px;" height="200px;" alt="권지아"/> | <img src="https://github.com/kookmin-sw/capstone-2024-07/assets/83686088/ac277479-2e56-481a-ae39-196fea859597" width="200px;" height="200px;" alt="윤홍현"/> | <img src="https://github.com/kookmin-sw/capstone-2024-07/assets/83686088/e1e3d13b-7835-4d93-9f9d-89656ea54a4f" width="200px;" height="200px;" alt="윤웅배"/> | <img src="https://github.com/kookmin-sw/capstone-2024-07/assets/83686088/ad14a84b-6c9e-4866-92f0-2546c6be63d5" width="200px;" height="200px;" alt="김동윤"/> |
+|                                                          [권지아(팀장)](https://github.com/jia5232/)                                                           |                                                            [윤홍현](https://github.com/hongbuly)                                                             |                                                            [윤웅배](https://github.com/devbelly)                                                             |                                                           [김동윤](https://github.com/zkxmdkdltm)                                                            |
 
-팀원정보 및 담당이나 사진 및 SNS를 이용하여 소개하세요.
-
-### 4. 사용법
-
-소스코드제출시 설치법이나 사용법을 작성하세요.
-
-### 5. 기타
-
-추가적인 내용은 자유롭게 작성하세요.
-
-
-## Markdown을 사용하여 내용꾸미기
-
-Markdown은 작문을 스타일링하기위한 가볍고 사용하기 쉬운 구문입니다. 여기에는 다음을위한 규칙이 포함됩니다.
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```
+✨ Name : 권지아
+👩‍🎓 Student ID : 20190155
+📌 Role: 팀장, 기획, 프론트엔드
 ```
 
-자세한 내용은 [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+```
+✨ Name : 윤홍현
+👩‍🎓 Student ID : 20213032
+📌 Role: UI, 프론트엔드
+```
 
-### Support or Contact
+```
+✨ Name : 윤웅배
+👩‍🎓 Student ID : 20171659
+📌 Role: 백엔드, 인프라
+```
 
-readme 파일 생성에 추가적인 도움이 필요하면 [도움말](https://help.github.com/articles/about-readmes/) 이나 [contact support](https://github.com/contact) 을 이용하세요.
+```
+✨ Name : 김동윤
+👩‍🎓 Student ID : 20212674
+📌 Role: 백엔드, 인프라
+```
+
+### 4. 기술 스택
+
+![image](https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/1b424798-1341-4b62-b5a4-7fe7e9c8464b)
+
+
+### 5. 서비스 구조도
+
+![image](https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/77daf964-e42f-4075-bb41-3f1b76fc7d08)
+
+
+### 6. 사용법
+
+#### Backend
+
+- Prerequisite
+  - Java 17
+  - docker compose
+
+
+- 로컬 MYSQL 설치하기(M1 기준)
+  - 백엔드 파일 경로로 진입
+
+    ```
+    cd backend
+    ```
+  - `docker-compose`를 데몬으로 실행
+    ```
+    docker-compose up -d
+    ```
+  - `backend/src/main/resources/application.yml` 포트 수정
+      ```yml
+      spring:
+        datasource:
+          url: jdbc:mysql://localhost:{HOST_PORT}/dclass?serverTimezone=UTC
+      ```
+
+- AWS 설정하기
+  - `backend/src/main/resources`에 `application-security.yml` 파일 생성 후 아래 내용 작성
+
+     ```yml
+     aws:
+       access-key: <YOUR_AWS_ACCESS_KEY>
+       secret-key: <YOUR_AWS_SECRET_KEY>
+   
+       s3:
+         bucket: <YOUR_BUCKET_NAME>
+         region: "ap-northeast-2"
+     ```
+
+- 로컬 실행하기
+  - `backend`에서 아래 명령어 실행
+
+    ```
+    ./gradlew bootRun —args='—spring.profiles.active=local'
+    ```
+
+
+#### Frontend
+
+- Prerequisite
+  - [Flutter 3.13.0](https://docs.flutter.dev/get-started/install)
+  - [Dart 3.1.0](https://dart.dev/get-dart)
+  - [안드로이드 스튜디오](https://developer.android.com/codelabs/basic-android-kotlin-compose-install-android-studio?hl=ko#0)
+
+- 에뮬레이터 (혹은 시뮬레이터) 실행
+  - 안드로이드 스튜디오에서 device manager → virtual → create device → 실행
+
+- 로컬 실행하기
+  - 프론트엔드 파일 경로로 진입
+
+    ```
+    cd frontend
+    ```
+  - 패키지 설치
+
+    ```
+    flutter pub get
+    ```
+  - 프로젝트 실행
+
+    ```
+    flutter run
+    ```

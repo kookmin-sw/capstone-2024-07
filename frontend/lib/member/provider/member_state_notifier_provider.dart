@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:frontend/member/provider/selected_major_provider.dart';
 
 import '../../common/const/data.dart';
 import '../../common/provider/secure_storage_provider.dart';
@@ -53,9 +52,9 @@ class MemberStateNotifier extends StateNotifier<MemberModelBase?> {
       //성공적으로 가져왔을 경우 MemberModel이 state에 담기게 된다.
       state = resp;
 
-      if (resp is MemberModel) {
-        ref.read(selectedMajorProvider.notifier).state = resp.activatedDepartment;
-      }
+      // if (resp is MemberModel) {
+      //   ref.read(selectedMajorProvider.notifier).state = resp.activatedDepartment;
+      // }
     } on DioException catch(e){
       if(e.response?.statusCode == 401){
         state = MemberModelError(message: "로그인되지 않았습니다.");

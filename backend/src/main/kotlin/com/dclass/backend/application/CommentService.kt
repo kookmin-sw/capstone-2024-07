@@ -42,8 +42,9 @@ class CommentService(
     fun delete(userId: Long, request: DeleteCommentRequest) {
         val comment = commentRepository.findByIdAndUserId(request.commentId, userId)
             ?: throw CommentException(CommentExceptionType.NOT_FOUND_COMMENT)
-
+        val post = postRepository.getByIdOrThrow(comment.postId)
         commentRepository.delete(comment)
+        post.increaseCommentReplyCount(-1)
     }
 
     fun like(userId: Long, request: LikeCommentRequest) {

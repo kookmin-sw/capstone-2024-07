@@ -1,132 +1,166 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/board/provider/comment_provider.dart';
+import 'package:frontend/board/provider/reply_notifier_provider.dart';
+import 'package:frontend/board/provider/reply_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/comment_layout.dart';
 
-class MsgBoardScreen extends StatefulWidget {
+class MsgBoardScreen extends ConsumerStatefulWidget {
   final MsgBoardResponseModel board;
   const MsgBoardScreen({super.key, required this.board});
 
   @override
-  State<MsgBoardScreen> createState() => _MsgBoardScreenState();
+  ConsumerState<MsgBoardScreen> createState() => _MsgBoardScreenState();
 }
 
-class _MsgBoardScreenState extends State<MsgBoardScreen> {
+class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
   @override
   void initState() {
     super.initState();
   }
 
+  final TextEditingController textEditingController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
+  bool isAddNewComment = false;
+
+  void addNewComment() async {
+    final requestData = {
+      'postId': widget.board.id.toInt(),
+      'content': textEditingController.text,
+    };
+    await ref.watch(commentStateProvider).post(requestData);
+    setState(() {
+      isAddNewComment = true;
+    });
+  }
+
+  void addNewReply(int commentId) async {
+    final requestData = {
+      'commentId': commentId,
+      'content': textEditingController.text,
+    };
+    await ref.watch(replyProvider).post(requestData);
+    ref.read(replyStateProvider.notifier).add(-1);
+  }
+
   @override
   Widget build(BuildContext context) {
+    int selectIndex = ref.watch(replyStateProvider);
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: PRIMARY_COLOR.withOpacity(0.1),
+          centerTitle: true,
+          backgroundColor: PRIMARY10_COLOR,
+          iconTheme: const IconThemeData(
+            color: Colors.black,
+          ),
+          shadowColor: Colors.black,
+          elevation: 3,
           title: Text(
-            widget.board.communityTitle,
+            categoryCodesReverseList[widget.board.communityTitle].toString(),
             style: const TextStyle(
               fontSize: 15,
+              color: Colors.black,
+              fontWeight: FontWeight.normal,
             ),
           ),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.notifications_none_rounded),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.more_horiz),
+            ),
+          ],
         ),
-        body: Body(
-          widget: widget,
-        ));
-  }
-}
-
-class Body extends ConsumerWidget {
-  Body({
-    super.key,
-    required this.widget,
-  });
-
-  final MsgBoardScreen widget;
-  final TextEditingController textEditingController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      children: [
-        Board(
-          board: widget.board,
-          titleSize: 13,
-        ),
-        Expanded(
-          child: FutureBuilder(
-            future:
-                ref.watch(commentStateProvider).get(widget.board.id.toString()),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                List<CommentModel> comments = snapshot.data ?? [];
-                ScrollController scrollController = ScrollController();
-                SchedulerBinding.instance.addPostFrameCallback((_) {
-                  scrollController
-                      .jumpTo(scrollController.position.maxScrollExtent);
-                });
-                return ListView.builder(
-                  controller: scrollController,
-                  itemCount: comments.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Comment(
-                      comment: comments[index],
-                    );
-                  },
-                );
-              }
-            },
-          ),
-        ),
-        Container(
-          color: Colors.white,
-          padding: const EdgeInsets.only(bottom: 50),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: textEditingController,
-                  decoration: InputDecoration(
-                    hintText: '입력',
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 20),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: BODY_TEXT_COLOR.withOpacity(0.5),
-                      ),
-                    ),
-                    suffixIcon: GestureDetector(
-                      child: Icon(
-                        Icons.send,
-                        color: PRIMARY_COLOR.withOpacity(0.5),
-                        size: 30,
-                      ),
-                      onTap: () {
-                        // Upload comment.
-                        final requestData = {
-                          'postId': widget.board.id.toInt(),
-                          'content': textEditingController.text,
-                        };
-                        ref.watch(commentStateProvider).post(requestData);
-                        textEditingController.clear();
+        body: Column(
+          children: [
+            Board(
+              board: widget.board,
+              titleSize: 13,
+            ),
+            Expanded(
+              child: FutureBuilder(
+                future: ref
+                    .watch(commentStateProvider)
+                    .get(widget.board.id.toString()),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    List<CommentModel> comments = snapshot.data ?? [];
+                    ScrollController scrollController = ScrollController();
+                    if (isAddNewComment) {
+                      SchedulerBinding.instance.addPostFrameCallback((_) {
+                        scrollController
+                            .jumpTo(scrollController.position.maxScrollExtent);
+                      });
+                    }
+                    return ListView.builder(
+                      controller: scrollController,
+                      itemCount: comments.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        print("$selectIndex ${comments[index].id}");
+                        return Comment(
+                          comment: comments[index],
+                          selectComment: selectIndex == comments[index].id,
+                        );
                       },
+                    );
+                  }
+                },
+              ),
+            ),
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.only(bottom: 50),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: textEditingController,
+                      decoration: InputDecoration(
+                        hintText: '입력',
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 20),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: BODY_TEXT_COLOR.withOpacity(0.5),
+                          ),
+                        ),
+                        suffixIcon: GestureDetector(
+                          child: const Icon(
+                            Icons.send,
+                            color: PRIMARY50_COLOR,
+                            size: 30,
+                          ),
+                          onTap: () {
+                            if (selectIndex == -1) {
+                              // Upload comment.
+                              addNewComment();
+                            } else {
+                              addNewReply(selectIndex);
+                            }
+                            textEditingController.clear();
+                          },
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
-      ],
-    );
+            ),
+          ],
+        ));
   }
 }

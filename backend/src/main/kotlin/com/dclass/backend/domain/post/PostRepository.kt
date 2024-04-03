@@ -2,7 +2,9 @@ package com.dclass.backend.domain.post
 
 import com.dclass.backend.application.dto.PostResponse
 import com.dclass.backend.application.dto.PostScrollPageRequest
+import com.dclass.backend.domain.comment.Comment
 import com.dclass.backend.domain.community.Community
+import com.dclass.backend.domain.reply.Reply
 import com.dclass.backend.domain.scrap.Scrap
 import com.dclass.backend.domain.user.User
 import com.dclass.backend.exception.post.PostException
@@ -30,6 +32,16 @@ interface PostRepositorySupport {
 
     fun findPostScrollPage(
         communityIds: List<Long>,
+        request: PostScrollPageRequest
+    ): List<PostResponse>
+
+    fun findPostScrollPageByUserId(
+        userId: Long,
+        request: PostScrollPageRequest
+    ): List<PostResponse>
+
+    fun findCommentedAndRepliedPostByUserId(
+        userId: Long,
         request: PostScrollPageRequest
     ): List<PostResponse>
 }
@@ -101,15 +113,29 @@ private class PostRepositoryImpl(
         return em.createQuery(query, context).setMaxResults(request.size).resultList
     }
 
-    private fun Jpql.searchOption(request: PostScrollPageRequest): Predicatable? {
-        return if (request.keyword != null) or(
-            path(Post::title).like("%${request.keyword}%"),
-            path(Post::content).like("%${request.keyword}%")
-        ) else null
-    }
+    override fun findPostScrollPageByUserId(
+        userId: Long,
+        request: PostScrollPageRequest
+    ): List<PostResponse> {
 
-    private fun Jpql.isHot(request: PostScrollPageRequest): Predicatable? {
-        return if (request.isHot) path(Post::postCount)(PostCount::likeCount).ge(10) else null
+        val query = jpql {
+            selectNew<PostResponse>(
+                entity(Post::class),
+                entity(User::class),
+                path(Community::title)
+            ).from(
+                entity(Post::class),
+                join(Community::class).on(path(Post::communityId).equal(path(Community::id))),
+                join(User::class).on(path(Post::userId).equal(path(User::id)))
+            ).whereAnd(
+                path(Post::id).lessThan(request.lastId ?: Long.MAX_VALUE),
+                path(Post::userId).equal(userId),
+            ).orderBy(
+                path(Post::id).desc()
+            )
+        }
+        return em.createQuery(query, context).setMaxResults(request.size).resultList
+
     }
 
     override fun findScrapPostByUserId(userId: Long): List<PostResponse> {
@@ -130,6 +156,58 @@ private class PostRepositoryImpl(
             )
         }
         return em.createQuery(query, context).resultList
+    }
+
+    override fun findCommentedAndRepliedPostByUserId(
+        userId: Long,
+        request: PostScrollPageRequest
+    ): List<PostResponse> {
+        val query = jpql {
+
+            val subquery = select(
+                path(Comment::postId)
+            ).from(
+                entity(Comment::class),
+                join(Reply::class).on(path(Comment::id).equal(path(Reply::commentId)))
+            ).where(
+                path(Reply::userId).equal(userId),
+            ).asSubquery()
+
+            val subquery2 = select(
+                path(Comment::postId)
+            ).from(
+                entity(Comment::class)
+            ).where(
+                path(Comment::userId).equal(userId)
+            ).asSubquery()
+
+            selectNew<PostResponse>(
+                entity(Post::class),
+                entity(User::class),
+                path(Community::title)
+            ).from(
+                entity(Post::class),
+                join(Community::class).on(path(Post::communityId).equal(path(Community::id))),
+                join(User::class).on(path(Post::userId).equal(path(User::id)))
+            ).whereAnd(
+                path(Post::id).`in`(subquery).or(path(Post::id).`in`(subquery2)),
+                path(Post::id).lessThan(request.lastId ?: Long.MAX_VALUE),
+            ).orderBy(
+                path(Post::id).desc()
+            )
+        }
+        return em.createQuery(query, context).setMaxResults(request.size).resultList
+    }
+
+    private fun Jpql.searchOption(request: PostScrollPageRequest): Predicatable? {
+        return if (request.keyword != null) or(
+            path(Post::title).like("%${request.keyword}%"),
+            path(Post::content).like("%${request.keyword}%")
+        ) else null
+    }
+
+    private fun Jpql.isHot(request: PostScrollPageRequest): Predicatable? {
+        return if (request.isHot) path(Post::postCount)(PostCount::likeCount).ge(10) else null
     }
 
 }
