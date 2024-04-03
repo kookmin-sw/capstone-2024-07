@@ -72,7 +72,7 @@ class Reply extends ConsumerWidget {
                                     commentId: -1,
                                     postId: -1,
                                     replyId: reply.id,
-                                    isLiked: false,
+                                    isClicked: false,
                                   ),
                                   const SizedBox(
                                     width: 13,
@@ -84,7 +84,7 @@ class Reply extends ConsumerWidget {
                                     commentId: -1,
                                     postId: -1,
                                     replyId: reply.id,
-                                    isLiked: false,
+                                    isClicked: false,
                                   ),
                                 ],
                               ),

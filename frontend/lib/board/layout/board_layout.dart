@@ -56,7 +56,7 @@ class Board extends ConsumerWidget {
                       commentId: -1,
                       postId: board.id,
                       replyId: -1,
-                      isLiked: false,
+                      isClicked: false,
                     ),
                     const SizedBox(
                       width: 13,
@@ -68,7 +68,7 @@ class Board extends ConsumerWidget {
                       commentId: -1,
                       postId: -1,
                       replyId: -1,
-                      isLiked: false,
+                      isClicked: false,
                     ),
                     const SizedBox(
                       width: 13,
@@ -80,7 +80,7 @@ class Board extends ConsumerWidget {
                       commentId: -1,
                       postId: board.id,
                       replyId: -1,
-                      isLiked: false,
+                      isClicked: false,
                     ),
                     const SizedBox(
                       width: 13,
