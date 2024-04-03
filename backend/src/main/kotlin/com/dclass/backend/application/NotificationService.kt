@@ -37,15 +37,13 @@ class NotificationService(
 
         val eventId = makeTimeIncludeId(request.userId)
         val emitters = emitterRepository.findAllEmitterStartWithByUserId(request.userId.toString())
-        emitters.forEach { (key, emitter) ->
-            run {
-                val response = request.createResponse(notification.id, notification.createdAt)
-                emitterRepository.saveEventCache(key, notification)
-                sendNotification(emitter, eventId, key, response)
-            }
+        emitters.forEach {
+            val response = request.createResponse(notification.id, notification.createdAt)
+            emitterRepository.saveEventCache(it.key, notification)
+            sendNotification(it.value, eventId, it.key, response)
         }
     }
-    
+
     fun readNotification(id: Long) {
         val notification = notificationRepository.getOrThrow(id)
         notification.read()
