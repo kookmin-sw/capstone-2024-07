@@ -5,6 +5,8 @@ import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.comment.getByIdOrThrow
 import com.dclass.backend.domain.notification.NotificationCommentEvent
 import com.dclass.backend.domain.notification.NotificationType
+import com.dclass.backend.domain.post.PostRepository
+import com.dclass.backend.domain.post.getByIdOrThrow
 import com.dclass.backend.domain.reply.ReplyRepository
 import com.dclass.backend.exception.comment.CommentException
 import com.dclass.backend.exception.comment.CommentExceptionType
@@ -19,6 +21,7 @@ class CommentService(
     private val replyRepository: ReplyRepository,
     private val commentValidator: CommentValidator,
     private val eventPublisher: ApplicationEventPublisher,
+    private val postRepository: PostRepository,
 ) {
     fun create(userId: Long, request: CreateCommentRequest): CommentResponse {
         val dto = commentValidator.validateCreateComment(userId, request.postId)
