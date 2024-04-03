@@ -16,7 +16,7 @@ class TextWithIcon extends ConsumerStatefulWidget {
   final int commentId;
   final int postId;
   final int replyId;
-  final bool isLiked;
+  final bool isClicked;
 
   const TextWithIcon({
     super.key,
@@ -26,7 +26,7 @@ class TextWithIcon extends ConsumerStatefulWidget {
     required this.commentId,
     required this.postId,
     required this.replyId,
-    required this.isLiked,
+    required this.isClicked,
   });
 
   @override
@@ -58,7 +58,13 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
   @override
   void initState() {
     super.initState();
-    isHeartClicked = widget.isLiked;
+    if (widget.icon == Icons.favorite_outline_rounded) {
+      isHeartClicked = widget.isClicked;
+    } else if (widget.icon == Icons.star_outline_rounded) {
+      isFavoriteClicked = widget.isClicked;
+    } else if (widget.icon == Icons.check_box_outline_blank_rounded) {
+      isQuestionClicked = widget.isClicked;
+    }
     textCount = int.tryParse(widget.text);
     textCount ??= widget.text;
     heartAnimationController =

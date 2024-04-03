@@ -44,6 +44,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
     title = widget.board.postTitle;
     content = widget.board.postContent;
     isQuestion = widget.board.isQuestion;
+    canUpload = widget.isEdit;
   }
 
   @override
@@ -76,7 +77,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             widget.isEdit
-                                ? Text("$selectCategory에 글을 수정할까요?")
+                                ? Text("'$selectCategory'에 글을 수정할까요?")
                                 : Text("'$selectCategory'에 글을 등록할까요?"),
                           ],
                         ),
@@ -107,6 +108,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                         images.add("image$i.gif");
                                       }
                                       if (widget.isEdit) {
+                                        // TODO : isEdit
                                       } else {
                                         List<String> images = [];
                                         for (int i = 0;
@@ -124,7 +126,6 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                         };
                                         MsgBoardResponseModel resp =
                                             await boardAddAPI.post(requestData);
-                                        // TODO : resp의 image 링크에 image들 올려야 함
                                         for (int i = 0;
                                             i < resp.images.length;
                                             i++) {
@@ -184,6 +185,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                   children: [
                     Expanded(
                       child: TextField(
+                        controller: TextEditingController(text: title),
                         onChanged: (value) {
                           setState(() {
                             if (value != "") {
@@ -284,6 +286,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                   ),
                 ),
                 TextField(
+                  controller: TextEditingController(text: content),
                   onChanged: (value) {
                     setState(() {
                       if (value != "") {
@@ -351,18 +354,18 @@ class BottomView extends ConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Row(
+              Row(
                 children: [
-                  TextWithIcon(
+                  const TextWithIcon(
                     icon: Icons.image_rounded,
                     iconSize: 17,
                     text: "사진",
                     commentId: -1,
                     postId: -1,
                     replyId: -1,
-                    isLiked: false,
+                    isClicked: false,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   TextWithIcon(
@@ -372,7 +375,7 @@ class BottomView extends ConsumerWidget {
                     commentId: -1,
                     postId: -1,
                     replyId: -1,
-                    isLiked: false,
+                    isClicked: msgBoardAddScreenState.isQuestion,
                   ),
                 ],
               ),

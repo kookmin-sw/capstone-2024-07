@@ -76,7 +76,7 @@ class _CommentState extends ConsumerState<Comment>
                           commentId: widget.comment.id,
                           postId: -1,
                           replyId: -1,
-                          isLiked: widget.comment.isLiked,
+                          isClicked: widget.comment.isLiked,
                         ),
                         const SizedBox(
                           width: 13,
@@ -88,7 +88,7 @@ class _CommentState extends ConsumerState<Comment>
                           commentId: widget.comment.id,
                           postId: -1,
                           replyId: -1,
-                          isLiked: false,
+                          isClicked: false,
                         ),
                         const SizedBox(
                           width: 13,
@@ -100,7 +100,7 @@ class _CommentState extends ConsumerState<Comment>
                           commentId: widget.comment.id,
                           postId: -1,
                           replyId: -1,
-                          isLiked: false,
+                          isClicked: false,
                         ),
                       ],
                     ),
