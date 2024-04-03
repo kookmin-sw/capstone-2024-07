@@ -19,8 +19,8 @@ class NotificationService(
     fun subscribe(id: Long, lastEventId: String): SseEmitter {
         val emitterId = makeTimeIncludeId(id)
         val emitter = emitterRepository.save(emitterId, SseEmitter(DEFAULT_TIMEOUT))
+        emitter.onTimeout(emitter::complete)
         emitter.onCompletion { emitterRepository.delete(emitterId) }
-        emitter.onTimeout { emitterRepository.delete(emitterId) }
 
         sendNotification(emitter, makeTimeIncludeId(id), emitterId, "EventStream Created. [userId=$id]")
 
