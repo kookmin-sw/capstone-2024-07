@@ -79,7 +79,21 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                     for (int i = 0;
                                         i < realImages.length;
                                         i++) {
-                                      images.add("image$i.jpg");
+                                      if (realImages[i].path.endsWith("jpg")) {
+                                        images.add("image$i.jpg");
+                                      } else if (realImages[i]
+                                          .path
+                                          .endsWith("png")) {
+                                        images.add("image$i.png");
+                                      } else if (realImages[i]
+                                          .path
+                                          .endsWith("jpeg")) {
+                                        images.add("image$i.jpeg");
+                                      } else if (realImages[i]
+                                          .path
+                                          .endsWith("gif")) {
+                                        images.add("image$i.gif");
+                                      }
                                     }
                                     final requestData = {
                                       'communityTitle':
@@ -363,31 +377,39 @@ class ImageViewer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     List<XFile> images = ref.watch(imageStateProvider);
     msgBoardAddScreenState.realImages = images;
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: SizedBox(
-        height: 100,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: [
-            for (var image in images)
-              Container(
-                margin: const EdgeInsets.only(
-                  right: 10,
+    try {
+      return Padding(
+        padding: const EdgeInsets.all(10),
+        child: SizedBox(
+          height: 100,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              for (var image in images)
+                Container(
+                  margin: const EdgeInsets.only(
+                    right: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.black.withOpacity(0.2),
+                  ),
+                  width: 100,
+                  child: Image.file(
+                    File(image.path),
+                  ),
                 ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.black.withOpacity(0.2),
-                ),
-                width: 100,
-                child: Image.file(
-                  File(image.path),
-                ),
-              ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      debugPrint("ImageViewer error! ${images[0].path}");
+      return const SizedBox(
+        height: 100,
+        width: 100,
+      );
+    }
   }
 }
 
