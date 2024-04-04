@@ -8,6 +8,7 @@ import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/provider/image_provider.dart';
 import 'package:frontend/board/provider/isquestion_provider.dart';
+import 'package:frontend/board/provider/network_image_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -32,6 +33,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   String title = "", content = "";
   bool isQuestion = false;
   List<XFile> realImages = [];
+  List<String> networkImages = [];
   late TextEditingController titleController;
   late TextEditingController contentController;
   bool isLoading = false;
@@ -56,7 +58,19 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
 
   Future<void> upLoad() async {
     List<String> images = [];
-    for (int i = 0; i < realImages.length; i++) {
+    int i = 0;
+    for (; i < widget.board.images.length; i++) {
+      if (widget.board.images[i].endsWith("jpg")) {
+        images.add("image$i.jpg");
+      } else if (widget.board.images[i].endsWith("png")) {
+        images.add("image$i.png");
+      } else if (widget.board.images[i].endsWith("jpeg")) {
+        images.add("image$i.jpeg");
+      } else if (widget.board.images[i].endsWith("gif")) {
+        images.add("image$i.gif");
+      }
+    }
+    for (; i < realImages.length; i++) {
       if (realImages[i].path.endsWith("jpg")) {
         images.add("image$i.jpg");
       } else if (realImages[i].path.endsWith("png")) {
@@ -68,8 +82,14 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
       }
     }
     if (widget.isEdit) {
-      // TODO : isEdit
-      debugPrint("Edit");
+      final requestData = {
+        'postId': widget.board.id,
+        'title': title,
+        'content': content,
+        'images': networkImages,
+      };
+      // TODO : modify error!!
+      // await boardAddAPI.modify(requestData);
     } else {
       List<String> images = [];
       for (int i = 0; i < realImages.length; i++) {
@@ -91,9 +111,6 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
     await ref
         .read(boardStateNotifierProvider.notifier)
         .paginate(forceRefetch: true);
-    setState(() {
-      isLoading = false;
-    });
   }
 
   @override
@@ -420,8 +437,111 @@ class ImageViewer extends ConsumerWidget {
   final _MsgBoardAddScreenState msgBoardAddScreenState;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<XFile> images = ref.watch(imageStateProvider);
+    List<XFile> images;
+    images = ref.watch(imageStateProvider);
     msgBoardAddScreenState.realImages = images;
+    if (msgBoardAddScreenState.widget.isEdit) {
+      msgBoardAddScreenState.networkImages =
+          msgBoardAddScreenState.widget.board.images;
+      for (var removeImg in ref.watch(networkImageStateProvider)) {
+        msgBoardAddScreenState.networkImages.remove(removeImg);
+      }
+      try {
+        return Padding(
+          padding: const EdgeInsets.all(10),
+          child: SizedBox(
+            height: 100,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                for (var image in msgBoardAddScreenState.networkImages)
+                  Stack(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(
+                          right: 10,
+                          left: 10,
+                          top: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.black.withOpacity(0.2),
+                        ),
+                        width: 100,
+                        child: Image(
+                          image: NetworkImage(image),
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Icon(
+                          Icons.cancel_outlined,
+                          color: Colors.white,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          ref
+                              .read(networkImageStateProvider.notifier)
+                              .add(image);
+                        },
+                        icon: const Icon(
+                          Icons.cancel,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                for (var image in images)
+                  Stack(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(
+                          right: 10,
+                          left: 10,
+                          top: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.black.withOpacity(0.2),
+                        ),
+                        width: 100,
+                        child: Image.file(
+                          File(image.path),
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Icon(
+                          Icons.cancel_outlined,
+                          color: Colors.white,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          ref.read(imageStateProvider.notifier).remove(image);
+                        },
+                        icon: const Icon(
+                          Icons.cancel,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+          ),
+        );
+      } catch (e) {
+        debugPrint(
+            "ImageViewer error! ${msgBoardAddScreenState.networkImages[0]}");
+        return const SizedBox(
+          height: 100,
+          width: 100,
+        );
+      }
+    }
+
     try {
       return Padding(
         padding: const EdgeInsets.all(10),
@@ -431,18 +551,40 @@ class ImageViewer extends ConsumerWidget {
             scrollDirection: Axis.horizontal,
             children: [
               for (var image in images)
-                Container(
-                  margin: const EdgeInsets.only(
-                    right: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.black.withOpacity(0.2),
-                  ),
-                  width: 100,
-                  child: Image.file(
-                    File(image.path),
-                  ),
+                Stack(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(
+                        right: 10,
+                        left: 10,
+                        top: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.black.withOpacity(0.2),
+                      ),
+                      width: 100,
+                      child: Image.file(
+                        File(image.path),
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Icon(
+                        Icons.cancel_outlined,
+                        color: Colors.white,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        ref.read(imageStateProvider.notifier).remove(image);
+                      },
+                      icon: const Icon(
+                        Icons.cancel,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
                 ),
             ],
           ),

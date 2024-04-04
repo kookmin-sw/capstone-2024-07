@@ -13,6 +13,10 @@ class ImageNotifier extends StateNotifier<List<XFile>> {
   Future<void> clear() async {
     state = List.from(state)..clear();
   }
+
+  Future<void> remove(XFile image) async {
+    state = state.where((item) => item != image).toList();
+  }
 }
 
 final imageStateProvider =
