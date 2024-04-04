@@ -49,7 +49,7 @@ class Reply extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            reply.userInformation.name,
+                            reply.userInformation.nickname,
                             style: const TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
