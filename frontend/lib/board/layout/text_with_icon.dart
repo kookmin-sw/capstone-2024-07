@@ -7,6 +7,7 @@ import 'package:frontend/board/provider/image_provider.dart';
 import 'package:frontend/board/provider/comment_notifier_provider.dart';
 import 'package:frontend/board/provider/reply_notifier_provider.dart';
 import 'package:frontend/board/provider/reply_provider.dart';
+import 'package:frontend/common/const/colors.dart';
 import 'package:image_picker/image_picker.dart';
 
 class TextWithIcon extends ConsumerStatefulWidget {
@@ -45,6 +46,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
 
   late AnimationController heartAnimationController;
   final ImagePicker picker = ImagePicker();
+
   Future<bool> getImage() async {
     List<XFile> images = [];
     try {
@@ -103,33 +105,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
             setState(() {
               if (widget.icon == Icons.favorite_outline_rounded) {
                 if (isHeartClicked) {
-                  showDialog(
-                      context: context,
-                      builder: ((context) {
-                        return AlertDialog(
-                          content: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("이미 좋아요를 눌렀습니다."),
-                            ],
-                          ),
-                          actions: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text("확인"),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        );
-                      }));
+                  alreadyHeart(context);
                 } else {
                   textCount += 1;
                   heartAnimationController.forward();
@@ -154,47 +130,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                 ref
                     .read(commentStateProvider.notifier)
                     .add(0, widget.commentId);
-                showDialog(
-                    context: context,
-                    builder: ((context) {
-                      return AlertDialog(
-                        content: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("이 댓글에 대댓글을 달까요?"),
-                          ],
-                        ),
-                        actions: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text("네"),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              Container(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    ref
-                                        .read(commentStateProvider.notifier)
-                                        .add(0, -1);
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text("아니요"),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      );
-                    }));
+                chatDialog(context);
               } else if (widget.icon == Icons.star_outline_rounded) {
                 if (isFavoriteClicked) {
                   textCount -= 1;
@@ -250,38 +186,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                 } else if (widget.replyId != -1) {
                   ref.read(replyStateProvider.notifier).add(widget.replyId);
                 }
-                showDialog(
-                    context: context,
-                    builder: ((context) {
-                      return AlertDialog(
-                        actions: <Widget>[
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text("삭제하기"),
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              Container(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text("수정하기"),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      );
-                    }));
+                moreDialog(context);
               }
             });
           },
@@ -318,6 +223,150 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
         ),
       ],
     );
+  }
+
+  Future<dynamic> alreadyHeart(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            content: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("이미 좋아요를 눌렀습니다."),
+              ],
+            ),
+            actions: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("확인"),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        }));
+  }
+
+  Future<dynamic> chatDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            content: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("이 댓글에 대댓글을 달까요?"),
+              ],
+            ),
+            actions: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("네"),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Container(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        ref.read(commentStateProvider.notifier).add(0, -1);
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("아니요"),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        }));
+  }
+
+  Future<dynamic> moreDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            actionsPadding: EdgeInsets.zero,
+            backgroundColor: PRIMARY10_COLOR,
+            actions: <Widget>[
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            "삭제하기",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: BODY_TEXT_COLOR.withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            "수정하기",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          );
+        }));
   }
 }
 
