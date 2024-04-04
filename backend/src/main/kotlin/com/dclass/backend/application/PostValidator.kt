@@ -4,9 +4,9 @@ import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.community.Community
 import com.dclass.backend.domain.community.CommunityRepository
-import com.dclass.backend.domain.community.getByIdOrThrow
+import com.dclass.backend.domain.community.findByIdOrThrow
 import com.dclass.backend.domain.post.PostRepository
-import com.dclass.backend.domain.post.getByIdOrThrow
+import com.dclass.backend.domain.post.findByIdOrThrow
 import com.dclass.backend.exception.post.PostException
 import com.dclass.backend.exception.post.PostExceptionType.FORBIDDEN_POST
 import org.springframework.stereotype.Service
@@ -33,8 +33,8 @@ class PostValidator(
 
     fun validate(userId: Long, postId: Long) {
         val belong = belongRepository.getOrThrow(userId)
-        val post = postRepository.getByIdOrThrow(postId)
-        val community = communityRepository.getByIdOrThrow(post.communityId)
+        val post = postRepository.findByIdOrThrow(postId)
+        val community = communityRepository.findByIdOrThrow(post.communityId)
 
         if (!belong.contain(community.departmentId)) {
             throw PostException(FORBIDDEN_POST)

@@ -66,4 +66,6 @@ class Comment(
         this.content = content
         modifiedDateTime = LocalDateTime.now()
     }
+
+    fun isEligibleForSSE(userId: Long) = this.userId != userId
 }

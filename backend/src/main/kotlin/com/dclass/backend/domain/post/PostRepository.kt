@@ -16,9 +16,10 @@ import com.linecorp.kotlinjdsl.render.jpql.JpqlRenderContext
 import com.linecorp.kotlinjdsl.support.spring.data.jpa.extension.createQuery
 import jakarta.persistence.EntityManager
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.repository.findByIdOrNull
 
-fun PostRepository.getByIdOrThrow(id: Long): Post = findById(id).orElseThrow {
-    PostException(NOT_FOUND_POST)
+fun PostRepository.findByIdOrThrow(id: Long): Post {
+    return findByIdOrNull(id) ?: throw PostException(NOT_FOUND_POST)
 }
 
 interface PostRepository : JpaRepository<Post, Long>, PostRepositorySupport {

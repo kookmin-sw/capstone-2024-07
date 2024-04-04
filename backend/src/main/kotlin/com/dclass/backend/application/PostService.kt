@@ -5,7 +5,7 @@ import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.post.PostRepository
-import com.dclass.backend.domain.post.getByIdOrThrow
+import com.dclass.backend.domain.post.findByIdOrThrow
 import com.dclass.backend.exception.post.PostException
 import com.dclass.backend.exception.post.PostExceptionType.NOT_FOUND_POST
 import com.dclass.backend.infra.s3.AwsPresigner
@@ -111,7 +111,7 @@ class PostService(
     fun likes(userId: Long, postId: Long): Int {
         postValidator.validate(userId, postId)
 
-        val post = postRepository.getByIdOrThrow(postId)
+        val post = postRepository.findByIdOrThrow(postId)
         post.addLike(userId)
 
         return post.postLikesCount
