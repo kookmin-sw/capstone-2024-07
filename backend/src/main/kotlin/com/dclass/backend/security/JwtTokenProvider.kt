@@ -44,10 +44,9 @@ class JwtTokenProvider(
             .subject
     }
 
-    fun isValidToken(token: String): Boolean {
-        return try {
+    fun validateToken(token: String): Unit {
+        try {
             getClaimsJws(token)
-            true
         } catch (e: SignatureException) {
             throw TokenException(INVALID_TOKEN)
         } catch (e: MalformedJwtException) {
