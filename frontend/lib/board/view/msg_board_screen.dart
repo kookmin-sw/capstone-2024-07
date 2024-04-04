@@ -35,13 +35,16 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
   @override
   void initState() {
     super.initState();
-    ref.read(memberRepositoryProvider).getMe().then((value) => myModel = value);
+    ref
+        .read(memberRepositoryProvider)
+        .getMe()
+        .then((value) => isMine = value.id == widget.board.userId);
     initNotification();
   }
 
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController scrollController = ScrollController();
-  late final MemberModel myModel;
+  bool isMine = false;
   final FlutterLocalNotificationsPlugin notification =
       FlutterLocalNotificationsPlugin();
 
@@ -83,6 +86,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
       'content': textEditingController.text,
     };
     await ref.watch(commentProvider).post(requestData);
+    setState(() {});
   }
 
   void addNewReply(int commentId) async {
@@ -90,7 +94,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
       'commentId': commentId,
       'content': textEditingController.text,
     };
-    await ref.watch(commentProvider).post(requestData);
+    await ref.watch(replyProvider).post(requestData);
     ref.read(commentStateProvider.notifier).add(0, -1);
   }
 
@@ -108,6 +112,136 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     };
     await ref.watch(replyProvider).modify(replyId, requestData);
     ref.read(replyStateProvider.notifier).add(-1);
+  }
+
+  void boardMore() {
+    try {
+      if (isMine) {
+        showDialog(
+            context: context,
+            builder: ((context) {
+              return AlertDialog(
+                actionsPadding: EdgeInsets.zero,
+                backgroundColor: PRIMARY10_COLOR,
+                actions: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: 0,
+                                backgroundColor: Colors.transparent,
+                              ),
+                              onPressed: () async {
+                                await ref
+                                    .watch(boardAddProvider)
+                                    .delete(widget.board.id);
+                                await ref
+                                    .read(boardStateNotifierProvider.notifier)
+                                    .paginate(forceRefetch: true);
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text(
+                                "삭제하기",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: BODY_TEXT_COLOR.withOpacity(0.3),
+                              width: 1,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: 0,
+                                backgroundColor: Colors.transparent,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => MsgBoardAddScreen(
+                                      isEdit: true,
+                                      board: widget.board,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                "수정하기",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            }));
+      } else {
+        showDialog(
+            context: context,
+            builder: ((context) {
+              return AlertDialog(
+                content: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("글의 수정 권한이 없습니다."),
+                  ],
+                ),
+                actions: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("확인"),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            }));
+      }
+    } catch (e) {
+      debugPrint("myModel 불러오는 문제 발생 : $e");
+    }
+  }
+
+  void subscribeNotification() {
+    // TODO : cancel Notification
+
+    SSEClient.subscribeToSSE(
+        method: SSERequestType.GET,
+        url: 'http://$ip/api/notifications/${widget.board.id}',
+        header: {"accessToken": "true"}).listen((event) {
+      debugPrint('subscribe! ${event.id} | ${event.event} | ${event.data}');
+    });
   }
 
   @override
@@ -133,136 +267,13 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
           ),
           actions: [
             IconButton(
-              onPressed: () {
-                // SSEClient.subscribeToSSE(
-                //     method: SSERequestType.GET,
-                //     url: 'http://$ip/api/notifications/${widget.board.id}',
-                //     header: {"Authorization": ""}).listen((event) {});
-              },
-              icon: const Icon(Icons.notifications_off_outlined),
+              onPressed: subscribeNotification,
+              icon: isMine
+                  ? const Icon(Icons.notifications_none)
+                  : const Icon(Icons.notifications_off_outlined),
             ),
             IconButton(
-              onPressed: () {
-                try {
-                  if (widget.board.userId == myModel.id) {
-                    showDialog(
-                        context: context,
-                        builder: ((context) {
-                          return AlertDialog(
-                            actionsPadding: EdgeInsets.zero,
-                            backgroundColor: PRIMARY10_COLOR,
-                            actions: <Widget>[
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            elevation: 0,
-                                            backgroundColor: Colors.transparent,
-                                          ),
-                                          onPressed: () async {
-                                            await ref
-                                                .watch(boardAddProvider)
-                                                .delete(widget.board.id);
-                                            await ref
-                                                .read(boardStateNotifierProvider
-                                                    .notifier)
-                                                .paginate(forceRefetch: true);
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text(
-                                            "삭제하기",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      border: Border(
-                                        bottom: BorderSide(
-                                          color:
-                                              BODY_TEXT_COLOR.withOpacity(0.3),
-                                          width: 1,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            elevation: 0,
-                                            backgroundColor: Colors.transparent,
-                                          ),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (_) =>
-                                                    MsgBoardAddScreen(
-                                                  isEdit: true,
-                                                  board: widget.board,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          child: const Text(
-                                            "수정하기",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          );
-                        }));
-                  } else {
-                    showDialog(
-                        context: context,
-                        builder: ((context) {
-                          return AlertDialog(
-                            content: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text("글의 수정 권한이 없습니다."),
-                              ],
-                            ),
-                            actions: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text("확인"),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          );
-                        }));
-                  }
-                } catch (e) {
-                  debugPrint("myModel 불러오는 문제 발생 : $e");
-                }
-              },
+              onPressed: boardMore,
               icon: const Icon(Icons.more_horiz),
             ),
           ],
@@ -300,7 +311,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                         return Comment(
                           comment: comments[index],
                           selectComment:
-                              selectCommentIndex == comments[index].id,
+                              selectCommentIndex[0] == comments[index].id,
                         );
                       },
                     ),
@@ -332,7 +343,8 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                             size: 30,
                           ),
                           onTap: () {
-                            if (selectCommentIndex == -1 &&
+                            if (selectCommentIndex[0] == -1 &&
+                                selectCommentIndex[1] == -1 &&
                                 selectReplyIndex == -1) {
                               // Upload comment.
                               addNewComment();
@@ -346,6 +358,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                               //Modify Reply
                               modifyReply(selectReplyIndex);
                             }
+
                             textEditingController.clear();
                           },
                         ),
