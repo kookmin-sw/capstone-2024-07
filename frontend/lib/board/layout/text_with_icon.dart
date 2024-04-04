@@ -39,6 +39,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
   bool isHeartClicked = false;
   bool isFavoriteClicked = false;
   bool isQuestionClicked = false;
+  bool cantClicked = true;
   // ignore: prefer_typing_uninitialized_variables
   var textCount;
 
@@ -64,6 +65,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
       isFavoriteClicked = widget.isClicked;
     } else if (widget.icon == Icons.check_box_outline_blank_rounded) {
       isQuestionClicked = widget.isClicked;
+      cantClicked = isQuestionClicked;
     }
     textCount = int.tryParse(widget.text);
     textCount ??= widget.text;
@@ -234,7 +236,8 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                               }))
                         }
                     });
-              } else if (widget.icon == Icons.check_box_outline_blank_rounded) {
+              } else if (widget.icon == Icons.check_box_outline_blank_rounded &&
+                  !cantClicked) {
                 isQuestionClicked = !isQuestionClicked;
                 ref
                     .read(isQuestionStateProvider.notifier)
