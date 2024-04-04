@@ -32,6 +32,9 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   String title = "", content = "";
   bool isQuestion = false;
   List<XFile> realImages = [];
+  late TextEditingController titleController;
+  late TextEditingController contentController;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -39,12 +42,58 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
     if (widget.isEdit) {
       selectCategory =
           categoryCodesReverseList[widget.board.communityTitle].toString();
+      title = widget.board.postTitle;
+      content = widget.board.postContent;
+      isQuestion = widget.board.isQuestion;
+      canUpload = widget.isEdit;
+
+      canUpload = writedTitle = writedContent = true;
     }
 
-    title = widget.board.postTitle;
-    content = widget.board.postContent;
-    isQuestion = widget.board.isQuestion;
-    canUpload = widget.isEdit;
+    titleController = TextEditingController(text: title);
+    contentController = TextEditingController(text: content);
+  }
+
+  Future<void> upLoad() async {
+    List<String> images = [];
+    for (int i = 0; i < realImages.length; i++) {
+      if (realImages[i].path.endsWith("jpg")) {
+        images.add("image$i.jpg");
+      } else if (realImages[i].path.endsWith("png")) {
+        images.add("image$i.png");
+      } else if (realImages[i].path.endsWith("jpeg")) {
+        images.add("image$i.jpeg");
+      } else if (realImages[i].path.endsWith("gif")) {
+        images.add("image$i.gif");
+      }
+    }
+    if (widget.isEdit) {
+      // TODO : isEdit
+      debugPrint("Edit");
+    } else {
+      List<String> images = [];
+      for (int i = 0; i < realImages.length; i++) {
+        images.add("image$i.jpg");
+      }
+      final requestData = {
+        'communityTitle': categoryCodesList[selectCategory],
+        'title': title,
+        'content': content,
+        'isQuestion': isQuestion,
+        'images': images,
+      };
+      MsgBoardResponseModel resp = await boardAddAPI.post(requestData);
+      for (int i = 0; i < resp.images.length; i++) {
+        final String url = resp.images[i];
+        UploadFile().call(url, File(realImages[i].path));
+      }
+    }
+    await ref
+        .read(boardStateNotifierProvider.notifier)
+        .paginate(forceRefetch: true);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -72,94 +121,53 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                 showDialog(
                     context: context,
                     builder: ((context) {
-                      return AlertDialog(
-                        content: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            widget.isEdit
-                                ? Text("'$selectCategory'에 글을 수정할까요?")
-                                : Text("'$selectCategory'에 글을 등록할까요?"),
-                          ],
-                        ),
-                        actions: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    List<String> images = [];
-                                    for (int i = 0;
-                                        i < realImages.length;
-                                        i++) {
-                                      if (realImages[i].path.endsWith("jpg")) {
-                                        images.add("image$i.jpg");
-                                      } else if (realImages[i]
-                                          .path
-                                          .endsWith("png")) {
-                                        images.add("image$i.png");
-                                      } else if (realImages[i]
-                                          .path
-                                          .endsWith("jpeg")) {
-                                        images.add("image$i.jpeg");
-                                      } else if (realImages[i]
-                                          .path
-                                          .endsWith("gif")) {
-                                        images.add("image$i.gif");
-                                      }
-                                      if (widget.isEdit) {
-                                        // TODO : isEdit
-                                      } else {
-                                        List<String> images = [];
-                                        for (int i = 0;
-                                            i < realImages.length;
-                                            i++) {
-                                          images.add("image$i.jpg");
-                                        }
-                                        final requestData = {
-                                          'communityTitle':
-                                              categoryCodesList[selectCategory],
-                                          'title': title,
-                                          'content': content,
-                                          'isQuestion': isQuestion,
-                                          'images': images,
-                                        };
-                                        MsgBoardResponseModel resp =
-                                            await boardAddAPI.post(requestData);
-                                        for (int i = 0;
-                                            i < resp.images.length;
-                                            i++) {
-                                          final String url = resp.images[i];
-                                          UploadFile().call(
-                                              url, File(realImages[i].path));
-                                        }
-                                        Navigator.of(context).pop();
-                                        Navigator.of(context).pop();
-                                        ref
-                                            .read(boardStateNotifierProvider
-                                                .notifier)
-                                            .paginate(forceRefetch: true);
-                                      }
-                                    }
-                                  },
-                                  child: const Text("네"),
+                      return isLoading
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : AlertDialog(
+                              content: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  widget.isEdit
+                                      ? Text("'$selectCategory'에 글을 수정할까요?")
+                                      : Text("'$selectCategory'에 글을 등록할까요?"),
+                                ],
+                              ),
+                              actions: <Widget>[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            isLoading = true;
+                                          });
+
+                                          upLoad();
+
+                                          Navigator.of(context).pop();
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text("네"),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
+                                    Container(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text("아니요"),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              Container(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text("아니요"),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      );
+                              ],
+                            );
                     }));
               }
             },
@@ -185,7 +193,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                   children: [
                     Expanded(
                       child: TextField(
-                        controller: TextEditingController(text: title),
+                        controller: titleController,
                         onChanged: (value) {
                           setState(() {
                             if (value != "") {
@@ -286,7 +294,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                   ),
                 ),
                 TextField(
-                  controller: TextEditingController(text: content),
+                  controller: contentController,
                   onChanged: (value) {
                     setState(() {
                       if (value != "") {
@@ -381,8 +389,11 @@ class BottomView extends ConsumerWidget {
               ),
               if (widget.isEdit)
                 TextButton(
-                  onPressed: () {
-                    ref.watch(boardAddProvider).delete(widget.board.id);
+                  onPressed: () async {
+                    await ref.watch(boardAddProvider).delete(widget.board.id);
+                    await ref
+                        .read(boardStateNotifierProvider.notifier)
+                        .paginate(forceRefetch: true);
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
                   },
