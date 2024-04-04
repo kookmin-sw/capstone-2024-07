@@ -32,7 +32,7 @@ class LoginUserResolver(
         binderFactory: WebDataBinderFactory?
     ): User {
         val token = extractBearerToken(webRequest)
-        jwtTokenProvider.isValidToken(token)
+        jwtTokenProvider.validateToken(token)
         val userEmail = jwtTokenProvider.getSubject(token)
         return userRepository.getByEmailOrThrow(userEmail)
     }
