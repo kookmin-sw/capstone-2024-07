@@ -82,12 +82,12 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
       }
     }
     if (widget.isEdit) {
-      final requestData = {
-        'postId': widget.board.id,
-        'title': title,
-        'content': content,
-        'images': networkImages,
-      };
+      // final requestData = {
+      //   'postId': widget.board.id,
+      //   'title': title,
+      //   'content': content,
+      //   'images': networkImages,
+      // };
       // TODO : modify error!!
       // await boardAddAPI.modify(requestData);
     } else {
@@ -113,6 +113,62 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
         .paginate(forceRefetch: true);
   }
 
+  void upLoadDialog() {
+    if (canUpload) {
+      showDialog(
+          context: context,
+          builder: ((context) {
+            return isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : AlertDialog(
+                    content: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        widget.isEdit
+                            ? Text("'$selectCategory'에 글을 수정할까요?")
+                            : Text("'$selectCategory'에 글을 등록할까요?"),
+                      ],
+                    ),
+                    actions: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  isLoading = true;
+                                });
+
+                                upLoad();
+
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("네"),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          Container(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("아니요"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+          }));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -133,61 +189,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () {
-              if (canUpload) {
-                showDialog(
-                    context: context,
-                    builder: ((context) {
-                      return isLoading
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : AlertDialog(
-                              content: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  widget.isEdit
-                                      ? Text("'$selectCategory'에 글을 수정할까요?")
-                                      : Text("'$selectCategory'에 글을 등록할까요?"),
-                                ],
-                              ),
-                              actions: <Widget>[
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            isLoading = true;
-                                          });
-
-                                          upLoad();
-
-                                          Navigator.of(context).pop();
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text("네"),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 20,
-                                    ),
-                                    Container(
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text("아니요"),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            );
-                    }));
-              }
-            },
+            onPressed: upLoadDialog,
             child: Text(
               "완료",
               style: TextStyle(
