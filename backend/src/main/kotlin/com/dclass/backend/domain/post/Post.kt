@@ -100,4 +100,8 @@ class Post(
         postLikes.add(userId)
         postCount = postCount.syncLikeCount(postLikesCount)
     }
+
+    fun isEligibleForSSE(userid: Long): Boolean {
+        return this.userId != userid
+    }
 }

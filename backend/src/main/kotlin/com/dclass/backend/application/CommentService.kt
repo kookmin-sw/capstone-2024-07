@@ -3,10 +3,11 @@ package com.dclass.backend.application
 import com.dclass.backend.application.dto.*
 import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.comment.getByIdOrThrow
-import com.dclass.backend.domain.notification.NotificationCommentEvent
-import com.dclass.backend.domain.notification.NotificationType
+import com.dclass.backend.domain.community.CommunityRepository
+import com.dclass.backend.domain.community.findByIdOrThrow
+import com.dclass.backend.domain.notification.NotificationEvent
 import com.dclass.backend.domain.post.PostRepository
-import com.dclass.backend.domain.post.getByIdOrThrow
+import com.dclass.backend.domain.post.findByIdOrThrow
 import com.dclass.backend.domain.reply.ReplyRepository
 import com.dclass.backend.exception.comment.CommentException
 import com.dclass.backend.exception.comment.CommentExceptionType
@@ -21,16 +22,21 @@ class CommentService(
     private val replyRepository: ReplyRepository,
     private val postRepository: PostRepository,
     private val commentValidator: CommentValidator,
+    private val communityRepository: CommunityRepository,
     private val eventPublisher: ApplicationEventPublisher,
 ) {
     fun create(userId: Long, request: CreateCommentRequest): CommentResponse {
-        val dto = commentValidator.validateCreateComment(userId, request.postId)
-        dto.post.increaseCommentReplyCount(1)
+        val post = postRepository.findByIdOrThrow(request.postId)
         val comment = commentRepository.save(request.toEntity(userId))
-        if (userId != dto.post.userId) {
-            eventPublisher.publishEvent(
-                NotificationCommentEvent.of(dto, comment.id, request.content, NotificationType.COMMENT)
-            )
+        val community = communityRepository.findByIdOrThrow(post.communityId)
+
+        commentValidator.validate(userId, community)
+
+        post.increaseCommentReplyCount(1)
+
+        if (post.isEligibleForSSE(userId)) {
+            val event = NotificationEvent.commentToPostUser(post, comment, community)
+            eventPublisher.publishEvent(event)
         }
         return CommentResponse(comment)
     }
@@ -45,14 +51,18 @@ class CommentService(
     fun delete(userId: Long, request: DeleteCommentRequest) {
         val comment = commentRepository.findByIdAndUserId(request.commentId, userId)
             ?: throw CommentException(CommentExceptionType.NOT_FOUND_COMMENT)
-        val post = postRepository.getByIdOrThrow(comment.postId)
         commentRepository.delete(comment)
+
+        val post = postRepository.findByIdOrThrow(comment.postId)
         post.increaseCommentReplyCount(-1)
     }
 
     fun like(userId: Long, request: LikeCommentRequest) {
-        commentValidator.validateLikeComment(userId, request.commentId)
         val comment = commentRepository.getByIdOrThrow(request.commentId)
+        val post = postRepository.findByIdOrThrow(comment.postId)
+        val community = communityRepository.findByIdOrThrow(post.communityId)
+
+        commentValidator.validate(userId, community)
         comment.like(userId)
     }
 

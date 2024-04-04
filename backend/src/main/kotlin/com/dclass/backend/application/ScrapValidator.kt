@@ -3,10 +3,10 @@ package com.dclass.backend.application
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
-import com.dclass.backend.domain.community.getByIdOrThrow
+import com.dclass.backend.domain.community.findByIdOrThrow
 import com.dclass.backend.domain.post.Post
 import com.dclass.backend.domain.post.PostRepository
-import com.dclass.backend.domain.post.getByIdOrThrow
+import com.dclass.backend.domain.post.findByIdOrThrow
 import com.dclass.backend.domain.scrap.ScrapRepository
 import com.dclass.backend.exception.scrap.ScrapException
 import com.dclass.backend.exception.scrap.ScrapExceptionType.ALREADY_SCRAP_POST
@@ -27,8 +27,8 @@ class ScrapValidator(
             throw ScrapException(ALREADY_SCRAP_POST)
         }
         val belong = belongRepository.getOrThrow(userId)
-        val post = postRepository.getByIdOrThrow(postId)
-        val community = communityRepository.getByIdOrThrow(post.communityId)
+        val post = postRepository.findByIdOrThrow(postId)
+        val community = communityRepository.findByIdOrThrow(post.communityId)
 
         if (!belong.contain(community.departmentId)) {
             throw ScrapException(PERMISSION_DENIED)

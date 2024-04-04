@@ -15,34 +15,31 @@ class NotificationListener(
 ) {
 
     @TransactionalEventListener
-    fun sendNotificationForComment(event: NotificationCommentEvent) =
+    fun sendNotificationForComment(event: NotificationEvent) =
         CoroutineScope(Dispatchers.IO).launch {
-            notificationService.send(
-                NotificationCommentRequest(
-                    userId = event.userId,
-                    postId = event.postId,
-                    commentId = event.commentId,
-                    content = event.content,
-                    communityTitle = event.community,
-                    type = event.type
+            if (event.type == NotificationType.COMMENT) {
+                notificationService.send(
+                    NotificationCommentRequest(
+                        userId = event.userId,
+                        postId = event.postId,
+                        commentId = event.commentId,
+                        content = event.content,
+                        communityTitle = event.community,
+                        type = event.type
+                    )
                 )
-            )
-        }
-
-    @TransactionalEventListener
-    fun sendNotificationForReply(event: NotificationReplyEvent) =
-        CoroutineScope(Dispatchers.IO).launch {
-            notificationService.send(
-                NotificationReplyRequest(
-                    userId = event.userId,
-                    postId = event.postId,
-                    commentId = event.commentId,
-                    replyId = event.replyId,
-                    content = event.content,
-                    communityTitle = event.community,
-                    type = event.type
+            } else {
+                notificationService.send(
+                    NotificationReplyRequest(
+                        userId = event.userId,
+                        postId = event.postId,
+                        commentId = event.commentId,
+                        replyId = event.replyId!!,
+                        content = event.content,
+                        communityTitle = event.community,
+                        type = event.type
+                    )
                 )
-            )
+            }
         }
-
 }
