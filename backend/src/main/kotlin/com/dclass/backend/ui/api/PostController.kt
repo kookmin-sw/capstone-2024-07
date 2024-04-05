@@ -94,9 +94,8 @@ class PostController(
     fun updatePost(
         @LoginUser user: User,
         @RequestBody request: UpdatePostRequest
-    ): ResponseEntity<Unit> {
-        postService.update(user.id, request)
-        return ResponseEntity.noContent().build()
+    ): ResponseEntity<PostResponse> {
+        return ResponseEntity.ok(postService.update(user.id, request))
     }
 
     @Operation(summary = "게시글 삭제 API", description = "게시글을 삭제합니다.")
