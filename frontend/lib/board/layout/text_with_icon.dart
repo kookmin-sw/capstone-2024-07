@@ -102,86 +102,82 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
         ),
         GestureDetector(
           onTap: () {
-            setState(() {
-              if (widget.icon == Icons.favorite_outline_rounded) {
-                if (isHeartClicked) {
-                  alreadyHeart(context);
-                } else {
+            if (widget.icon == Icons.favorite_outline_rounded) {
+              if (isHeartClicked) {
+                alreadyHeart(context);
+              } else {
+                setState(() {
                   textCount += 1;
-                  heartAnimationController.forward();
                   isHeartClicked = true;
-                  // TODO: add heartCount to Server
-                  if (widget.postId != -1) {
-                    ref.watch(boardAddProvider).heart(widget.postId);
-                  } else if (widget.commentId != -1) {
-                    final requestData = {
-                      'commentId': widget.commentId,
-                    };
-                    ref.watch(commentProvider).heart(requestData);
-                  } else if (widget.replyId != -1) {
-                    final requestData = {
-                      'replyId': widget.replyId,
-                    };
-                    ref.watch(replyProvider).heart(requestData);
-                  }
+                });
+                heartAnimationController.forward();
+
+                if (widget.postId != -1) {
+                  ref.watch(boardAddProvider).heart(widget.postId);
+                } else if (widget.commentId != -1) {
+                  final requestData = {
+                    'commentId': widget.commentId,
+                  };
+                  ref.watch(commentProvider).heart(requestData);
+                } else if (widget.replyId != -1) {
+                  final requestData = {
+                    'replyId': widget.replyId,
+                  };
+                  ref.watch(replyProvider).heart(requestData);
                 }
-              } else if (widget.icon == Icons.chat_outlined &&
-                  widget.commentId != -1) {
-                ref
-                    .read(commentStateProvider.notifier)
-                    .add(0, widget.commentId);
-                chatDialog(context);
-              } else if (widget.icon == Icons.star_outline_rounded) {
+              }
+            } else if (widget.icon == Icons.chat_outlined &&
+                widget.commentId != -1) {
+              chatDialog(context);
+            } else if (widget.icon == Icons.star_outline_rounded) {
+              setState(() {
                 if (isFavoriteClicked) {
                   textCount -= 1;
                 } else {
                   textCount += 1;
                 }
                 isFavoriteClicked = !isFavoriteClicked;
-              } else if (widget.icon == Icons.image_rounded) {
-                getImage().then((value) => {
-                      if (value)
-                        {
-                          showDialog(
-                              context: context,
-                              builder: ((context) {
-                                return AlertDialog(
-                                  content: const Row(
+              });
+            } else if (widget.icon == Icons.image_rounded) {
+              getImage().then((value) => {
+                    if (value)
+                      {
+                        showDialog(
+                            context: context,
+                            builder: ((context) {
+                              return AlertDialog(
+                                content: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("사진 접근 허용을 해주세요!"),
+                                  ],
+                                ),
+                                actions: <Widget>[
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text("사진 접근 허용을 해주세요!"),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text("확인"),
+                                      ),
                                     ],
                                   ),
-                                  actions: <Widget>[
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text("확인"),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                );
-                              }))
-                        }
-                    });
-              } else if (widget.icon == Icons.check_box_outline_blank_rounded &&
-                  !cantClicked) {
+                                ],
+                              );
+                            }))
+                      }
+                  });
+            } else if (widget.icon == Icons.check_box_outline_blank_rounded &&
+                !cantClicked) {
+              setState(() {
                 isQuestionClicked = !isQuestionClicked;
-                ref
-                    .read(isQuestionStateProvider.notifier)
-                    .set(isQuestionClicked);
-              } else if (widget.icon == Icons.more_horiz) {
-                moreDialog(context);
-              }
-            });
+              });
+              ref.read(isQuestionStateProvider.notifier).set(isQuestionClicked);
+            } else if (widget.icon == Icons.more_horiz) {
+              moreDialog(context);
+            }
           },
           child: Row(
             children: [
@@ -233,13 +229,11 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("확인"),
-                    ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("확인"),
                   ),
                 ],
               ),
@@ -263,25 +257,23 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("네"),
-                    ),
+                  ElevatedButton(
+                    onPressed: () {
+                      ref
+                          .read(commentStateProvider.notifier)
+                          .add(0, widget.commentId);
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("네"),
                   ),
                   const SizedBox(
                     width: 20,
                   ),
-                  Container(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        ref.read(commentStateProvider.notifier).add(0, -1);
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("아니요"),
-                    ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("아니요"),
                   ),
                 ],
               ),
