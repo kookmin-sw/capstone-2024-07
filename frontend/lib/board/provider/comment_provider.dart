@@ -50,4 +50,12 @@ abstract class CommentNotifier {
     @Path() int commentId,
     @Body() Map<String, dynamic> data,
   );
+
+  @DELETE('/api/comments/{commentId}')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<void> delete(
+    @Path() int commentId,
+  );
 }

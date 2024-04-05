@@ -6,9 +6,11 @@ import 'package:frontend/common/const/colors.dart';
 
 class Reply extends ConsumerWidget {
   final ReplyModel reply;
+  final bool selectReply;
   const Reply({
     super.key,
     required this.reply,
+    required this.selectReply,
   });
 
   @override
@@ -50,9 +52,10 @@ class Reply extends ConsumerWidget {
                         children: [
                           Text(
                             reply.userInformation.nickname,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
+                              color: selectReply ? PRIMARY_COLOR : Colors.black,
                             ),
                           ),
                           Container(
@@ -94,8 +97,10 @@ class Reply extends ConsumerWidget {
                       ),
                       Text(
                         reply.content,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 10,
+                          fontWeight: FontWeight.normal,
+                          color: selectReply ? PRIMARY_COLOR : Colors.black,
                         ),
                       ),
                     ],

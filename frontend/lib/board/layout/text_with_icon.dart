@@ -310,7 +310,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                             backgroundColor: Colors.transparent,
                           ),
                           onPressed: () {
-                            select();
+                            select(2);
                             Navigator.of(context).pop();
                           },
                           child: const Text(
@@ -343,7 +343,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                             backgroundColor: Colors.transparent,
                           ),
                           onPressed: () {
-                            select();
+                            select(1);
                             Navigator.of(context).pop();
                           },
                           child: const Text(
@@ -364,11 +364,11 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
         }));
   }
 
-  void select() {
+  void select(int code) {
     if (widget.commentId != -1) {
-      ref.read(commentStateProvider.notifier).add(1, widget.commentId);
+      ref.read(commentStateProvider.notifier).add(code, widget.commentId);
     } else if (widget.replyId != -1) {
-      ref.read(replyStateProvider.notifier).add(widget.replyId);
+      ref.read(replyStateProvider.notifier).add(code, widget.replyId);
     }
   }
 }

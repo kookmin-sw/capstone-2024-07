@@ -110,7 +110,17 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
       'content': textEditingController.text,
     };
     await ref.watch(replyProvider).modify(replyId, requestData);
-    ref.read(replyStateProvider.notifier).add(-1);
+    ref.read(replyStateProvider.notifier).add(1, -1);
+  }
+
+  void deleteComment(int commentId) async {
+    await ref.watch(commentProvider).delete(commentId);
+    ref.read(commentStateProvider.notifier).add(2, -1);
+  }
+
+  void deleteReply(int replyId) async {
+    await ref.watch(replyProvider).delete(replyId);
+    ref.read(replyStateProvider.notifier).add(2, -1);
   }
 
   void boardMore() {
@@ -246,7 +256,14 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
   @override
   Widget build(BuildContext context) {
     List<int> selectCommentIndex = ref.watch(commentStateProvider);
-    int selectReplyIndex = ref.watch(replyStateProvider);
+    List<int> selectReplyIndex = ref.watch(replyStateProvider);
+    if (selectCommentIndex[2] != -1) {
+      // Delete comment.
+      deleteComment(selectCommentIndex[2]);
+    } else if (selectReplyIndex[2] != -1) {
+      // Delete Reply
+      deleteReply(selectReplyIndex[2]);
+    }
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -312,6 +329,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                           selectComment:
                               selectCommentIndex[0] == comments[index].id ||
                                   selectCommentIndex[1] == comments[index].id,
+                          selectReplyIndex: selectReplyIndex[1],
                         );
                       },
                     ),
@@ -343,20 +361,17 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                             size: 30,
                           ),
                           onTap: () {
-                            if (selectCommentIndex[0] == -1 &&
-                                selectCommentIndex[1] == -1 &&
-                                selectReplyIndex == -1) {
-                              // Upload comment.
-                              addNewComment();
-                            } else if (selectCommentIndex[0] != -1) {
+                            if (selectCommentIndex[0] != -1) {
                               // Upload Reply
                               addNewReply(selectCommentIndex[0]);
                             } else if (selectCommentIndex[1] != -1) {
                               // Modify Comment
                               modifyComment(selectCommentIndex[1]);
-                            } else if (selectReplyIndex != -1) {
-                              //Modify Reply
-                              modifyReply(selectReplyIndex);
+                            } else if (selectReplyIndex[1] != -1) {
+                              // Modify Reply
+                              modifyReply(selectReplyIndex[1]);
+                            } else {
+                              addNewComment();
                             }
 
                             textEditingController.clear();
