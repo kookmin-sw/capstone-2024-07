@@ -179,13 +179,6 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                     .read(isQuestionStateProvider.notifier)
                     .set(isQuestionClicked);
               } else if (widget.icon == Icons.more_horiz) {
-                if (widget.commentId != -1) {
-                  ref
-                      .read(commentStateProvider.notifier)
-                      .add(1, widget.commentId);
-                } else if (widget.replyId != -1) {
-                  ref.read(replyStateProvider.notifier).add(widget.replyId);
-                }
                 moreDialog(context);
               }
             });
@@ -317,6 +310,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                             backgroundColor: Colors.transparent,
                           ),
                           onPressed: () {
+                            select();
                             Navigator.of(context).pop();
                           },
                           child: const Text(
@@ -349,6 +343,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                             backgroundColor: Colors.transparent,
                           ),
                           onPressed: () {
+                            select();
                             Navigator.of(context).pop();
                           },
                           child: const Text(
@@ -367,6 +362,14 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
             ],
           );
         }));
+  }
+
+  void select() {
+    if (widget.commentId != -1) {
+      ref.read(commentStateProvider.notifier).add(1, widget.commentId);
+    } else if (widget.replyId != -1) {
+      ref.read(replyStateProvider.notifier).add(widget.replyId);
+    }
   }
 }
 

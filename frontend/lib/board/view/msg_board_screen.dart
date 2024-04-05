@@ -310,7 +310,8 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                         return Comment(
                           comment: comments[index],
                           selectComment:
-                              selectCommentIndex[0] == comments[index].id,
+                              selectCommentIndex[0] == comments[index].id ||
+                                  selectCommentIndex[1] == comments[index].id,
                         );
                       },
                     ),
