@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/provider/reply_notifier_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/layout/reply_layout.dart';
@@ -8,8 +9,12 @@ import 'package:frontend/board/layout/text_with_icon.dart';
 class Comment extends ConsumerStatefulWidget {
   final CommentModel comment;
   final bool selectComment;
+  final int selectReplyIndex;
   const Comment(
-      {super.key, required this.comment, required this.selectComment});
+      {super.key,
+      required this.comment,
+      required this.selectComment,
+      required this.selectReplyIndex});
 
   @override
   ConsumerState<Comment> createState() => _CommentState();
@@ -115,7 +120,11 @@ class _CommentState extends ConsumerState<Comment>
                 color: widget.selectComment ? PRIMARY_COLOR : null,
               ),
             ),
-            for (var reply in replies) Reply(reply: reply)
+            for (var reply in replies)
+              Reply(
+                reply: reply,
+                selectReply: widget.selectReplyIndex == reply.id,
+              )
           ],
         ),
       ),
