@@ -124,7 +124,7 @@ data class PostResponse(
     constructor(
         post: Post,
         user: User,
-        communityTitle: String
+        communityTitle: String,
     ) : this(
         post.id,
         post.userId,
@@ -140,6 +140,107 @@ data class PostResponse(
         post.createdDateTime
     )
 
+}
+
+data class PostDetailResponse(
+    @Schema(
+        description = "게시글의 고유 식별자",
+        example = "1"
+    )
+    val id: Long,
+
+    @Schema(
+        description = "게시글을 작성한 사용자의 고유 식별자",
+        example = "1"
+    )
+    val userId: Long,
+
+    @Schema(
+        description = "게시글을 작성한 사용자의 닉네임",
+        example = "닉네임"
+    )
+    val userNickname: String,
+
+    @Schema(
+        description = "게시글을 작성한 사용자의 대학교 이름",
+        example = "대학교 이름"
+    )
+    val universityName: String,
+
+    @Schema(
+        description = "게시글이 속한 커뮤니티의 고유 식별자",
+        example = "1"
+    )
+    val communityId: Long,
+
+    @Schema(
+        description = "게시글이 속한 커뮤니티의 타이틀",
+        example = "자유게시판"
+    )
+    var communityTitle: String,
+
+    @Schema(
+        description = "게시글의 제목",
+        example = "게시글 제목"
+    )
+    val postTitle: String,
+
+    @Schema(
+        description = "게시글의 내용",
+        example = "게시글 내용"
+    )
+    val postContent: String,
+
+    @Schema(
+        description = "게시글의 이미지 URL 리스트",
+        example = "['이미지 URL']"
+    )
+    var images: List<String>,
+
+    @Schema(
+        description = "게시글의 조회수, 댓글수, 좋아요수",
+        example = "{'view': 1, 'comment': 1, 'like': 1}"
+    )
+    val count: PostCount,
+
+    @Schema(
+        description = "게시글이 질문인지 여부",
+        example = "true"
+    )
+    val isQuestion: Boolean,
+
+    @Schema(
+        description = "게시글이 스크랩된 여부",
+        example = "true"
+    )
+    var isScrapped: Boolean,
+
+    @Schema(
+        description = "게시글이 작성된 시각",
+        example = "2021-08-01T00:00:00"
+    )
+    val createdDateTime: LocalDateTime,
+) {
+
+    constructor(
+        post: Post,
+        user: User,
+        communityTitle: String,
+    ) : this(
+        post.id,
+        post.userId,
+        user.nickname,
+        user.universityName,
+        post.communityId,
+        communityTitle,
+        post.title,
+        post.content,
+        post.images.map { it.imageKey },
+        post.postCount,
+        post.isQuestion,
+        false,
+        post.createdDateTime
+    )
 }
 
 data class CreatePostRequest(
