@@ -216,6 +216,12 @@ data class PostDetailResponse(
     var isScrapped: Boolean,
 
     @Schema(
+        description = "게시글의 좋아요 여부",
+        example = "true"
+    )
+    var likedBy : Boolean,
+
+    @Schema(
         description = "게시글이 작성된 시각",
         example = "2021-08-01T00:00:00"
     )
@@ -238,6 +244,7 @@ data class PostDetailResponse(
         post.images.map { it.imageKey },
         post.postCount,
         post.isQuestion,
+        false,
         false,
         post.createdDateTime
     )

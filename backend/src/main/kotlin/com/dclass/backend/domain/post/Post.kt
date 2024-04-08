@@ -104,4 +104,8 @@ class Post(
     fun isEligibleForSSE(userid: Long): Boolean {
         return this.userId != userid
     }
+
+    fun likedBy(userId: Long): Boolean {
+        return postLikes.likedBy(userId)
+    }
 }
