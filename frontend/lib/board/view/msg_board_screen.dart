@@ -12,6 +12,7 @@ import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/provider/comment_provider.dart';
 import 'package:frontend/board/provider/comment_notifier_provider.dart';
+import 'package:frontend/board/provider/image_provider.dart';
 import 'package:frontend/board/provider/reply_notifier_provider.dart';
 import 'package:frontend/board/provider/reply_provider.dart';
 import 'package:frontend/board/view/msg_board_add_screen.dart';
@@ -256,6 +257,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(imageStateProvider);
     List<int> selectCommentIndex = ref.watch(commentStateProvider);
     List<int> selectReplyIndex = ref.watch(replyStateProvider);
     if (selectCommentIndex[2] != -1) {
