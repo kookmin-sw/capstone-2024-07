@@ -85,8 +85,8 @@ class Post(
         this.modifiedDateTime = LocalDateTime.now()
     }
 
-    fun increaseCommentReplyCount(cnt: Int) {
-        postCount = postCount.increaseCommentReplyCount(cnt)
+    fun increaseCommentReplyCount() {
+        postCount = postCount.increaseCommentReplyCount()
     }
 
     fun increaseScrapCount() {
@@ -95,6 +95,10 @@ class Post(
 
     fun decreaseScrapCount() {
         postCount = postCount.decreaseScrapCount()
+    }
+
+    fun decreaseCommentReplyCount() {
+        postCount = postCount.decreaseCommentReplyCount()
     }
 
     fun addLike(userId: Long) {

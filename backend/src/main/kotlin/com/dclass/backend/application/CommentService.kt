@@ -32,7 +32,7 @@ class CommentService(
 
         commentValidator.validate(userId, community)
 
-        post.increaseCommentReplyCount(1)
+        post.increaseCommentReplyCount()
 
         if (post.isEligibleForSSE(userId)) {
             val event = NotificationEvent.commentToPostUser(post, comment, community)
@@ -54,7 +54,7 @@ class CommentService(
         commentRepository.delete(comment)
 
         val post = postRepository.findByIdOrThrow(comment.postId)
-        post.increaseCommentReplyCount(-1)
+        post.decreaseCommentReplyCount()
     }
 
     fun like(userId: Long, request: LikeCommentRequest) {
