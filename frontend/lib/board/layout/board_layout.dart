@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/const/categorys.dart';
+import 'package:frontend/board/model/msg_board_detail_response_model.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/category_circle_layout.dart';
@@ -8,7 +9,7 @@ import 'package:frontend/board/layout/text_with_icon.dart';
 import 'package:photo_view/photo_view.dart';
 
 class Board extends ConsumerWidget {
-  final MsgBoardResponseModel board;
+  final MsgBoardDetailResponseModel board;
   final double titleSize;
   const Board({
     super.key,
@@ -18,6 +19,7 @@ class Board extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    MsgBoardResponseModel boardForImageViewer = board;
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -56,7 +58,7 @@ class Board extends ConsumerWidget {
                       commentId: -1,
                       postId: board.id,
                       replyId: -1,
-                      isClicked: false,
+                      isClicked: board.likedBy,
                     ),
                     const SizedBox(
                       width: 13,
@@ -80,7 +82,7 @@ class Board extends ConsumerWidget {
                       commentId: -1,
                       postId: board.id,
                       replyId: -1,
-                      isClicked: false,
+                      isClicked: board.isScrapped,
                     ),
                     const SizedBox(
                       width: 13,
@@ -115,7 +117,7 @@ class Board extends ConsumerWidget {
                     height: 5,
                   ),
                   ImageViewer(
-                    board: board,
+                    board: boardForImageViewer,
                   ),
                   Text(
                     "${board.createdDateTime} | ${board.userNickname}",
