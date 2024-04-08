@@ -113,9 +113,7 @@ class PostService(
             }
         }
 
-        val likePost = postRepository.findByIdOrThrow(post.id)
         postResponse.isScrapped = scrapRepository.existsByUserIdAndPostId(userId, post.id)
-        postResponse.likedBy = likePost.likedBy(userId)
 
         return postResponse
     }
