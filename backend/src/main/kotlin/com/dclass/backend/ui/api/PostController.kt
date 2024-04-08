@@ -23,7 +23,7 @@ class PostController(
     fun getPost(
         @LoginUser user: User,
         @PathVariable postId: Long
-    ): ResponseEntity<PostResponse> {
+    ): ResponseEntity<PostDetailResponse> {
         val postResponse = postService.getById(user.id, postId)
         return ResponseEntity.ok(postResponse)
     }
@@ -74,7 +74,7 @@ class PostController(
     fun createPost(
         @LoginUser user: User,
         @RequestBody request: CreatePostRequest
-    ): ResponseEntity<PostResponse> {
+    ): ResponseEntity<PostDetailResponse> {
         return ResponseEntity.ok(postService.create(user.id, request))
     }
 
@@ -94,7 +94,7 @@ class PostController(
     fun updatePost(
         @LoginUser user: User,
         @RequestBody request: UpdatePostRequest
-    ): ResponseEntity<PostResponse> {
+    ): ResponseEntity<PostDetailResponse> {
         return ResponseEntity.ok(postService.update(user.id, request))
     }
 
