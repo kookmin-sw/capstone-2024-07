@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart' hide Headers;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/model/msg_board_detail_response_model.dart';
 import 'package:frontend/common/provider/dio_provider.dart';
 import 'package:retrofit/http.dart';
 
@@ -48,5 +49,13 @@ abstract class BoardAdd {
   })
   Future<MsgBoardResponseModel> modify(
     @Body() Map<String, dynamic> data,
+  );
+
+  @GET('/api/post/{postId}')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<MsgBoardDetailResponseModel> get(
+    @Path('postId') int postId,
   );
 }

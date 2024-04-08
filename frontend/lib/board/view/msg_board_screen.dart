@@ -6,6 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/model/comment_model.dart';
+import 'package:frontend/board/model/msg_board_detail_response_model.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
@@ -297,9 +298,22 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Board(
-              board: widget.board,
-              titleSize: 13,
+            FutureBuilder(
+              future: ref.watch(boardAddProvider).get(widget.board.id),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  MsgBoardDetailResponseModel boardDetail = snapshot.data ??
+                      widget.board as MsgBoardDetailResponseModel;
+                  return Board(
+                    board: boardDetail,
+                    titleSize: 13,
+                  );
+                }
+              },
             ),
             FutureBuilder(
               future:
