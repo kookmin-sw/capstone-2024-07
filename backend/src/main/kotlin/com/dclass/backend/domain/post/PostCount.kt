@@ -8,8 +8,11 @@ class PostCount(
     val likeCount: Int = 0,
     val scrapCount: Int = 0,
 ) {
-    fun increaseCommentReplyCount(cnt: Int) =
-        PostCount(commentReplyCount + cnt, likeCount, scrapCount)
+    fun increaseCommentReplyCount() =
+        PostCount(commentReplyCount + 1, likeCount, scrapCount)
+
+    fun decreaseCommentReplyCount() =
+        PostCount(commentReplyCount - 1, likeCount, scrapCount)
 
     fun syncLikeCount(cnt: Int) =
         PostCount(commentReplyCount, cnt, scrapCount)
@@ -17,6 +20,6 @@ class PostCount(
     fun increaseScrapCount() =
         PostCount(commentReplyCount, likeCount, scrapCount + 1)
 
-    fun decreaseScrapCount()=
+    fun decreaseScrapCount() =
         PostCount(commentReplyCount, likeCount, scrapCount - 1)
 }

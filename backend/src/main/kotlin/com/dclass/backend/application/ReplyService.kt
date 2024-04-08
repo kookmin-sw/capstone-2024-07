@@ -57,7 +57,7 @@ class ReplyService(
 
         val comment = commentRepository.getByIdOrThrow(reply.commentId)
         val post = postRepository.findByIdOrThrow(comment.postId)
-        post.increaseCommentReplyCount(-1)
+        post.decreaseScrapCount()
 
         replyRepository.delete(reply)
     }

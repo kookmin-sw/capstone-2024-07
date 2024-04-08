@@ -801,7 +801,7 @@ class DatabaseInitializer(
                 val comment = createDummyComment(user, post, num)
                 dummyComments.add(comment)
                 num++
-                post.increaseCommentReplyCount(1)
+                post.increaseCommentReplyCount()
             }
         }
 
@@ -830,7 +830,7 @@ class DatabaseInitializer(
                 num++
 
                 val post = posts.find { it.id == comment.postId }
-                post?.increaseCommentReplyCount(1)
+                post?.increaseCommentReplyCount()
             }
         }
 
