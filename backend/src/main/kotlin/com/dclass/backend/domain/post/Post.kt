@@ -89,8 +89,12 @@ class Post(
         postCount = postCount.increaseCommentReplyCount(cnt)
     }
 
-    fun increaseScrapCount(cnt: Int) {
-        postCount = postCount.increaseScrapCount(cnt)
+    fun increaseScrapCount() {
+        postCount = postCount.increaseScrapCount()
+    }
+
+    fun decreaseScrapCount() {
+        postCount = postCount.decreaseScrapCount()
     }
 
     fun addLike(userId: Long) {
