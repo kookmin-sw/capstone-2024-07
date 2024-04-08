@@ -46,7 +46,7 @@ abstract class BoardAdd {
   @Headers({
     'accessToken': 'true',
   })
-  Future<void> modify(
+  Future<MsgBoardResponseModel> modify(
     @Body() Map<String, dynamic> data,
   );
 }
