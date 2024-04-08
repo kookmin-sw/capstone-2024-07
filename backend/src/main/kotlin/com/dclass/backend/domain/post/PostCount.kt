@@ -14,6 +14,9 @@ class PostCount(
     fun syncLikeCount(cnt: Int) =
         PostCount(commentReplyCount, cnt, scrapCount)
 
-    fun increaseScrapCount(cnt: Int) =
-        PostCount(commentReplyCount, likeCount, scrapCount + cnt)
+    fun increaseScrapCount() =
+        PostCount(commentReplyCount, likeCount, scrapCount + 1)
+
+    fun decreaseScrapCount()=
+        PostCount(commentReplyCount, likeCount, scrapCount - 1)
 }

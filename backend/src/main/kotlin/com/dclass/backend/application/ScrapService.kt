@@ -2,6 +2,7 @@ package com.dclass.backend.application
 
 import com.dclass.backend.application.dto.PostResponse
 import com.dclass.backend.domain.post.PostRepository
+import com.dclass.backend.domain.post.findByIdOrThrow
 import com.dclass.backend.domain.scrap.Scrap
 import com.dclass.backend.domain.scrap.ScrapRepository
 import com.dclass.backend.exception.scrap.ScrapException
@@ -19,7 +20,7 @@ class ScrapService(
 
     fun create(userId: Long, postId: Long) {
         val post = validator.validateScrapPost(userId, postId)
-        post.increaseScrapCount(1)
+        post.increaseScrapCount()
 
         scrapRepository.save(Scrap(userId, postId))
     }
@@ -28,6 +29,8 @@ class ScrapService(
         val scrap = scrapRepository.findByUserIdAndPostId(userId, postId) ?: throw ScrapException(
             NOT_FOUND_SCRAP
         )
+        val post = postRepository.findByIdOrThrow(postId)
+        post.decreaseScrapCount()
 
         scrapRepository.delete(scrap)
     }
