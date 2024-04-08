@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/common/const/colors.dart';
 
 import '../model/member_model.dart';
+import '../provider/first_major_state_notifier_provider.dart';
 import '../provider/member_state_notifier_provider.dart';
+import '../provider/second_major_state_notifier_provider.dart';
 
 class MyInfoScreen extends ConsumerStatefulWidget {
   const MyInfoScreen({super.key});
@@ -14,6 +16,8 @@ class MyInfoScreen extends ConsumerStatefulWidget {
 
 class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
   bool isWillingToChangeMajor = false;
+  String selectedMajor = "";
+  String selectedMinor = "";
 
   @override
   Widget build(BuildContext context) {
@@ -24,19 +28,21 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
             children: [
               _renderTop(),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 10.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 18.0, vertical: 10.0),
                 child: Column(
                   children: [
                     _renderMyInfo(),
                     if (!isWillingToChangeMajor)
                       _renderButton(
                         "전공 변경하기",
-                            () {
+                        () {
                           setState(() {
                             isWillingToChangeMajor = true;
                           });
                         },
                       ),
+                    if (isWillingToChangeMajor) _renderChangeMajorField(),
                   ],
                 ),
               ),
@@ -97,25 +103,25 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
       height: 170.0,
       child: Column(
         children: [
-          _renderSimpleTextBox('닉네임', nickname, 10),
-          _renderSimpleTextBox('학교', universityName, 20),
-          _renderSimpleTextBox('이메일', email, 10),
-          _renderSimpleTextBox('전공', major, 22),
-          _renderSimpleTextBox('부전공', minor, 9),
+          _renderSimpleTextBox('닉네임', nickname),
+          _renderSimpleTextBox('학교', universityName),
+          _renderSimpleTextBox('이메일', email),
+          _renderSimpleTextBox('전공', major),
+          _renderSimpleTextBox('부전공', minor),
         ],
       ),
     );
   }
 
-  Widget _renderSimpleTextBox(String fieldName, String content, double size) {
+  Widget _renderSimpleTextBox(String fieldName, String content) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6.0),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             fieldName,
           ),
-          SizedBox(width: size),
           Text(
             content,
             style: const TextStyle(
@@ -129,7 +135,7 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
 
   Widget _renderButton(String text, VoidCallback onButtonClicked) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: PRIMARY_COLOR,
@@ -140,6 +146,239 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
         ),
         onPressed: onButtonClicked,
         child: Text(text),
+      ),
+    );
+  }
+
+  Widget _renderChangeMajorField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 12.0),
+      child: Column(
+        children: [
+          _renderFirstMajorField(),
+          _renderSecondMajorField(),
+          _renderButton(
+            "등록하기",
+            () {
+              //학과변경 api 요청
+            },
+          ),
+          _renderButton(
+            "취소",
+                () {
+              setState(() {
+                isWillingToChangeMajor = false;
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _renderFirstMajorField() {
+    //학과 정보
+    final departmentState = ref.watch(firstDepartmentListNotifierProvider);
+
+    String selectedDivision = departmentState.selectedDivision;
+    String selectedDepartment = departmentState.selectedDepartment;
+
+    final divisionAndDepartments = departmentState.divisionAndDepartments;
+
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '본전공 선택',
+            style: TextStyle(
+              color: BODY_TEXT_COLOR,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: 240,
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    value: selectedDivision,
+                    items: divisionAndDepartments.keys == null
+                        ? []
+                        : divisionAndDepartments.keys
+                            .map((e) => DropdownMenuItem(
+                                  value: e,
+                                  child: Text(e),
+                                ))
+                            .toList(),
+                    onChanged: (String? value) {
+                      if (value != null &&
+                          divisionAndDepartments.containsKey(value)) {
+                        setState(() {
+                          selectedDivision = value;
+                          selectedDepartment =
+                              divisionAndDepartments[value]!.isNotEmpty
+                                  ? divisionAndDepartments[value]![0]
+                                  : null;
+                          ref
+                              .read(
+                                  firstDepartmentListNotifierProvider.notifier)
+                              .setSelectedDivision(value);
+                          if (selectedDepartment != null) {
+                            ref
+                                .read(firstDepartmentListNotifierProvider
+                                    .notifier)
+                                .setSelectedDepartment(selectedDepartment!);
+                            setState(() {
+                              selectedMajor = selectedDepartment;
+                            });
+                          }
+                        });
+                      }
+                    },
+                  ),
+                ),
+                Container(
+                  width: 240,
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    value: selectedDepartment,
+                    items: divisionAndDepartments[selectedDivision] == null
+                        ? []
+                        : List<String>.from(
+                                divisionAndDepartments[selectedDivision])
+                            .map((e) => DropdownMenuItem(
+                                  value: e.toString(),
+                                  child: Text(e.toString()),
+                                ))
+                            .toList(),
+                    onChanged: (String? value) {
+                      if (value != null) {
+                        setState(() {
+                          selectedDepartment = value;
+                          ref
+                              .read(
+                                  firstDepartmentListNotifierProvider.notifier)
+                              .setSelectedDepartment(value);
+                          setState(() {
+                            selectedMajor = selectedDepartment;
+                          });
+                        });
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _renderSecondMajorField() {
+    //학과 정보
+    final departmentState = ref.watch(secondDepartmentListNotifierProvider);
+
+    String selectedDivision = departmentState.selectedDivision;
+    String selectedDepartment = departmentState.selectedDepartment;
+
+    final divisionAndDepartments = departmentState.divisionAndDepartments;
+
+    return Container(
+      padding: EdgeInsets.only(top: 10.0),
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '복수전공 선택',
+            style: TextStyle(
+              color: BODY_TEXT_COLOR,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: 240,
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    value: selectedDivision,
+                    items: divisionAndDepartments.keys == null
+                        ? []
+                        : divisionAndDepartments.keys
+                            .map((e) => DropdownMenuItem(
+                                  value: e,
+                                  child: Text(e),
+                                ))
+                            .toList(),
+                    onChanged: (String? value) {
+                      if (value != null &&
+                          divisionAndDepartments.containsKey(value)) {
+                        setState(() {
+                          selectedDivision = value;
+                          selectedDepartment =
+                              divisionAndDepartments[value]!.isNotEmpty
+                                  ? divisionAndDepartments[value]![0]
+                                  : null;
+                          ref
+                              .read(
+                                  secondDepartmentListNotifierProvider.notifier)
+                              .setSelectedDivision(value);
+                          if (selectedDepartment != null) {
+                            ref
+                                .read(secondDepartmentListNotifierProvider
+                                    .notifier)
+                                .setSelectedDepartment(selectedDepartment!);
+                            setState(() {
+                              selectedMinor = selectedDepartment;
+                            });
+                          }
+                        });
+                      }
+                    },
+                  ),
+                ),
+                Container(
+                  width: 240,
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    value: selectedDepartment,
+                    items: divisionAndDepartments[selectedDivision] == null
+                        ? []
+                        : List<String>.from(
+                                divisionAndDepartments[selectedDivision])
+                            .map((e) => DropdownMenuItem(
+                                  value: e.toString(),
+                                  child: Text(e.toString()),
+                                ))
+                            .toList(),
+                    onChanged: (String? value) {
+                      if (value != null) {
+                        setState(() {
+                          selectedDepartment = value;
+                          ref
+                              .read(
+                                  secondDepartmentListNotifierProvider.notifier)
+                              .setSelectedDepartment(value);
+                          setState(() {
+                            selectedMinor = selectedDepartment;
+                          });
+                        });
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
