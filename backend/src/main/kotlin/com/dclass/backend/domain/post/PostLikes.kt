@@ -23,4 +23,8 @@ class PostLikes(
         _likes.removeIf { it.usersId == userId }
         _likes.add(PostLike(userId))
     }
+
+    fun likedBy(userId: Long): Boolean {
+        return _likes.any { it.usersId == userId }
+    }
 }

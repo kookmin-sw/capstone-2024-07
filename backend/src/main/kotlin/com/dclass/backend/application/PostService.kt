@@ -81,7 +81,10 @@ class PostService(
             }
         }
 
+        val likePost = postRepository.findByIdOrThrow(postId)
+
         post.isScrapped = scrapRepository.existsByUserIdAndPostId(userId, postId)
+        post.likedBy = likePost.likedBy(userId)
 
         return post
     }
@@ -110,8 +113,9 @@ class PostService(
             }
         }
 
+        val likePost = postRepository.findByIdOrThrow(post.id)
         postResponse.isScrapped = scrapRepository.existsByUserIdAndPostId(userId, post.id)
-
+        postResponse.likedBy = likePost.likedBy(userId)
 
         return postResponse
     }
