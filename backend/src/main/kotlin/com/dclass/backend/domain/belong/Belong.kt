@@ -7,6 +7,7 @@ import com.dclass.support.domain.BaseEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
+import java.time.Duration
 import java.time.LocalDateTime
 
 @SQLDelete(sql = "update belong set deleted = true where id = ?")
@@ -41,6 +42,8 @@ class Belong(
     val activated: Long
         get() = _departmentIds.first()
 
+    val remainingTime: Duration
+        get() = Duration.between(modifiedDateTime, LocalDateTime.now())
 
     @Column(nullable = false)
     var majorIndex: Int = 0
@@ -51,7 +54,6 @@ class Belong(
 
     val minor: Long
         get() = _departmentIds[1 - majorIndex]
-
 
     init {
         if (departmentIds.size > 2) {
@@ -80,6 +82,10 @@ class Belong(
 
     private fun periodValidation(): Boolean {
         val now = LocalDateTime.now()
-        return modifiedDateTime.isBefore(now.minusDays(90))
+        return modifiedDateTime.isBefore(now.minusDays(CHANGE_INTERVAL_DAYS))
+    }
+
+    companion object {
+        const val CHANGE_INTERVAL_DAYS = 90L
     }
 }
