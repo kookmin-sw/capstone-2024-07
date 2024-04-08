@@ -59,42 +59,59 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   Future<void> upLoad() async {
     List<String> images = [];
     int i = 0;
-    for (; i < widget.board.images.length; i++) {
-      if (widget.board.images[i].endsWith("jpg")) {
+    for (; i < networkImages.length; i++) {
+      // network image URL
+      if (networkImages[i].contains("jpg")) {
         images.add("image$i.jpg");
-      } else if (widget.board.images[i].endsWith("png")) {
+      } else if (networkImages[i].contains("png")) {
         images.add("image$i.png");
-      } else if (widget.board.images[i].endsWith("jpeg")) {
+      } else if (networkImages[i].contains("jpeg")) {
         images.add("image$i.jpeg");
-      } else if (widget.board.images[i].endsWith("gif")) {
+      } else if (networkImages[i].contains("gif")) {
         images.add("image$i.gif");
       }
     }
-    for (; i < realImages.length; i++) {
-      if (realImages[i].path.endsWith("jpg")) {
+    for (; i - networkImages.length < realImages.length; i++) {
+      // local image path
+      if (realImages[i - networkImages.length].path.endsWith("jpg")) {
         images.add("image$i.jpg");
-      } else if (realImages[i].path.endsWith("png")) {
+      } else if (realImages[i - networkImages.length].path.endsWith("png")) {
         images.add("image$i.png");
-      } else if (realImages[i].path.endsWith("jpeg")) {
+      } else if (realImages[i - networkImages.length].path.endsWith("jpeg")) {
         images.add("image$i.jpeg");
-      } else if (realImages[i].path.endsWith("gif")) {
+      } else if (realImages[i - networkImages.length].path.endsWith("gif")) {
         images.add("image$i.gif");
       }
     }
     if (widget.isEdit) {
-      // final requestData = {
-      //   'postId': widget.board.id,
-      //   'title': title,
-      //   'content': content,
-      //   'images': networkImages,
-      // };
-      // TODO : modify error!!
-      // await boardAddAPI.modify(requestData);
-    } else {
-      List<String> images = [];
-      for (int i = 0; i < realImages.length; i++) {
-        images.add("image$i.jpg");
+      final requestData = {
+        'postId': widget.board.id,
+        'title': title,
+        'content': content,
+        'images': images,
+      };
+      List<http.Response> httpImages = [];
+      for (int i = 0; i < networkImages.length; i++) {
+        httpImages.add(await http.get(Uri.parse(networkImages[i])));
       }
+      MsgBoardResponseModel resp = await boardAddAPI.modify(requestData);
+      i = 0;
+      for (; i < resp.images.length; i++) {
+        final String url = resp.images[i];
+        if (i < networkImages.length) {
+          UploadFile().httpFile(url, httpImages[i]);
+        } else {
+          if (i == resp.images.length - 1) {
+            // 마지막 사진만 업로드가 다 될때까지 기다림
+            await UploadFile()
+                .file(url, File(realImages[i - networkImages.length].path));
+          } else {
+            UploadFile()
+                .file(url, File(realImages[i - networkImages.length].path));
+          }
+        }
+      }
+    } else {
       final requestData = {
         'communityTitle': categoryCodesList[selectCategory],
         'title': title,
@@ -105,12 +122,22 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
       MsgBoardResponseModel resp = await boardAddAPI.post(requestData);
       for (int i = 0; i < resp.images.length; i++) {
         final String url = resp.images[i];
-        UploadFile().call(url, File(realImages[i].path));
+        if (i == resp.images.length - 1) {
+          await UploadFile().file(url, File(realImages[i].path));
+        } else {
+          UploadFile().file(url, File(realImages[i].path));
+        }
       }
     }
+
     await ref
         .read(boardStateNotifierProvider.notifier)
         .paginate(forceRefetch: true);
+
+    ref.read(imageStateProvider.notifier).clear();
+    ref.read(networkImageStateProvider.notifier).clear();
+
+    Navigator.of(context).pop();
   }
 
   void upLoadDialog() {
@@ -118,232 +145,237 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
       showDialog(
           context: context,
           builder: ((context) {
-            return isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : AlertDialog(
-                    content: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        widget.isEdit
-                            ? Text("'$selectCategory'에 글을 수정할까요?")
-                            : Text("'$selectCategory'에 글을 등록할까요?"),
-                      ],
-                    ),
-                    actions: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  isLoading = true;
-                                });
-
-                                upLoad();
-
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text("네"),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Container(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text("아니요"),
-                            ),
-                          ),
-                        ],
+            return AlertDialog(
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  widget.isEdit
+                      ? Text("'$selectCategory'에 글을 수정할까요?")
+                      : Text("'$selectCategory'에 글을 등록할까요?"),
+                ],
+              ),
+              actions: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          upLoad();
+                          setState(() {
+                            isLoading = true;
+                          });
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("네"),
                       ),
-                    ],
-                  );
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Container(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("아니요"),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
           }));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: PRIMARY10_COLOR,
-        shadowColor: Colors.black,
-        elevation: 3,
-        iconTheme: const IconThemeData(
-          color: Colors.black,
-        ),
-        title: const Text(
-          "컴퓨터공학과 | 글 작성",
-          style: TextStyle(
-            fontSize: 15,
+    return Stack(children: [
+      Scaffold(
+        appBar: AppBar(
+          backgroundColor: PRIMARY10_COLOR,
+          shadowColor: Colors.black,
+          elevation: 3,
+          iconTheme: const IconThemeData(
             color: Colors.black,
-            fontWeight: FontWeight.normal,
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: upLoadDialog,
-            child: Text(
-              "완료",
-              style: TextStyle(
-                color: canUpload ? Colors.black : Colors.grey,
+          title: const Text(
+            "컴퓨터공학과 | 글 작성",
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.black,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: upLoadDialog,
+              child: Text(
+                "완료",
+                style: TextStyle(
+                  color: canUpload ? Colors.black : Colors.grey,
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 15,
-            ),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: titleController,
-                        onChanged: (value) {
-                          setState(() {
-                            if (value != "") {
-                              title = value; // 제목
-                              writedTitle = true;
-                              canUpload = writedTitle & writedContent;
-                            }
-                          });
-                        },
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "제목",
-                            disabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: BODY_TEXT_COLOR.withOpacity(0.5)))),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 25,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 15, right: 10),
-                          child: DropdownButton(
-                            value: selectCategory,
-                            icon: const Icon(Icons.arrow_drop_down_outlined),
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 10,
-                            ),
-                            underline: Container(),
-                            elevation: 0,
-                            dropdownColor: Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(20),
-                            items: categorysList
-                                .sublist(1, categorysList.length)
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (value) => {
-                              setState(() {
-                                if (value != null) {
-                                  selectCategory = value; // 게시판 종류
-                                }
-                              })
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: BODY_TEXT_COLOR.withOpacity(0.3),
-                        width: 1,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: PRIMARY20_COLOR,
-                  ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+          ],
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 15,
+              ),
+              child: Column(
+                children: [
+                  Row(
                     children: [
-                      Text(
-                        "잠깐!",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 10,
+                      Expanded(
+                        child: TextField(
+                          controller: titleController,
+                          onChanged: (value) {
+                            setState(() {
+                              if (value != "") {
+                                title = value; // 제목
+                                writedTitle = true;
+                                canUpload = writedTitle & writedContent;
+                              }
+                            });
+                          },
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "제목",
+                              disabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color:
+                                          BODY_TEXT_COLOR.withOpacity(0.5)))),
                         ),
                       ),
                       SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        "개인정보 노출이나 모욕적인 말이 있는지 확인해주세요.",
-                        style: TextStyle(
-                          fontSize: 10,
+                        height: 25,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 15, right: 10),
+                            child: DropdownButton(
+                              value: selectCategory,
+                              icon: const Icon(Icons.arrow_drop_down_outlined),
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 10,
+                              ),
+                              underline: Container(),
+                              elevation: 0,
+                              dropdownColor: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(20),
+                              items: categorysList
+                                  .sublist(1, categorysList.length)
+                                  .map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (value) => {
+                                setState(() {
+                                  if (value != null) {
+                                    selectCategory = value; // 게시판 종류
+                                  }
+                                })
+                              },
+                            ),
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
-                TextField(
-                  controller: contentController,
-                  onChanged: (value) {
-                    setState(() {
-                      if (value != "") {
-                        content = value; // 내용
-                        writedContent = true;
-                        canUpload = writedTitle & writedContent;
-                      }
-                    });
-                  },
-                  style: const TextStyle(
-                    fontSize: 12,
-                  ),
-                  decoration: const InputDecoration(
-                    hintText: "지금 가장 고민이 되거나 궁금한 내용이 무엇인가요?",
-                    border: InputBorder.none,
-                    hintStyle: TextStyle(
-                      fontSize: 12,
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: BODY_TEXT_COLOR.withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: PRIMARY20_COLOR,
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "잠깐!",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "개인정보 노출이나 모욕적인 말이 있는지 확인해주세요.",
+                          style: TextStyle(
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  TextField(
+                    controller: contentController,
+                    onChanged: (value) {
+                      setState(() {
+                        if (value != "") {
+                          content = value; // 내용
+                          writedContent = true;
+                          canUpload = writedTitle & writedContent;
+                        }
+                      });
+                    },
+                    style: const TextStyle(
+                      fontSize: 12,
+                    ),
+                    decoration: const InputDecoration(
+                      hintText: "지금 가장 고민이 되거나 궁금한 내용이 무엇인가요?",
+                      border: InputBorder.none,
+                      hintStyle: TextStyle(
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          BottomView(
-            widget: widget,
-            msgBoardAddScreenState: this,
-          )
-        ],
+            BottomView(
+              widget: widget,
+              msgBoardAddScreenState: this,
+            ),
+          ],
+        ),
       ),
-    );
+      isLoading
+          ? Container(
+              color: Colors.black.withOpacity(0.4),
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+          : const Center(),
+    ]);
   }
 }
 
@@ -357,7 +389,9 @@ class BottomView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     msgBoardAddScreenState.boardAddAPI = ref.watch(boardAddProvider);
-    msgBoardAddScreenState.isQuestion = ref.watch(isQuestionStateProvider);
+    if (!msgBoardAddScreenState.widget.isEdit) {
+      msgBoardAddScreenState.isQuestion = ref.watch(isQuestionStateProvider);
+    }
     return Column(
       children: [
         ImageViewer(
@@ -542,68 +576,68 @@ class ImageViewer extends ConsumerWidget {
           width: 100,
         );
       }
-    }
-
-    try {
-      return Padding(
-        padding: const EdgeInsets.all(10),
-        child: SizedBox(
-          height: 100,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              for (var image in images)
-                Stack(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(
-                        right: 10,
-                        left: 10,
-                        top: 10,
+    } else {
+      try {
+        return Padding(
+          padding: const EdgeInsets.all(10),
+          child: SizedBox(
+            height: 100,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                for (var image in images)
+                  Stack(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(
+                          right: 10,
+                          left: 10,
+                          top: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.black.withOpacity(0.2),
+                        ),
+                        width: 100,
+                        child: Image.file(
+                          File(image.path),
+                        ),
                       ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.black.withOpacity(0.2),
+                      const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Icon(
+                          Icons.cancel_outlined,
+                          color: Colors.white,
+                        ),
                       ),
-                      width: 100,
-                      child: Image.file(
-                        File(image.path),
+                      IconButton(
+                        onPressed: () {
+                          ref.read(imageStateProvider.notifier).remove(image);
+                        },
+                        icon: const Icon(
+                          Icons.cancel,
+                          color: Colors.red,
+                        ),
                       ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(12),
-                      child: Icon(
-                        Icons.cancel_outlined,
-                        color: Colors.white,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        ref.read(imageStateProvider.notifier).remove(image);
-                      },
-                      icon: const Icon(
-                        Icons.cancel,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ],
-                ),
-            ],
+                    ],
+                  ),
+              ],
+            ),
           ),
-        ),
-      );
-    } catch (e) {
-      debugPrint("ImageViewer error! ${images[0].path}");
-      return const SizedBox(
-        height: 100,
-        width: 100,
-      );
+        );
+      } catch (e) {
+        debugPrint("ImageViewer error! ${images[0].path}");
+        return const SizedBox(
+          height: 100,
+          width: 100,
+        );
+      }
     }
   }
 }
 
 class UploadFile {
-  Future<void> call(String url, File image) async {
+  Future<void> file(String url, File image) async {
     try {
       var response =
           await http.put(Uri.parse(url), body: image.readAsBytesSync());
@@ -612,6 +646,17 @@ class UploadFile {
       }
     } catch (e) {
       debugPrint("upload file 에러 : $e");
+    }
+  }
+
+  Future<void> httpFile(String url, http.Response image) async {
+    try {
+      var response = await http.put(Uri.parse(url), body: image.bodyBytes);
+      if (response.statusCode != 200) {
+        debugPrint("Upload HTTP File 응답 : ${response.statusCode}");
+      }
+    } catch (e) {
+      debugPrint("Upload HTTP File 에러 : $e");
     }
   }
 }
