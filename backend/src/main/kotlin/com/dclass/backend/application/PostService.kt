@@ -6,6 +6,7 @@ import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.post.findByIdOrThrow
+import com.dclass.backend.domain.scrap.ScrapRepository
 import com.dclass.backend.exception.post.PostException
 import com.dclass.backend.exception.post.PostExceptionType.NOT_FOUND_POST
 import com.dclass.backend.infra.s3.AwsPresigner
@@ -24,6 +25,7 @@ class PostService(
     private val postRepository: PostRepository,
     private val belongRepository: BelongRepository,
     private val communityRepository: CommunityRepository,
+    private val scrapRepository: ScrapRepository,
     private val awsPresigner: AwsPresigner
 ) {
     fun getAll(userId: Long, request: PostScrollPageRequest): PostsResponse {
@@ -46,6 +48,7 @@ class PostService(
                 it.images.map { async { awsPresigner.getPostObjectPresigned(it) } }.awaitAll()
             }
         }
+
         return PostsResponse.of(posts, request.size)
     }
 
@@ -55,6 +58,7 @@ class PostService(
                 it.images.map { async { awsPresigner.getPostObjectPresigned(it) } }.awaitAll()
             }
         }
+
         return PostsResponse.of(posts, request.size)
     }
 
@@ -64,20 +68,25 @@ class PostService(
                 it.images.map { async { awsPresigner.getPostObjectPresigned(it) } }.awaitAll()
             }
         }
+
         return PostsResponse.of(posts, request.size)
     }
 
-    fun getById(userId: Long, postId: Long): PostResponse {
+    fun getById(userId: Long, postId: Long): PostDetailResponse {
         postValidator.validate(userId, postId)
 
-        return postRepository.findPostById(postId).apply {
+        val post = postRepository.findPostById(postId).apply {
             images = runBlocking(Dispatchers.IO) {
                 images.map { async { awsPresigner.getPostObjectPresigned(it) } }.awaitAll()
             }
         }
+
+        post.isScrapped = scrapRepository.existsByUserIdAndPostId(userId, postId)
+
+        return post
     }
 
-    fun create(userId: Long, request: CreatePostRequest): PostResponse {
+    fun create(userId: Long, request: CreatePostRequest): PostDetailResponse {
         val community = postValidator.validateCreatePost(userId, request.communityTitle)
 
         val post = postRepository.save(request.toEntity(userId, community.id))
@@ -89,17 +98,22 @@ class PostService(
         }
     }
 
-    fun update(userId: Long, request: UpdatePostRequest): PostResponse {
+    fun update(userId: Long, request: UpdatePostRequest): PostDetailResponse {
         val post = postRepository.findByIdAndUserId(request.postId, userId)
             ?: throw PostException(NOT_FOUND_POST)
 
         post.update(request.title, request.content, request.images.map { Image(it) })
 
-        return postRepository.findPostById(post.id).apply {
+        val postResponse = postRepository.findPostById(post.id).apply {
             images = runBlocking(Dispatchers.IO) {
                 images.map { async { awsPresigner.putPostObjectPresigned(it) } }.awaitAll()
             }
         }
+
+        postResponse.isScrapped = scrapRepository.existsByUserIdAndPostId(userId, post.id)
+
+
+        return postResponse
     }
 
     fun delete(userId: Long, request: DeletePostRequest) {
