@@ -1,5 +1,6 @@
 package com.dclass.backend.application
 
+import com.dclass.backend.application.dto.RemainDurationResponse
 import com.dclass.backend.application.dto.SwitchDepartmentResponse
 import com.dclass.backend.application.dto.UpdateDepartmentRequest
 import com.dclass.backend.domain.belong.BelongRepository
@@ -30,5 +31,10 @@ class BelongService(
 
         return departmentRepository.getByIdOrThrow(belong.activated).title
             .let(::SwitchDepartmentResponse)
+    }
+
+    fun remain(userId: Long): RemainDurationResponse {
+        val belong = belongRepository.getOrThrow(userId)
+        return RemainDurationResponse(belong.remainingTime)
     }
 }
