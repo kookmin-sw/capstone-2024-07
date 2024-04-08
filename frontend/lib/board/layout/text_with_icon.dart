@@ -7,6 +7,7 @@ import 'package:frontend/board/provider/image_provider.dart';
 import 'package:frontend/board/provider/comment_notifier_provider.dart';
 import 'package:frontend/board/provider/reply_notifier_provider.dart';
 import 'package:frontend/board/provider/reply_provider.dart';
+import 'package:frontend/board/provider/scrap_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -133,8 +134,10 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
               setState(() {
                 if (isFavoriteClicked) {
                   textCount -= 1;
+                  ref.watch(scrapProvider).delete(widget.postId);
                 } else {
                   textCount += 1;
+                  ref.watch(scrapProvider).post(widget.postId);
                 }
                 isFavoriteClicked = !isFavoriteClicked;
               });
