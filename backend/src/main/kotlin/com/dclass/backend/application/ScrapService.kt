@@ -25,7 +25,7 @@ class ScrapService(
     }
 
     fun delete(userId: Long, postId: Long) {
-        val scrap = scrapRepository.findByIdAndPostId(userId, postId) ?: throw ScrapException(
+        val scrap = scrapRepository.findByUserIdAndPostId(userId, postId) ?: throw ScrapException(
             NOT_FOUND_SCRAP
         )
 
