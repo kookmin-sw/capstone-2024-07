@@ -1,5 +1,6 @@
 package com.dclass.backend.domain.post
 
+import com.dclass.backend.application.dto.PostDetailResponse
 import com.dclass.backend.application.dto.PostResponse
 import com.dclass.backend.application.dto.PostScrollPageRequest
 import com.dclass.backend.domain.comment.Comment
@@ -28,7 +29,7 @@ interface PostRepository : JpaRepository<Post, Long>, PostRepositorySupport {
 
 interface PostRepositorySupport {
     fun findPostScrollPage(request: PostScrollPageRequest): List<Post>
-    fun findPostById(id: Long): PostResponse
+    fun findPostById(id: Long): PostDetailResponse
     fun findScrapPostByUserId(userId: Long): List<PostResponse>
 
     fun findPostScrollPage(
@@ -69,9 +70,9 @@ private class PostRepositoryImpl(
         return em.createQuery(query, context).setMaxResults(request.size).resultList
     }
 
-    override fun findPostById(id: Long): PostResponse {
+    override fun findPostById(id: Long): PostDetailResponse {
         val query = jpql {
-            selectNew<PostResponse>(
+            selectNew<PostDetailResponse>(
                 entity(Post::class),
                 entity(User::class),
                 path(Community::title)
