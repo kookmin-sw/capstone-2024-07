@@ -170,9 +170,9 @@ data class CommentWithUserResponse(
         id = comment.id,
         userInformation = UserInformation(user.name, user.email, user.nickname),
         postId = comment.postId,
-        content = comment.content,
+        content = comment.content.takeIf { !comment.isDeleted() } ?: "삭제된 댓글 입니다.",
         likeCount = comment.commentLikes,
-        deleted = comment.isDeleted(comment.id),
+        deleted = comment.isDeleted(),
         isLiked = false,
         createdAt = comment.createdDateTime
     )

@@ -64,7 +64,7 @@ class Comment(
         commentLikes.add(userId)
     }
 
-    fun isDeleted(commentId: Long) = deleted
+    fun isDeleted() = deleted
 
     fun changeContent(content: String) {
         this.content = content
