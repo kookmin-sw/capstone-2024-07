@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/board/view/msg_board_list_screen.dart';
+import 'package:frontend/member/view/password_reset_screen.dart';
 import 'package:frontend/member/view/signup_screen.dart';
 
 import '../../common/const/colors.dart';
@@ -19,6 +19,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
+  bool isWillingToResetPassword = false;
   String email = '';
   String password = '';
 
@@ -86,13 +87,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 .read(memberStateNotifierProvider.notifier)
                                 .login(email: email, password: password);
                           },
-                    // onPressed: () {
-                    //   Navigator.of(context).push(
-                    //     MaterialPageRoute(
-                    //       builder: (_) => const MsgBoardListScreen(),
-                    //     ),
-                    //   );
-                    // },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: PRIMARY_COLOR,
                     ),
@@ -122,6 +116,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                     child: const Text('회원가입'),
+                  ),
+                ),
+                const SizedBox(height: 8.0),
+                SizedBox(
+                  height: 40.0,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const PasswordResetScreen(),
+                        ),
+                      );
+                    },
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.all(BODY_TEXT_COLOR),
+                    ),
+                    child: const Text('비밀번호 초기화'),
                   ),
                 ),
               ],
