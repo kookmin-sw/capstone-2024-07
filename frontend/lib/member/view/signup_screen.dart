@@ -104,7 +104,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             ),
           ),
           const SizedBox(
-            // 정렬 나중에 다시 수정할게요!
             width: 110,
           ),
           const Text(
@@ -126,6 +125,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const Text('이름'),
+          const SizedBox(height: 6.0),
           SizedBox(
             width: MediaQuery.of(context).size.width,
             child: CustomTextFormField(
@@ -160,6 +161,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const Text('닉네임'),
+          const SizedBox(height: 6.0),
           SizedBox(
             width: MediaQuery.of(context).size.width,
             child: CustomTextFormField(
@@ -196,6 +199,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const Text('이메일'),
+          const SizedBox(height: 6.0),
           Row(
             children: [
               SizedBox(
@@ -219,42 +224,42 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 onPressed: (isEmailNull || isEmailAuthenticated)
                     ? null
                     : () async {
-                  try {
-                    final resp = await dio.post(
-                      'http://$ip/api/users/authentication-code?email=$email',
-                    );
-                    if (resp.statusCode == 204) {
-                      setState(() {
-                        isEmailSend = true;
-                      });
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return NoticePopupDialog(
-                            message: "인증번호가 전송되었습니다.",
-                            buttonText: "닫기",
-                            onPressed: () {
-                              Navigator.pop(context); // 두 번째 팝업 닫기
+                        try {
+                          final resp = await dio.post(
+                            'http://$ip/api/users/authentication-code?email=$email',
+                          );
+                          if (resp.statusCode == 204) {
+                            setState(() {
+                              isEmailSend = true;
+                            });
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return NoticePopupDialog(
+                                  message: "인증번호가 전송되었습니다.",
+                                  buttonText: "닫기",
+                                  onPressed: () {
+                                    Navigator.pop(context); // 두 번째 팝업 닫기
+                                  },
+                                );
+                              },
+                            );
+                          }
+                        } on DioException catch (e) {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return NoticePopupDialog(
+                                message: e.response?.data["message"] ?? "에러 발생",
+                                buttonText: "닫기",
+                                onPressed: () {
+                                  Navigator.pop(context); // 두 번째 팝업 닫기
+                                },
+                              );
                             },
                           );
-                        },
-                      );
-                    }
-                  } on DioException catch (e) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return NoticePopupDialog(
-                          message: e.response?.data["message"] ?? "에러 발생",
-                          buttonText: "닫기",
-                          onPressed: () {
-                            Navigator.pop(context); // 두 번째 팝업 닫기
-                          },
-                        );
+                        }
                       },
-                    );
-                  }
-                },
                 child: Text('전송'),
               ),
             ],
@@ -293,42 +298,42 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 onPressed: (isEmailNull || isEmailAuthenticated)
                     ? null
                     : () async {
-                  try {
-                    final resp = await dio.post(
-                      'http://$ip/api/users/authenticate-email?email=$email&authenticationCode=$authNumber',
-                    );
-                    if (resp.statusCode == 204) {
-                      setState(() {
-                        isEmailAuthenticated = true;
-                      });
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return NoticePopupDialog(
-                            message: "인증이 완료되었습니다.",
-                            buttonText: "닫기",
-                            onPressed: () {
-                              Navigator.pop(context); // 두 번째 팝업 닫기
+                        try {
+                          final resp = await dio.post(
+                            'http://$ip/api/users/authenticate-email?email=$email&authenticationCode=$authNumber',
+                          );
+                          if (resp.statusCode == 204) {
+                            setState(() {
+                              isEmailAuthenticated = true;
+                            });
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return NoticePopupDialog(
+                                  message: "인증이 완료되었습니다.",
+                                  buttonText: "닫기",
+                                  onPressed: () {
+                                    Navigator.pop(context); // 두 번째 팝업 닫기
+                                  },
+                                );
+                              },
+                            );
+                          }
+                        } on DioException catch (e) {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return NoticePopupDialog(
+                                message: e.response?.data["message"] ?? "에러 발생",
+                                buttonText: "닫기",
+                                onPressed: () {
+                                  Navigator.pop(context); // 두 번째 팝업 닫기
+                                },
+                              );
                             },
                           );
-                        },
-                      );
-                    }
-                  } on DioException catch (e) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return NoticePopupDialog(
-                          message: e.response?.data["message"] ?? "에러 발생",
-                          buttonText: "닫기",
-                          onPressed: () {
-                            Navigator.pop(context); // 두 번째 팝업 닫기
-                          },
-                        );
+                        }
                       },
-                    );
-                  }
-                },
                 child: Text('확인'),
               ),
             ],
@@ -378,28 +383,28 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     items: divisionAndDepartments.keys == null
                         ? []
                         : divisionAndDepartments.keys
-                        .map((e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(e),
-                    ))
-                        .toList(),
+                            .map((e) => DropdownMenuItem(
+                                  value: e,
+                                  child: Text(e),
+                                ))
+                            .toList(),
                     onChanged: (String? value) {
                       if (value != null &&
                           divisionAndDepartments.containsKey(value)) {
                         setState(() {
                           selectedDivision = value;
                           selectedDepartment =
-                          divisionAndDepartments[value]!.isNotEmpty
-                              ? divisionAndDepartments[value]![0]
-                              : null;
+                              divisionAndDepartments[value]!.isNotEmpty
+                                  ? divisionAndDepartments[value]![0]
+                                  : null;
                           ref
                               .read(
-                              firstDepartmentListNotifierProvider.notifier)
+                                  firstDepartmentListNotifierProvider.notifier)
                               .setSelectedDivision(value);
                           if (selectedDepartment != null) {
                             ref
                                 .read(firstDepartmentListNotifierProvider
-                                .notifier)
+                                    .notifier)
                                 .setSelectedDepartment(selectedDepartment!);
                             setState(() {
                               major1 = selectedDepartment;
@@ -418,19 +423,19 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     items: divisionAndDepartments[selectedDivision] == null
                         ? []
                         : List<String>.from(
-                        divisionAndDepartments[selectedDivision])
-                        .map((e) => DropdownMenuItem(
-                      value: e.toString(),
-                      child: Text(e.toString()),
-                    ))
-                        .toList(),
+                                divisionAndDepartments[selectedDivision])
+                            .map((e) => DropdownMenuItem(
+                                  value: e.toString(),
+                                  child: Text(e.toString()),
+                                ))
+                            .toList(),
                     onChanged: (String? value) {
                       if (value != null) {
                         setState(() {
                           selectedDepartment = value;
                           ref
                               .read(
-                              firstDepartmentListNotifierProvider.notifier)
+                                  firstDepartmentListNotifierProvider.notifier)
                               .setSelectedDepartment(value);
                           setState(() {
                             major1 = selectedDepartment;
@@ -479,28 +484,28 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     items: divisionAndDepartments.keys == null
                         ? []
                         : divisionAndDepartments.keys
-                        .map((e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(e),
-                    ))
-                        .toList(),
+                            .map((e) => DropdownMenuItem(
+                                  value: e,
+                                  child: Text(e),
+                                ))
+                            .toList(),
                     onChanged: (String? value) {
                       if (value != null &&
                           divisionAndDepartments.containsKey(value)) {
                         setState(() {
                           selectedDivision = value;
                           selectedDepartment =
-                          divisionAndDepartments[value]!.isNotEmpty
-                              ? divisionAndDepartments[value]![0]
-                              : null;
+                              divisionAndDepartments[value]!.isNotEmpty
+                                  ? divisionAndDepartments[value]![0]
+                                  : null;
                           ref
                               .read(
-                              secondDepartmentListNotifierProvider.notifier)
+                                  secondDepartmentListNotifierProvider.notifier)
                               .setSelectedDivision(value);
                           if (selectedDepartment != null) {
                             ref
                                 .read(secondDepartmentListNotifierProvider
-                                .notifier)
+                                    .notifier)
                                 .setSelectedDepartment(selectedDepartment!);
                             setState(() {
                               major2 = selectedDepartment;
@@ -519,19 +524,19 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     items: divisionAndDepartments[selectedDivision] == null
                         ? []
                         : List<String>.from(
-                        divisionAndDepartments[selectedDivision])
-                        .map((e) => DropdownMenuItem(
-                      value: e.toString(),
-                      child: Text(e.toString()),
-                    ))
-                        .toList(),
+                                divisionAndDepartments[selectedDivision])
+                            .map((e) => DropdownMenuItem(
+                                  value: e.toString(),
+                                  child: Text(e.toString()),
+                                ))
+                            .toList(),
                     onChanged: (String? value) {
                       if (value != null) {
                         setState(() {
                           selectedDepartment = value;
                           ref
                               .read(
-                              secondDepartmentListNotifierProvider.notifier)
+                                  secondDepartmentListNotifierProvider.notifier)
                               .setSelectedDepartment(value);
                           setState(() {
                             major2 = selectedDepartment;
@@ -566,7 +571,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 setState(() {
                   isPasswordDifferent = password == password2 ? false : true;
                   isPasswordNull =
-                  (password == '' && password2 == '') ? true : false;
+                      (password == '' && password2 == '') ? true : false;
                 });
               },
             ),
@@ -583,7 +588,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 setState(() {
                   isPasswordDifferent = password == password2 ? false : true;
                   isPasswordNull =
-                  (password == '' && password2 == '') ? true : false;
+                      (password == '' && password2 == '') ? true : false;
                 });
               },
             ),
@@ -740,7 +745,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           onPressed: () {
             setState(() {
               isDoubleMajor = true;
-              major2 = ref.read(secondDepartmentListNotifierProvider.notifier).state.selectedDepartment;
+              major2 = ref
+                  .read(secondDepartmentListNotifierProvider.notifier)
+                  .state
+                  .selectedDepartment;
             });
           },
           icon: const Icon(Icons.add),
