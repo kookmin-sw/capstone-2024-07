@@ -11,7 +11,7 @@ import org.hibernate.annotations.SQLRestriction
 import java.time.LocalDateTime
 
 @SQLDelete(sql = "update comment set deleted = true where id = ?")
-@SQLRestriction("deleted = false")
+@SQLRestriction("deleted = false OR (deleted = true AND reply_count > 0)")
 @Entity
 class Comment(
     @Column(nullable = false)
