@@ -828,6 +828,7 @@ class DatabaseInitializer(
                 val reply = createDummyReply(user, comment, num)
                 dummyReplies.add(reply)
                 num++
+                comment.increaseReplyCount()
 
                 val post = posts.find { it.id == comment.postId }
                 post?.increaseCommentReplyCount()
