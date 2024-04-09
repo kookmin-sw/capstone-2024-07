@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/model/comment_model.dart';
@@ -18,8 +17,6 @@ import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/comment_layout.dart';
 import 'package:frontend/member/provider/member_repository_provider.dart';
-import 'package:flutter_local_notifications/src/platform_specifics/android/enums.dart'
-    as noti;
 
 class MsgBoardScreen extends ConsumerStatefulWidget {
   final MsgBoardResponseModel board;
@@ -37,46 +34,11 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
         .read(memberRepositoryProvider)
         .getMe()
         .then((value) => isMine = value.id == widget.board.userId);
-    initNotification();
   }
 
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController scrollController = ScrollController();
   bool isMine = false;
-  final FlutterLocalNotificationsPlugin notification =
-      FlutterLocalNotificationsPlugin();
-
-  void initNotification() async {
-    AndroidInitializationSettings android =
-        const AndroidInitializationSettings("@mipmap/ic_launcher");
-    DarwinInitializationSettings ios = const DarwinInitializationSettings(
-      requestSoundPermission: false,
-      requestBadgePermission: false,
-      requestAlertPermission: false,
-    );
-    InitializationSettings settings =
-        InitializationSettings(android: android, iOS: ios);
-    await notification.initialize(settings);
-  }
-
-  void sendNotification() async {
-    NotificationDetails details = const NotificationDetails(
-      iOS: DarwinNotificationDetails(
-        presentAlert: true,
-        presentBadge: true,
-        presentSound: true,
-      ),
-      android: AndroidNotificationDetails(
-        "1",
-        "test",
-        importance: Importance.max,
-        priority: noti.Priority.high,
-      ),
-    );
-
-    await notification.show(0, "title", "body", details);
-    // TODO : Add 'payload : router path'
-  }
 
   void addNewComment() async {
     final requestData = {
