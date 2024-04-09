@@ -1,7 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/common/const/colors.dart';
+import 'package:frontend/common/provider/dio_provider.dart';
 
+import '../../common/component/notice_popup_dialog.dart';
+import '../../common/const/data.dart';
 import '../model/member_model.dart';
 import '../provider/first_major_state_notifier_provider.dart';
 import '../provider/member_state_notifier_provider.dart';
@@ -21,6 +25,8 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final dio = ref.watch(dioProvider);
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -36,10 +42,68 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
                     if (!isWillingToChangeMajor)
                       _renderButton(
                         "전공 변경하기",
-                        () {
-                          setState(() {
-                            isWillingToChangeMajor = true;
-                          });
+                        () async {
+                          try {
+                            final resp = await dio.get(
+                              'http://$ip/api/belongs/remain',
+                              options: Options(
+                                headers: {
+                                  'accessToken': 'true',
+                                },
+                              ),
+                            );
+                            if (resp.statusCode == 200) {
+                              int remainDays = resp.data['remainDays'];
+                              int remainHours = resp.data['remainHours'];
+                              int remainMinutes = resp.data['remainMinutes'];
+                              print('$remainDays/$remainHours/$remainMinutes');
+
+                              if(remainDays==0 && remainHours==0 && remainMinutes==0){
+                                setState(() {
+                                  isWillingToChangeMajor = true;
+                                });
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return NoticePopupDialog(
+                                      message: "$remainDays일 $remainHours시간 $remainMinutes분 뒤에 변경이 가능합니다.",
+                                      buttonText: "닫기",
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  },
+                                );
+                              }
+                            }
+                          } on DioException catch (e){
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return NoticePopupDialog(
+                                  message: e.response?.data["message"] ?? "에러 발생",
+                                  buttonText: "닫기",
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                );
+                              },
+                            );
+                          } catch (e){
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return NoticePopupDialog(
+                                  message: "에러가 발생했습니다.",
+                                  buttonText: "닫기",
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                );
+                              },
+                            );
+                          }
                         },
                       ),
                     if (isWillingToChangeMajor) _renderChangeMajorField(),
@@ -154,6 +218,8 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
   }
 
   Widget _renderChangeMajorField() {
+    final dio = ref.watch(dioProvider);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 12.0),
       child: Column(
@@ -161,9 +227,62 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
           _renderFirstMajorField(),
           _renderSecondMajorField(),
           _renderButton(
-            "등록하기",
-            () {
-              //학과변경 api 요청
+            "학과 변경하기",
+            () async {
+              try {
+                final resp = await dio.put(
+                  'http://$ip/api/belongs/change-departments',
+                  options: Options(
+                    headers: {
+                      'accessToken': 'true',
+                    },
+                  ),
+                  data: {
+                    'major': selectedMajor,
+                    'minor': selectedMinor,
+                  },
+                );
+                if (resp.statusCode == 204) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return NoticePopupDialog(
+                        message: "학과 변경이 완료되었습니다.",
+                        buttonText: "닫기",
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      );
+                    },
+                  );
+                }
+              } on DioException catch (e){
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return NoticePopupDialog(
+                      message: e.response?.data["message"] ?? "에러 발생",
+                      buttonText: "닫기",
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
+              } catch (e){
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return NoticePopupDialog(
+                      message: "에러가 발생했습니다.",
+                      buttonText: "닫기",
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                );
+              }
             },
           ),
           _renderButton(
