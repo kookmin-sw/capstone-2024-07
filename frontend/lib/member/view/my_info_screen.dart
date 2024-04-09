@@ -135,13 +135,16 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
 
   Widget _renderButton(String text, VoidCallback onButtonClicked) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.only(top: 12.0),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: PRIMARY_COLOR,
           minimumSize: Size(
             MediaQuery.of(context).size.width,
-            50.0,
+            40.0,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
         ),
         onPressed: onButtonClicked,
