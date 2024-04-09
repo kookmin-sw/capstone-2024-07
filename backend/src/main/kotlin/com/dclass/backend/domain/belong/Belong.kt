@@ -46,7 +46,7 @@ class Belong(
         get() = Duration.between(
             LocalDateTime.now(),
             modifiedDateTime.plusDays(CHANGE_INTERVAL_DAYS)
-        ).takeIf { it.isPositive } ?: Duration.ZERO
+        ).takeUnless { it.isNegative } ?: Duration.ZERO
 
     @Column(nullable = false)
     var majorIndex: Int = 0
