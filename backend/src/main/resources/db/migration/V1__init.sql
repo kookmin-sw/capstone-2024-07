@@ -37,6 +37,7 @@ create table comment
     post_id            bigint       not null,
     user_id            bigint       not null,
     content            varchar(255) not null,
+    reply_count        integer      not null,
     primary key (id)
 ) engine=InnoDB;
 
