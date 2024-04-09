@@ -43,6 +43,8 @@ class ReplyService(
             eventPublisher.publishEvent(event)
         }
 
+        comment.increaseReplyCount()
+
         return ReplyResponse(reply)
 
     }
@@ -57,7 +59,8 @@ class ReplyService(
 
         val comment = commentRepository.getByIdOrThrow(reply.commentId)
         val post = postRepository.findByIdOrThrow(comment.postId)
-        post.decreaseScrapCount()
+        post.decreaseCommentReplyCount()
+        comment.decreaseReplyCount()
 
         replyRepository.delete(reply)
     }
