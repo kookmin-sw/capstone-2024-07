@@ -32,13 +32,13 @@ class CategoryCircleWithProvider extends ConsumerWidget {
         } else {
           ref.read(categoryTitleProvider.notifier).state = categoryCode;
           ref.read(isHotProvider.notifier).state = false;
+        }
 
-          if (clickedList.contains(category)) {
-            ref.read(categoryStateProvider.notifier).remove(category);
-          } else {
-            ref.read(categoryStateProvider.notifier).clear();
-            ref.read(categoryStateProvider.notifier).add(category);
-          }
+        if (clickedList.contains(category)) {
+          ref.read(categoryStateProvider.notifier).remove(category);
+        } else {
+          ref.read(categoryStateProvider.notifier).clear();
+          ref.read(categoryStateProvider.notifier).add(category);
         }
       },
       child: Container(
