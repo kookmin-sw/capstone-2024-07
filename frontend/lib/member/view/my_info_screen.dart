@@ -67,7 +67,7 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
                                   context: context,
                                   builder: (context) {
                                     return NoticePopupDialog(
-                                      message: "$remainDays일 $remainHours시간 $remainMinutes분 뒤에 변경이 가능합니다.",
+                                      message: "$remainDays일 뒤에 변경이 가능합니다.",
                                       buttonText: "닫기",
                                       onPressed: () {
                                         Navigator.pop(context);
