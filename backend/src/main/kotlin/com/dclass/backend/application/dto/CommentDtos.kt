@@ -149,6 +149,12 @@ data class CommentWithUserResponse(
     val likeCount: CommentLikes,
 
     @Schema(
+        description = "댓글의 삭제 여부",
+        example = "false"
+    )
+    val deleted: Boolean,
+
+    @Schema(
         description = "댓글의 좋아요 여부",
         example = "true"
     )
@@ -166,6 +172,7 @@ data class CommentWithUserResponse(
         postId = comment.postId,
         content = comment.content,
         likeCount = comment.commentLikes,
+        deleted = comment.isDeleted(comment.id),
         isLiked = false,
         createdAt = comment.createdDateTime
     )
@@ -207,6 +214,11 @@ data class CommentReplyWithUserResponse(
     )
     val likeCount: CommentLikes,
 
+    @Schema(
+        description = "댓글의 삭제 여부",
+        example = "false"
+    )
+    val deleted: Boolean,
 
     @Schema(
         description = "댓글의 좋아요 여부",
@@ -255,6 +267,7 @@ data class CommentReplyWithUserResponse(
         postId = commentWithUserResponse.postId,
         content = commentWithUserResponse.content,
         likeCount = commentWithUserResponse.likeCount,
+        deleted = commentWithUserResponse.deleted,
         isLiked = commentWithUserResponse.isLiked,
         createdAt = commentWithUserResponse.createdAt,
         replies = replies
