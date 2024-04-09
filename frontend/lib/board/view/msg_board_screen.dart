@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_client_sse/constants/sse_request_type_enum.dart';
-import 'package:flutter_client_sse/flutter_client_sse.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/const/categorys.dart';
@@ -19,7 +17,6 @@ import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/comment_layout.dart';
-import 'package:frontend/common/const/data.dart';
 import 'package:frontend/member/provider/member_repository_provider.dart';
 import 'package:flutter_local_notifications/src/platform_specifics/android/enums.dart'
     as noti;
@@ -244,17 +241,6 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     }
   }
 
-  void subscribeNotification() {
-    // TODO : cancel Notification
-
-    SSEClient.subscribeToSSE(
-        method: SSERequestType.GET,
-        url: 'http://$ip/api/notifications/${widget.board.id}',
-        header: {"accessToken": "true"}).listen((event) {
-      debugPrint('subscribe! ${event.id} | ${event.event} | ${event.data}');
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     ref.watch(imageStateProvider);
@@ -286,7 +272,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
           ),
           actions: [
             IconButton(
-              onPressed: subscribeNotification,
+              onPressed: () {},
               icon: isMine
                   ? const Icon(Icons.notifications_none)
                   : const Icon(Icons.notifications_off_outlined),
