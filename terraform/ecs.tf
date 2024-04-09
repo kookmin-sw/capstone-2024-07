@@ -41,8 +41,8 @@ resource "aws_ecs_task_definition" "service" {
   family                   = "service-staging-${var.env_suffix}"
   network_mode             = "awsvpc"
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
-  cpu                      = 256
-  memory                   = 512
+  cpu                      = 512
+  memory                   = 1024
   requires_compatibilities = ["FARGATE"]
   container_definitions    = data.template_file.service.rendered
 
