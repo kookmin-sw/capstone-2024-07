@@ -47,6 +47,10 @@ class Comment(
     var commentLikes: CommentLikes = commentLikes
         private set
 
+    @Column(nullable = false)
+    var replyCount: Int = 0
+        private set
+
     val likeCount: Int
         get() = commentLikes.count
 
@@ -68,4 +72,13 @@ class Comment(
     }
 
     fun isEligibleForSSE(userId: Long) = this.userId != userId
+
+    fun increaseReplyCount() {
+        replyCount++
+    }
+
+    fun decreaseReplyCount() {
+        replyCount--
+    }
+
 }
