@@ -43,7 +43,10 @@ class Belong(
         get() = _departmentIds.first()
 
     val remainingTime: Duration
-        get() = Duration.between(modifiedDateTime, LocalDateTime.now())
+        get() = Duration.between(
+            LocalDateTime.now(),
+            modifiedDateTime.plusDays(CHANGE_INTERVAL_DAYS)
+        ).takeIf { it.isPositive } ?: Duration.ZERO
 
     @Column(nullable = false)
     var majorIndex: Int = 0
