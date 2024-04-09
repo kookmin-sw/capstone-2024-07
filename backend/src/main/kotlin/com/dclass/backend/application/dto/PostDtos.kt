@@ -116,6 +116,12 @@ data class PostResponse(
     val isQuestion: Boolean,
 
     @Schema(
+        description = "게시글의 이미지 개수",
+        example = "1"
+    )
+    val imageCount: Int,
+
+    @Schema(
         description = "게시글이 작성된 시각",
         example = "2021-08-01T00:00:00"
     )
@@ -137,6 +143,7 @@ data class PostResponse(
         post.images.map { it.imageKey },
         post.postCount,
         post.isQuestion,
+        post.images.size,
         post.createdDateTime
     )
 
@@ -219,7 +226,13 @@ data class PostDetailResponse(
         description = "게시글의 좋아요 여부",
         example = "true"
     )
-    var likedBy : Boolean,
+    var likedBy: Boolean,
+
+    @Schema(
+        description = "게시글의 이미지 개수",
+        example = "1"
+    )
+    val imageCount: Int,
 
     @Schema(
         description = "게시글이 작성된 시각",
@@ -246,6 +259,7 @@ data class PostDetailResponse(
         post.isQuestion,
         false,
         false,
+        post.images.size,
         post.createdDateTime
     )
 }
