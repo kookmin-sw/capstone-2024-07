@@ -11,6 +11,8 @@ import com.dclass.backend.domain.post.findByIdOrThrow
 import com.dclass.backend.domain.reply.ReplyRepository
 import com.dclass.backend.domain.reply.getByIdAndUserIdOrThrow
 import com.dclass.backend.domain.reply.getByIdOrThrow
+import com.dclass.backend.exception.comment.CommentException
+import com.dclass.backend.exception.comment.CommentExceptionType
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -27,6 +29,11 @@ class ReplyService(
 ) {
     fun create(userId: Long, request: CreateReplyRequest): ReplyResponse {
         val comment = commentRepository.getByIdOrThrow(request.commentId)
+
+        if (comment.isDeleted()) {
+            throw CommentException(CommentExceptionType.DELETED_COMMENT)
+        }
+
         val post = postRepository.findByIdOrThrow(comment.postId)
         val community = communityRepository.findByIdOrThrow(post.communityId)
 
