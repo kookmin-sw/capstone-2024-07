@@ -67,19 +67,20 @@ class CommentService(
     }
 
     @Transactional(readOnly = true)
-    fun findAllByPostId(postId: Long): List<CommentReplyWithUserResponse> {
-        val comments = commentRepository.findCommentWithUserByPostId(postId)
+    fun findAllByPostId(request: CommentScrollPageRequest): CommentsResponse {
+        val comments = commentRepository.findCommentWithUserByPostId(request)
 
         val commentIds = comments.map { it.id }
 
         val replies = replyRepository.findRepliesWithUserByCommentIdIn(commentIds)
             .groupBy { it.commentId }
 
-        return comments.map {
+        val data = comments.map {
             CommentReplyWithUserResponse(
                 it,
                 replies = replies[it.id] ?: emptyList()
             )
         }
+        return CommentsResponse.of(data, request.size)
     }
 }
