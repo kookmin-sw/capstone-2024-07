@@ -1,5 +1,6 @@
 package com.dclass.backend.domain.comment
 
+import com.dclass.backend.application.dto.CommentScrollPageRequest
 import com.dclass.backend.application.dto.CommentWithUserResponse
 import com.dclass.backend.domain.user.UniversityRepository
 import com.dclass.backend.domain.user.UserRepository
@@ -47,15 +48,16 @@ class CommentRepositorySupportImplTest(
         )
 
         When("게시글에 해당하는 댓글을 조회하면") {
-            val comments = commentRepository.findCommentWithUserByPostId(1L)
+            val comments = commentRepository.findCommentWithUserByPostId(CommentScrollPageRequest(postId = 1L))
 
             Then("댓글 및 작성자 정보가 반환된다") {
 
                 comments shouldHaveSize 10
-                comments shouldContainExactly
-                        comments1.map {
-                            CommentWithUserResponse(it, user1)
-                        } + comments2.map { CommentWithUserResponse(it, user2) }
+
+                val expected = comments1.map {
+                    CommentWithUserResponse(it, user1)
+                } + comments2.map { CommentWithUserResponse(it, user2) }
+                comments shouldContainExactly expected
             }
         }
     }
