@@ -272,3 +272,23 @@ data class CommentReplyWithUserResponse(
         replies = replies
     )
 }
+
+data class CommentScrollPageRequest(
+    @Schema(
+        description = "게시글의 고유 식별자",
+        example = "1"
+    )
+    val postId: Long,
+
+    @Schema(
+        description = "댓글의 마지막 고유 식별자",
+        example = "1"
+    )
+    val lastCommentId: Long? = null,
+
+    @Schema(
+        description = "댓글의 페이지 크기",
+        example = "20"
+    )
+    val size: Int = 20,
+)
