@@ -1,5 +1,6 @@
 package com.dclass.backend.application
 
+import com.dclass.backend.application.dto.CommentScrollPageRequest
 import com.dclass.backend.application.dto.LikeCommentRequest
 import com.dclass.backend.application.dto.LikeReplyRequest
 import com.dclass.backend.application.dto.UpdateCommentRequest
@@ -62,12 +63,13 @@ class CommentIntegrationTest(
         )
 
         When("해당 게시글의 댓글과 대댓글을 조회하면") {
-            val comments = commentService.findAllByPostId(1L)
+            val comments = commentService.findAllByPostId(CommentScrollPageRequest(1L,null,10))
 
             Then("댓글과 대댓글이 조회된다") {
-                comments.size shouldBe 3
-                comments[0].replies.size shouldBe 3
-                comments[1].replies.size shouldBe 2
+
+                comments.data.size shouldBe 3
+                comments.data[0].replies.size shouldBe 3
+                comments.data[1].replies.size shouldBe 2
             }
         }
 
