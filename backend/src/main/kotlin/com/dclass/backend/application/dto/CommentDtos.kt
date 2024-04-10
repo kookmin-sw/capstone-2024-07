@@ -2,7 +2,6 @@ package com.dclass.backend.application.dto
 
 import com.dclass.backend.domain.comment.Comment
 import com.dclass.backend.domain.comment.CommentLikes
-import com.dclass.backend.domain.post.Post
 import com.dclass.backend.domain.user.User
 import com.dclass.backend.domain.user.UserInformation
 import io.swagger.v3.oas.annotations.media.Schema
@@ -273,8 +272,3 @@ data class CommentReplyWithUserResponse(
         replies = replies
     )
 }
-
-data class CommentValidatorDto(
-    val post: Post,
-    val communityTitle: String,
-)
