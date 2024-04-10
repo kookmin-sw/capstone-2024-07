@@ -54,12 +54,12 @@ class CommentController(
 
     @Operation(summary = "댓글 조회 API", description = "게시글에 달린 댓글을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "댓글 조회 성공")
-    @GetMapping("/{postId}")
+    @GetMapping
     fun getComments(
         @LoginUser user: User,
-        @PathVariable postId: Long
-    ): ResponseEntity<List<CommentReplyWithUserResponse>> {
-        val comments = commentService.findAllByPostId(postId)
+        request : CommentScrollPageRequest
+    ): ResponseEntity<CommentsResponse> {
+        val comments = commentService.findAllByPostId(request)
         return ResponseEntity.ok(comments)
     }
 
