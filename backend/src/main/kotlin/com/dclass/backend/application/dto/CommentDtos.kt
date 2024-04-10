@@ -292,3 +292,23 @@ data class CommentScrollPageRequest(
     )
     val size: Int = 20,
 )
+
+data class CommentsResponse(
+    @Schema(
+        description = "댓글 목록",
+        example = "['댓글 목록']"
+    )
+    val data: List<CommentReplyWithUserResponse>,
+
+    @Schema(
+        description = "댓글 목록의 메타데이터",
+        example = "{'count': 10, 'hasMore': true}"
+    )
+    val meta: MetaData
+) {
+    companion object {
+        fun of(data: List<CommentReplyWithUserResponse>, limit: Int): CommentsResponse {
+            return CommentsResponse(data, MetaData(data.size, data.size >= limit))
+        }
+    }
+}
