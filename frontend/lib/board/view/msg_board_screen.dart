@@ -50,13 +50,17 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     }
   }
 
+  void refresh() {
+    ref.read(commentPaginationProvider.notifier).paginate(forceRefetch: true);
+  }
+
   void addNewComment() async {
     final requestData = {
       'postId': widget.board.id.toInt(),
       'content': textEditingController.text,
     };
     await ref.watch(commentProvider).post(requestData);
-    setState(() {});
+    refresh();
   }
 
   void addNewReply(int commentId) async {
@@ -66,6 +70,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     };
     await ref.watch(replyProvider).post(requestData);
     ref.read(commentStateProvider.notifier).add(0, -1);
+    refresh();
   }
 
   void modifyComment(int commentId) async {
@@ -74,6 +79,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     };
     await ref.watch(commentProvider).modify(commentId, requestData);
     ref.read(commentStateProvider.notifier).add(1, -1);
+    refresh();
   }
 
   void modifyReply(int replyId) async {
@@ -82,16 +88,19 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     };
     await ref.watch(replyProvider).modify(replyId, requestData);
     ref.read(replyStateProvider.notifier).add(1, -1);
+    refresh();
   }
 
   void deleteComment(int commentId) async {
     await ref.watch(commentProvider).delete(commentId);
     ref.read(commentStateProvider.notifier).add(2, -1);
+    refresh();
   }
 
   void deleteReply(int replyId) async {
     await ref.watch(replyProvider).delete(replyId);
     ref.read(replyStateProvider.notifier).add(2, -1);
+    refresh();
   }
 
   void boardMore() {
