@@ -1,5 +1,6 @@
 package com.dclass.backend.domain.comment
 
+import com.dclass.backend.application.dto.CommentScrollPageRequest
 import com.dclass.backend.application.dto.CommentWithUserResponse
 import com.dclass.backend.domain.reply.Reply
 import com.dclass.backend.domain.user.User
@@ -9,7 +10,7 @@ import com.linecorp.kotlinjdsl.support.spring.data.jpa.extension.createQuery
 import jakarta.persistence.EntityManager
 
 interface CommentRepositorySupport {
-    fun findCommentWithUserByPostId(postId: Long): List<CommentWithUserResponse>
+    fun findCommentWithUserByPostId(request: CommentScrollPageRequest): List<CommentWithUserResponse>
     fun countCommentReplyByPostId(postId: Long): Long
 }
 
@@ -18,7 +19,7 @@ class CommentRepositoryImpl(
     private val context: JpqlRenderContext
 ) : CommentRepositorySupport {
 
-    override fun findCommentWithUserByPostId(postId: Long): List<CommentWithUserResponse> {
+    override fun findCommentWithUserByPostId(request: CommentScrollPageRequest): List<CommentWithUserResponse> {
         val query = jpql {
             selectNew<CommentWithUserResponse>(
                 entity(Comment::class),
@@ -26,12 +27,13 @@ class CommentRepositoryImpl(
             ).from(
                 entity(Comment::class),
                 join(User::class).on(path(Comment::userId).eq(path(User::id))),
-            ).where(
-                path(Comment::postId).eq(postId)
+            ).whereAnd(
+                path(Comment::postId).eq(request.postId),
+                path(Comment::id).greaterThan(request.lastCommentId ?: Long.MIN_VALUE),
             )
         }
 
-        return em.createQuery(query, context).resultList
+        return em.createQuery(query, context).setMaxResults(request.size).resultList
     }
 
     override fun countCommentReplyByPostId(postId: Long): Long {
