@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:frontend/board/component/board_card.dart';
+import 'package:frontend/board/provider/board_detail_state_notifier_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/view/msg_board_add_screen.dart';
@@ -286,6 +287,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
           child: BoardCard.fromModel(msgBoardResponseModel: pItem),
           onTap: () async {
             // 상세페이지
+            ref.read(boardDetailNotifier.notifier).add(pItem.id);
             Navigator.push(
               context,
               MaterialPageRoute(

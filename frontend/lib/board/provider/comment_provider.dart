@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/model/comment_response_model.dart';
 import 'package:frontend/common/const/data.dart';
+import 'package:frontend/common/model/cursor_pagination_model.dart';
 import 'package:frontend/common/provider/dio_provider.dart';
 import 'package:retrofit/http.dart';
 
@@ -18,12 +19,14 @@ final commentProvider = Provider<CommentNotifier>((ref) {
 abstract class CommentNotifier {
   factory CommentNotifier(Dio dio, {String baseUrl}) = _CommentNotifier;
 
-  @GET('/api/comments/{postId}')
+  @GET('/api/comments')
   @Headers({
     'accessToken': 'true',
   })
-  Future<List<CommentModel>> get(
-    @Path('postId') String postId,
+  Future<CursorPaginationModel<CommentModel>> paginate(
+    @Query('postId') int postId,
+    @Query('lastCommentId') int lastCommentId,
+    @Query('size') int size,
   );
 
   @POST('/api/comments')
