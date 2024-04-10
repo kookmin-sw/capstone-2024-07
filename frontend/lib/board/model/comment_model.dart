@@ -9,12 +9,13 @@ class CommentModel {
   final int postId;
   final String content;
   final LikeCount likeCount;
+  final bool deleted;
   final bool isLiked;
   final String createdAt;
   final List<ReplyModel> replies;
 
   CommentModel(this.id, this.userInformation, this.postId, this.content,
-      this.likeCount, this.isLiked, this.createdAt, this.replies);
+      this.deleted, this.likeCount, this.isLiked, this.createdAt, this.replies);
 
   factory CommentModel.fromJson(Map<String, dynamic> json) =>
       _$CommentModelFromJson(json);

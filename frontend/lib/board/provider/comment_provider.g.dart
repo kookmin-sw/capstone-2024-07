@@ -19,21 +19,29 @@ class _CommentNotifier implements CommentNotifier {
   String? baseUrl;
 
   @override
-  Future<List<CommentModel>> get(String postId) async {
+  Future<CursorPaginationModel<CommentModel>> paginate(
+    int postId,
+    int lastCommentId,
+    int size,
+  ) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'postId': postId,
+      r'lastCommentId': lastCommentId,
+      r'size': size,
+    };
     final _headers = <String, dynamic>{r'accessToken': 'true'};
     _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
-    final _result = await _dio
-        .fetch<List<dynamic>>(_setStreamType<List<CommentModel>>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<CursorPaginationModel<CommentModel>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/api/comments/${postId}',
+              '/api/comments',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -42,9 +50,10 @@ class _CommentNotifier implements CommentNotifier {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    var value = _result.data!
-        .map((dynamic i) => CommentModel.fromJson(i as Map<String, dynamic>))
-        .toList();
+    final value = CursorPaginationModel<CommentModel>.fromJson(
+      _result.data!,
+      (json) => CommentModel.fromJson(json as Map<String, dynamic>),
+    );
     return value;
   }
 

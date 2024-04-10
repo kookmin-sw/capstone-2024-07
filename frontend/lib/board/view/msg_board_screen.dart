@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/model/comment_model.dart';
@@ -7,6 +6,7 @@ import 'package:frontend/board/model/msg_board_detail_response_model.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
+import 'package:frontend/board/provider/comment_pagination_provider.dart';
 import 'package:frontend/board/provider/comment_provider.dart';
 import 'package:frontend/board/provider/comment_notifier_provider.dart';
 import 'package:frontend/board/provider/image_provider.dart';
@@ -16,6 +16,7 @@ import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/comment_layout.dart';
+import 'package:frontend/common/model/cursor_pagination_model.dart';
 import 'package:frontend/member/provider/member_repository_provider.dart';
 
 class MsgBoardScreen extends ConsumerStatefulWidget {
@@ -34,11 +35,20 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
         .read(memberRepositoryProvider)
         .getMe()
         .then((value) => isMine = value.id == widget.board.userId);
+    controller.addListener(scrollListener);
   }
 
   final TextEditingController textEditingController = TextEditingController();
-  final ScrollController scrollController = ScrollController();
+  final ScrollController controller = ScrollController();
   bool isMine = false;
+
+  void scrollListener() {
+    if (controller.offset > controller.position.maxScrollExtent - 150) {
+      ref.read(commentPaginationProvider.notifier).paginate(
+            fetchMore: true,
+          );
+    }
+  }
 
   void addNewComment() async {
     final requestData = {
@@ -203,6 +213,10 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     }
   }
 
+  void notification() {
+    // TODO : notification on/off
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.watch(imageStateProvider);
@@ -234,7 +248,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: notification,
               icon: isMine
                   ? const Icon(Icons.notifications_none)
                   : const Icon(Icons.notifications_off_outlined),
@@ -248,106 +262,120 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            FutureBuilder(
-              future: ref.watch(boardAddProvider).get(widget.board.id),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  MsgBoardDetailResponseModel boardDetail = snapshot.data ??
-                      widget.board as MsgBoardDetailResponseModel;
-                  return Board(
-                    board: boardDetail,
-                    titleSize: 13,
-                  );
-                }
-              },
-            ),
-            FutureBuilder(
-              future:
-                  ref.watch(commentProvider).get(widget.board.id.toString()),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  List<CommentModel> comments = snapshot.data ?? [];
-                  ScrollController scrollController = ScrollController();
-
-                  SchedulerBinding.instance.addPostFrameCallback((_) {
-                    scrollController
-                        .jumpTo(scrollController.position.maxScrollExtent);
-                  });
-
-                  return Expanded(
-                    child: ListView.builder(
-                      controller: scrollController,
-                      itemCount: comments.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        return Comment(
-                          comment: comments[index],
-                          selectComment:
-                              selectCommentIndex[0] == comments[index].id ||
-                                  selectCommentIndex[1] == comments[index].id,
-                          selectReplyIndex: selectReplyIndex[1],
-                        );
-                      },
-                    ),
-                  );
-                }
-              },
-            ),
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.only(bottom: 50),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: textEditingController,
-                      decoration: InputDecoration(
-                        hintText: '입력',
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: BODY_TEXT_COLOR.withOpacity(0.5),
-                          ),
-                        ),
-                        suffixIcon: GestureDetector(
-                          child: const Icon(
-                            Icons.send,
-                            color: PRIMARY50_COLOR,
-                            size: 30,
-                          ),
-                          onTap: () {
-                            if (selectCommentIndex[0] != -1) {
-                              // Upload Reply
-                              addNewReply(selectCommentIndex[0]);
-                            } else if (selectCommentIndex[1] != -1) {
-                              // Modify Comment
-                              modifyComment(selectCommentIndex[1]);
-                            } else if (selectReplyIndex[1] != -1) {
-                              // Modify Reply
-                              modifyReply(selectReplyIndex[1]);
-                            } else {
-                              addNewComment();
-                            }
-
-                            textEditingController.clear();
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            renderBoardDetail(),
+            renderCommentList(selectCommentIndex, selectReplyIndex),
+            renderTextField(selectCommentIndex, selectReplyIndex),
           ],
         ));
+  }
+
+  Widget renderBoardDetail() {
+    return FutureBuilder(
+      future: ref.watch(boardAddProvider).get(widget.board.id),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else {
+          MsgBoardDetailResponseModel boardDetail =
+              snapshot.data ?? widget.board as MsgBoardDetailResponseModel;
+          return Board(
+            board: boardDetail,
+            titleSize: 13,
+          );
+        }
+      },
+    );
+  }
+
+  Widget renderCommentList(selectCommentIndex, selectReplyIndex) {
+    final data = ref.watch(commentPaginationProvider);
+
+    if (data is CursorPaginationModelLoading) {
+      return const Center(
+        child: CircularProgressIndicator(
+          color: PRIMARY_COLOR,
+        ),
+      );
+    }
+
+    if (data is CursorPaginationModelError) {
+      return const Center(
+        child: Text("데이터를 불러올 수 없습니다."),
+      );
+    }
+
+    final cp = data as CursorPaginationModel;
+
+    return Expanded(
+      child: ListView.separated(
+        controller: controller,
+        itemCount: cp.data.length,
+        itemBuilder: (_, index) {
+          final CommentModel comment = cp.data[index];
+          return Comment(
+            comment: comment,
+            selectComment: selectCommentIndex[0] == comment.id ||
+                selectCommentIndex[1] == comment.id,
+            selectReplyIndex: selectReplyIndex[1],
+          );
+        },
+        separatorBuilder: (_, index) {
+          return const SizedBox(
+            height: 1.0,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget renderTextField(selectCommentIndex, selectReplyIndex) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.only(bottom: 50),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: textEditingController,
+              decoration: InputDecoration(
+                hintText: '입력',
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: BODY_TEXT_COLOR.withOpacity(0.5),
+                  ),
+                ),
+                suffixIcon: GestureDetector(
+                  child: const Icon(
+                    Icons.send,
+                    color: PRIMARY50_COLOR,
+                    size: 30,
+                  ),
+                  onTap: () {
+                    if (selectCommentIndex[0] != -1) {
+                      // Upload Reply
+                      addNewReply(selectCommentIndex[0]);
+                    } else if (selectCommentIndex[1] != -1) {
+                      // Modify Comment
+                      modifyComment(selectCommentIndex[1]);
+                    } else if (selectReplyIndex[1] != -1) {
+                      // Modify Reply
+                      modifyReply(selectReplyIndex[1]);
+                    } else {
+                      addNewComment();
+                    }
+
+                    textEditingController.clear();
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
