@@ -234,7 +234,13 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
               });
               ref.read(isQuestionStateProvider.notifier).set(isQuestionClicked);
             } else if (widget.icon == Icons.more_horiz) {
-              moreDialog(context);
+              if (widget.commentId == -2) {
+                notAllowed("댓글 수정 권한이 없습니다.");
+              } else if (widget.replyId == -2) {
+                notAllowed("대댓글 수정 권한이 없습니다.");
+              } else {
+                moreDialog(context);
+              }
             }
           },
           child: Row(
