@@ -1,9 +1,6 @@
 package com.dclass.backend.application
 
-import com.dclass.backend.application.dto.CommentScrollPageRequest
-import com.dclass.backend.application.dto.LikeCommentRequest
-import com.dclass.backend.application.dto.LikeReplyRequest
-import com.dclass.backend.application.dto.UpdateCommentRequest
+import com.dclass.backend.application.dto.*
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.community.CommunityRepository
@@ -62,12 +59,31 @@ class CommentIntegrationTest(
             )
         )
 
+        When("해당 게시글에 댓글을 작성하면") {
+            val comment = commentService.create(1, CreateCommentRequest(1, "저녁 메뉴 추천 받습니다"))
+
+            Then("댓글이 작성된다") {
+                val savedComment = commentRepository.findById(comment.id).get()
+                savedComment.content shouldBe "저녁 메뉴 추천 받습니다"
+            }
+        }
+
+        When("해당 게시글에 댓글을 삭제하면") {
+            val comment = commentService.create(1, CreateCommentRequest(1, "저녁 메뉴 추천 받습니다"))
+            commentService.delete(1, DeleteCommentRequest(comment.id))
+
+            Then("댓글이 삭제된다") {
+                val savedComment = commentRepository.findById(comment.id)
+                savedComment.isEmpty shouldBe true
+            }
+        }
+
         When("해당 게시글의 댓글과 대댓글을 조회하면") {
-            val comments = commentService.findAllByPostId(CommentScrollPageRequest(1L,null,10))
+            val comments = commentService.findAllByPostId(CommentScrollPageRequest(1L, null, 10))
 
             Then("댓글과 대댓글이 조회된다") {
 
-                comments.data.size shouldBe 3
+                comments.data.size shouldBe 4
                 comments.data[0].replies.size shouldBe 3
                 comments.data[1].replies.size shouldBe 2
             }
@@ -77,7 +93,7 @@ class CommentIntegrationTest(
             val count = commentRepository.countCommentReplyByPostId(1L)
 
             Then("댓글과 대댓글 수가 조회된다") {
-                count shouldBe 8
+                count shouldBe 9
             }
         }
 
