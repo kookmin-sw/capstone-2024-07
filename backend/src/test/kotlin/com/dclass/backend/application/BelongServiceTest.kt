@@ -7,7 +7,7 @@ import com.dclass.backend.domain.department.DepartmentRepository
 import com.dclass.backend.domain.department.getByIdOrThrow
 import com.dclass.backend.domain.department.getByTitleOrThrow
 import com.dclass.backend.exception.department.DepartmentException
-import com.dclass.backend.exception.department.DepartmentExceptionType.*
+import com.dclass.backend.exception.department.DepartmentExceptionType.NOT_FOUND_DEPARTMENT
 import com.dclass.support.fixtures.belong
 import com.dclass.support.fixtures.department
 import io.kotest.assertions.throwables.shouldThrow
@@ -19,6 +19,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 val UPDATEABLE = LocalDateTime.now().minusDays(100)
+val NOT_UPDATEABLE = LocalDateTime.now()
 
 class BelongServiceTest : BehaviorSpec({
 
@@ -34,10 +35,11 @@ class BelongServiceTest : BehaviorSpec({
         every { departmentRepository.getByTitleOrThrow(request.major) } returns department(id = 3L, title = request.major)
         every { departmentRepository.getByTitleOrThrow(request.minor) } returns department(id = 4L, title = request.minor)
 
-        val belong = belong(userId = userId, modifiedDateTime = UPDATEABLE)
-        every { belongRepository.getOrThrow(userId) } returns belong
+
 
         When("특정 회원이 학과를 변경하면") {
+            val belong = belong(userId = userId, modifiedDateTime = UPDATEABLE)
+            every { belongRepository.getOrThrow(userId) } returns belong
             val actual = belongService.editDepartments(userId, request)
 
             Then("회원의 학과가 변경된다") {
@@ -45,9 +47,21 @@ class BelongServiceTest : BehaviorSpec({
                 belong.minor shouldBe 4L
             }
         }
+
+        When("특정 회원의 학과 변경 가능 날짜를 조회하면") {
+            val belong = belong(userId = userId, modifiedDateTime = NOT_UPDATEABLE)
+            every { belongRepository.getOrThrow(userId) } returns belong
+            val actual = belongService.remain(userId)
+
+            Then("남은 학과 변경 가능 날짜가 조회된다") {
+                actual.remainDays shouldBe 89
+            }
+        }
     }
 
-    Given("학과가 존재하지 않는 경우"){
+
+
+    Given("학과가 존재하지 않는 경우") {
         val userId = 1L
         val request = UpdateDepartmentRequest(major = "존재하지않는 학과", minor = "산업공학과")
 
@@ -74,7 +88,7 @@ class BelongServiceTest : BehaviorSpec({
 
         val belong = belong(userId = userId, modifiedDateTime = UPDATEABLE)
         every { belongRepository.getOrThrow(userId) } returns belong
-        every { departmentRepository.findById(any())} returns Optional.of(department())
+        every { departmentRepository.findById(any()) } returns Optional.of(department())
         val department = departmentRepository.getByIdOrThrow(belong.activated)
 
         When("활성화된 학과를 변경하면") {
@@ -87,4 +101,6 @@ class BelongServiceTest : BehaviorSpec({
             }
         }
     }
+
+
 })
