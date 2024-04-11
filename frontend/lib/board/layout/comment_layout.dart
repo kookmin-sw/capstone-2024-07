@@ -89,7 +89,8 @@ class _CommentState extends ConsumerState<Comment>
                           icon: Icons.chat_outlined,
                           iconSize: 15,
                           text: widget.comment.replies.length.toString(),
-                          commentId: widget.comment.id,
+                          commentId:
+                              widget.comment.deleted ? -2 : widget.comment.id,
                           postId: -1,
                           replyId: -1,
                           isClicked: false,

@@ -180,7 +180,11 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
               }
             } else if (widget.icon == Icons.chat_outlined &&
                 widget.commentId != -1) {
-              chatDialog(context);
+              if (widget.commentId == -2) {
+                notAllowed("삭제된 댓글엔 대댓글을 달 수 없습니다.");
+              } else {
+                chatDialog(context);
+              }
             } else if (widget.icon == Icons.star_outline_rounded) {
               setState(() {
                 if (isFavoriteClicked) {
