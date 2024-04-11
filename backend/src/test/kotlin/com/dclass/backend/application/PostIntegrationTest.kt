@@ -2,9 +2,11 @@ package com.dclass.backend.application
 
 import com.dclass.backend.application.dto.PostScrollPageRequest
 import com.dclass.backend.domain.belong.BelongRepository
+import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.post.PostCount
 import com.dclass.backend.domain.post.PostRepository
+import com.dclass.backend.domain.scrap.ScrapRepository
 import com.dclass.backend.domain.user.UniversityRepository
 import com.dclass.backend.domain.user.UserRepository
 import com.dclass.backend.exception.post.PostException
@@ -29,6 +31,8 @@ class PostIntegrationTest(
     private val universityRepository: UniversityRepository,
     private val communityRepository: CommunityRepository,
     private val postRepository: PostRepository,
+    private val scrapRepository: ScrapRepository,
+    private val commentRepository: CommentRepository,
 ) : BehaviorSpec({
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 
@@ -121,10 +125,6 @@ class PostIntegrationTest(
                     postCount = PostCount()
                 )
             )
-
-            postRepository.save(post(userId = user.id, communityId = communities[0].id))
-            postRepository.save(post(userId = user.id, communityId = communities[1].id))
-            postRepository.save(post(userId = user.id, communityId = communities[2].id))
             postRepository.save(post(title = "검색용 제목", content = "내용입니다", userId = user.id, communityId = communities[2].id))
         }
 
@@ -160,10 +160,6 @@ class PostIntegrationTest(
                     postCount = PostCount()
                 )
             )
-
-            postRepository.save(post(userId = anotherUser.id, communityId = notMyCommunities[0].id))
-            postRepository.save(post(userId = anotherUser.id, communityId = notMyCommunities[1].id))
-            postRepository.save(post(userId = anotherUser.id, communityId = notMyCommunities[2].id))
             postRepository.save(post(title = "검색용 제목", content = "내용입니다", userId = anotherUser.id, communityId = notMyCommunities[2].id))
         }
 
@@ -175,23 +171,37 @@ class PostIntegrationTest(
                 actual.meta.count shouldBe 30
             }
         }
-//
-//        When("인기 게시글을 조회하면") {
-//            val actual = postService.getAll(user.id, PostScrollPageRequest(size = 30, isHot = true))
-//
-//            Then("자신이 속한 학과 커뮤니티의 인기 게시글이 조회된다") {
-//                actual.meta.count shouldBe 20
-//            }
-//        }
-//
-//        When("특정 게시글을 검색하면") {
-//            val actual = postService.getAll(user.id, PostScrollPageRequest(size = 30, isHot = false, keyword = "검색용"))
-//            val actual2 = postService.getAll(user.id, PostScrollPageRequest(size = 30, isHot = false, keyword = "내용"))
-//
-//            Then("검색된 게시글이 조회된다") {
-//                actual.meta.count shouldBe 5
-//                actual2.meta.count shouldBe 5
-//            }
-//        }
+
+        When("특정 유저가 작성한 게시글을 조회하면") {
+            val actual = postService.getByUserId(user.id, PostScrollPageRequest(size = 30))
+
+            Then("특정 유저가 작성한 게시글이 조회된다") {
+                actual.meta.count shouldBe 20
+            }
+        }
+
+        When("특정 유저가 특정 게시글을 스크랩하면") {
+            repeat(5) {
+                scrapRepository.save(scrap(userId = user.id, postId = it + 1L))
+            }
+
+            val actual = postService.getScrapped(user.id, PostScrollPageRequest(size = 30))
+
+            Then("특정 유저가 스크랩한 게시글이 조회된다") {
+                actual.meta.count shouldBe 5
+            }
+        }
+
+        When("특정 유저가 특정 게시글에 댓글을 작성하면") {
+            repeat(5) {
+                commentRepository.save(comment(userId = user.id, postId = it + 1L))
+            }
+
+            val actual = postService.getCommentedAndReplied(user.id, PostScrollPageRequest(size = 30))
+
+            Then("특정 유저가 댓글을 작성한 게시글이 조회된다") {
+                actual.meta.count shouldBe 5
+            }
+        }
     }
 })
