@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/provider/notification_notifier_provider.dart';
 import 'package:frontend/board/view/msg_board_list_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -28,22 +29,22 @@ class AuthProvider extends ChangeNotifier {
   }
 
   List<GoRoute> get routes => [
-    GoRoute(
-      path: '/boardList',
-      name: MsgBoardListScreen.routeName,
-      builder: (context, state) => MsgBoardListScreen(),
-    ),
-    GoRoute(
-      path: '/splash',
-      name: SplashScreen.routeName,
-      builder: (context, state) => SplashScreen(),
-    ),
-    GoRoute(
-      path: '/login',
-      name: LoginScreen.routeName,
-      builder: (context, state) => LoginScreen(),
-    ),
-  ];
+        GoRoute(
+          path: '/boardList',
+          name: MsgBoardListScreen.routeName,
+          builder: (context, state) => const MsgBoardListScreen(),
+        ),
+        GoRoute(
+          path: '/splash',
+          name: SplashScreen.routeName,
+          builder: (context, state) => const SplashScreen(),
+        ),
+        GoRoute(
+          path: '/login',
+          name: LoginScreen.routeName,
+          builder: (context, state) => const LoginScreen(),
+        ),
+      ];
 
   void logout() {
     ref.read(memberStateNotifierProvider.notifier).logout();
@@ -66,7 +67,10 @@ class AuthProvider extends ChangeNotifier {
     // 1. MemberModel
     // 로그인 중이거나 현재 위치가 SplashScreen이면 홈으로 이동
     if (member is MemberModel) {
-      return loggingIn || state.location == '/splash' ? '/boardList' : null;
+      if (loggingIn || state.location == '/splash') {
+        ref.watch(notificationStateProvider.notifier).listen();
+        return '/boardList';
+      }
     }
 
     // 2. MemberModelError
