@@ -56,7 +56,6 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
                               int remainDays = resp.data['remainDays'];
                               int remainHours = resp.data['remainHours'];
                               int remainMinutes = resp.data['remainMinutes'];
-                              print('$remainDays/$remainHours/$remainMinutes');
 
                               if(remainDays==0 && remainHours==0 && remainMinutes==0){
                                 setState(() {
@@ -67,7 +66,7 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
                                   context: context,
                                   builder: (context) {
                                     return NoticePopupDialog(
-                                      message: "$remainDays일 뒤에 변경이 가능합니다.",
+                                      message: remainDays == 0 ? "1일 뒤에 변경이 가능합니다." : "$remainDays일 뒤에 변경이 가능합니다.",
                                       buttonText: "닫기",
                                       onPressed: () {
                                         Navigator.pop(context);
