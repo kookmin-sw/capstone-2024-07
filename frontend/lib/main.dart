@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/board/provider/notification_notifier_provider.dart';
 
 import 'common/provider/router_provider.dart';
 
@@ -18,7 +17,6 @@ class _App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
-    ref.watch(notificationStateProvider.notifier).listen();
 
     return MaterialApp.router(
       routerConfig: router,
