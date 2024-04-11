@@ -13,7 +13,8 @@ class PasswordResetScreen extends ConsumerStatefulWidget {
   const PasswordResetScreen({super.key});
 
   @override
-  ConsumerState<PasswordResetScreen> createState() => _PasswordResetScreenState();
+  ConsumerState<PasswordResetScreen> createState() =>
+      _PasswordResetScreenState();
 }
 
 class _PasswordResetScreenState extends ConsumerState<PasswordResetScreen> {
@@ -35,7 +36,9 @@ class _PasswordResetScreenState extends ConsumerState<PasswordResetScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _renderTop(),
-                const SizedBox(height: 20.0),
+                const SizedBox(height: 30.0),
+                _renderInfo(),
+                const SizedBox(height: 30.0),
                 _renderNameField(),
                 _renderEmailField(),
                 const SizedBox(height: 20.0),
@@ -74,6 +77,29 @@ class _PasswordResetScreenState extends ConsumerState<PasswordResetScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _renderInfo() {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '비밀번호를 분실하셨나요?',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
+        Text(
+          '이름과 학교 이메일을 입력하시면 새로운 비밀번호를 이메일로 전송해드립니다.',
+          style: TextStyle(
+            fontSize: 14,
+            color: BODY_TEXT_COLOR,
+          ),
+        ),
+      ],
     );
   }
 
@@ -161,8 +187,7 @@ class _PasswordResetScreenState extends ConsumerState<PasswordResetScreen> {
         ),
       ),
       onPressed: () async {
-        if (!isEmailNull &&
-            !isNameNull) {
+        if (!isEmailNull && !isNameNull) {
           try {
             final resp = await dio.post(
               'http://$ip/api/users/reset-password',
@@ -176,7 +201,7 @@ class _PasswordResetScreenState extends ConsumerState<PasswordResetScreen> {
                 context: context,
                 builder: (context) {
                   return NoticePopupDialog(
-                    message: "새로운 임시 비밀번호를 이메일로 전송했습니다.",
+                    message: "새로운 비밀번호를 이메일로 전송했습니다.",
                     buttonText: "닫기",
                     onPressed: () {
                       Navigator.pop(context);
@@ -199,7 +224,7 @@ class _PasswordResetScreenState extends ConsumerState<PasswordResetScreen> {
                 );
               },
             );
-          } catch (e){
+          } catch (e) {
             showDialog(
               context: context,
               builder: (context) {
@@ -215,7 +240,7 @@ class _PasswordResetScreenState extends ConsumerState<PasswordResetScreen> {
           }
         }
       },
-      child: Text('임시 비밀번호 발급'),
+      child: Text('비밀번호 초기화'),
     );
   }
 }
