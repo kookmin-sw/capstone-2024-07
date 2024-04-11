@@ -21,6 +21,7 @@ MsgBoardResponseModel _$MsgBoardResponseModelFromJson(
           (json['images'] as List<dynamic>).map((e) => e as String).toList(),
       count: ReactCountModel.fromJson(json['count'] as Map<String, dynamic>),
       isQuestion: json['isQuestion'] as bool,
+      imageCount: json['imageCount'] as int,
       createdDateTime: json['createdDateTime'] as String,
     );
 
@@ -38,6 +39,7 @@ Map<String, dynamic> _$MsgBoardResponseModelToJson(
       'images': instance.images,
       'count': instance.count,
       'isQuestion': instance.isQuestion,
+      'imageCount': instance.imageCount,
       'createdDateTime': instance.createdDateTime,
     };
 

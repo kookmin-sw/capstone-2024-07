@@ -15,6 +15,7 @@ class MsgBoardResponseModel {
   final List<String> images;
   final ReactCountModel count;
   final bool isQuestion;
+  final int imageCount;
   final String createdDateTime;
 
   MsgBoardResponseModel({
@@ -29,6 +30,7 @@ class MsgBoardResponseModel {
     required this.images,
     required this.count,
     required this.isQuestion,
+    required this.imageCount,
     required this.createdDateTime,
   });
 

@@ -17,6 +17,7 @@ class BoardCard extends StatelessWidget {
   final List<String> images;
   final ReactCountModel count;
   final bool isQuestion;
+  final int imageCount;
   final String createdDateTime;
 
   const BoardCard({
@@ -31,6 +32,7 @@ class BoardCard extends StatelessWidget {
     required this.images,
     required this.count,
     required this.isQuestion,
+    required this.imageCount,
     required this.createdDateTime,
     super.key,
   });
@@ -49,6 +51,7 @@ class BoardCard extends StatelessWidget {
       images: msgBoardResponseModel.images,
       count: msgBoardResponseModel.count,
       isQuestion: msgBoardResponseModel.isQuestion,
+      imageCount: msgBoardResponseModel.imageCount,
       createdDateTime: msgBoardResponseModel.createdDateTime,
     );
   }
@@ -102,7 +105,15 @@ class BoardCard extends StatelessWidget {
                     TextWithIconForView(
                       icon: Icons.star_outline_rounded,
                       iconSize: 18,
-                      text: 0.toString(),
+                      text: count.scrapCount.toString(),
+                    ),
+                    const SizedBox(
+                      width: 13,
+                    ),
+                    TextWithIconForView(
+                      icon: Icons.photo_size_select_actual_outlined,
+                      iconSize: 18,
+                      text: imageCount.toString(),
                     ),
                     const SizedBox(
                       width: 13,

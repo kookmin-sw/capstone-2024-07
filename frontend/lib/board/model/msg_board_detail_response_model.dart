@@ -23,6 +23,7 @@ class MsgBoardDetailResponseModel extends MsgBoardResponseModel {
     required this.isScrapped,
     required this.likedBy,
     required super.createdDateTime,
+    required super.imageCount,
   });
 
   factory MsgBoardDetailResponseModel.fromJson(Map<String, dynamic> json) =>
