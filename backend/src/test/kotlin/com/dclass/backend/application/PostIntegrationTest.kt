@@ -1,5 +1,7 @@
 package com.dclass.backend.application
 
+import com.dclass.backend.application.dto.DeletePostRequest
+import com.dclass.backend.application.dto.PostDetailResponse
 import com.dclass.backend.application.dto.PostScrollPageRequest
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.comment.CommentRepository
@@ -18,6 +20,7 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.extensions.spring.SpringTestExtension
 import io.kotest.extensions.spring.SpringTestLifecycleMode
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.instanceOf
 import org.springframework.transaction.annotation.Transactional
 
 const val NEVER_EXIST_ID: Long = 999_999
@@ -35,6 +38,52 @@ class PostIntegrationTest(
     private val commentRepository: CommentRepository,
 ) : BehaviorSpec({
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
+
+    Given("특정 학과에 유저가 존재 할 경우") {
+        val univ = universityRepository.save(university())
+        val user = userRepository.save(user(university = univ))
+        val community = communityRepository.save(community(title = "JOB"))
+        belongRepository.save(
+            belong(
+                userId = user.id,
+                departmentIds = listOf(community.departmentId, community.departmentId + 1)
+            )
+        )
+
+        When("게시글을 작성하면") {
+            val actual = postService.create(
+                user.id,
+                createPostRequest()
+            )
+
+            Then("게시글이 생성된다") {
+                actual shouldBe instanceOf<PostDetailResponse>()
+            }
+        }
+
+        When("게시글을 삭제하면") {
+            val post = postRepository.save(post(userId = user.id, communityId = community.departmentId))
+            postService.delete(user.id, DeletePostRequest(post.id))
+
+            Then("게시글이 삭제된다") {
+                shouldThrow<PostException> {
+                    postService.getById(user.id, post.id)
+                }.exceptionType() shouldBe PostExceptionType.NOT_FOUND_POST
+            }
+        }
+
+        When("게시글을 수정하면") {
+            val post = postRepository.save(post(userId = user.id, communityId = community.departmentId))
+            postService.update(user.id, updatePostRequest(postId = post.id))
+
+            Then("게시글이 수정된다") {
+                val actual = postService.getById(user.id, post.id)
+                actual.postTitle shouldBe "수정된 제목"
+                actual.postContent shouldBe "수정된 내용"
+            }
+        }
+
+    }
 
     Given("특정 학과에 속한 학생이 게시글을 작성한 경우") {
         val univ = universityRepository.save(university())
