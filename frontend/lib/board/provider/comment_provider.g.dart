@@ -32,7 +32,7 @@ class _CommentNotifier implements CommentNotifier {
     };
     final _headers = <String, dynamic>{r'accessToken': 'true'};
     _headers.removeWhere((k, v) => v == null);
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<CursorPaginationModel<CommentModel>>(Options(
       method: 'GET',
@@ -87,29 +87,34 @@ class _CommentNotifier implements CommentNotifier {
   }
 
   @override
-  Future<void> heart(Map<String, dynamic> data) async {
+  Future<int> heart(Map<String, dynamic> data) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'accessToken': 'true'};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(data);
-    await _dio.fetch<void>(_setStreamType<void>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-    )
-        .compose(
-          _dio.options,
-          '/api/comments/likes',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
+    try {
+      await _dio.fetch<void>(_setStreamType<void>(Options(
+        method: 'POST',
+        headers: _headers,
+        extra: _extra,
+      )
+          .compose(
+            _dio.options,
+            '/api/comments/likes',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(
+              baseUrl: _combineBaseUrls(
+            _dio.options.baseUrl,
+            baseUrl,
+          ))));
+      return 1;
+    } catch (e) {
+      return -1;
+    }
   }
 
   @override
@@ -147,7 +152,7 @@ class _CommentNotifier implements CommentNotifier {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'accessToken': 'true'};
     _headers.removeWhere((k, v) => v == null);
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     await _dio.fetch<void>(_setStreamType<void>(Options(
       method: 'DELETE',
       headers: _headers,
