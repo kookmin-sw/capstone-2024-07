@@ -59,6 +59,42 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
     return false;
   }
 
+  void notAllowed(String s) {
+    showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(s),
+              ],
+            ),
+            actions: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("확인"),
+                  ),
+                ],
+              ),
+            ],
+          );
+        }));
+  }
+
+  void increaseHeart() {
+    setState(() {
+      textCount += 1;
+      isHeartClicked = true;
+    });
+    heartAnimationController.forward();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -107,24 +143,39 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
               if (isHeartClicked) {
                 alreadyHeart(context);
               } else {
-                setState(() {
-                  textCount += 1;
-                  isHeartClicked = true;
-                });
-                heartAnimationController.forward();
-
                 if (widget.postId != -1) {
-                  ref.watch(boardAddProvider).heart(widget.postId);
+                  ref
+                      .watch(boardAddProvider)
+                      .heart(widget.postId)
+                      .then((value) {
+                    if (value != -1) {
+                      increaseHeart();
+                    } else {
+                      notAllowed("자신의 글에는 좋아요를 할 수 없습니다.");
+                    }
+                  });
                 } else if (widget.commentId != -1) {
                   final requestData = {
                     'commentId': widget.commentId,
                   };
-                  ref.watch(commentProvider).heart(requestData);
+                  ref.watch(commentProvider).heart(requestData).then((value) {
+                    if (value != -1) {
+                      increaseHeart();
+                    } else {
+                      notAllowed("자신의 댓글에는 좋아요를 할 수 없습니다.");
+                    }
+                  });
                 } else if (widget.replyId != -1) {
                   final requestData = {
                     'replyId': widget.replyId,
                   };
-                  ref.watch(replyProvider).heart(requestData);
+                  ref.watch(replyProvider).heart(requestData).then((value) {
+                    if (value != -1) {
+                      increaseHeart();
+                    } else {
+                      notAllowed("자신의 대댓글에는 좋아요를 할 수 없습니다.");
+                    }
+                  });
                 }
               }
             } else if (widget.icon == Icons.chat_outlined &&

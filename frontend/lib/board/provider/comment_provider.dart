@@ -41,7 +41,7 @@ abstract class CommentNotifier {
   @Headers({
     'accessToken': 'true',
   })
-  Future<void> heart(
+  Future<int> heart(
     @Body() Map<String, dynamic> data,
   );
 
