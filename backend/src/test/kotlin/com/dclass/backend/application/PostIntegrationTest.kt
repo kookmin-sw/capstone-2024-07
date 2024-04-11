@@ -83,6 +83,29 @@ class PostIntegrationTest(
             }
         }
 
+        When("존재하지 않는 게시글에 삭제 및 수정을 시도하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<PostException> {
+                    postService.delete(user.id, DeletePostRequest(NEVER_EXIST_ID))
+                }.exceptionType() shouldBe PostExceptionType.NOT_FOUND_POST
+
+                shouldThrow<PostException> {
+                    postService.update(user.id, updatePostRequest(postId = NEVER_EXIST_ID))
+                }.exceptionType() shouldBe PostExceptionType.NOT_FOUND_POST
+            }
+        }
+
+        When("게시글에 좋아요를 누르면") {
+            val post = postRepository.save(post(userId = 2L, communityId = community.departmentId))
+
+            postService.likes(user.id, post.id)
+
+            Then("게시글에 좋아요가 눌린다") {
+                val actual = postService.getById(user.id, post.id)
+                actual.count.likeCount shouldBe 1
+            }
+        }
+
     }
 
     Given("특정 학과에 속한 학생이 게시글을 작성한 경우") {
