@@ -23,8 +23,11 @@ class _Reply extends ConsumerState<Reply> {
   @override
   void initState() {
     super.initState();
-    ref.read(memberRepositoryProvider).getMe().then(
-        (value) => isMine = value.email == widget.reply.userInformation.email);
+    ref.read(memberRepositoryProvider).getMe().then((value) {
+      setState(() {
+        isMine = value.email == widget.reply.userInformation.email;
+      });
+    });
   }
 
   @override

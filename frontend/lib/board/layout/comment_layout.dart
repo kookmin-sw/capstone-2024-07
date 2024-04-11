@@ -32,8 +32,11 @@ class _CommentState extends ConsumerState<Comment>
     animationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 1));
     replies = widget.comment.replies;
-    ref.read(memberRepositoryProvider).getMe().then((value) =>
-        isMine = value.email == widget.comment.userInformation.email);
+    ref.read(memberRepositoryProvider).getMe().then((value) {
+      setState(() {
+        isMine = value.email == widget.comment.userInformation.email;
+      });
+    });
   }
 
   @override
