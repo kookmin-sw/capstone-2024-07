@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/common/const/colors.dart';
+import 'package:frontend/member/provider/member_repository_provider.dart';
 
-class Reply extends ConsumerWidget {
+class Reply extends ConsumerStatefulWidget {
   final ReplyModel reply;
   final bool selectReply;
   const Reply({
@@ -14,7 +15,20 @@ class Reply extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<Reply> createState() => _Reply();
+}
+
+class _Reply extends ConsumerState<Reply> {
+  bool isMine = false;
+  @override
+  void initState() {
+    super.initState();
+    ref.read(memberRepositoryProvider).getMe().then(
+        (value) => isMine = value.email == widget.reply.userInformation.email);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         const SizedBox(
@@ -51,11 +65,13 @@ class Reply extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            reply.userInformation.nickname,
+                            widget.reply.userInformation.nickname,
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
-                              color: selectReply ? PRIMARY_COLOR : Colors.black,
+                              color: widget.selectReply
+                                  ? PRIMARY_COLOR
+                                  : Colors.black,
                             ),
                           ),
                           Container(
@@ -71,10 +87,11 @@ class Reply extends ConsumerWidget {
                                   TextWithIcon(
                                     icon: Icons.favorite_outline_rounded,
                                     iconSize: 15,
-                                    text: reply.likeCount.count.toString(),
+                                    text:
+                                        widget.reply.likeCount.count.toString(),
                                     commentId: -1,
                                     postId: -1,
-                                    replyId: reply.id,
+                                    replyId: widget.reply.id,
                                     isClicked: false,
                                   ),
                                   const SizedBox(
@@ -86,7 +103,7 @@ class Reply extends ConsumerWidget {
                                     text: "-1",
                                     commentId: -1,
                                     postId: -1,
-                                    replyId: reply.id,
+                                    replyId: isMine ? widget.reply.id : -2,
                                     isClicked: false,
                                   ),
                                 ],
@@ -96,11 +113,12 @@ class Reply extends ConsumerWidget {
                         ],
                       ),
                       Text(
-                        reply.content,
+                        widget.reply.content,
                         style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.normal,
-                          color: selectReply ? PRIMARY_COLOR : Colors.black,
+                          color:
+                              widget.selectReply ? PRIMARY_COLOR : Colors.black,
                         ),
                       ),
                     ],

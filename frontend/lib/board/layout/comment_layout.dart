@@ -4,6 +4,7 @@ import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/layout/reply_layout.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
+import 'package:frontend/member/provider/member_repository_provider.dart';
 
 class Comment extends ConsumerStatefulWidget {
   final CommentModel comment;
@@ -23,6 +24,7 @@ class _CommentState extends ConsumerState<Comment>
     with SingleTickerProviderStateMixin {
   late AnimationController animationController;
   List<ReplyModel> replies = [];
+  bool isMine = false;
 
   @override
   void initState() {
@@ -30,6 +32,8 @@ class _CommentState extends ConsumerState<Comment>
     animationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 1));
     replies = widget.comment.replies;
+    ref.read(memberRepositoryProvider).getMe().then((value) =>
+        isMine = value.email == widget.comment.userInformation.email);
   }
 
   @override
@@ -102,7 +106,7 @@ class _CommentState extends ConsumerState<Comment>
                           icon: Icons.more_horiz,
                           iconSize: 20,
                           text: "-1",
-                          commentId: widget.comment.id,
+                          commentId: isMine ? widget.comment.id : -2,
                           postId: -1,
                           replyId: -1,
                           isClicked: false,
