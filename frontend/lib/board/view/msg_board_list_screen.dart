@@ -84,6 +84,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                       commentReplyCount: 0, likeCount: 0, scrapCount: 0),
                   isQuestion: false,
                   createdDateTime: "",
+                  imageCount: 0,
                 ),
               ),
             ),

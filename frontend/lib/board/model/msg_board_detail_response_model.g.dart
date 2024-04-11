@@ -24,6 +24,7 @@ MsgBoardDetailResponseModel _$MsgBoardDetailResponseModelFromJson(
       isScrapped: json['isScrapped'] as bool,
       likedBy: json['likedBy'] as bool,
       createdDateTime: json['createdDateTime'] as String,
+      imageCount: json['imageCount'] as int,
     );
 
 Map<String, dynamic> _$MsgBoardDetailResponseModelToJson(
@@ -40,6 +41,7 @@ Map<String, dynamic> _$MsgBoardDetailResponseModelToJson(
       'images': instance.images,
       'count': instance.count,
       'isQuestion': instance.isQuestion,
+      'imageCount': instance.imageCount,
       'createdDateTime': instance.createdDateTime,
       'isScrapped': instance.isScrapped,
       'likedBy': instance.likedBy,
