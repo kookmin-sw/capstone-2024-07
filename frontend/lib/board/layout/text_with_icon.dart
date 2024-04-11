@@ -155,16 +155,20 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                     }
                   });
                 } else if (widget.commentId != -1) {
-                  final requestData = {
-                    'commentId': widget.commentId,
-                  };
-                  ref.watch(commentProvider).heart(requestData).then((value) {
-                    if (value != -1) {
-                      increaseHeart();
-                    } else {
-                      notAllowed("자신의 댓글에는 좋아요를 할 수 없습니다.");
-                    }
-                  });
+                  if (widget.commentId == -3) {
+                    notAllowed("이미 삭제된 댓글입니다.");
+                  } else {
+                    final requestData = {
+                      'commentId': widget.commentId,
+                    };
+                    ref.watch(commentProvider).heart(requestData).then((value) {
+                      if (value != -1) {
+                        increaseHeart();
+                      } else {
+                        notAllowed("자신의 댓글에는 좋아요를 할 수 없습니다.");
+                      }
+                    });
+                  }
                 } else if (widget.replyId != -1) {
                   final requestData = {
                     'replyId': widget.replyId,
@@ -234,7 +238,9 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
               });
               ref.read(isQuestionStateProvider.notifier).set(isQuestionClicked);
             } else if (widget.icon == Icons.more_horiz) {
-              if (widget.commentId == -2) {
+              if (widget.commentId == -3) {
+                notAllowed("이미 삭제된 댓글입니다.");
+              } else if (widget.commentId == -2) {
                 notAllowed("댓글 수정 권한이 없습니다.");
               } else if (widget.replyId == -2) {
                 notAllowed("대댓글 수정 권한이 없습니다.");

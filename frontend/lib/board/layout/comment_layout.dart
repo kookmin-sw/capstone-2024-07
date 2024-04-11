@@ -81,7 +81,8 @@ class _CommentState extends ConsumerState<Comment>
                           icon: Icons.favorite_outline_rounded,
                           iconSize: 15,
                           text: widget.comment.likeCount.count.toString(),
-                          commentId: widget.comment.id,
+                          commentId:
+                              widget.comment.deleted ? -3 : widget.comment.id,
                           postId: -1,
                           replyId: -1,
                           isClicked: widget.comment.isLiked,
@@ -106,7 +107,11 @@ class _CommentState extends ConsumerState<Comment>
                           icon: Icons.more_horiz,
                           iconSize: 20,
                           text: "-1",
-                          commentId: isMine ? widget.comment.id : -2,
+                          commentId: widget.comment.deleted
+                              ? -3
+                              : isMine
+                                  ? widget.comment.id
+                                  : -2,
                           postId: -1,
                           replyId: -1,
                           isClicked: false,
