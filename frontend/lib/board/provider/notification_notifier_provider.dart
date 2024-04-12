@@ -85,6 +85,8 @@ class NotificationNotifier extends StateNotifier<SSEModel> {
       }
 
       state = event;
+    }).onError((e) {
+      debugPrint("SSE-Error : ${e.toString()}");
     });
   }
 }
