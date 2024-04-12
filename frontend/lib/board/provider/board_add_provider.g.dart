@@ -54,27 +54,24 @@ class _BoardAdd implements BoardAdd {
     final _headers = <String, dynamic>{r'accessToken': 'true'};
     _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
-    try {
-      await _dio.fetch<int>(_setStreamType<int>(Options(
-        method: 'PUT',
-        headers: _headers,
-        extra: _extra,
-      )
-          .compose(
-            _dio.options,
-            '/api/post/${postId}',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(
-              baseUrl: _combineBaseUrls(
-            _dio.options.baseUrl,
-            baseUrl,
-          ))));
-      return 1;
-    } catch (e) {
-      return -1;
-    }
+    final _result = await _dio.fetch<int>(_setStreamType<int>(Options(
+      method: 'PUT',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/post/${postId}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        ))));
+    final value = _result.data!;
+    return value;
   }
 
   @override

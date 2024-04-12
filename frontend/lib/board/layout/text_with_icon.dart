@@ -48,15 +48,16 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
   late AnimationController heartAnimationController;
   final ImagePicker picker = ImagePicker();
 
-  Future<bool> getImage() async {
+  Future<String> getImage() async {
     List<XFile> images = [];
     try {
       images = await picker.pickMultiImage();
     } catch (e) {
-      return true; // permission access need!
+      debugPrint("getImageError : $e");
+      return e.toString(); // permission access need!
     }
     ref.read(imageStateProvider.notifier).add(images);
-    return false;
+    return "";
   }
 
   void notAllowed(String s) {
@@ -202,7 +203,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
               });
             } else if (widget.icon == Icons.image_rounded) {
               getImage().then((value) => {
-                    if (value)
+                    if (value != "")
                       {
                         showDialog(
                             context: context,
@@ -211,7 +212,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                                 content: const Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text("사진 접근 허용을 해주세요!"),
+                                    Text("사진 접근 허용을 해주세요!\nvalue"),
                                   ],
                                 ),
                                 actions: <Widget>[

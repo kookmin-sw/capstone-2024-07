@@ -1,8 +1,10 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
+import 'package:frontend/board/model/exception_model.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
@@ -56,6 +58,34 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
     contentController = TextEditingController(text: content);
   }
 
+  void notAllowed(String s) {
+    showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(s),
+              ],
+            ),
+            actions: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("확인"),
+                  ),
+                ],
+              ),
+            ],
+          );
+        }));
+  }
+
   Future<void> upLoad() async {
     List<String> images = [];
     int i = 0;
@@ -94,7 +124,29 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
       for (int i = 0; i < networkImages.length; i++) {
         httpImages.add(await http.get(Uri.parse(networkImages[i])));
       }
-      MsgBoardResponseModel resp = await boardAddAPI.modify(requestData);
+      MsgBoardResponseModel resp;
+      try {
+        resp = await boardAddAPI.modify(requestData);
+      } on DioException catch (e) {
+        if (e.response != null) {
+          ExceptionModel exc = e.response!.data;
+          debugPrint(exc.message);
+          notAllowed(exc.message);
+        } else {
+          debugPrint(e.message);
+          notAllowed(e.message!);
+        }
+        return;
+      } catch (e) {
+        debugPrint("boardModifyError : $e");
+        notAllowed("다시 시도해주세요!");
+        return;
+      } finally {
+        setState(() {
+          isLoading = true;
+        });
+      }
+
       i = 0;
       for (; i < resp.images.length; i++) {
         final String url = resp.images[i];
@@ -201,7 +253,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
             color: Colors.black,
           ),
           title: const Text(
-            "컴퓨터공학과 | 글 작성",
+            "글 작성",
             style: TextStyle(
               fontSize: 15,
               color: Colors.black,
