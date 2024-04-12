@@ -10,6 +10,7 @@ import 'package:frontend/board/provider/comment_pagination_provider.dart';
 import 'package:frontend/board/provider/comment_provider.dart';
 import 'package:frontend/board/provider/comment_notifier_provider.dart';
 import 'package:frontend/board/provider/image_provider.dart';
+import 'package:frontend/board/provider/network_image_provider.dart';
 import 'package:frontend/board/provider/reply_notifier_provider.dart';
 import 'package:frontend/board/provider/reply_provider.dart';
 import 'package:frontend/board/view/msg_board_add_screen.dart';
@@ -279,6 +280,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
   }
 
   Widget renderBoardDetail() {
+    ref.watch(networkImageStateProvider);
     return FutureBuilder(
       future: ref.watch(boardAddProvider).get(widget.board.id),
       builder: (context, snapshot) {
