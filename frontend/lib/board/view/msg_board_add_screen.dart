@@ -130,10 +130,10 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
       } on DioException catch (e) {
         if (e.response != null) {
           ExceptionModel exc = e.response!.data;
-          debugPrint(exc.message);
+          debugPrint("boardModifyError : ${exc.message}");
           notAllowed(exc.message);
         } else {
-          debugPrint(e.message);
+          debugPrint("boardModifyError : ${e.message}");
           notAllowed(e.message!);
         }
         return;
@@ -171,7 +171,28 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
         'isQuestion': isQuestion,
         'images': images,
       };
-      MsgBoardResponseModel resp = await boardAddAPI.post(requestData);
+      MsgBoardResponseModel resp;
+      try {
+        resp = await boardAddAPI.post(requestData);
+      } on DioException catch (e) {
+        if (e.response != null) {
+          ExceptionModel exc = e.response!.data;
+          debugPrint("boardPostError : ${exc.message}");
+          notAllowed(exc.message);
+          return;
+        } else {
+          debugPrint("boardModifyError : ${e.message}");
+          notAllowed(e.message!);
+          return;
+        }
+      } catch (e) {
+        debugPrint("boardModifyError : ${e.toString()}");
+        notAllowed("다시 시도해주세요!");
+        return;
+      } finally {
+        isLoading = false;
+      }
+
       for (int i = 0; i < resp.images.length; i++) {
         final String url = resp.images[i];
         if (i == resp.images.length - 1) {
