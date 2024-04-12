@@ -209,10 +209,13 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                             context: context,
                             builder: ((context) {
                               return AlertDialog(
-                                content: const Row(
+                                content: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text("사진 접근 허용을 해주세요!\nvalue"),
+                                    Text(
+                                      "사진 접근 허용을 해주세요!\n$value",
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ],
                                 ),
                                 actions: <Widget>[
