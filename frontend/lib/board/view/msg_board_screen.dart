@@ -22,6 +22,8 @@ import 'package:frontend/common/const/data.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
 import 'package:frontend/member/provider/member_repository_provider.dart';
 
+import '../../common/const/ip_list.dart';
+
 class MsgBoardScreen extends ConsumerStatefulWidget {
   final MsgBoardResponseModel board;
   const MsgBoardScreen({super.key, required this.board});
