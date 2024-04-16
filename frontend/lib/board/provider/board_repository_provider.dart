@@ -12,7 +12,7 @@ part 'board_repository_provider.g.dart';
 final boardRepositoryProvider = Provider<BoardRepository>((ref) {
   final dio = ref.watch(dioProvider);
 
-  return BoardRepository(dio, baseUrl: 'http://$ip');
+  return BoardRepository(dio, baseUrl: ip);
 });
 
 @RestApi()

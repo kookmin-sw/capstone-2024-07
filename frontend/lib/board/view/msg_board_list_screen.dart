@@ -157,7 +157,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
               try {
                 // 활성화된 전공을 변경하는 API 요청을 보낸다.
                 final resp = await dio.put(
-                  'http://$ip/api/belongs/switch-departments',
+                  '$ip/api/belongs/switch-departments',
                   options: Options(
                     headers: {
                       'accessToken': 'true',

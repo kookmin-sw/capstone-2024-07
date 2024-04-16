@@ -9,7 +9,7 @@ part 'scrap_provider.g.dart';
 final scrapProvider = Provider<Scrap>((ref) {
   final dio = ref.watch(dioProvider);
 
-  return Scrap(dio, baseUrl: 'http://$ip');
+  return Scrap(dio, baseUrl: ip);
 });
 
 @RestApi()

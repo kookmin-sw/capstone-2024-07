@@ -12,7 +12,7 @@ part 'comment_provider.g.dart';
 final commentProvider = Provider<CommentNotifier>((ref) {
   final dio = ref.watch(dioProvider);
 
-  return CommentNotifier(dio, baseUrl: 'http://$ip');
+  return CommentNotifier(dio, baseUrl: ip);
 });
 
 @RestApi()

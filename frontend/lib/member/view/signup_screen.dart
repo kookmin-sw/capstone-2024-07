@@ -253,7 +253,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     : () async {
                         try {
                           final resp = await dio.post(
-                            'http://$ip/api/users/authentication-code?email=$email',
+                            '$ip/api/users/authentication-code?email=$email',
                           );
                           if (resp.statusCode == 204) {
                             setState(() {
@@ -327,7 +327,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     : () async {
                         try {
                           final resp = await dio.post(
-                            'http://$ip/api/users/authenticate-email?email=$email&authenticationCode=$authNumber',
+                            '$ip/api/users/authenticate-email?email=$email&authenticationCode=$authNumber',
                           );
                           if (resp.statusCode == 204) {
                             setState(() {
@@ -723,7 +723,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             isAccept) {
           try {
             final resp = await dio.post(
-              'http://$ip/api/users/register',
+              '$ip/api/users/register',
               data: {
                 'name': name,
                 'email': email,
