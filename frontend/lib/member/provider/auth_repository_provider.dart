@@ -10,7 +10,7 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final dio = ref.watch(dioProvider);
 
   return AuthRepository(
-    baseUrl: 'http://$ip',
+    baseUrl: ip,
     dio: dio,
   );
 });

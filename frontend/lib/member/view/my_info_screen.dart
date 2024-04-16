@@ -45,7 +45,7 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
                         () async {
                           try {
                             final resp = await dio.get(
-                              'http://$ip/api/belongs/remain',
+                              '$ip/api/belongs/remain',
                               options: Options(
                                 headers: {
                                   'accessToken': 'true',
@@ -230,7 +230,7 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
             () async {
               try {
                 final resp = await dio.put(
-                  'http://$ip/api/belongs/change-departments',
+                  '$ip/api/belongs/change-departments',
                   options: Options(
                     headers: {
                       'accessToken': 'true',

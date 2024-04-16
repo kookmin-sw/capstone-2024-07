@@ -9,7 +9,7 @@ part 'reply_provider.g.dart';
 final replyProvider = Provider<ReplyNotifier>((ref) {
   final dio = ref.watch(dioProvider);
 
-  return ReplyNotifier(dio, baseUrl: 'http://$ip');
+  return ReplyNotifier(dio, baseUrl: ip);
 });
 
 @RestApi()

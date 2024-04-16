@@ -123,7 +123,7 @@ class CustomInterceptor extends Interceptor {
     print('보내는 refreshToken: $refreshToken');
     try {
       final resp = await dio.post(
-        'http://$ip/api/users/reissue-token',
+        '$ip/api/users/reissue-token',
         options: Options(
           headers: {
             'Authorization': 'Bearer $refreshToken',

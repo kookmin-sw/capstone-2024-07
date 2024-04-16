@@ -81,7 +81,7 @@ class NotificationNotifier extends StateNotifier<SSEModel> {
 
     SSEClient.subscribeToSSE(
         method: SSERequestType.GET,
-        url: "http://$ip/api/notifications/subscribe",
+        url: "$ip/api/notifications/subscribe",
         header: {
           "Authorization": "Bearer $accessToken",
           "Accept": "text/event-stream"

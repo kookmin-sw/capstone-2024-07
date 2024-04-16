@@ -190,7 +190,7 @@ class _PasswordResetScreenState extends ConsumerState<PasswordResetScreen> {
         if (!isEmailNull && !isNameNull) {
           try {
             final resp = await dio.post(
-              'http://$ip/api/users/reset-password',
+              '$ip/api/users/reset-password',
               data: {
                 'name': name,
                 'email': email,

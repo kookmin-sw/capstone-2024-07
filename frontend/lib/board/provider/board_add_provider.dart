@@ -12,7 +12,7 @@ part 'board_add_provider.g.dart';
 final boardAddProvider = Provider<BoardAdd>((ref) {
   final dio = ref.watch(dioProvider);
 
-  return BoardAdd(dio, baseUrl: 'http://$ip');
+  return BoardAdd(dio, baseUrl: ip);
 });
 
 @RestApi()
