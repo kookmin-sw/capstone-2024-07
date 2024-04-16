@@ -4,7 +4,6 @@ import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/layout/reply_layout.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
-import 'package:frontend/member/provider/member_repository_provider.dart';
 
 class Comment extends ConsumerStatefulWidget {
   final CommentModel comment;
