@@ -29,7 +29,7 @@ resource "aws_db_instance" "example" {
   username               = var.db_username
   password               = var.db_password
   instance_class         = "db.t3.micro"
-  allocated_storage      = "5"
+  allocated_storage      = "20"
   skip_final_snapshot    = true
   license_model          = "general-public-license"
   db_subnet_group_name   = aws_db_subnet_group.example.id
