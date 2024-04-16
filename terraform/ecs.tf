@@ -61,7 +61,8 @@ resource "aws_ecs_service" "staging" {
   name                  = "staging"
   cluster               = aws_ecs_cluster.staging.id
   task_definition       = aws_ecs_task_definition.service.arn
-  desired_count         = length(data.aws_availability_zones.available.names)
+  desired_count = 2
+#  desired_count         = length(data.aws_availability_zones.available.names)/2
   force_new_deployment  = true
   launch_type           = "FARGATE"
 
