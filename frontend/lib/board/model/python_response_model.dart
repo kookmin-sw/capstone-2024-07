@@ -4,10 +4,10 @@ part 'python_response_model.g.dart';
 
 @JsonSerializable()
 class PythonResponseModel {
-  final bool prafanity;
+  final bool profanity;
 
   PythonResponseModel({
-    required this.prafanity,
+    required this.profanity,
   });
 
   factory PythonResponseModel.fromJson(Map<String, dynamic> json) =>
