@@ -67,7 +67,9 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
             content: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(s),
+                Text(
+                  s,
+                ),
               ],
             ),
             actions: <Widget>[
@@ -94,7 +96,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
           await dio.post('$pythonIP/predict/', data: {"message": title});
       debugPrint("titleCheck : ${titleCheck.data["profanity"]}");
       if (titleCheck.data["profanity"]) {
-        notAllowed("제목에 비속어가 포함되어 있습니다. 수정 후 다시 시도해주세요!");
+        notAllowed("제목에 비속어가 포함되어 있습니다.\n수정 후 다시 시도해주세요!");
         setState(() {
           isLoading = false;
         });
@@ -109,7 +111,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
           await dio.post('$pythonIP/predict/', data: {"message": content});
       debugPrint("titleCheck : ${contentCheck.data["profanity"]}");
       if (contentCheck.data["profanity"]) {
-        notAllowed("글 내용에 비속어가 포함되어 있습니다. 수정 후 다시 시도해주세요!");
+        notAllowed("글 내용에 비속어가 포함되어 있습니다.\n수정 후 다시 시도해주세요!");
         setState(() {
           isLoading = false;
         });
@@ -222,7 +224,9 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
         notAllowed("다시 시도해주세요!");
         return;
       } finally {
-        isLoading = false;
+        setState(() {
+          isLoading = false;
+        });
       }
 
       for (int i = 0; i < resp.images.length; i++) {

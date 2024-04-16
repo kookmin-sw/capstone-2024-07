@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/const/categorys.dart';
@@ -17,6 +18,7 @@ import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/comment_layout.dart';
+import 'package:frontend/common/const/data.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
 import 'package:frontend/member/provider/member_repository_provider.dart';
 
@@ -227,6 +229,36 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     // TODO : notification on/off
   }
 
+  void notAllowed(String s) {
+    showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  s,
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("확인"),
+                  ),
+                ],
+              ),
+            ],
+          );
+        }));
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.watch(imageStateProvider);
@@ -365,7 +397,22 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     color: PRIMARY50_COLOR,
                     size: 30,
                   ),
-                  onTap: () {
+                  onTap: () async {
+                    try {
+                      var dio = Dio();
+                      Response contentCheck = await dio.post(
+                          '$pythonIP/predict/',
+                          data: {"message": textEditingController.text});
+                      debugPrint(
+                          "titleCheck : ${contentCheck.data["profanity"]}");
+                      if (contentCheck.data["profanity"]) {
+                        notAllowed("댓글에 비속어가 포함되어 있습니다.\n수정 후 다시 시도해주세요!");
+                        return;
+                      }
+                    } catch (e) {
+                      debugPrint("upload_content_predict : ${e.toString()}");
+                    }
+
                     if (selectCommentIndex[0] != -1) {
                       // Upload Reply
                       addNewReply(selectCommentIndex[0]);
