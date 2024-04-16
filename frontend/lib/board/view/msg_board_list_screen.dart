@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:frontend/board/component/board_card.dart';
+import 'package:frontend/board/model/msg_board_detail_response_model.dart';
+import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/board_detail_state_notifier_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/const/categorys.dart';
+import 'package:frontend/board/provider/payload_state_notifier_provider.dart';
 import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/board/view/msg_board_screen.dart';
 import 'package:frontend/common/const/colors.dart';
@@ -35,6 +38,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
   // late Future<List<MsgBoardListModel>> boards;
   List<String> categorys = categorysList;
   final ScrollController controller = ScrollController();
+  String payload = "";
 
   @override
   void initState() {
@@ -52,6 +56,26 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    payload = ref.watch(payloadNotifier);
+    if (payload != "") {
+      // Process only once After Build
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        ref.read(boardDetailNotifier.notifier).add(int.parse(payload));
+        MsgBoardDetailResponseModel resp;
+        ref.watch(boardAddProvider).get(int.parse(payload)).then((value) {
+          resp = value;
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MsgBoardScreen(
+                      board: resp,
+                    ),
+                fullscreenDialog: true),
+          );
+        });
+      });
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Column(

@@ -6,6 +6,7 @@ import 'package:flutter_client_sse/flutter_client_sse.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:frontend/board/provider/payload_state_notifier_provider.dart';
 import 'package:frontend/common/const/data.dart';
 import 'package:frontend/common/provider/secure_storage_provider.dart';
 import 'package:flutter_local_notifications/src/platform_specifics/android/enums.dart'
@@ -30,7 +31,15 @@ class NotificationNotifier extends StateNotifier<SSEModel> {
     );
     InitializationSettings settings =
         InitializationSettings(android: android, iOS: ios);
-    await notification.initialize(settings);
+    await notification.initialize(
+      settings,
+      onDidReceiveNotificationResponse: (details) {
+        if (details.payload != null) {
+          // TODO : Add payload State Notifier
+          ref.read(payloadNotifier.notifier).add(details.payload!);
+        }
+      },
+    );
   }
 
   void requestNotificationPermission() {
@@ -44,7 +53,7 @@ class NotificationNotifier extends StateNotifier<SSEModel> {
         );
   }
 
-  void sendNotification(String title, String body) {
+  void sendNotification(String title, String body, int postId) {
     NotificationDetails details = const NotificationDetails(
       iOS: DarwinNotificationDetails(
         badgeNumber: 1,
@@ -60,7 +69,7 @@ class NotificationNotifier extends StateNotifier<SSEModel> {
       ),
     );
 
-    notification.show(0, title, body, details);
+    notification.show(0, title, body, details, payload: "$postId");
     // TODO : Add 'payload : router path'
   }
 
@@ -81,7 +90,8 @@ class NotificationNotifier extends StateNotifier<SSEModel> {
       String e = event.data ?? "";
       if (e != "" && !e.contains("EventStream Created.")) {
         Map<String, dynamic> response = jsonDecode(e);
-        sendNotification(response["type"], response["content"]);
+        sendNotification(
+            response["type"], response["content"], response["postId"]);
       }
 
       state = event;
