@@ -6,11 +6,13 @@ import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
 import 'package:frontend/board/model/exception_model.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
+import 'package:frontend/board/model/python_response_model.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/provider/image_provider.dart';
 import 'package:frontend/board/provider/isquestion_provider.dart';
 import 'package:frontend/board/provider/network_image_provider.dart';
+import 'package:frontend/board/provider/python_api_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -87,6 +89,19 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   }
 
   Future<void> upLoad() async {
+    PythonResponseModel titleCheck =
+        await ref.read(pythonApiRepository).post(title);
+    if (titleCheck.profanity) {
+      notAllowed("제목에 비속어가 포함되어 있습니다. 수정 후 다시 시도해주세요!");
+      return;
+    }
+    PythonResponseModel contentCheck =
+        await ref.read(pythonApiRepository).post(content);
+    if (contentCheck.profanity) {
+      notAllowed("글 내용에 비속어가 포함되어 있습니다. 수정 후 다시 시도해주세요!");
+      return;
+    }
+
     List<String> images = [];
     int i = 0;
     for (; i < networkImages.length; i++) {

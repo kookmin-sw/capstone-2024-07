@@ -8,11 +8,11 @@ part of 'python_response_model.dart';
 
 PythonResponseModel _$PythonResponseModelFromJson(Map<String, dynamic> json) =>
     PythonResponseModel(
-      prafanity: json['prafanity'] as bool,
+      profanity: json['profanity'] as bool,
     );
 
 Map<String, dynamic> _$PythonResponseModelToJson(
         PythonResponseModel instance) =>
     <String, dynamic>{
-      'prafanity': instance.prafanity,
+      'profanity': instance.profanity,
     };
