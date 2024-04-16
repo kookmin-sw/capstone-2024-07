@@ -34,12 +34,8 @@ class CategoryCircleWithProvider extends ConsumerWidget {
           ref.read(isHotProvider.notifier).state = false;
         }
 
-        if (clickedList.contains(category)) {
-          ref.read(categoryStateProvider.notifier).remove(category);
-        } else {
-          ref.read(categoryStateProvider.notifier).clear();
-          ref.read(categoryStateProvider.notifier).add(category);
-        }
+        ref.read(categoryStateProvider.notifier).clear();
+        ref.read(categoryStateProvider.notifier).add(category);
       },
       child: Container(
         // category circle

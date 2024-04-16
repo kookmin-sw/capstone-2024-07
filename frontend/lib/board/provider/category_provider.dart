@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CategoryNotifier extends StateNotifier<List<String>> {
-  CategoryNotifier(this.ref) : super([]);
+  CategoryNotifier(this.ref) : super(["전체"]);
 
   final Ref ref;
 
