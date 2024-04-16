@@ -8,4 +8,4 @@ const simulatorIp = '127.0.0.1:8080';
 
 final ip = Platform.isIOS == true ? simulatorIp : emulatorIp;
 
-const pythonIP = "http://127.0.0.1:8000/predict";
+const pythonIP = "http://127.0.0.1:8000";

@@ -6,14 +6,13 @@ import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
 import 'package:frontend/board/model/exception_model.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
-import 'package:frontend/board/model/python_response_model.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/provider/image_provider.dart';
 import 'package:frontend/board/provider/isquestion_provider.dart';
 import 'package:frontend/board/provider/network_image_provider.dart';
-import 'package:frontend/board/provider/python_api_provider.dart';
 import 'package:frontend/common/const/colors.dart';
+import 'package:frontend/common/const/data.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:http/http.dart' as http;
@@ -89,17 +88,35 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   }
 
   Future<void> upLoad() async {
-    PythonResponseModel titleCheck =
-        await ref.read(pythonApiRepository).post(title);
-    if (titleCheck.profanity) {
-      notAllowed("제목에 비속어가 포함되어 있습니다. 수정 후 다시 시도해주세요!");
-      return;
+    var dio = Dio();
+    try {
+      Response titleCheck =
+          await dio.post('$pythonIP/predict/', data: {"message": title});
+      debugPrint("titleCheck : ${titleCheck.data["profanity"]}");
+      if (titleCheck.data["profanity"]) {
+        notAllowed("제목에 비속어가 포함되어 있습니다. 수정 후 다시 시도해주세요!");
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+    } catch (e) {
+      debugPrint("upload_title_predict : ${e.toString()}");
     }
-    PythonResponseModel contentCheck =
-        await ref.read(pythonApiRepository).post(content);
-    if (contentCheck.profanity) {
-      notAllowed("글 내용에 비속어가 포함되어 있습니다. 수정 후 다시 시도해주세요!");
-      return;
+
+    try {
+      Response contentCheck =
+          await dio.post('$pythonIP/predict/', data: {"message": content});
+      debugPrint("titleCheck : ${contentCheck.data["profanity"]}");
+      if (contentCheck.data["profanity"]) {
+        notAllowed("글 내용에 비속어가 포함되어 있습니다. 수정 후 다시 시도해주세요!");
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+    } catch (e) {
+      debugPrint("upload_content_predict : ${e.toString()}");
     }
 
     List<String> images = [];
@@ -158,7 +175,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
         return;
       } finally {
         setState(() {
-          isLoading = true;
+          isLoading = false;
         });
       }
 
