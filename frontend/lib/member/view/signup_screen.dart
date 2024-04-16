@@ -51,6 +51,33 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   // 복수전공 선택 여부
   bool isDoubleMajor = false;
 
+  final String privacyPolicy = '''
+  1. 개인정보의 수집 및 이용에 대한 동의
+
+가. 수집 및 이용 목적
+- 디클(DeCl)이 제공하는 커뮤니티 서비스 이용에 필요
+- 대학교 재학여부 및 본인 확인을 위하여 필요한 최소한의 범위 내에서 개인정보를 수집하고 있습니다.
+
+나. 수집 및 이용 항목
+- 필수항목 : 성명, 닉네임, 전자우편, 학과(1전공)
+- 선택항목 : 학과(2전공)
+
+다. 개인정보의 보유 및 이용 기간
+- 이용자의 개인정보 수집ᆞ이용에 관한 동의일로부터 채용절차 종료 시까지 위 이용목적을 위하여 보유 및 이용하게 됩니다. 단, 서비스 종료 후에는 분쟁 해결 및 법령상 의무이행 등을 위하여 1년간 보유하게 됩니다.
+
+라. 동의를 거부할 권리 및 동의를 거부할 경우의 불이익
+- 위 개인정보 중 필수정보의 수집ᆞ이용에 관한 동의는 서비스 이용을 위해 필수적이므로, 위 사항에 동의하셔야만 서비스의 이용이 가능합니다.
+- 지원자는 개인정보의 선택항목 제공 동의를 거부할 권리가 있습니다. 다만, 지원자가 선택항목 동의를 거부하는 경우 원활한 정보 확인을 할 수 없어 서비스 이용에 제한받을 수 있습니다.
+
+2. 민감정보 수집에 대한 동의 (민감정보 기재 시에만 한함)
+가. 해당 사항 없음
+
+3. 개인정보의 제3자 제공에 대한 동의
+가. 해당사항없음
+
+디클(DeCl)이 위와 같이 개인정보를 수집ᆞ이용하는 것에 동의합니다.
+  ''';
+
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
@@ -644,7 +671,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   barrierDismissible: true,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      content: Text('개인정보 수집 및 이용동의 관련 내용'),
+                      content: SingleChildScrollView(
+                        child: Text(
+                          privacyPolicy,
+                          style: const TextStyle(
+                            fontSize: 12.0,
+                          ),
+                        ),
+                      ),
                       actions: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -653,7 +687,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: Center(
+                          child: const Center(
                             child: Text('닫기'),
                           ),
                         ),
@@ -662,7 +696,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   },
                 );
               },
-              child: Text('내용 확인')),
+              child: const Text('내용 확인')),
         ],
       ),
     );
