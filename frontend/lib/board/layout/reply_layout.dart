@@ -3,15 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/common/const/colors.dart';
-import 'package:frontend/member/provider/member_repository_provider.dart';
 
 class Reply extends ConsumerStatefulWidget {
   final ReplyModel reply;
   final bool selectReply;
+  final bool isMine;
   const Reply({
     super.key,
     required this.reply,
     required this.selectReply,
+    required this.isMine,
   });
 
   @override
@@ -19,15 +20,9 @@ class Reply extends ConsumerStatefulWidget {
 }
 
 class _Reply extends ConsumerState<Reply> {
-  bool isMine = false;
   @override
   void initState() {
     super.initState();
-    ref.read(memberRepositoryProvider).getMe().then((value) {
-      setState(() {
-        isMine = value.email == widget.reply.userInformation.email;
-      });
-    });
   }
 
   @override
@@ -106,7 +101,8 @@ class _Reply extends ConsumerState<Reply> {
                                     text: "-1",
                                     commentId: -1,
                                     postId: -1,
-                                    replyId: isMine ? widget.reply.id : -2,
+                                    replyId:
+                                        widget.isMine ? widget.reply.id : -2,
                                     isClicked: false,
                                   ),
                                 ],
