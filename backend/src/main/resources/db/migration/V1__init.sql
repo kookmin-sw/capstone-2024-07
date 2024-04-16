@@ -155,6 +155,18 @@ create table users
     constraint FK_users_university_id foreign key (university_id) references university (id)
 ) engine=InnoDB;
 
+create table notifications
+(
+    is_read    bit          not null,
+    created_at datetime(6) not null,
+    id         bigint       not null auto_increment,
+    post_id    bigint       not null,
+    user_id    bigint       not null,
+    content    varchar(255) not null,
+    type       enum ('COMMENT','REPLY') not null,
+    primary key (id)
+) engine=InnoDB;
+
 INSERT INTO department (deleted, title) VALUES (0, '언어정보학과');
 INSERT INTO department (deleted, title) VALUES (0, '국어국문학과');
 INSERT INTO department (deleted, title) VALUES (0, '독어독문학과');
@@ -334,6 +346,7 @@ INSERT INTO department (deleted, title) VALUES (0, '메이크업아티스트과'
 INSERT INTO department (deleted, title) VALUES (0, '모델과');
 INSERT INTO department (deleted, title) VALUES (0, '보석감정과');
 INSERT INTO department (deleted, title) VALUES (0, '산업잠수과');
+INSERT INTO department (deleted, title) VALUES (0, '');
 
 INSERT INTO university (email_suffix, logo, name) VALUES ('gachon.ac.kr','','가천길대학');
 INSERT INTO university (email_suffix, logo, name) VALUES ('csj.ac.kr','','가톨릭상지대학교');
