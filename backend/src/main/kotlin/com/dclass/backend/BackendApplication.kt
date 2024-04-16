@@ -8,8 +8,6 @@ import org.springframework.boot.runApplication
 @ConfigurationPropertiesScan
 class BackendApplication
 
-/**/
-
 fun main(args: Array<String>) {
 	runApplication<BackendApplication>(*args)
 }
