@@ -362,6 +362,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
             selectComment: selectCommentIndex[0] == comment.id ||
                 selectCommentIndex[1] == comment.id,
             selectReplyIndex: selectReplyIndex[1],
+            isMine: isMine,
           );
         },
         separatorBuilder: (_, index) {

@@ -10,11 +10,14 @@ class Comment extends ConsumerStatefulWidget {
   final CommentModel comment;
   final bool selectComment;
   final int selectReplyIndex;
-  const Comment(
-      {super.key,
-      required this.comment,
-      required this.selectComment,
-      required this.selectReplyIndex});
+  final bool isMine;
+  const Comment({
+    super.key,
+    required this.comment,
+    required this.selectComment,
+    required this.selectReplyIndex,
+    required this.isMine,
+  });
 
   @override
   ConsumerState<Comment> createState() => _CommentState();
@@ -24,7 +27,6 @@ class _CommentState extends ConsumerState<Comment>
     with SingleTickerProviderStateMixin {
   late AnimationController animationController;
   List<ReplyModel> replies = [];
-  bool isMine = false;
 
   @override
   void initState() {
@@ -32,11 +34,6 @@ class _CommentState extends ConsumerState<Comment>
     animationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 1));
     replies = widget.comment.replies;
-    ref.read(memberRepositoryProvider).getMe().then((value) {
-      setState(() {
-        isMine = value.email == widget.comment.userInformation.email;
-      });
-    });
   }
 
   @override
@@ -112,7 +109,7 @@ class _CommentState extends ConsumerState<Comment>
                           text: "-1",
                           commentId: widget.comment.deleted
                               ? -3
-                              : isMine
+                              : widget.isMine
                                   ? widget.comment.id
                                   : -2,
                           postId: -1,
@@ -136,6 +133,7 @@ class _CommentState extends ConsumerState<Comment>
               Reply(
                 reply: reply,
                 selectReply: widget.selectReplyIndex == reply.id,
+                isMine: widget.isMine,
               )
           ],
         ),
