@@ -382,7 +382,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                               dropdownColor: Colors.grey.shade200,
                               borderRadius: BorderRadius.circular(20),
                               items: categorysList
-                                  .sublist(1, categorysList.length)
+                                  .sublist(2, categorysList.length)
                                   .map<DropdownMenuItem<String>>(
                                       (String value) {
                                 return DropdownMenuItem<String>(
