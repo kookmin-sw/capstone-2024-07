@@ -1,0 +1,65 @@
+name: deploy to amazon ecs
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "backend/**"
+
+env:
+  AWS_REGION: ap-northeast-2
+  ECR_URL: ${{ secrets.ECR_URL }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.SUBMODULE_TOKEN }}
+          submodules: true
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Get git commit rev
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Grant execute permission for gradlew
+        working-directory: ./backend
+        run: chmod +x ./gradlew
+
+      - name: Build Jar
+        working-directory: ./backend
+        run: ./gradlew bootJar -Dspring.profiles.active=prod
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build Docker Image & Push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: ${{ env.ECR_URL }}:latest
+          provenance: false
+
+      - name: Deploy to Amazon ECS
+        run: |
+          aws ecs update-service --cluster ${{ secrets.CLUSTER }} --service ${{ secrets.SERVICE }} --force-new-deployment \
+          --region ${{ env.AWS_REGION }}

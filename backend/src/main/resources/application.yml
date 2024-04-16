@@ -8,5 +8,6 @@ spring:
       - classpath:application-security.yml
       - classpath:application-dev.yml
       - classpath:application-test.yml
+      - classpath:application-prod.yml
 ---
 
