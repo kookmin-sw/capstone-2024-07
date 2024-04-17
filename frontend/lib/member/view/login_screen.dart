@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/member/view/password_reset_screen.dart';
 import 'package:frontend/member/view/signup_screen.dart';
 
+import '../../common/component/notice_popup_dialog.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/default_layout.dart';
 import '../component/custom_text_form_field.dart';
@@ -23,9 +24,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   String email = '';
   String password = '';
 
+  void getNoticeDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return NoticePopupDialog(
+          message: message,
+          buttonText: "닫기",
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(memberStateNotifierProvider);
+
+    if (state is MemberModelError) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        getNoticeDialog(context, state.message);
+      });
+    }
 
     return DefaultLayout(
       child: SingleChildScrollView(
