@@ -91,6 +91,7 @@ class _Reply extends ConsumerState<Reply> {
                                     postId: -1,
                                     replyId: widget.reply.id,
                                     isClicked: false,
+                                    isMine: widget.isMine,
                                   ),
                                   const SizedBox(
                                     width: 13,
@@ -104,6 +105,7 @@ class _Reply extends ConsumerState<Reply> {
                                     replyId:
                                         widget.isMine ? widget.reply.id : -2,
                                     isClicked: false,
+                                    isMine: widget.isMine,
                                   ),
                                 ],
                               ),

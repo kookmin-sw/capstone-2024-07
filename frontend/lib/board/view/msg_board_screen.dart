@@ -19,7 +19,8 @@ import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/comment_layout.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
-import 'package:frontend/member/provider/member_repository_provider.dart';
+import 'package:frontend/member/model/member_model.dart';
+import 'package:frontend/member/provider/member_state_notifier_provider.dart';
 
 import '../../common/const/ip_list.dart';
 
@@ -35,16 +36,11 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
   @override
   void initState() {
     super.initState();
-    ref
-        .read(memberRepositoryProvider)
-        .getMe()
-        .then((value) => isMine = value.id == widget.board.userId);
     controller.addListener(scrollListener);
   }
 
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController controller = ScrollController();
-  bool isMine = false;
 
   void scrollListener() {
     if (controller.offset > controller.position.maxScrollExtent - 150) {
@@ -107,7 +103,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     refresh();
   }
 
-  void boardMore() {
+  void boardMore(bool isMine) {
     try {
       if (isMine) {
         showDialog(
@@ -262,6 +258,13 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final memberState = ref.watch(memberStateNotifierProvider);
+    int myId = -1;
+    String myEmail = "";
+    if (memberState is MemberModel) {
+      myId = memberState.id;
+      myEmail = memberState.email;
+    }
     ref.watch(imageStateProvider);
     List<int> selectCommentIndex = ref.watch(commentStateProvider);
     List<int> selectReplyIndex = ref.watch(replyStateProvider);
@@ -292,12 +295,14 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
           actions: [
             IconButton(
               onPressed: notification,
-              icon: isMine
+              icon: myId == widget.board.userId
                   ? const Icon(Icons.notifications_none)
                   : const Icon(Icons.notifications_off_outlined),
             ),
             IconButton(
-              onPressed: boardMore,
+              onPressed: () {
+                boardMore(myId == widget.board.userId);
+              },
               icon: const Icon(Icons.more_horiz),
             ),
           ],
@@ -305,14 +310,15 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            renderBoardDetail(),
-            renderCommentList(selectCommentIndex, selectReplyIndex),
+            renderBoardDetail(myId == widget.board.userId),
+            renderCommentList(
+                selectCommentIndex, selectReplyIndex, myEmail, myId),
             renderTextField(selectCommentIndex, selectReplyIndex),
           ],
         ));
   }
 
-  Widget renderBoardDetail() {
+  Widget renderBoardDetail(bool isMine) {
     ref.watch(networkImageStateProvider);
     return FutureBuilder(
       future: ref.watch(boardAddProvider).get(widget.board.id),
@@ -327,13 +333,15 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
           return Board(
             board: boardDetail,
             titleSize: 13,
+            isMine: isMine,
           );
         }
       },
     );
   }
 
-  Widget renderCommentList(selectCommentIndex, selectReplyIndex) {
+  Widget renderCommentList(
+      selectCommentIndex, selectReplyIndex, String myEmail, int myId) {
     final data = ref.watch(commentPaginationProvider);
 
     if (data is CursorPaginationModelLoading) {
@@ -363,7 +371,8 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
             selectComment: selectCommentIndex[0] == comment.id ||
                 selectCommentIndex[1] == comment.id,
             selectReplyIndex: selectReplyIndex[1],
-            isMine: isMine,
+            isMine: myEmail == comment.userInformation.email,
+            myId: myId,
           );
         },
         separatorBuilder: (_, index) {

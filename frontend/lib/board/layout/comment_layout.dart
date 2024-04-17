@@ -10,12 +10,14 @@ class Comment extends ConsumerStatefulWidget {
   final bool selectComment;
   final int selectReplyIndex;
   final bool isMine;
+  final int myId;
   const Comment({
     super.key,
     required this.comment,
     required this.selectComment,
     required this.selectReplyIndex,
     required this.isMine,
+    required this.myId,
   });
 
   @override
@@ -85,6 +87,7 @@ class _CommentState extends ConsumerState<Comment>
                           postId: -1,
                           replyId: -1,
                           isClicked: widget.comment.isLiked,
+                          isMine: widget.isMine,
                         ),
                         const SizedBox(
                           width: 13,
@@ -98,6 +101,7 @@ class _CommentState extends ConsumerState<Comment>
                           postId: -1,
                           replyId: -1,
                           isClicked: false,
+                          isMine: widget.isMine,
                         ),
                         const SizedBox(
                           width: 13,
@@ -114,6 +118,7 @@ class _CommentState extends ConsumerState<Comment>
                           postId: -1,
                           replyId: -1,
                           isClicked: false,
+                          isMine: widget.isMine,
                         ),
                       ],
                     ),
@@ -132,7 +137,7 @@ class _CommentState extends ConsumerState<Comment>
               Reply(
                 reply: reply,
                 selectReply: widget.selectReplyIndex == reply.id,
-                isMine: widget.isMine,
+                isMine: widget.myId == reply.userId,
               )
           ],
         ),

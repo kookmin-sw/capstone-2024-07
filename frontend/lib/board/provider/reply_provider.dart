@@ -45,7 +45,7 @@ abstract class ReplyNotifier {
   @Headers({
     'accessToken': 'true',
   })
-  Future<int> heart(
+  Future<void> heart(
     @Body() Map<String, dynamic> data,
   );
 }

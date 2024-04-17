@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
@@ -19,6 +20,7 @@ class TextWithIcon extends ConsumerStatefulWidget {
   final int postId;
   final int replyId;
   final bool isClicked;
+  final bool isMine;
 
   const TextWithIcon({
     super.key,
@@ -29,6 +31,7 @@ class TextWithIcon extends ConsumerStatefulWidget {
     required this.postId,
     required this.replyId,
     required this.isClicked,
+    required this.isMine,
   });
 
   @override
@@ -145,42 +148,46 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                 alreadyHeart(context);
               } else {
                 if (widget.postId != -1) {
-                  ref
-                      .watch(boardAddProvider)
-                      .heart(widget.postId)
-                      .then((value) {
-                    if (value != -1) {
+                  if (widget.isMine) {
+                    notAllowed("자신의 글에는 좋아요를 할 수 없습니다.");
+                  } else {
+                    try {
+                      ref.watch(boardAddProvider).heart(widget.postId);
                       increaseHeart();
-                    } else {
-                      notAllowed("자신의 글에는 좋아요를 할 수 없습니다.");
+                    } on DioException catch (e) {
+                      notAllowed(e.message!);
                     }
-                  });
+                  }
                 } else if (widget.commentId != -1) {
                   if (widget.commentId == -3) {
                     notAllowed("이미 삭제된 댓글입니다.");
+                  } else if (widget.isMine) {
+                    notAllowed("자신의 댓글에는 좋아요를 할 수 없습니다.");
                   } else {
                     final requestData = {
                       'commentId': widget.commentId,
                     };
-                    ref.watch(commentProvider).heart(requestData).then((value) {
-                      if (value != -1) {
-                        increaseHeart();
-                      } else {
-                        notAllowed("자신의 댓글에는 좋아요를 할 수 없습니다.");
-                      }
-                    });
+                    try {
+                      ref.watch(commentProvider).heart(requestData);
+                      increaseHeart();
+                    } on DioException catch (e) {
+                      notAllowed(e.message!);
+                    }
                   }
                 } else if (widget.replyId != -1) {
-                  final requestData = {
-                    'replyId': widget.replyId,
-                  };
-                  ref.watch(replyProvider).heart(requestData).then((value) {
-                    if (value != -1) {
+                  if (widget.isMine) {
+                    notAllowed("자신의 대댓글에는 좋아요를 할 수 없습니다.");
+                  } else {
+                    final requestData = {
+                      'replyId': widget.replyId,
+                    };
+                    try {
+                      ref.watch(replyProvider).heart(requestData);
                       increaseHeart();
-                    } else {
-                      notAllowed("자신의 대댓글에는 좋아요를 할 수 없습니다.");
+                    } on DioException catch (e) {
+                      notAllowed(e.message!);
                     }
-                  });
+                  }
                 }
               }
             } else if (widget.icon == Icons.chat_outlined &&
