@@ -311,8 +311,13 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             renderBoardDetail(myId == widget.board.userId),
-            renderCommentList(
-                selectCommentIndex, selectReplyIndex, myEmail, myId),
+            RenderCommentList(
+                ref: ref,
+                controller: controller,
+                selectCommentIndex: selectCommentIndex,
+                selectReplyIndex: selectReplyIndex,
+                myEmail: myEmail,
+                myId: myId),
             renderTextField(selectCommentIndex, selectReplyIndex),
           ],
         ));
@@ -337,50 +342,6 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
           );
         }
       },
-    );
-  }
-
-  Widget renderCommentList(
-      selectCommentIndex, selectReplyIndex, String myEmail, int myId) {
-    final data = ref.watch(commentPaginationProvider);
-
-    if (data is CursorPaginationModelLoading) {
-      return const Center(
-        child: CircularProgressIndicator(
-          color: PRIMARY_COLOR,
-        ),
-      );
-    }
-
-    if (data is CursorPaginationModelError) {
-      return const Center(
-        child: Text("데이터를 불러올 수 없습니다."),
-      );
-    }
-
-    final cp = data as CursorPaginationModel;
-
-    return Expanded(
-      child: ListView.separated(
-        controller: controller,
-        itemCount: cp.data.length,
-        itemBuilder: (_, index) {
-          final CommentModel comment = cp.data[index];
-          return Comment(
-            comment: comment,
-            selectComment: selectCommentIndex[0] == comment.id ||
-                selectCommentIndex[1] == comment.id,
-            selectReplyIndex: selectReplyIndex[1],
-            isMine: myEmail == comment.userInformation.email,
-            myId: myId,
-          );
-        },
-        separatorBuilder: (_, index) {
-          return const SizedBox(
-            height: 1.0,
-          );
-        },
-      ),
     );
   }
 
@@ -444,6 +405,69 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class RenderCommentList extends StatelessWidget {
+  const RenderCommentList({
+    super.key,
+    required this.ref,
+    required this.controller,
+    required this.selectCommentIndex,
+    required this.selectReplyIndex,
+    required this.myEmail,
+    required this.myId,
+  });
+
+  final WidgetRef ref;
+  final ScrollController controller;
+  final List<int> selectCommentIndex;
+  final List<int> selectReplyIndex;
+  final String myEmail;
+  final int myId;
+
+  @override
+  Widget build(BuildContext context) {
+    final data = ref.watch(commentPaginationProvider);
+
+    if (data is CursorPaginationModelLoading) {
+      return const Center(
+        child: CircularProgressIndicator(
+          color: PRIMARY_COLOR,
+        ),
+      );
+    }
+
+    if (data is CursorPaginationModelError) {
+      return const Center(
+        child: Text("데이터를 불러올 수 없습니다."),
+      );
+    }
+
+    final cp = data as CursorPaginationModel;
+
+    return Expanded(
+      child: ListView.separated(
+        controller: controller,
+        itemCount: cp.data.length,
+        itemBuilder: (_, index) {
+          final CommentModel comment = cp.data[index];
+          return Comment(
+            comment: comment,
+            selectComment: selectCommentIndex[0] == comment.id ||
+                selectCommentIndex[1] == comment.id,
+            selectReplyIndex: selectReplyIndex[1],
+            isMine: myEmail == comment.userInformation.email,
+            myId: myId,
+          );
+        },
+        separatorBuilder: (_, index) {
+          return const SizedBox(
+            height: 1.0,
+          );
+        },
       ),
     );
   }

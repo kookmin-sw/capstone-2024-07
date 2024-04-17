@@ -12,7 +12,7 @@ final commentPaginationProvider =
     final commentNotifier = ref.watch(commentProvider);
     final postId = ref.watch(boardDetailNotifier);
     const initialLastPostId = 1;
-    const size = 10;
+    const size = 15;
 
     final notifier = CommentPaginationNotifier(
       commentNotifier: commentNotifier,
