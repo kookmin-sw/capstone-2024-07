@@ -24,9 +24,34 @@ resource "aws_lb_listener" "https_forward" {
   certificate_arn   = aws_acm_certificate.cert.arn
   ssl_policy        = "ELBSecurityPolicy-2016-08"
 
+#  default_action {
+#    type             = "forward"
+#    target_group_arn = aws_lb_target_group.staging.id
+#  }
   default_action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Fixed response content"
+      status_code  = "200"
+    }
+  }
+}
+
+resource "aws_lb_listener_rule" "api" {
+  listener_arn = aws_lb_listener.https_forward.arn
+  priority     = 100
+
+  action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.staging.id
+  }
+
+  condition {
+    path_pattern {
+      values = ["/api/*"]
+    }
   }
 }
 
@@ -46,6 +71,17 @@ resource "aws_lb_listener" "http_forward" {
   }
 }
 
+resource "aws_lb_listener" "ai_forward" {
+  load_balancer_arn = aws_alb.staging.arn
+  port              = 8000
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.ai.id
+  }
+}
+
 resource "aws_lb_target_group" "staging" {
   vpc_id                = aws_vpc.cluster_vpc.id
   name                  = "service-alb-tg-${var.env_suffix}"
@@ -56,12 +92,35 @@ resource "aws_lb_target_group" "staging" {
 
   health_check {
     interval            = 120
-    path                = "/"
+    path                = "/api/health-check"
     timeout             = 60
     matcher             = "200"
     healthy_threshold   = 5
     unhealthy_threshold = 5
   }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_lb_target_group" "ai" {
+  vpc_id                = aws_vpc.cluster_vpc.id
+  name                  = "service-alb-tg-ai"
+  port                  = 8000
+  protocol              = "HTTP"
+  target_type           = "ip"
+  deregistration_delay  = 30
+
+  health_check {
+    interval            = 120
+    path                = "/health-check"
+    timeout             = 60
+    matcher             = "200"
+    healthy_threshold   = 5
+    unhealthy_threshold = 5
+  }
+
 
   lifecycle {
     create_before_destroy = true
