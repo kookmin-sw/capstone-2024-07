@@ -68,7 +68,6 @@ class CommentPaginationNotifier
           return;
         }
       }
-
       final isLoading = state is CursorPaginationModelLoading;
       final isRefetching = state is CursorPaginationModelRefetching;
       final isFetchingMore = state is CursorPaginationModelFetchingMore;
@@ -88,7 +87,6 @@ class CommentPaginationNotifier
       } else {
         if (state is CursorPaginationModel && !forceRefetch) {
           final pState = state as CursorPaginationModel;
-
           state = CursorPaginationModelRefetching(
             meta: pState.meta,
             data: pState.data,
@@ -115,7 +113,7 @@ class CommentPaginationNotifier
     } catch (e) {
       if (!isMounted) return;
 
-      debugPrint(e.runtimeType.toString());
+      debugPrint("CommentPaginationError : ${e.runtimeType.toString()}");
 
       state = CursorPaginationModelError(message: '데이터를 가져오지 못했습니다');
     } finally {

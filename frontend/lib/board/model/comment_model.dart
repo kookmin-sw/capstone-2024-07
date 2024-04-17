@@ -39,7 +39,7 @@ class UserInformation {
 
 @JsonSerializable()
 class LikeCount {
-  final List<int> likes;
+  final List<Likes> likes;
   final int count;
 
   LikeCount({
@@ -49,6 +49,14 @@ class LikeCount {
 
   factory LikeCount.fromJson(Map<String, dynamic> json) =>
       _$LikeCountFromJson(json);
+}
+
+@JsonSerializable()
+class Likes {
+  final int usersId;
+
+  Likes(this.usersId);
+  factory Likes.fromJson(Map<String, dynamic> json) => _$LikesFromJson(json);
 }
 
 @JsonSerializable()
