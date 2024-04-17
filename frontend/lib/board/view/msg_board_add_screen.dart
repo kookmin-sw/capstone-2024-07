@@ -12,7 +12,6 @@ import 'package:frontend/board/provider/image_provider.dart';
 import 'package:frontend/board/provider/isquestion_provider.dart';
 import 'package:frontend/board/provider/network_image_provider.dart';
 import 'package:frontend/common/const/colors.dart';
-import 'package:frontend/common/const/data.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:http/http.dart' as http;

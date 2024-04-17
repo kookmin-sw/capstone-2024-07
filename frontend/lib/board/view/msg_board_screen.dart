@@ -18,7 +18,6 @@ import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/comment_layout.dart';
-import 'package:frontend/common/const/data.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
 import 'package:frontend/member/provider/member_repository_provider.dart';
 
