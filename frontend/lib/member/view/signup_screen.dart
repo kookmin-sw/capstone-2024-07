@@ -764,6 +764,19 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 );
               },
             );
+          } catch(e){
+            showDialog(
+              context: context,
+              builder: (context) {
+                return NoticePopupDialog(
+                  message: "알 수 없는 에러가 발생했습니다.",
+                  buttonText: "닫기",
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                );
+              },
+            );
           }
         }
       },
