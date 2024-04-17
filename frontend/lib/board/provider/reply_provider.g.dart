@@ -99,14 +99,14 @@ class _ReplyNotifier implements ReplyNotifier {
   }
 
   @override
-  Future<int> heart(Map<String, dynamic> data) async {
+  Future<void> heart(Map<String, dynamic> data) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'accessToken': 'true'};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(data);
-    final _result = await _dio.fetch<int>(_setStreamType<int>(Options(
+    await _dio.fetch<void>(_setStreamType<void>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -122,8 +122,6 @@ class _ReplyNotifier implements ReplyNotifier {
           _dio.options.baseUrl,
           baseUrl,
         ))));
-    final value = _result.data!;
-    return value;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

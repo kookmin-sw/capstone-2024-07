@@ -10,11 +10,13 @@ import 'package:photo_view/photo_view.dart';
 
 class Board extends ConsumerWidget {
   final MsgBoardDetailResponseModel board;
+  final bool isMine;
   final double titleSize;
   const Board({
     super.key,
     required this.board,
     required this.titleSize,
+    required this.isMine,
   });
 
   @override
@@ -59,6 +61,7 @@ class Board extends ConsumerWidget {
                       postId: board.id,
                       replyId: -1,
                       isClicked: board.likedBy,
+                      isMine: isMine,
                     ),
                     const SizedBox(
                       width: 13,
@@ -71,6 +74,7 @@ class Board extends ConsumerWidget {
                       postId: -1,
                       replyId: -1,
                       isClicked: false,
+                      isMine: isMine,
                     ),
                     const SizedBox(
                       width: 13,
@@ -83,6 +87,7 @@ class Board extends ConsumerWidget {
                       postId: board.id,
                       replyId: -1,
                       isClicked: board.isScrapped,
+                      isMine: isMine,
                     ),
                     const SizedBox(
                       width: 13,

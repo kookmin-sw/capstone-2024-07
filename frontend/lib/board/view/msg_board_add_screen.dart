@@ -535,6 +535,7 @@ class BottomView extends ConsumerWidget {
                     postId: -1,
                     replyId: -1,
                     isClicked: false,
+                    isMine: false,
                   ),
                   const SizedBox(
                     width: 10,
@@ -547,6 +548,7 @@ class BottomView extends ConsumerWidget {
                     postId: -1,
                     replyId: -1,
                     isClicked: msgBoardAddScreenState.isQuestion,
+                    isMine: false,
                   ),
                 ],
               ),

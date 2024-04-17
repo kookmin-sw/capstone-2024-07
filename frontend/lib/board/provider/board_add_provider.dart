@@ -31,7 +31,7 @@ abstract class BoardAdd {
   @Headers({
     'accessToken': 'true',
   })
-  Future<int> heart(
+  Future<void> heart(
     @Path('postId') int postId,
   );
 

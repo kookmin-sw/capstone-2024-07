@@ -48,13 +48,13 @@ class _BoardAdd implements BoardAdd {
   }
 
   @override
-  Future<int> heart(int postId) async {
+  Future<void> heart(int postId) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'accessToken': 'true'};
     _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<int>(_setStreamType<int>(Options(
+    await _dio.fetch<void>(_setStreamType<void>(Options(
       method: 'PUT',
       headers: _headers,
       extra: _extra,
@@ -70,8 +70,6 @@ class _BoardAdd implements BoardAdd {
           _dio.options.baseUrl,
           baseUrl,
         ))));
-    final value = _result.data!;
-    return value;
   }
 
   @override
