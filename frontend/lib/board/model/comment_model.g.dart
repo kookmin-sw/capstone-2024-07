@@ -48,13 +48,23 @@ Map<String, dynamic> _$UserInformationToJson(UserInformation instance) =>
     };
 
 LikeCount _$LikeCountFromJson(Map<String, dynamic> json) => LikeCount(
-      likes: (json['likes'] as List<dynamic>).map((e) => e as int).toList(),
+      likes: (json['likes'] as List<dynamic>)
+          .map((e) => Likes.fromJson(e as Map<String, dynamic>))
+          .toList(),
       count: json['count'] as int,
     );
 
 Map<String, dynamic> _$LikeCountToJson(LikeCount instance) => <String, dynamic>{
       'likes': instance.likes,
       'count': instance.count,
+    };
+
+Likes _$LikesFromJson(Map<String, dynamic> json) => Likes(
+      json['usersId'] as int,
+    );
+
+Map<String, dynamic> _$LikesToJson(Likes instance) => <String, dynamic>{
+      'usersId': instance.usersId,
     };
 
 ReplyModel _$ReplyModelFromJson(Map<String, dynamic> json) => ReplyModel(
