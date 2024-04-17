@@ -8,11 +8,13 @@ class Reply extends ConsumerStatefulWidget {
   final ReplyModel reply;
   final bool selectReply;
   final bool isMine;
+  final int myId;
   const Reply({
     super.key,
     required this.reply,
     required this.selectReply,
     required this.isMine,
+    required this.myId,
   });
 
   @override
@@ -27,6 +29,10 @@ class _Reply extends ConsumerState<Reply> {
 
   @override
   Widget build(BuildContext context) {
+    bool myClicked = false;
+    for (var likes in widget.reply.likeCount.likes) {
+      myClicked = likes.usersId == widget.myId;
+    }
     return Column(
       children: [
         const SizedBox(
@@ -90,7 +96,7 @@ class _Reply extends ConsumerState<Reply> {
                                     commentId: -1,
                                     postId: -1,
                                     replyId: widget.reply.id,
-                                    isClicked: false,
+                                    isClicked: myClicked,
                                     isMine: widget.isMine,
                                   ),
                                   const SizedBox(

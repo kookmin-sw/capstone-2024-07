@@ -138,6 +138,7 @@ class _CommentState extends ConsumerState<Comment>
                 reply: reply,
                 selectReply: widget.selectReplyIndex == reply.id,
                 isMine: widget.myId == reply.userId,
+                myId: widget.myId,
               )
           ],
         ),
