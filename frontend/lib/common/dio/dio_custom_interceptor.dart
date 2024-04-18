@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import '../../member/provider/auth_provider.dart';
 import '../const/data.dart';
 
 class CustomInterceptor extends Interceptor {
@@ -103,7 +104,7 @@ class CustomInterceptor extends Interceptor {
               handler.reject(err);
             });
             //로그아웃 처리
-            // ref.read(authProvider.notifier).logout();
+            ref.read(authProvider.notifier).logout();
           }
           requestQueue.clear();
           isRefreshing = false;
