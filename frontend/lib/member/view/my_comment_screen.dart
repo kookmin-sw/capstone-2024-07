@@ -4,6 +4,7 @@ import 'package:frontend/member/provider/mypage/my_comment_state_notifier_provid
 
 import '../../board/component/board_card.dart';
 import '../../board/model/msg_board_response_model.dart';
+import '../../board/provider/board_detail_state_notifier_provider.dart';
 import '../../board/view/msg_board_screen.dart';
 import '../../common/const/colors.dart';
 import '../../common/model/cursor_pagination_model.dart';
@@ -117,6 +118,7 @@ class _MyCommentScreenState extends ConsumerState<MyCommentScreen> {
           child: BoardCard.fromModel(msgBoardResponseModel: pItem),
           onTap: () async {
             // 상세페이지
+            ref.read(boardDetailNotifier.notifier).add(pItem.id);
             Navigator.push(
               context,
               MaterialPageRoute(
