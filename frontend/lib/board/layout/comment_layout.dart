@@ -37,6 +37,55 @@ class _CommentState extends ConsumerState<Comment>
     replies = widget.comment.replies;
   }
 
+  String changeTime(String time) {
+    String dt = DateTime.now().toString(); //2022-12-05 20:09:14.322471
+    String nowDate = dt.replaceRange(11, dt.length, ""); //2022-12-05
+    String nowTime = dt.replaceRange(0, 11, ""); //20:09:14.322471
+    nowTime = nowTime.replaceRange(9, nowTime.length, ""); //20:09:14
+
+    debugPrint("nowDate : $nowDate, nowTime : $nowTime");
+
+    time = time.replaceAll('T', " ");
+    String uploadDate = time.replaceRange(11, time.length, "");
+    String uploadTime = time.replaceRange(0, 11, "");
+    uploadTime = uploadTime.replaceRange(9, uploadTime.length, "");
+
+    debugPrint("uploadDate : $uploadDate, uploadTime : $uploadTime");
+
+    if (nowDate == uploadDate) {
+      if (nowTime.replaceRange(2, nowTime.length, "") ==
+          uploadTime.replaceRange(2, nowTime.length, "")) {
+        // same hour
+        String nowTmp = nowTime.replaceRange(0, 3, "");
+        nowTmp = nowTmp.replaceRange(2, nowTmp.length, "");
+        String uploadTmp = uploadTime.replaceRange(0, 3, "");
+        uploadTmp = uploadTmp.replaceRange(2, uploadTmp.length, "");
+
+        debugPrint("nowTmp : $nowTmp, uploadTmp : $uploadTmp");
+
+        if (int.parse(nowTmp) - int.parse(uploadTmp) == 0) {
+          return "방금전";
+        } else {
+          return "${int.parse(nowTmp) - int.parse(uploadTmp)}분전";
+        }
+      } else if (int.parse(nowTime.replaceRange(2, nowTime.length, "")) -
+              int.parse(uploadTime.replaceRange(2, nowTime.length, "")) ==
+          1) {
+        // different 1 hour
+        String nowTmp = nowTime.replaceRange(0, 3, "");
+        nowTmp = nowTmp.replaceRange(2, nowTmp.length, "");
+        String uploadTmp = uploadTime.replaceRange(0, 3, "");
+        uploadTmp = uploadTmp.replaceRange(2, uploadTmp.length, "");
+
+        debugPrint("nowTmp : $nowTmp, uploadTmp : $uploadTmp");
+
+        return "${int.parse(nowTmp) - int.parse(uploadTmp)}분전";
+      }
+    }
+
+    return time.replaceRange(16, time.length, "");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -60,13 +109,27 @@ class _CommentState extends ConsumerState<Comment>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  widget.comment.userInformation.nickname,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: widget.selectComment ? PRIMARY_COLOR : null,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      widget.comment.userInformation.nickname,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: widget.selectComment ? PRIMARY_COLOR : null,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      changeTime(widget.comment.createdAt),
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ],
                 ),
                 Container(
                   decoration: BoxDecoration(
