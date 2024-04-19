@@ -95,13 +95,14 @@ class _CommentState extends ConsumerState<Comment>
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 10,
-          vertical: 8,
+          vertical: 10,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
