@@ -30,6 +30,8 @@ class CommentRepositoryImpl(
             ).whereAnd(
                 path(Comment::postId).eq(request.postId),
                 path(Comment::id).greaterThan(request.lastCommentId ?: Long.MIN_VALUE),
+            ).orderBy(
+                path(Comment::id).asc()
             )
         }
 
