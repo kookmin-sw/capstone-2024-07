@@ -69,7 +69,7 @@ class BoardCard extends StatelessWidget {
 
     if (nowDate == uploadDate) {
       if (nowTime.replaceRange(2, nowTime.length, "") ==
-          uploadTime.replaceRange(2, nowTime.length, "")) {
+          uploadTime.replaceRange(2, uploadTime.length, "")) {
         // same hour
         String nowTmp = nowTime.replaceRange(0, 3, "");
         nowTmp = nowTmp.replaceRange(2, nowTmp.length, "");
@@ -82,7 +82,7 @@ class BoardCard extends StatelessWidget {
           return "${int.parse(nowTmp) - int.parse(uploadTmp)}분전";
         }
       } else if (int.parse(nowTime.replaceRange(2, nowTime.length, "")) -
-              int.parse(uploadTime.replaceRange(2, nowTime.length, "")) ==
+              int.parse(uploadTime.replaceRange(2, uploadTime.length, "")) ==
           1) {
         // different 1 hour
         String nowTmp = nowTime.replaceRange(0, 3, "");
@@ -90,7 +90,9 @@ class BoardCard extends StatelessWidget {
         String uploadTmp = uploadTime.replaceRange(0, 3, "");
         uploadTmp = uploadTmp.replaceRange(2, uploadTmp.length, "");
 
-        return "${int.parse(uploadTmp) - int.parse(nowTmp)}분전";
+        if (int.parse(uploadTmp) - int.parse(nowTmp) > 0) {
+          return "${int.parse(uploadTmp) - int.parse(nowTmp)}분전";
+        }
       }
     }
 

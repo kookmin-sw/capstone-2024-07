@@ -61,7 +61,9 @@ class _Reply extends ConsumerState<Reply> {
         String uploadTmp = uploadTime.replaceRange(0, 3, "");
         uploadTmp = uploadTmp.replaceRange(2, uploadTmp.length, "");
 
-        return "${int.parse(uploadTmp) - int.parse(nowTmp)}분전";
+        if (int.parse(uploadTmp) - int.parse(nowTmp) > 0) {
+          return "${int.parse(uploadTmp) - int.parse(nowTmp)}분전";
+        }
       }
     }
 
