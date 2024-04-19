@@ -71,6 +71,10 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
               children: [
                 Text(
                   s,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                  ),
                 ),
               ],
             ),
@@ -82,6 +86,9 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: PRIMARY_COLOR,
+                    ),
                     child: const Text("확인"),
                   ),
                 ],
@@ -120,36 +127,36 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   }
 
   Future<void> upLoad() async {
-    // var dio = Dio();
-    // try {
-    //   Response titleCheck =
-    //       await dio.post('$pythonIP/predict/', data: {"message": title});
-    //   debugPrint("titleCheck : ${titleCheck.data["profanity"]}");
-    //   if (titleCheck.data["profanity"]) {
-    //     notAllowed("제목에 비속어가 포함되어 있습니다.\n수정 후 다시 시도해주세요!");
-    //     setState(() {
-    //       isLoading = false;
-    //     });
-    //     return;
-    //   }
-    // } catch (e) {
-    //   debugPrint("upload_title_predict : ${e.toString()}");
-    // }
+    var dio = Dio();
+    try {
+      Response titleCheck =
+          await dio.post('$pythonIP/predict/', data: {"message": title});
+      debugPrint("titleCheck : ${titleCheck.data["profanity"]}");
+      if (titleCheck.data["profanity"]) {
+        notAllowed("제목에 비속어가 포함되어 있습니다.\n수정 후 다시 시도해주세요!");
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+    } catch (e) {
+      debugPrint("upload_title_predict : ${e.toString()}");
+    }
 
-    // try {
-    //   Response contentCheck =
-    //       await dio.post('$pythonIP/predict/', data: {"message": content});
-    //   debugPrint("titleCheck : ${contentCheck.data["profanity"]}");
-    //   if (contentCheck.data["profanity"]) {
-    //     notAllowed("글 내용에 비속어가 포함되어 있습니다.\n수정 후 다시 시도해주세요!");
-    //     setState(() {
-    //       isLoading = false;
-    //     });
-    //     return;
-    //   }
-    // } catch (e) {
-    //   debugPrint("upload_content_predict : ${e.toString()}");
-    // }
+    try {
+      Response contentCheck =
+          await dio.post('$pythonIP/predict/', data: {"message": content});
+      debugPrint("titleCheck : ${contentCheck.data["profanity"]}");
+      if (contentCheck.data["profanity"]) {
+        notAllowed("글 내용에 비속어가 포함되어 있습니다.\n수정 후 다시 시도해주세요!");
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+    } catch (e) {
+      debugPrint("upload_content_predict : ${e.toString()}");
+    }
 
     List<String> images = [];
     int i = 0;

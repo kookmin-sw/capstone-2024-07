@@ -236,6 +236,10 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
               children: [
                 Text(
                   s,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                  ),
                 ),
               ],
             ),
@@ -247,6 +251,9 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: PRIMARY_COLOR,
+                    ),
                     child: const Text("확인"),
                   ),
                 ],
@@ -370,20 +377,20 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     size: 30,
                   ),
                   onTap: () async {
-                    // try {
-                    //   var dio = Dio();
-                    //   Response contentCheck = await dio.post(
-                    //       '$pythonIP/predict/',
-                    //       data: {"message": textEditingController.text});
-                    //   debugPrint(
-                    //       "titleCheck : ${contentCheck.data["profanity"]}");
-                    //   if (contentCheck.data["profanity"]) {
-                    //     notAllowed("댓글에 비속어가 포함되어 있습니다.\n수정 후 다시 시도해주세요!");
-                    //     return;
-                    //   }
-                    // } catch (e) {
-                    //   debugPrint("upload_content_predict : ${e.toString()}");
-                    // }
+                    try {
+                      var dio = Dio();
+                      Response contentCheck = await dio.post(
+                          '$pythonIP/predict/',
+                          data: {"message": textEditingController.text});
+                      debugPrint(
+                          "titleCheck : ${contentCheck.data["profanity"]}");
+                      if (contentCheck.data["profanity"]) {
+                        notAllowed("댓글에 비속어가 포함되어 있습니다.\n수정 후 다시 시도해주세요!");
+                        return;
+                      }
+                    } catch (e) {
+                      debugPrint("upload_content_predict : ${e.toString()}");
+                    }
 
                     if (selectCommentIndex[0] != -1) {
                       // Upload Reply
