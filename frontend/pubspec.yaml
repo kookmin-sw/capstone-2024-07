@@ -74,7 +74,8 @@ flutter:
   uses-material-design: true
 
   assets:
-    - asset/imgs/
+    - asset/imgs/decle.png
+    - asset/imgs/logo.png
     - asset/jsons/departments.json
 
   fonts:
