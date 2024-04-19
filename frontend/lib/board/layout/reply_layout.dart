@@ -100,7 +100,7 @@ class _Reply extends ConsumerState<Reply> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(
-                    top: 10,
+                    top: 15,
                     left: 15,
                     right: 15,
                     bottom: 15,
@@ -110,6 +110,7 @@ class _Reply extends ConsumerState<Reply> {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
