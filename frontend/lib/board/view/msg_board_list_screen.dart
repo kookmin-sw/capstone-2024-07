@@ -166,6 +166,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                 if (resp.statusCode == 200) {
                   // 다시 paginate api 요청을 보낸다.
                   ref.read(memberStateNotifierProvider.notifier).getMe();
+                  ref.read(boardStateNotifierProvider.notifier).lastId = 9223372036854775807;
                   ref
                       .read(boardStateNotifierProvider.notifier)
                       .paginate(forceRefetch: true);
