@@ -466,6 +466,7 @@ class RenderCommentList extends StatelessWidget {
         itemCount: cp.data.length,
         itemBuilder: (_, index) {
           final CommentModel comment = cp.data[index];
+          // debugPrint("$index 번째 댓글 : ${comment.content}");
           return Comment(
             comment: comment,
             selectComment: selectCommentIndex[0] == comment.id ||

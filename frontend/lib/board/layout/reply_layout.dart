@@ -33,14 +33,10 @@ class _Reply extends ConsumerState<Reply> {
     String nowTime = dt.replaceRange(0, 11, ""); //20:09:14.322471
     nowTime = nowTime.replaceRange(9, nowTime.length, ""); //20:09:14
 
-    debugPrint("nowDate : $nowDate, nowTime : $nowTime");
-
     time = time.replaceAll('T', " ");
     String uploadDate = time.replaceRange(11, time.length, "");
     String uploadTime = time.replaceRange(0, 11, "");
     uploadTime = uploadTime.replaceRange(9, uploadTime.length, "");
-
-    debugPrint("uploadDate : $uploadDate, uploadTime : $uploadTime");
 
     if (nowDate == uploadDate) {
       if (nowTime.replaceRange(2, nowTime.length, "") ==
@@ -50,8 +46,6 @@ class _Reply extends ConsumerState<Reply> {
         nowTmp = nowTmp.replaceRange(2, nowTmp.length, "");
         String uploadTmp = uploadTime.replaceRange(0, 3, "");
         uploadTmp = uploadTmp.replaceRange(2, uploadTmp.length, "");
-
-        debugPrint("nowTmp : $nowTmp, uploadTmp : $uploadTmp");
 
         if (int.parse(nowTmp) - int.parse(uploadTmp) == 0) {
           return "방금전";
@@ -67,9 +61,7 @@ class _Reply extends ConsumerState<Reply> {
         String uploadTmp = uploadTime.replaceRange(0, 3, "");
         uploadTmp = uploadTmp.replaceRange(2, uploadTmp.length, "");
 
-        debugPrint("nowTmp : $nowTmp, uploadTmp : $uploadTmp");
-
-        return "${int.parse(nowTmp) - int.parse(uploadTmp)}분전";
+        return "${int.parse(uploadTmp) - int.parse(nowTmp)}분전";
       }
     }
 
