@@ -60,17 +60,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Center(
-                  child: Text(
-                    'DeCl',
-                    style: TextStyle(
-                      fontSize: 34,
-                      fontWeight: FontWeight.w500,
-                      color: PRIMARY_COLOR,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Center(
+                    child: Image.asset(
+                      'asset/imgs/logo.png',
+                      width: 80.0,
                     ),
                   ),
                 ),
-                const SizedBox(height: 16.0),
                 _renderTitle(),
                 _renderSubTitle(),
                 const SizedBox(height: 16.0),
