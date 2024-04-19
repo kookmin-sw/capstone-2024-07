@@ -58,7 +58,6 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
   Widget build(BuildContext context) {
     payload = ref.watch(payloadNotifier);
     if (payload != "") {
-      // Process only once After Build
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         ref.read(boardDetailNotifier.notifier).add(int.parse(payload));
         MsgBoardDetailResponseModel resp;
