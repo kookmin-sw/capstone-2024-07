@@ -40,7 +40,6 @@ class TextWithIcon extends ConsumerStatefulWidget {
 
 class _TextWithIconState extends ConsumerState<TextWithIcon>
     with SingleTickerProviderStateMixin {
-  // TODO : if user click heart(write comment, favorite), then change icon.
   bool isHeartClicked = false;
   bool isFavoriteClicked = false;
   bool isQuestionClicked = false;
@@ -71,7 +70,14 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
             content: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(s),
+                Text(
+                  s,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 13,
+                  ),
+                ),
               ],
             ),
             actions: <Widget>[
@@ -82,7 +88,14 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: const Text("확인"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: PRIMARY50_COLOR,
+                    ),
+                    child: const Text(
+                      "확인",
+                      style: TextStyle(fontSize: 13, color: PRIMARY_COLOR),
+                    ),
                   ),
                 ],
               ),

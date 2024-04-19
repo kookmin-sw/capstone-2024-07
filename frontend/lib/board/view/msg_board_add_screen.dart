@@ -71,9 +71,10 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
               children: [
                 Text(
                   s,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: Colors.black,
-                    fontSize: 15,
+                    fontSize: 13,
                   ),
                 ),
               ],
@@ -87,9 +88,13 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                       Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: PRIMARY_COLOR,
+                      backgroundColor: Colors.white,
+                      foregroundColor: PRIMARY50_COLOR,
                     ),
-                    child: const Text("확인"),
+                    child: const Text(
+                      "확인",
+                      style: TextStyle(fontSize: 13, color: PRIMARY_COLOR),
+                    ),
                   ),
                 ],
               ),
