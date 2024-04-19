@@ -40,22 +40,22 @@ class CustomTextFormField extends StatelessWidget {
       autofocus: autoFocus,
       onChanged: onChanged,
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.all(5.0),
+        contentPadding: const EdgeInsets.all(10.0),
         suffixIcon: suffixText == null
             ? null
             : Padding(
-          padding: EdgeInsets.only(right: 8.0),
+          padding: const EdgeInsets.only(right: 8.0),
           child: Text(suffixText!),
         ),
-        suffixIconConstraints: BoxConstraints(
+        suffixIconConstraints: const BoxConstraints(
           minHeight: 10,
           minWidth: 10,
         ),
-        suffixStyle: TextStyle(
+        suffixStyle: const TextStyle(
           fontSize: 14.0,
         ),
         hintText: hintText,
-        hintStyle: TextStyle(
+        hintStyle: const TextStyle(
           color: BODY_TEXT_COLOR,
           fontSize: 14.0,
         ),
