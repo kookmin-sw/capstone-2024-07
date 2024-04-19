@@ -155,6 +155,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
           e: -1.2,
         ),
         GestureDetector(
+          behavior: HitTestBehavior.opaque,
           onTap: () {
             if (widget.icon == Icons.favorite_outline_rounded) {
               if (isHeartClicked) {
@@ -273,35 +274,38 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
               }
             }
           },
-          child: Row(
-            children: [
-              Icon(
-                isHeartClicked
-                    ? Icons.favorite
-                    : isQuestionClicked
-                        ? Icons.check_box_rounded
-                        : isFavoriteClicked
-                            ? Icons.star
-                            : widget.icon,
-                size: widget.iconSize,
-                color: isHeartClicked
-                    ? Colors.red
-                    : isQuestionClicked
-                        ? Colors.blue.withOpacity(0.5)
-                        : isFavoriteClicked
-                            ? Colors.yellow
-                            : null,
-              ),
-              const SizedBox(
-                width: 2,
-              ),
-              Text(
-                textCount == -1 ? "" : "$textCount",
-                style: const TextStyle(
-                  fontSize: 12,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+            child: Row(
+              children: [
+                Icon(
+                  isHeartClicked
+                      ? Icons.favorite
+                      : isQuestionClicked
+                          ? Icons.check_box_rounded
+                          : isFavoriteClicked
+                              ? Icons.star
+                              : widget.icon,
+                  size: widget.iconSize,
+                  color: isHeartClicked
+                      ? Colors.red
+                      : isQuestionClicked
+                          ? Colors.blue.withOpacity(0.5)
+                          : isFavoriteClicked
+                              ? Colors.yellow
+                              : null,
                 ),
-              ),
-            ],
+                const SizedBox(
+                  width: 2,
+                ),
+                Text(
+                  textCount == -1 ? "" : "$textCount",
+                  style: const TextStyle(
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],

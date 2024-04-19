@@ -139,8 +139,8 @@ class _Reply extends ConsumerState<Reply> {
                               color: BODY_TEXT_COLOR.withOpacity(0.1),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 3),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 3),
                               child: Row(
                                 children: [
                                   TextWithIcon(
@@ -153,9 +153,6 @@ class _Reply extends ConsumerState<Reply> {
                                     replyId: widget.reply.id,
                                     isClicked: myClicked,
                                     isMine: widget.isMine,
-                                  ),
-                                  const SizedBox(
-                                    width: 13,
                                   ),
                                   TextWithIcon(
                                     icon: Icons.more_horiz,

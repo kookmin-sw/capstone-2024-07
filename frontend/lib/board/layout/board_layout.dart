@@ -104,9 +104,6 @@ class Board extends ConsumerWidget {
                       isClicked: board.likedBy,
                       isMine: isMine,
                     ),
-                    const SizedBox(
-                      width: 13,
-                    ),
                     TextWithIcon(
                       icon: Icons.chat_outlined,
                       iconSize: 15,
@@ -116,9 +113,6 @@ class Board extends ConsumerWidget {
                       replyId: -1,
                       isClicked: false,
                       isMine: isMine,
-                    ),
-                    const SizedBox(
-                      width: 13,
                     ),
                     TextWithIcon(
                       icon: Icons.star_outline_rounded,
@@ -131,7 +125,7 @@ class Board extends ConsumerWidget {
                       isMine: isMine,
                     ),
                     const SizedBox(
-                      width: 13,
+                      width: 6,
                     ),
                   ],
                 ),
