@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -90,6 +91,34 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
         }));
   }
 
+  String getRandomStr() {
+    var random = Random();
+    var leastCharacterIndex = [];
+    var skipCharacter = [0x2B, 0x2D, 0x20];
+    var min = 0x21;
+    var max = 0x7A;
+    var dat = [];
+    while (dat.length <= 32) {
+      var tmp = min + random.nextInt(max - min);
+      if (skipCharacter.contains(tmp)) {
+        continue;
+      }
+
+      dat.add(tmp);
+    }
+
+    while (leastCharacterIndex.length < 2) {
+      var ran = random.nextInt(32);
+      if (!leastCharacterIndex.contains(ran)) {
+        leastCharacterIndex.add(ran);
+      }
+    }
+
+    dat[leastCharacterIndex[0]] = 0x25;
+    dat[leastCharacterIndex[1]] = 0x40;
+    return String.fromCharCodes(dat.cast<int>());
+  }
+
   Future<void> upLoad() async {
     // var dio = Dio();
     // try {
@@ -127,25 +156,29 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
     for (; i < networkImages.length; i++) {
       // network image URL
       if (networkImages[i].contains("jpg")) {
-        images.add("image$i.jpg");
+        images.add("${getRandomStr()}$i.jpg");
       } else if (networkImages[i].contains("png")) {
-        images.add("image$i.png");
+        images.add("${getRandomStr()}$i.png");
       } else if (networkImages[i].contains("jpeg")) {
-        images.add("image$i.jpeg");
+        images.add("${getRandomStr()}$i.jpeg");
       } else if (networkImages[i].contains("gif")) {
-        images.add("image$i.gif");
+        images.add("${getRandomStr()}$i.gif");
+      } else if (networkImages[i].contains("HEIC")) {
+        images.add("${getRandomStr()}$i.HEIC");
       }
     }
     for (; i - networkImages.length < realImages.length; i++) {
       // local image path
       if (realImages[i - networkImages.length].path.endsWith("jpg")) {
-        images.add("image$i.jpg");
+        images.add("${getRandomStr()}$i.jpg");
       } else if (realImages[i - networkImages.length].path.endsWith("png")) {
-        images.add("image$i.png");
+        images.add("${getRandomStr()}$i.png");
       } else if (realImages[i - networkImages.length].path.endsWith("jpeg")) {
-        images.add("image$i.jpeg");
+        images.add("${getRandomStr()}$i.jpeg");
       } else if (realImages[i - networkImages.length].path.endsWith("gif")) {
-        images.add("image$i.gif");
+        images.add("${getRandomStr()}$i.gif");
+      } else if (realImages[i - networkImages.length].path.endsWith("HEIC")) {
+        images.add("${getRandomStr()}$i.HEIC");
       }
     }
     if (widget.isEdit) {
