@@ -129,8 +129,7 @@ class _CommentState extends ConsumerState<Comment>
                     color: BODY_TEXT_COLOR.withOpacity(0.1),
                   ),
                   child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                    padding: const EdgeInsets.symmetric(horizontal: 3),
                     child: Row(
                       children: [
                         TextWithIcon(
@@ -144,9 +143,6 @@ class _CommentState extends ConsumerState<Comment>
                           isClicked: widget.comment.isLiked,
                           isMine: widget.isMine,
                         ),
-                        const SizedBox(
-                          width: 13,
-                        ),
                         TextWithIcon(
                           icon: Icons.chat_outlined,
                           iconSize: 15,
@@ -157,9 +153,6 @@ class _CommentState extends ConsumerState<Comment>
                           replyId: -1,
                           isClicked: false,
                           isMine: widget.isMine,
-                        ),
-                        const SizedBox(
-                          width: 13,
                         ),
                         TextWithIcon(
                           icon: Icons.more_horiz,
