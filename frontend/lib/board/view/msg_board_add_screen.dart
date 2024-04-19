@@ -356,9 +356,9 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
           iconTheme: const IconThemeData(
             color: Colors.black,
           ),
-          title: const Text(
-            "글 작성",
-            style: TextStyle(
+          title: Text(
+            widget.isEdit ? "글 수정" : "글 작성",
+            style: const TextStyle(
               fontSize: 15,
               color: Colors.black,
               fontWeight: FontWeight.normal,

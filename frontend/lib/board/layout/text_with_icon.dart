@@ -133,26 +133,35 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        HeartAnim(
-          heartAnimationController: heartAnimationController,
-          isHeartClicked: isHeartClicked,
-          widget: widget,
-          s: 0.2,
-          e: -1.5,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+          child: HeartAnim(
+            heartAnimationController: heartAnimationController,
+            isHeartClicked: isHeartClicked,
+            widget: widget,
+            s: 0.2,
+            e: -1.5,
+          ),
         ),
-        HeartAnim(
-          heartAnimationController: heartAnimationController,
-          isHeartClicked: isHeartClicked,
-          widget: widget,
-          s: -0.2,
-          e: -1.0,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+          child: HeartAnim(
+            heartAnimationController: heartAnimationController,
+            isHeartClicked: isHeartClicked,
+            widget: widget,
+            s: -0.2,
+            e: -1.0,
+          ),
         ),
-        HeartAnim(
-          heartAnimationController: heartAnimationController,
-          isHeartClicked: isHeartClicked,
-          widget: widget,
-          s: 0.3,
-          e: -1.2,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+          child: HeartAnim(
+            heartAnimationController: heartAnimationController,
+            isHeartClicked: isHeartClicked,
+            widget: widget,
+            s: 0.3,
+            e: -1.2,
+          ),
         ),
         GestureDetector(
           behavior: HitTestBehavior.opaque,
