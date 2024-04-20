@@ -66,11 +66,14 @@ class _MyPostScreenState extends ConsumerState<MyPostScreen> {
               ),
             ],
           ),
-          Center(
-            child: Text(
-              "내가 쓴 글",
-              style: TextStyle(
-                fontSize: 16.0,
+          const Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              child: Text(
+                "내가 쓴 글",
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
               ),
             ),
           ),

@@ -51,21 +51,30 @@ class _MyCommentScreenState extends ConsumerState<MyCommentScreen> {
 
   Widget _renderTop() {
     return Container(
-      child: Row(
+      child: Stack(
         children: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(
-              Icons.chevron_left,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(
+                  Icons.chevron_left,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 113.0),
-          Text(
-            "댓글단 글",
-            style: TextStyle(
-              fontSize: 16.0,
+          const Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              child: Text(
+                "댓글단 글",
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
+              ),
             ),
           ),
         ],
