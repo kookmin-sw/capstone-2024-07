@@ -157,7 +157,7 @@ data class CommentWithUserResponse(
         description = "댓글의 좋아요 여부",
         example = "true"
     )
-    val isLiked: Boolean,
+    var isLiked: Boolean,
 
     @Schema(
         description = "댓글이 작성된 시각",

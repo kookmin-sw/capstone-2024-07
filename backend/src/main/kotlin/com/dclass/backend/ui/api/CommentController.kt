@@ -59,7 +59,7 @@ class CommentController(
         @LoginUser user: User,
         request : CommentScrollPageRequest
     ): ResponseEntity<CommentsResponse> {
-        val comments = commentService.findAllByPostId(request)
+        val comments = commentService.findAllByPostId(user.id,request)
         return ResponseEntity.ok(comments)
     }
 

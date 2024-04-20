@@ -67,8 +67,10 @@ class CommentService(
     }
 
     @Transactional(readOnly = true)
-    fun findAllByPostId(request: CommentScrollPageRequest): CommentsResponse {
+    fun findAllByPostId(userId: Long, request: CommentScrollPageRequest): CommentsResponse {
         val comments = commentRepository.findCommentWithUserByPostId(request)
+
+        comments.forEach { it.isLiked = it.likeCount.findUserById(userId) }
 
         val commentIds = comments.map { it.id }
 
