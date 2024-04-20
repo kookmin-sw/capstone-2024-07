@@ -4,6 +4,7 @@ import com.dclass.backend.application.dto.NotificationRequest
 import com.dclass.backend.domain.emitter.EmitterRepository
 import com.dclass.backend.domain.notification.NotificationRepository
 import com.dclass.backend.domain.notification.getOrThrow
+import com.dclass.support.util.logger
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
@@ -15,6 +16,8 @@ class NotificationService(
     val notificationRepository: NotificationRepository,
 ) {
     private val DEFAULT_TIMEOUT = 60L * 1000L * 60L
+    private val log = logger()
+
 
     fun subscribe(id: Long, lastEventId: String): SseEmitter {
         val emitterId = makeTimeIncludeId(id)
@@ -63,6 +66,8 @@ class NotificationService(
             )
         } catch (e: Exception) {
             emitterRepository.delete(emitterId)
+            log.error("Error occurred while sending notification. [emitterId=$emitterId]", e)
+            emitter.completeWithError(e)
         }
     }
 
