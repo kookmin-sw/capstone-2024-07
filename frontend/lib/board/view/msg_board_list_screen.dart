@@ -48,9 +48,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
 
   void scrollListener() {
     if (controller.offset > controller.position.maxScrollExtent - 150) {
-      ref.read(boardStateNotifierProvider.notifier).paginate(
-            fetchMore: true,
-          );
+      ref.read(boardStateNotifierProvider.notifier).paginate(fetchMore: true);
     }
   }
 
@@ -166,7 +164,8 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                 if (resp.statusCode == 200) {
                   // 다시 paginate api 요청을 보낸다.
                   ref.read(memberStateNotifierProvider.notifier).getMe();
-                  ref.read(boardStateNotifierProvider.notifier).lastId = 9223372036854775807;
+                  ref.read(boardStateNotifierProvider.notifier).lastId =
+                      9223372036854775807;
                   ref
                       .read(boardStateNotifierProvider.notifier)
                       .paginate(forceRefetch: true);
@@ -216,9 +215,18 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
         children: [
           renderMajorSelectBox(),
           const SizedBox(width: 30.0),
-          Image.asset(
-            'asset/imgs/logo.png',
-            width: 60.0,
+          GestureDetector(
+            onTap: () {
+              ref.read(boardStateNotifierProvider.notifier).lastId =
+                  9223372036854775807;
+              ref
+                  .read(boardStateNotifierProvider.notifier)
+                  .paginate(forceRefetch: true);
+            },
+            child: Image.asset(
+              'asset/imgs/logo.png',
+              width: 60.0,
+            ),
           ),
           const SizedBox(width: 60),
           SizedBox(
@@ -283,47 +291,53 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
 
     final cp = data as CursorPaginationModel;
 
-    return ListView.separated(
-      controller: controller,
-      itemCount: cp.data.length + 1,
-      itemBuilder: (_, index) {
-        if (index == cp.data.length) {
-          return Center(
-            child: cp is CursorPaginationModelFetchingMore
-                ? const CircularProgressIndicator(
-                    color: PRIMARY_COLOR,
-                  )
-                : const Text(
-                    'Copyright 2024. Decl Team all rights reserved.\n',
-                    style: TextStyle(
-                      color: BODY_TEXT_COLOR,
-                      fontSize: 12.0,
-                    ),
-                  ),
-          );
-        }
-
-        final MsgBoardResponseModel pItem = cp.data[index];
-
-        return GestureDetector(
-          child: BoardCard.fromModel(msgBoardResponseModel: pItem),
-          onTap: () async {
-            // 상세페이지
-            ref.read(boardDetailNotifier.notifier).add(pItem.id);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => MsgBoardScreen(
-                        board: pItem,
+    return RefreshIndicator(
+      onRefresh: () async {
+        ref.read(boardStateNotifierProvider.notifier).lastId = 9223372036854775807;
+        await ref.read(boardStateNotifierProvider.notifier).paginate(forceRefetch: true);
+      },
+      child: ListView.separated(
+        controller: controller,
+        itemCount: cp.data.length + 1,
+        itemBuilder: (_, index) {
+          if (index == cp.data.length) {
+            return Center(
+              child: cp is CursorPaginationModelFetchingMore
+                  ? const CircularProgressIndicator(
+                      color: PRIMARY_COLOR,
+                    )
+                  : const Text(
+                      'Copyright 2024. Decl Team all rights reserved.\n',
+                      style: TextStyle(
+                        color: BODY_TEXT_COLOR,
+                        fontSize: 12.0,
                       ),
-                  fullscreenDialog: true),
+                    ),
             );
-          },
-        );
-      },
-      separatorBuilder: (_, index) {
-        return const SizedBox(height: 1.0);
-      },
+          }
+
+          final MsgBoardResponseModel pItem = cp.data[index];
+
+          return GestureDetector(
+            child: BoardCard.fromModel(msgBoardResponseModel: pItem),
+            onTap: () async {
+              // 상세페이지
+              ref.read(boardDetailNotifier.notifier).add(pItem.id);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MsgBoardScreen(
+                          board: pItem,
+                        ),
+                    fullscreenDialog: true),
+              );
+            },
+          );
+        },
+        separatorBuilder: (_, index) {
+          return const SizedBox(height: 1.0);
+        },
+      ),
     );
   }
 }
