@@ -207,46 +207,49 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
 
   Widget renderTop() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
-      height: 50.0,
-      width: MediaQuery.of(context).size.width,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          renderMajorSelectBox(),
-          const SizedBox(width: 30.0),
-          GestureDetector(
-            onTap: () {
-              ref.read(boardStateNotifierProvider.notifier).lastId =
-                  9223372036854775807;
-              ref
-                  .read(boardStateNotifierProvider.notifier)
-                  .paginate(forceRefetch: true);
-            },
-            child: Image.asset(
-              'asset/imgs/logo.png',
-              width: 60.0,
-            ),
-          ),
-          const SizedBox(width: 60),
-          SizedBox(
-            width: 70,
-            child: IconButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const MyPageScreen(),
-                  ),
-                );
-              },
-              icon: const Icon(
-                Icons.person,
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
+        height: 50.0,
+        width: MediaQuery.of(context).size.width,
+        child: Stack(
+          children: [
+            Center(
+              child: GestureDetector(
+                onTap: () {
+                  ref.read(boardStateNotifierProvider.notifier).lastId =
+                      9223372036854775807;
+                  ref
+                      .read(boardStateNotifierProvider.notifier)
+                      .paginate(forceRefetch: true);
+                },
+                child: Image.asset(
+                  'asset/imgs/logo.png',
+                  width: 60.0,
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                renderMajorSelectBox(),
+                SizedBox(
+                  width: 70,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const MyPageScreen(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.person,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ));
   }
 
   Widget renderCategories() {
@@ -293,8 +296,11 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
 
     return RefreshIndicator(
       onRefresh: () async {
-        ref.read(boardStateNotifierProvider.notifier).lastId = 9223372036854775807;
-        await ref.read(boardStateNotifierProvider.notifier).paginate(forceRefetch: true);
+        ref.read(boardStateNotifierProvider.notifier).lastId =
+            9223372036854775807;
+        await ref
+            .read(boardStateNotifierProvider.notifier)
+            .paginate(forceRefetch: true);
       },
       child: ListView.separated(
         controller: controller,
