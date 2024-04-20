@@ -79,7 +79,7 @@ class CommentIntegrationTest(
         }
 
         When("해당 게시글의 댓글과 대댓글을 조회하면") {
-            val comments = commentService.findAllByPostId(CommentScrollPageRequest(1L, null, 10))
+            val comments = commentService.findAllByPostId(1, CommentScrollPageRequest(1L, null, 10))
 
             Then("댓글과 대댓글이 조회된다") {
 
