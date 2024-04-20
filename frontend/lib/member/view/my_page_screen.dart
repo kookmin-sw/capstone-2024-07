@@ -3,6 +3,7 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/member/view/my_info_screen.dart';
 import 'package:frontend/member/view/my_scrap_screen.dart';
+import 'package:frontend/member/view/password_edit_screen.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../common/component/notice_popup_dialog.dart';
@@ -258,6 +259,16 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (_) => MyScrapScreen(),
+              ),
+            );
+          },
+        ),
+        _MenuButton(
+          title: "비밀번호 변경",
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => PasswordEditScreen(),
               ),
             );
           },
