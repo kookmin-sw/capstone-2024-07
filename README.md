@@ -1,9 +1,14 @@
-## 디클 (Decl)
+<div align="center">
+<img src="https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/a6255c3f-ff7a-43b7-8e14-7e1199be3ac0" width="250px">
+<h1>디클</h1>
+</div>
+
 
 ### 1. 프로젝트 소개
 - 디클(Department class)은 전국의 대학생들이 학과를 중심으로 모여 소통할 수 있는 학과별 커뮤니티 서비스입니다. 모든 유저가 자신의 소속 학교나 동아리가 아닌 학과별로 자유롭게 모여 같은 학과끼리만 이해할 수 있는 깊은 고민과 전공 관련 정보를 공유할 수 있게 돕고자 합니다.
 
 ### 2. 소개 영상
+- [소개 영상](https://youtu.be/f8lyoE0JIKA?si=rLR_N2X6oFqUPunp)
 - [중간 평가 발표용 시연영상](https://youtu.be/4zNbyYo_4bg)
 
 ### 3. 팀 소개
