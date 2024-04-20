@@ -92,47 +92,53 @@ class _MyPostScreenState extends ConsumerState<MyPostScreen> {
 
     final cp = data as CursorPaginationModel;
 
-    return ListView.separated(
-      controller: controller,
-      itemCount: cp.data.length + 1,
-      itemBuilder: (_, index) {
-        if (index == cp.data.length) {
-          return Center(
-            child: cp is CursorPaginationModelFetchingMore
-                ? const CircularProgressIndicator(
-                    color: PRIMARY_COLOR,
-                  )
-                : const Text(
-                    'Copyright 2024. Decl Team all rights reserved.\n',
-                    style: TextStyle(
-                      color: BODY_TEXT_COLOR,
-                      fontSize: 12.0,
-                    ),
-                  ),
-          );
-        }
-
-        final MsgBoardResponseModel pItem = cp.data[index];
-
-        return GestureDetector(
-          child: BoardCard.fromModel(msgBoardResponseModel: pItem),
-          onTap: () async {
-            // 상세페이지
-            ref.read(boardDetailNotifier.notifier).add(pItem.id);
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => MsgBoardScreen(
-                        board: pItem,
+    return RefreshIndicator(
+      onRefresh: () async {
+        ref.read(myPostStateNotifierProvider.notifier).lastId = 9223372036854775807;
+        await ref.read(myPostStateNotifierProvider.notifier).paginate(forceRefetch: true);
+      },
+      child: ListView.separated(
+        controller: controller,
+        itemCount: cp.data.length + 1,
+        itemBuilder: (_, index) {
+          if (index == cp.data.length) {
+            return Center(
+              child: cp is CursorPaginationModelFetchingMore
+                  ? const CircularProgressIndicator(
+                      color: PRIMARY_COLOR,
+                    )
+                  : const Text(
+                      'Copyright 2024. Decl Team all rights reserved.\n',
+                      style: TextStyle(
+                        color: BODY_TEXT_COLOR,
+                        fontSize: 12.0,
                       ),
-                  fullscreenDialog: true),
+                    ),
             );
-          },
-        );
-      },
-      separatorBuilder: (_, index) {
-        return const SizedBox(height: 1.0);
-      },
+          }
+
+          final MsgBoardResponseModel pItem = cp.data[index];
+
+          return GestureDetector(
+            child: BoardCard.fromModel(msgBoardResponseModel: pItem),
+            onTap: () async {
+              // 상세페이지
+              ref.read(boardDetailNotifier.notifier).add(pItem.id);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MsgBoardScreen(
+                          board: pItem,
+                        ),
+                    fullscreenDialog: true),
+              );
+            },
+          );
+        },
+        separatorBuilder: (_, index) {
+          return const SizedBox(height: 1.0);
+        },
+      ),
     );
   }
 }
