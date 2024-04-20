@@ -51,21 +51,27 @@ class _MyPostScreenState extends ConsumerState<MyPostScreen> {
 
   Widget _renderTop() {
     return Container(
-      child: Row(
+      child: Stack(
         children: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(
-              Icons.chevron_left,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(
+                  Icons.chevron_left,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 113.0),
-          Text(
-            "내가 쓴 글",
-            style: TextStyle(
-              fontSize: 16.0,
+          Center(
+            child: Text(
+              "내가 쓴 글",
+              style: TextStyle(
+                fontSize: 16.0,
+              ),
             ),
           ),
         ],
@@ -94,8 +100,11 @@ class _MyPostScreenState extends ConsumerState<MyPostScreen> {
 
     return RefreshIndicator(
       onRefresh: () async {
-        ref.read(myPostStateNotifierProvider.notifier).lastId = 9223372036854775807;
-        await ref.read(myPostStateNotifierProvider.notifier).paginate(forceRefetch: true);
+        ref.read(myPostStateNotifierProvider.notifier).lastId =
+            9223372036854775807;
+        await ref
+            .read(myPostStateNotifierProvider.notifier)
+            .paginate(forceRefetch: true);
       },
       child: ListView.separated(
         controller: controller,
