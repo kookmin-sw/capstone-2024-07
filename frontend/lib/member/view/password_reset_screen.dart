@@ -54,25 +54,31 @@ class _PasswordResetScreenState extends ConsumerState<PasswordResetScreen> {
   Widget _renderTop() {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+      child: Stack(
         children: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(
-              Icons.chevron_left,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(
+                  Icons.chevron_left,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(
-            width: 86,
-          ),
-          const Text(
-            '비밀번호 초기화',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 10.0),
+            child: Center(
+              child: Text(
+                '비밀번호 초기화',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
           ),
         ],
