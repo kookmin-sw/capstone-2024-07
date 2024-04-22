@@ -268,6 +268,80 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
         }));
   }
 
+  void filterDialog(String s, List<int> selectCommentIndex,
+      List<int> selectReplyIndex) async {
+    await showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  s,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+
+                      if (selectCommentIndex[0] != -1) {
+                        // Upload Reply
+                        addNewReply(selectCommentIndex[0]);
+                      } else if (selectCommentIndex[1] != -1) {
+                        // Modify Comment
+                        modifyComment(selectCommentIndex[1]);
+                      } else if (selectReplyIndex[1] != -1) {
+                        // Modify Reply
+                        modifyReply(selectReplyIndex[1]);
+                      } else {
+                        addNewComment();
+                      }
+
+                      textEditingController.clear();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: PRIMARY50_COLOR,
+                    ),
+                    child: const Text(
+                      "네",
+                      style: TextStyle(fontSize: 13, color: PRIMARY_COLOR),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: PRIMARY50_COLOR,
+                    ),
+                    child: const Text(
+                      "아니요",
+                      style: TextStyle(fontSize: 13, color: PRIMARY_COLOR),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        }));
+  }
+
   @override
   Widget build(BuildContext context) {
     final memberState = ref.watch(memberStateNotifierProvider);
@@ -390,27 +464,27 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                       debugPrint(
                           "titleCheck : ${contentCheck.data["profanity"]}");
                       if (contentCheck.data["profanity"]) {
-                        notAllowed("댓글에 비속어가 포함되어 있습니다.\n수정 후 다시 시도해주세요!");
-                        return;
+                        filterDialog("댓글에 비속어가 포함되어 있습니다.\n그래도 등록하시겠습니까?",
+                            selectCommentIndex, selectReplyIndex);
+                      } else {
+                        if (selectCommentIndex[0] != -1) {
+                          // Upload Reply
+                          addNewReply(selectCommentIndex[0]);
+                        } else if (selectCommentIndex[1] != -1) {
+                          // Modify Comment
+                          modifyComment(selectCommentIndex[1]);
+                        } else if (selectReplyIndex[1] != -1) {
+                          // Modify Reply
+                          modifyReply(selectReplyIndex[1]);
+                        } else {
+                          addNewComment();
+                        }
+
+                        textEditingController.clear();
                       }
                     } catch (e) {
                       debugPrint("upload_content_predict : ${e.toString()}");
                     }
-
-                    if (selectCommentIndex[0] != -1) {
-                      // Upload Reply
-                      addNewReply(selectCommentIndex[0]);
-                    } else if (selectCommentIndex[1] != -1) {
-                      // Modify Comment
-                      modifyComment(selectCommentIndex[1]);
-                    } else if (selectReplyIndex[1] != -1) {
-                      // Modify Reply
-                      modifyReply(selectReplyIndex[1]);
-                    } else {
-                      addNewComment();
-                    }
-
-                    textEditingController.clear();
                   },
                 ),
               ),
