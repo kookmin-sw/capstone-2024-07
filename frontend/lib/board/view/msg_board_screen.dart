@@ -456,6 +456,9 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     size: 30,
                   ),
                   onTap: () async {
+                    if (textEditingController.text == "") {
+                      return;
+                    }
                     try {
                       var dio = Dio();
                       Response contentCheck = await dio.post(
