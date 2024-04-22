@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/model/comment_model.dart';
@@ -405,6 +406,17 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                 myEmail: myEmail,
                 myId: myId),
             renderTextField(selectCommentIndex, selectReplyIndex),
+            KeyboardVisibilityBuilder(
+              builder: (p0, isKeyboardVisible) {
+                return isKeyboardVisible
+                    ? const SizedBox(
+                        height: 0,
+                      )
+                    : const SizedBox(
+                        height: 40,
+                      );
+              },
+            ),
           ],
         ));
   }
@@ -434,7 +446,6 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
   Widget renderTextField(selectCommentIndex, selectReplyIndex) {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.only(bottom: 50),
       child: Row(
         children: [
           Expanded(
