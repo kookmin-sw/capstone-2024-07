@@ -58,9 +58,9 @@ class DatabaseInitializer(
         populateDepartment()
         populateCommunity()
         populateUser()
-        populateDummyPosts()
-        populateDummyComments()
-        populateDummyReplies()
+//        populateDummyPosts()
+//        populateDummyComments()
+//        populateDummyReplies()
     }
 
 
