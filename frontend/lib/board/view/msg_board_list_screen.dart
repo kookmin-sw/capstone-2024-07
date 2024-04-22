@@ -111,11 +111,14 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
             ),
           );
         },
+        shape: const CircleBorder(),
         backgroundColor: PRIMARY50_COLOR,
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
-    //test
   }
 
   Widget renderMajorSelectBox() {
