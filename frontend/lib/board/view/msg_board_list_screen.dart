@@ -85,40 +85,61 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => MsgBoardAddScreen(
-                isEdit: false,
-                board: MsgBoardResponseModel(
-                  id: 0,
-                  userId: 0,
-                  userNickname: "",
-                  universityName: "",
-                  communityId: 0,
-                  communityTitle: "",
-                  postTitle: "",
-                  postContent: "",
-                  images: [],
-                  count: ReactCountModel(
-                      commentReplyCount: 0, likeCount: 0, scrapCount: 0),
-                  isQuestion: false,
-                  createdDateTime: "",
-                  imageCount: 0,
-                ),
+      floatingActionButton: Stack(
+        fit: StackFit.expand,
+        children: [
+          Positioned(
+            right: 10,
+            bottom: 100,
+            child: FloatingActionButton(
+              onPressed: () {
+                print('검색버튼');
+              },
+              child: Icon(Icons.search),
+              backgroundColor: Colors.blue[300],
+            ),
+          ),
+          Positioned(
+            right: 10,
+            bottom: 30,
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => MsgBoardAddScreen(
+                      isEdit: false,
+                      board: MsgBoardResponseModel(
+                        id: 0,
+                        userId: 0,
+                        userNickname: "",
+                        universityName: "",
+                        communityId: 0,
+                        communityTitle: "",
+                        postTitle: "",
+                        postContent: "",
+                        images: [],
+                        count: ReactCountModel(
+                            commentReplyCount: 0, likeCount: 0, scrapCount: 0),
+                        isQuestion: false,
+                        createdDateTime: "",
+                        imageCount: 0,
+                      ),
+                    ),
+                  ),
+                );
+              },
+              shape: const CircleBorder(),
+              backgroundColor: PRIMARY50_COLOR,
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
               ),
             ),
-          );
-        },
-        shape: const CircleBorder(),
-        backgroundColor: PRIMARY50_COLOR,
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
+          ),
+        ],
       ),
     );
+    //test
   }
 
   Widget renderMajorSelectBox() {
