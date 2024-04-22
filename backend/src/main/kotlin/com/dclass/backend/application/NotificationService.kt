@@ -5,9 +5,12 @@ import com.dclass.backend.domain.emitter.EmitterRepository
 import com.dclass.backend.domain.notification.NotificationRepository
 import com.dclass.backend.domain.notification.getOrThrow
 import com.dclass.support.util.logger
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
+import java.io.IOException
+import java.time.LocalDateTime
 
 @Service
 @Transactional
@@ -15,7 +18,8 @@ class NotificationService(
     val emitterRepository: EmitterRepository,
     val notificationRepository: NotificationRepository,
 ) {
-    private val DEFAULT_TIMEOUT = 60L * 1000L * 60L
+    //    60L * 1000L * 60L
+    private val DEFAULT_TIMEOUT = 20000L;
     private val log = logger()
 
 
@@ -47,6 +51,19 @@ class NotificationService(
         }
     }
 
+    @Scheduled(fixedRate = 3000)
+    fun sendHeartbeat() {
+        val emitters = emitterRepository.findAll()
+        try {
+            emitters.forEach {
+                sendNotification(it.value, it.key.split("_")[0], it.key, LocalDateTime.now())
+            }
+        } catch (e: Exception) {
+            log.error("Error occurred while sending heartbeat.", e)
+        }
+    }
+
+
     fun readNotification(id: Long) {
         val notification = notificationRepository.getOrThrow(id)
         notification.read()
@@ -64,10 +81,12 @@ class NotificationService(
                     .name(emitterId)
                     .data(data)
             )
-        } catch (e: Exception) {
+            log.info("Notification sent. data=$data, emitterId=$emitterId")
+        } catch (e: IOException) {
             emitterRepository.delete(emitterId)
             log.error("Error occurred while sending notification. [emitterId=$emitterId]", e)
             emitter.completeWithError(e)
+
         }
     }
 
