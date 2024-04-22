@@ -7,6 +7,7 @@ import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/category_circle_layout.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class Board extends ConsumerWidget {
   final MsgBoardDetailResponseModel board;
@@ -200,7 +201,8 @@ class ImageViewer extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => ShowImageBigger(
-                              imageLink: imageLink,
+                              imageLink: board.images,
+                              index: board.images.indexOf(imageLink),
                             ),
                         fullscreenDialog: true),
                   );
@@ -227,8 +229,10 @@ class ImageViewer extends StatelessWidget {
 }
 
 class ShowImageBigger extends StatelessWidget {
-  const ShowImageBigger({super.key, required this.imageLink});
-  final String imageLink;
+  ShowImageBigger({super.key, required this.imageLink, required this.index});
+  final List<String> imageLink;
+  final int index;
+  final PageController _controller = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -244,12 +248,42 @@ class ShowImageBigger extends StatelessWidget {
               Navigator.of(context).pop();
             },
           )),
-      body: Center(
-        child: PhotoView(
-          imageProvider: NetworkImage(imageLink),
-          minScale: PhotoViewComputedScale.contained,
-          maxScale: PhotoViewComputedScale.covered * 2,
-        ),
+      body: Stack(
+        children: [
+          PageView(
+            controller: _controller,
+            children: [
+              for (var i = 0; i < imageLink.length; i++)
+                Container(
+                  color: Colors.black,
+                  padding: const EdgeInsets.only(bottom: 100),
+                  child: Center(
+                    child: PhotoView(
+                      imageProvider: NetworkImage(imageLink[i]),
+                      minScale: PhotoViewComputedScale.contained,
+                      maxScale: PhotoViewComputedScale.covered * 2,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          Container(
+            margin: const EdgeInsets.only(top: 500),
+            child: Center(
+              child: SmoothPageIndicator(
+                effect: const WormEffect(
+                  dotHeight: 10,
+                  dotWidth: 10,
+                  type: WormType.thinUnderground,
+                  dotColor: Colors.white,
+                  activeDotColor: PRIMARY_COLOR,
+                ),
+                controller: _controller,
+                count: imageLink.length,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

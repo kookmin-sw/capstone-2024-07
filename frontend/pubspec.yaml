@@ -48,6 +48,7 @@ dependencies:
   photo_view: ^0.14.0
   flutter_client_sse: ^2.0.1
   flutter_local_notifications: ^17.0.0
+  smooth_page_indicator: ^1.1.0
 
 dev_dependencies:
   build_runner: ^2.3.3
