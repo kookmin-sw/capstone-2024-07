@@ -92,6 +92,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
             right: 10,
             bottom: 100,
             child: FloatingActionButton(
+              heroTag: 'searchButton',
               onPressed: () {
                 print('검색버튼');
               },
@@ -103,6 +104,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
             right: 10,
             bottom: 30,
             child: FloatingActionButton(
+              heroTag: 'addButton',
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
