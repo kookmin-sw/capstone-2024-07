@@ -1,5 +1,6 @@
 package com.dclass.backend.domain.emitter
 
+import com.dclass.support.util.logger
 import org.springframework.stereotype.Repository
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import java.util.concurrent.ConcurrentHashMap
@@ -8,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap
 class EmitterRepository {
     private val emitters = ConcurrentHashMap<String, SseEmitter>()
     private val eventCache = ConcurrentHashMap<String, Any>()
+    private val log = logger()
 
     fun save(userId: String, emitter: SseEmitter): SseEmitter {
         emitters[userId] = emitter
@@ -26,7 +28,12 @@ class EmitterRepository {
         return eventCache.filter { it.key.startsWith(userId) }
     }
 
+    fun findAll(): Map<String, SseEmitter> {
+        return emitters
+    }
+
     fun delete(userId: String) {
+        log.info("delete emitter: $userId")
         emitters.remove(userId)
     }
 
