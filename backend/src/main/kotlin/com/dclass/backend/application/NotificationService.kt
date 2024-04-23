@@ -76,7 +76,7 @@ class NotificationService(
             )
             log.info("Notification sent. data=$data, emitterId=$emitterId")
         } catch (e: Exception) {
-            log.error("Error occurred while sending notification. [emitterId=$emitterId]", e)
+            log.error("Error occurred while sending notification. [emitterId=$emitterId]", e.message)
             emitter.completeWithError(e)
         }
     }
