@@ -9,8 +9,6 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
-import java.io.IOException
-import java.time.LocalDateTime
 
 @Service
 @Transactional
@@ -54,15 +52,10 @@ class NotificationService(
     @Scheduled(fixedRate = 3000)
     fun sendHeartbeat() {
         val emitters = emitterRepository.findAll()
-        try {
-            emitters.forEach {
-                sendNotification(it.value, it.key.split("_")[0], it.key, LocalDateTime.now())
-            }
-        } catch (e: Exception) {
-            log.error("Error occurred while sending heartbeat.", e)
+        emitters.forEach {
+            sendNotification(it.value, it.key.split("_")[0], it.key, "heartbeat")
         }
     }
-
 
     fun readNotification(id: Long) {
         val notification = notificationRepository.getOrThrow(id)
@@ -82,11 +75,9 @@ class NotificationService(
                     .data(data)
             )
             log.info("Notification sent. data=$data, emitterId=$emitterId")
-        } catch (e: IOException) {
-            emitterRepository.delete(emitterId)
+        } catch (e: Exception) {
             log.error("Error occurred while sending notification. [emitterId=$emitterId]", e)
             emitter.completeWithError(e)
-
         }
     }
 
