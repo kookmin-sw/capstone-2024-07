@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import java.io.IOException
 
 @RestControllerAdvice
 class ExceptionControllerAdvice {
@@ -65,6 +66,11 @@ class ExceptionControllerAdvice {
                 message = errorMessage
             )
         )
+    }
+
+    @ExceptionHandler(IOException::class)
+    fun handleClientAbortException(request: HttpServletRequest, e: Exception) {
+        log.warn("클라이언트가 연결을 끊었습니다. URI: ${request.requestURI}, ${e.message}")
     }
 
     @ExceptionHandler(Exception::class)
