@@ -118,27 +118,29 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   Widget _renderTop() {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+      child: Stack(
         children: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(
-              Icons.chevron_left,
-              color: PRIMARY_COLOR,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(
+                  Icons.chevron_left,
+                  color: PRIMARY_COLOR,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(
-            width: 110,
-          ),
-          const Text(
-            'DeCl',
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.w500,
-              color: PRIMARY_COLOR,
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 10.0),
+            child: Center(
+              child: Image.asset(
+                'asset/imgs/logo.png',
+                width: 80.0,
+              ),
             ),
           ),
         ],
