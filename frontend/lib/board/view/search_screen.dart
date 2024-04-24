@@ -28,6 +28,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     controller.addListener(scrollListener);
   }
 
+  @override
+  void dispose() {
+    controller.removeListener(scrollListener);
+    controller.dispose();
+    super.dispose();
+  }
+
   void scrollListener() {
     if (controller.offset > controller.position.maxScrollExtent - 150) {
       ref.read(searchStateNotifierProvider.notifier).paginate(fetchMore: true);
@@ -92,10 +99,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       ),
                       color: PRIMARY_COLOR,
                       onPressed: () {
-                        setState(() {
-                          isSearched = true;
-                        });
                         if (searchKeyword.isNotEmpty) {
+                          setState(() {
+                            isSearched = true;
+                          });
                           ref
                               .read(searchStateNotifierProvider.notifier)
                               .updateAndFetch(searchKeyword);
@@ -119,6 +126,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     setState(() {
                       searchKeyword = value;
                     });
+                    ref.read(searchKeywordProvider.notifier).state = value;
                   },
                 ),
               ),
@@ -128,6 +136,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   height: 60,
                   child: TextButton(
                     onPressed: () {
+                      ref.read(searchKeywordProvider.notifier).state = '';
+                      ref.read(searchStateNotifierProvider.notifier).resetSearchResults();
+                      setState(() {
+                        searchKeyword = '';
+                        isSearched = false;
+                      });
                       Navigator.of(context).pop();
                     },
                     child: Text('취소'),
