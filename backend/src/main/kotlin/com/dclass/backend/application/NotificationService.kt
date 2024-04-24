@@ -49,13 +49,13 @@ class NotificationService(
         }
     }
 
-//    @Scheduled(fixedRate = 3000)
-//    fun sendHeartbeat() {
-//        val emitters = emitterRepository.findAll()
-//        emitters.forEach {
-//            sendNotification(it.value, it.key.split("_")[0], it.key, "heartbeat")
-//        }
-//    }
+    @Scheduled(fixedRate = 3000)
+    fun sendHeartbeat() {
+        val emitters = emitterRepository.findAll()
+        emitters.forEach {
+            sendNotification(it.value, it.key.split("_")[0], it.key, "heartbeat")
+        }
+    }
 
     fun readNotification(id: Long) {
         val notification = notificationRepository.getOrThrow(id)
