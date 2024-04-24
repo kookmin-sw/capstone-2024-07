@@ -11,6 +11,7 @@ import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/provider/payload_state_notifier_provider.dart';
 import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/board/view/msg_board_screen.dart';
+import 'package:frontend/board/view/search_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
@@ -94,7 +95,11 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
             child: FloatingActionButton(
               heroTag: 'searchButton',
               onPressed: () {
-                print('검색버튼');
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => SearchScreen(),
+                  ),
+                );
               },
               child: Icon(Icons.search),
               backgroundColor: Colors.blue[300],
