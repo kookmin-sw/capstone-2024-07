@@ -1,6 +1,8 @@
 package com.dclass.backend.application
 
 import com.dclass.backend.application.dto.CreateReplyRequest
+import com.dclass.backend.application.dto.DeleteReplyRequest
+import com.dclass.backend.application.dto.UpdateReplyRequest
 import com.dclass.backend.domain.comment.Comment
 import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.comment.getByIdOrThrow
@@ -10,6 +12,7 @@ import com.dclass.backend.domain.notification.NotificationEvent
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.post.findByIdOrThrow
 import com.dclass.backend.domain.reply.ReplyRepository
+import com.dclass.backend.domain.reply.getByIdAndUserIdOrThrow
 import com.dclass.backend.exception.comment.CommentException
 import com.dclass.backend.exception.comment.CommentExceptionType
 import com.dclass.support.fixtures.comment
@@ -18,6 +21,7 @@ import com.dclass.support.fixtures.post
 import com.dclass.support.fixtures.reply
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.ints.shouldBeLessThan
 import io.kotest.matchers.shouldBe
 import io.mockk.*
 import org.springframework.context.ApplicationEventPublisher
@@ -95,6 +99,48 @@ class ReplyServiceTest : BehaviorSpec({
 
             Then("답글 알림을 발송한다") {
                 verify { eventPublisher.publishEvent(any<NotificationEvent>()) }
+            }
+        }
+    }
+
+    Given("답글이 존재하는 경우") {
+        val reply = reply()
+        every { replyRepository.getByIdAndUserIdOrThrow(any(), any()) } returns reply
+
+        When("답글을 수정하면") {
+            replyService.update(1L, UpdateReplyRequest(1L, "updated content"))
+
+            Then("내용이 변경된다") {
+                reply.content shouldBe "updated content"
+            }
+        }
+    }
+
+    Given("답글이 존재하는 경우2") {
+        val reply = reply()
+        every { replyRepository.getByIdAndUserIdOrThrow(any(), any()) } returns reply
+
+        val comment = comment()
+        every { commentRepository.getByIdOrThrow(any()) } returns comment
+
+        val post = post()
+        every { postRepository.findByIdOrThrow(any()) } returns post
+
+        justRun { replyRepository.delete(any()) }
+
+        When("답글을 삭제하면") {
+            replyService.delete(1L, DeleteReplyRequest(1L))
+
+            Then("답글이 삭제된다") {
+                verify { replyRepository.delete(reply) }
+            }
+
+            Then("댓글의 답글 수가 감소한다") {
+                comment.replyCount shouldBeLessThan 0
+            }
+
+            Then("게시글의 댓글 답글 수가 감소한다") {
+                post.postCount.commentReplyCount shouldBe 29
             }
         }
     }
