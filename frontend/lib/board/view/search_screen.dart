@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/provider/search_state_notifier_provider.dart';
+import 'package:frontend/board/provider/searck_keyword_provider.dart';
 
 import '../../common/const/colors.dart';
+import '../../common/model/cursor_pagination_model.dart';
+import '../component/board_card.dart';
+import '../model/msg_board_response_model.dart';
+import '../provider/board_detail_state_notifier_provider.dart';
+import 'msg_board_screen.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -11,8 +18,21 @@ class SearchScreen extends ConsumerStatefulWidget {
 }
 
 class _SearchScreenState extends ConsumerState<SearchScreen> {
+  final ScrollController controller = ScrollController();
   String searchKeyword = '';
   bool isSearched = false;
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(scrollListener);
+  }
+
+  void scrollListener() {
+    if (controller.offset > controller.position.maxScrollExtent - 150) {
+      ref.read(searchStateNotifierProvider.notifier).paginate(fetchMore: true);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +41,25 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         child: Column(
           children: [
             _renderTextFormField(ref, context),
+            if (!isSearched)
+              const Expanded(
+                child: Center(
+                  child: Text(
+                    '궁금한 내용을 검색해보세요!',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: BODY_TEXT_COLOR,
+                    ),
+                  ),
+                ),
+              ),
+            if (isSearched)
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: _renderSearchedList(),
+                ),
+              ),
           ],
         ),
       ),
@@ -56,7 +95,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         setState(() {
                           isSearched = true;
                         });
-                        //검색 실행
+                        if (searchKeyword.isNotEmpty) {
+                          ref
+                              .read(searchStateNotifierProvider.notifier)
+                              .updateAndFetch(searchKeyword);
+                        }
                       },
                     ),
                     enabledBorder: OutlineInputBorder(
@@ -94,6 +137,78 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _renderSearchedList() {
+    final data = ref.watch(searchStateNotifierProvider);
+
+    if (data is CursorPaginationModelLoading) {
+      return const Center(
+        child: CircularProgressIndicator(
+          color: PRIMARY_COLOR,
+        ),
+      );
+    }
+
+    if (data is CursorPaginationModelError) {
+      return const Center(
+        child: Text("데이터를 불러올 수 없습니다."),
+      );
+    }
+
+    final cp = data as CursorPaginationModel;
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        ref.read(searchStateNotifierProvider.notifier).lastId =
+            9223372036854775807;
+        await ref
+            .read(searchStateNotifierProvider.notifier)
+            .paginate(forceRefetch: true);
+      },
+      child: ListView.separated(
+        controller: controller,
+        itemCount: cp.data.length + 1,
+        itemBuilder: (_, index) {
+          if (index == cp.data.length) {
+            return Center(
+              child: cp is CursorPaginationModelFetchingMore
+                  ? const CircularProgressIndicator(
+                      color: PRIMARY_COLOR,
+                    )
+                  : const Text(
+                      'Copyright 2024. Decl Team all rights reserved.\n',
+                      style: TextStyle(
+                        color: BODY_TEXT_COLOR,
+                        fontSize: 12.0,
+                      ),
+                    ),
+            );
+          }
+
+          final MsgBoardResponseModel pItem = cp.data[index];
+
+          return GestureDetector(
+            child: BoardCard.fromModel(msgBoardResponseModel: pItem),
+            onTap: () async {
+              // 상세페이지
+              ref.read(boardDetailNotifier.notifier).add(pItem.id);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MsgBoardScreen(
+                          board: pItem,
+                        ),
+                    fullscreenDialog: true),
+              );
+            },
+          );
+        },
+        separatorBuilder: (_, index) {
+          return const SizedBox(height: 1.0);
+        },
       ),
     );
   }
