@@ -337,6 +337,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
       }
     }
 
+    ref.read(boardStateNotifierProvider.notifier).lastId = 9223372036854775807;
     await ref
         .read(boardStateNotifierProvider.notifier)
         .paginate(forceRefetch: true);
