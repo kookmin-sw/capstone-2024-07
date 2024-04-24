@@ -14,7 +14,7 @@ class JwtTokenProvider(
     private val signingKey: SecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256),
 ) {
     companion object {
-        const val ACCESS_TOKEN_EXPIRATION_MILLISECONDS: Long = 1000 * 60 * 60 * 1 // 1시간
+        const val ACCESS_TOKEN_EXPIRATION_MILLISECONDS: Long = 1000 * 60 * 2 * 1 // 1시간
         const val REFRESH_TOKEN_EXPIRATION_MILLISECONDS: Long = 1000 * 60 * 60 * 24 * 14 // 2주
     }
 
