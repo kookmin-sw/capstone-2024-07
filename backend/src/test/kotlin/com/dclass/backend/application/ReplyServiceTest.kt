@@ -2,6 +2,7 @@ package com.dclass.backend.application
 
 import com.dclass.backend.application.dto.CreateReplyRequest
 import com.dclass.backend.application.dto.DeleteReplyRequest
+import com.dclass.backend.application.dto.LikeReplyRequest
 import com.dclass.backend.application.dto.UpdateReplyRequest
 import com.dclass.backend.domain.comment.Comment
 import com.dclass.backend.domain.comment.CommentRepository
@@ -13,8 +14,11 @@ import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.post.findByIdOrThrow
 import com.dclass.backend.domain.reply.ReplyRepository
 import com.dclass.backend.domain.reply.getByIdAndUserIdOrThrow
+import com.dclass.backend.domain.reply.getByIdOrThrow
 import com.dclass.backend.exception.comment.CommentException
 import com.dclass.backend.exception.comment.CommentExceptionType
+import com.dclass.backend.exception.reply.ReplyException
+import com.dclass.backend.exception.reply.ReplyExceptionType
 import com.dclass.support.fixtures.comment
 import com.dclass.support.fixtures.community
 import com.dclass.support.fixtures.post
@@ -141,6 +145,54 @@ class ReplyServiceTest : BehaviorSpec({
 
             Then("게시글의 댓글 답글 수가 감소한다") {
                 post.postCount.commentReplyCount shouldBe 29
+            }
+        }
+    }
+
+    Given("답글이 존재하는 경우3") {
+        val reply = reply()
+        every { replyRepository.getByIdOrThrow(any()) } returns reply
+
+        val comment = comment()
+        every { commentRepository.getByIdOrThrow(any()) } returns comment
+
+        val post = post()
+        every { postRepository.findByIdOrThrow(any()) } returns post
+
+        val community = community()
+        every { communityRepository.findByIdOrThrow(any()) } returns community
+
+        justRun { replyValidator.validate(any(), any()) }
+
+        When("답글을 좋아요하면") {
+            replyService.like(2L, LikeReplyRequest(1L))
+
+            Then("답글의 좋아요 수가 증가한다") {
+                reply.likeCount shouldBe 1
+            }
+        }
+    }
+
+    Given("답글이 존재하는 경우4") {
+        val reply = reply()
+        every { replyRepository.getByIdOrThrow(any()) } returns reply
+
+        val comment = comment()
+        every { commentRepository.getByIdOrThrow(any()) } returns comment
+
+        val post = post()
+        every { postRepository.findByIdOrThrow(any()) } returns post
+
+        val community = community()
+        every { communityRepository.findByIdOrThrow(any()) } returns community
+
+        justRun { replyValidator.validate(any(), any()) }
+
+        When("자기 답글에 좋아요하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<ReplyException> {
+                    replyService.like(1L, LikeReplyRequest(1L))
+                }.exceptionType() shouldBe ReplyExceptionType.SELF_LIKE
             }
         }
     }
