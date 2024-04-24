@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_client_sse/constants/sse_request_type_enum.dart';
@@ -20,6 +22,7 @@ class NotificationNotifier extends StateNotifier<SSEModel> {
   final FlutterSecureStorage storage;
   final FlutterLocalNotificationsPlugin notification =
       FlutterLocalNotificationsPlugin();
+  DateTime lastHeartbeat = DateTime.now();
 
   void initNotification() async {
     AndroidInitializationSettings android =
@@ -73,9 +76,15 @@ class NotificationNotifier extends StateNotifier<SSEModel> {
     // TODO : Add 'payload : router path'
   }
 
-  Future<void> listen() async {
-    initNotification();
-    requestNotificationPermission();
+  Future<void> listen(int retryCount) async {
+    if (retryCount == 0) {
+      initNotification();
+      requestNotificationPermission();
+    }
+
+    if (retryCount >= 3) {
+      return;
+    }
 
     final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
 
@@ -88,16 +97,38 @@ class NotificationNotifier extends StateNotifier<SSEModel> {
         }).listen((event) {
       debugPrint("SSE : ${event.event}, ${event.data}");
       String e = event.data ?? "";
-      if (e != "" && !e.contains("EventStream Created.")) {
+      if (e != "" &&
+          !e.contains("EventStream Created.") &&
+          !e.contains("heartbeat")) {
         Map<String, dynamic> response = jsonDecode(e);
         sendNotification(
             response["type"], response["content"], response["postId"]);
+      } else if (e.contains("heartbeat")) {
+        lastHeartbeat = DateTime.now();
       }
 
       state = event;
     }).onError((e) {
       debugPrint("SSE-Error : ${e.toString()}");
+      if (lastHeartbeat.difference(DateTime.now()).inMinutes > 1) {
+        sleep(const Duration(seconds: 3));
+        listen(retryCount + 1);
+      }
     });
+
+    // Isolate.spawn<SendPort>((message) {
+    //   while (true) {
+    //     if (lastHeartbeat.difference(DateTime.now()).inMinutes > 1) {
+    //       SSEClient.unsubscribeFromSSE();
+    //       debugPrint("SSE-Closed");
+    //       sleep(const Duration(seconds: 3));
+    //       listen(retryCount + 1);
+    //       break;
+    //     } else {
+    //       sleep(const Duration(seconds: 10));
+    //     }
+    //   }
+    // }, ReceivePort().sendPort);
   }
 }
 

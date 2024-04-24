@@ -68,7 +68,7 @@ class AuthProvider extends ChangeNotifier {
     // 로그인 중이거나 현재 위치가 SplashScreen이면 홈으로 이동
     if (member is MemberModel) {
       if (loggingIn || state.location == '/splash') {
-        ref.watch(notificationStateProvider.notifier).listen();
+        ref.watch(notificationStateProvider.notifier).listen(0);
         return '/boardList';
       }
     }
