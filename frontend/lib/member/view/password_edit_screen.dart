@@ -233,7 +233,7 @@ class _PasswordEditScreenState extends ConsumerState<PasswordEditScreen> {
           }
         }
       },
-      child: Text('비밀번호 초기화'),
+      child: Text('비밀번호 변경'),
     );
   }
 }
