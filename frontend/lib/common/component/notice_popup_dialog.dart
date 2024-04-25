@@ -54,8 +54,11 @@ class NoticePopupDialog extends StatelessWidget {
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: PRIMARY_COLOR,
+                  textStyle: TextStyle(
+                    color: Colors.white,
+                  ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
               ),
