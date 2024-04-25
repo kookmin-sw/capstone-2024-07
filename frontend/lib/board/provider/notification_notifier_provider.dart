@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_client_sse/constants/sse_request_type_enum.dart';
@@ -8,21 +7,21 @@ import 'package:flutter_client_sse/flutter_client_sse.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:frontend/board/model/notification_model.dart';
 import 'package:frontend/board/provider/payload_state_notifier_provider.dart';
 import 'package:frontend/common/const/data.dart';
 import 'package:frontend/common/provider/secure_storage_provider.dart';
 import 'package:flutter_local_notifications/src/platform_specifics/android/enums.dart'
     as noti;
 
-class NotificationNotifier extends StateNotifier<SSEModel> {
+class NotificationNotifier extends StateNotifier<NotificationModel> {
   NotificationNotifier(this.ref, this.storage)
-      : super(SSEModel(id: "", data: "", event: ""));
+      : super(NotificationModel(DateTime.now(), 0));
 
   final Ref ref;
   final FlutterSecureStorage storage;
   final FlutterLocalNotificationsPlugin notification =
       FlutterLocalNotificationsPlugin();
-  DateTime lastHeartbeat = DateTime.now();
 
   void initNotification() async {
     AndroidInitializationSettings android =
@@ -73,7 +72,6 @@ class NotificationNotifier extends StateNotifier<SSEModel> {
     );
 
     notification.show(0, title, body, details, payload: "$postId");
-    // TODO : Add 'payload : router path'
   }
 
   Future<void> listen(int retryCount) async {
@@ -82,11 +80,13 @@ class NotificationNotifier extends StateNotifier<SSEModel> {
       requestNotificationPermission();
     }
 
-    if (retryCount >= 3) {
+    if (retryCount >= 12000) {
       return;
     }
 
     final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
+    DateTime lastHeartbeat = DateTime.now();
+    int heartbeatCount = 0;
 
     SSEClient.subscribeToSSE(
         method: SSERequestType.GET,
@@ -105,34 +105,23 @@ class NotificationNotifier extends StateNotifier<SSEModel> {
             response["type"], response["content"], response["postId"]);
       } else if (e.contains("heartbeat")) {
         lastHeartbeat = DateTime.now();
+        heartbeatCount += 1;
       }
 
-      state = event;
+      state = NotificationModel(lastHeartbeat, retryCount);
+
+      if (heartbeatCount > 5) {
+        SSEClient.unsubscribeFromSSE();
+      }
     }).onError((e) {
       debugPrint("SSE-Error : ${e.toString()}");
-      if (lastHeartbeat.difference(DateTime.now()).inMinutes > 1) {
-        sleep(const Duration(seconds: 3));
-        listen(retryCount + 1);
-      }
+      sleep(const Duration(seconds: 10));
+      listen(retryCount + 1);
     });
-
-    // Isolate.spawn<SendPort>((message) {
-    //   while (true) {
-    //     if (lastHeartbeat.difference(DateTime.now()).inMinutes > 1) {
-    //       SSEClient.unsubscribeFromSSE();
-    //       debugPrint("SSE-Closed");
-    //       sleep(const Duration(seconds: 3));
-    //       listen(retryCount + 1);
-    //       break;
-    //     } else {
-    //       sleep(const Duration(seconds: 10));
-    //     }
-    //   }
-    // }, ReceivePort().sendPort);
   }
 }
 
 final notificationStateProvider =
-    StateNotifierProvider<NotificationNotifier, SSEModel>((ref) {
+    StateNotifierProvider<NotificationNotifier, NotificationModel>((ref) {
   return NotificationNotifier(ref, ref.watch(secureStorageProvider));
 });
