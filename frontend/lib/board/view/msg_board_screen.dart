@@ -277,18 +277,21 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
   void filterDialog(String s, List<int> selectCommentIndex,
       List<int> selectReplyIndex) async {
     await showDialog(
+        barrierDismissible: false,
         context: context,
         builder: ((context) {
           return AlertDialog(
             content: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  s,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 13,
+                Flexible(
+                  child: Text(
+                    s,
+                    overflow: TextOverflow.visible,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 13,
+                    ),
                   ),
                 ),
               ],
@@ -483,14 +486,14 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                       debugPrint(
                           "titleCheck : ${contentCheck.data["profanity"]}");
                       if (contentCheck.data["profanity"]) {
-                        filterDialog("댓글에 비속어가 포함되어 있는 경우 서비스 이용에 제한이 있을 수 있습니다.\n그래도 등록하시겠습니까?",
+                        filterDialog("댓글에 비속어가 포함되어 있는 경우 서비스 이용에 제한이 있을 수 있습니다. 정말 등록하시겠습니까?",
                             selectCommentIndex, selectReplyIndex);
                       } else {
                         if (selectCommentIndex[0] != -1) {
                           // Upload Reply
                           addNewReply(selectCommentIndex[0]);
                         } else if (selectCommentIndex[1] != -1) {
-                          // Modify Comment
+                          // Modify Comment속
                           modifyComment(selectCommentIndex[1]);
                         } else if (selectReplyIndex[1] != -1) {
                           // Modify Reply

@@ -217,7 +217,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
           await dio.post('$pythonIP/predict/', data: {"message": content});
       debugPrint("titleCheck : ${contentCheck.data["profanity"]}");
       if (titleCheck.data["profanity"] || contentCheck.data["profanity"]) {
-        filterDialog("제목이나 글 내용에 비속어가 포함되어 있는 경우 서비스 이용에 제한이 있을 수 있습니다.\n정말 등록하시겠습니까?");
+        filterDialog("제목이나 글 내용에 비속어가 포함되어 있는 경우 서비스 이용에 제한이 있을 수 있습니다. 정말 등록하시겠습니까?");
       } else {
         upLoad();
       }
