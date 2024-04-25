@@ -109,6 +109,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: PRIMARY_COLOR,
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
                     ),
                     child: const Text(
                       '로그인',
@@ -134,6 +140,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           width: 1.0,
                         ),
                       ),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
                     ),
                     child: const Text('회원가입'),
                   ),
@@ -151,6 +162,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     },
                     style: ButtonStyle(
                       foregroundColor: MaterialStateProperty.all(BODY_TEXT_COLOR),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
                     ),
                     child: const Text('비밀번호 초기화'),
                   ),
