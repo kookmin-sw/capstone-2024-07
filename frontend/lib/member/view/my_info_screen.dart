@@ -118,21 +118,30 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
 
   Widget _renderTop() {
     return Container(
-      child: Row(
+      child: Stack(
         children: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(
-              Icons.chevron_left,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(
+                  Icons.chevron_left,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 113.0),
-          Text(
-            "내 정보",
-            style: TextStyle(
-              fontSize: 16.0,
+          const Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              child: Text(
+                "내 정보",
+                style: TextStyle(
+                  fontSize: 16.0,
+                ),
+              ),
             ),
           ),
         ],
