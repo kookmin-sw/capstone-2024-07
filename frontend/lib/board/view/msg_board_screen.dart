@@ -23,6 +23,7 @@ import 'package:frontend/common/model/cursor_pagination_model.dart';
 import 'package:frontend/member/model/member_model.dart';
 import 'package:frontend/member/provider/member_state_notifier_provider.dart';
 import 'package:frontend/member/provider/mypage/my_comment_state_notifier_provider.dart';
+import 'package:frontend/member/provider/mypage/my_post_state_notifier_provider.dart';
 
 import '../../common/const/ip_list.dart';
 
@@ -135,6 +136,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                                 await ref
                                     .read(boardStateNotifierProvider.notifier)
                                     .paginate(forceRefetch: true);
+                                await ref.read(myPostStateNotifierProvider.notifier).paginate(forceRefetch: true);
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pop();
                               },
