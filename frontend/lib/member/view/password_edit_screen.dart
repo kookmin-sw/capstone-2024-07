@@ -143,7 +143,7 @@ class _PasswordEditScreenState extends ConsumerState<PasswordEditScreen> {
             ),
           ),
           if (isPasswordNull)
-            Padding(
+            const Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
                 '비밀번호는 빈칸일 수 없습니다.',
@@ -173,6 +173,12 @@ class _PasswordEditScreenState extends ConsumerState<PasswordEditScreen> {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: PRIMARY_COLOR,
+        textStyle: const TextStyle(
+          color: Colors.white,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
         minimumSize: Size(
           MediaQuery.of(context).size.width,
           50.0,
@@ -233,7 +239,7 @@ class _PasswordEditScreenState extends ConsumerState<PasswordEditScreen> {
           }
         }
       },
-      child: Text('비밀번호 변경'),
+      child: const Text('비밀번호 변경'),
     );
   }
 }
