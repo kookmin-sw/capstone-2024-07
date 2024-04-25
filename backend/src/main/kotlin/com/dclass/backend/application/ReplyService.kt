@@ -51,6 +51,7 @@ class ReplyService(
         }
 
         comment.increaseReplyCount()
+        post.increaseCommentReplyCount()
 
         return ReplyResponse(reply)
 
