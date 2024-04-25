@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_client_sse/constants/sse_request_type_enum.dart';
@@ -115,7 +114,6 @@ class NotificationNotifier extends StateNotifier<NotificationModel> {
       }
     }).onError((e) {
       debugPrint("SSE-Error : ${e.toString()}");
-      sleep(const Duration(seconds: 10));
       listen(retryCount + 1);
     });
   }
