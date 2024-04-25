@@ -22,6 +22,7 @@ import 'package:frontend/board/layout/comment_layout.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
 import 'package:frontend/member/model/member_model.dart';
 import 'package:frontend/member/provider/member_state_notifier_provider.dart';
+import 'package:frontend/member/provider/mypage/my_comment_state_notifier_provider.dart';
 
 import '../../common/const/ip_list.dart';
 
@@ -53,6 +54,8 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
 
   void refresh() {
     ref.read(commentPaginationProvider.notifier).paginate(forceRefetch: true);
+    ref.read(myCommentStateNotifierProvider.notifier).lastId = 9223372036854775807;
+    ref.read(myCommentStateNotifierProvider.notifier).paginate(forceRefetch: true);
   }
 
   void addNewComment() async {
@@ -478,7 +481,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                       debugPrint(
                           "titleCheck : ${contentCheck.data["profanity"]}");
                       if (contentCheck.data["profanity"]) {
-                        filterDialog("댓글에 비속어가 포함되어 있습니다.\n그래도 등록하시겠습니까?",
+                        filterDialog("댓글에 비속어가 포함되어 있는 경우 서비스 이용에 제한이 있을 수 있습니다.\n그래도 등록하시겠습니까?",
                             selectCommentIndex, selectReplyIndex);
                       } else {
                         if (selectCommentIndex[0] != -1) {
