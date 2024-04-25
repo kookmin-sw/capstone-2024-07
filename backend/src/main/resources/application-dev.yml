@@ -26,6 +26,8 @@ logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
 
+jwt:
+  secret: "1cf848f58e0e538db479ee4c0ea6df2e152da2688a0f8ed63aeb3e17359c521122ad20efc5f28cd6943ef86363c17f72eb4c7482bdae6b749f80cc9e23a07fe4"
 
 springdoc:
   packages-to-scan: com.dclass.backend.ui
