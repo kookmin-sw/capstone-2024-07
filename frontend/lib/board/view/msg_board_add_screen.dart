@@ -64,10 +64,13 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
 
   void refresh() async {
     ref.read(boardStateNotifierProvider.notifier).lastId = 9223372036854775807;
-    await ref.read(boardStateNotifierProvider.notifier)
+    await ref
+        .read(boardStateNotifierProvider.notifier)
         .paginate(forceRefetch: true);
     ref.read(myPostStateNotifierProvider.notifier).lastId = 9223372036854775807;
-    await ref.read(myPostStateNotifierProvider.notifier).paginate(forceRefetch: true);
+    await ref
+        .read(myPostStateNotifierProvider.notifier)
+        .paginate(forceRefetch: true);
   }
 
   void notAllowed(String s) {
@@ -217,7 +220,8 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
           await dio.post('$pythonIP/predict/', data: {"message": content});
       debugPrint("titleCheck : ${contentCheck.data["profanity"]}");
       if (titleCheck.data["profanity"] || contentCheck.data["profanity"]) {
-        filterDialog("제목이나 글 내용에 비속어가 포함되어 있는 경우 서비스 이용에 제한이 있을 수 있습니다. 정말 등록하시겠습니까?");
+        filterDialog(
+            "제목이나 글 내용에 비속어가 포함되어 있는 경우 서비스 이용에 제한이 있을 수 있습니다. 정말 등록하시겠습니까?");
       } else {
         upLoad();
       }
@@ -629,9 +633,9 @@ class BottomView extends ConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
+              const Row(
                 children: [
-                  const TextWithIcon(
+                  TextWithIcon(
                     icon: Icons.image_rounded,
                     iconSize: 17,
                     text: "사진",
@@ -641,26 +645,14 @@ class BottomView extends ConsumerWidget {
                     isClicked: false,
                     isMine: false,
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  TextWithIcon(
-                    icon: Icons.check_box_outline_blank_rounded,
-                    iconSize: 17,
-                    text: "질문",
-                    commentId: -1,
-                    postId: -1,
-                    replyId: -1,
-                    isClicked: msgBoardAddScreenState.isQuestion,
-                    isMine: false,
-                  ),
                 ],
               ),
               if (widget.isEdit)
                 TextButton(
                   onPressed: () async {
                     await ref.watch(boardAddProvider).delete(widget.board.id);
-                    ref.read(boardStateNotifierProvider.notifier).lastId = 9223372036854775807;
+                    ref.read(boardStateNotifierProvider.notifier).lastId =
+                        9223372036854775807;
                     await ref
                         .read(boardStateNotifierProvider.notifier)
                         .paginate(forceRefetch: true);
