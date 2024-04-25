@@ -100,7 +100,11 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                   ),
                 );
               },
-              child: Icon(Icons.search),
+              child: Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              shape: const CircleBorder(),
               backgroundColor: Colors.blue[300],
             ),
           ),
