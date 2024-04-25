@@ -36,7 +36,7 @@ class _PasswordResetScreenState extends ConsumerState<PasswordResetScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _renderTop(),
-                const SizedBox(height: 30.0),
+                const SizedBox(height: 10.0),
                 _renderInfo(),
                 const SizedBox(height: 30.0),
                 _renderNameField(),
@@ -131,7 +131,7 @@ class _PasswordResetScreenState extends ConsumerState<PasswordResetScreen> {
             ),
           ),
           if (isNameNull)
-            Padding(
+            const Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
                 '이름은 빈칸일 수 없습니다.',
@@ -167,7 +167,7 @@ class _PasswordResetScreenState extends ConsumerState<PasswordResetScreen> {
             ),
           ),
           if (isEmailNull)
-            Padding(
+            const Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
                 '이메일은 빈칸일 수 없습니다.',
@@ -187,6 +187,12 @@ class _PasswordResetScreenState extends ConsumerState<PasswordResetScreen> {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: PRIMARY_COLOR,
+        textStyle: const TextStyle(
+          color: Colors.white,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
         minimumSize: Size(
           MediaQuery.of(context).size.width,
           50.0,
