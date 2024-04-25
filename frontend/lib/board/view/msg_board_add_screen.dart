@@ -13,6 +13,7 @@ import 'package:frontend/board/provider/image_provider.dart';
 import 'package:frontend/board/provider/isquestion_provider.dart';
 import 'package:frontend/board/provider/network_image_provider.dart';
 import 'package:frontend/common/const/colors.dart';
+import 'package:frontend/member/provider/mypage/my_post_state_notifier_provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:http/http.dart' as http;
@@ -59,6 +60,14 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
 
     titleController = TextEditingController(text: title);
     contentController = TextEditingController(text: content);
+  }
+
+  void refresh() async {
+    ref.read(boardStateNotifierProvider.notifier).lastId = 9223372036854775807;
+    await ref.read(boardStateNotifierProvider.notifier)
+        .paginate(forceRefetch: true);
+    ref.read(myPostStateNotifierProvider.notifier).lastId = 9223372036854775807;
+    await ref.read(myPostStateNotifierProvider.notifier).paginate(forceRefetch: true);
   }
 
   void notAllowed(String s) {
@@ -340,10 +349,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
       }
     }
 
-    ref.read(boardStateNotifierProvider.notifier).lastId = 9223372036854775807;
-    await ref
-        .read(boardStateNotifierProvider.notifier)
-        .paginate(forceRefetch: true);
+    refresh();
 
     ref.read(imageStateProvider.notifier).clear();
     ref.read(networkImageStateProvider.notifier).clear();
@@ -654,6 +660,7 @@ class BottomView extends ConsumerWidget {
                 TextButton(
                   onPressed: () async {
                     await ref.watch(boardAddProvider).delete(widget.board.id);
+                    ref.read(boardStateNotifierProvider.notifier).lastId = 9223372036854775807;
                     await ref
                         .read(boardStateNotifierProvider.notifier)
                         .paginate(forceRefetch: true);
