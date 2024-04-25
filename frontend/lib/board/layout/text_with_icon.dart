@@ -10,6 +10,7 @@ import 'package:frontend/board/provider/reply_notifier_provider.dart';
 import 'package:frontend/board/provider/reply_provider.dart';
 import 'package:frontend/board/provider/scrap_provider.dart';
 import 'package:frontend/common/const/colors.dart';
+import 'package:frontend/member/provider/mypage/my_scrap_state_notifier_provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 class TextWithIcon extends ConsumerStatefulWidget {
@@ -224,11 +225,13 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
               setState(() {
                 if (isFavoriteClicked) {
                   textCount -= 1;
-                  ref.watch(scrapProvider).delete(widget.postId);
+                  ref.read(scrapProvider).delete(widget.postId);
                 } else {
                   textCount += 1;
-                  ref.watch(scrapProvider).post(widget.postId);
+                  ref.read(scrapProvider).post(widget.postId);
                 }
+                ref.read(myScrapStateNotifierProvider.notifier).lastId = 9223372036854775807;
+                ref.read(myScrapStateNotifierProvider.notifier).paginate(forceRefetch: true);
                 isFavoriteClicked = !isFavoriteClicked;
               });
             } else if (widget.icon == Icons.image_rounded) {
