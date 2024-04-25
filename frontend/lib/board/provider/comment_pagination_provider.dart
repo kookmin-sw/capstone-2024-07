@@ -94,6 +94,7 @@ class CommentPaginationNotifier
         } else {
           state = CursorPaginationModelLoading();
         }
+        lastCommentId = 1;
       }
       final resp = await commentNotifier.paginate(postId, lastCommentId, size);
 
