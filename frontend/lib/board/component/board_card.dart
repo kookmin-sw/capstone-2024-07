@@ -133,6 +133,7 @@ class BoardCard extends StatelessWidget {
                       icon: Icons.favorite_outline_rounded,
                       iconSize: 15,
                       text: count.likeCount.toString(),
+                      color: Colors.red,
                     ),
                     const SizedBox(
                       width: 13,
@@ -149,6 +150,7 @@ class BoardCard extends StatelessWidget {
                       icon: Icons.star_outline_rounded,
                       iconSize: 18,
                       text: count.scrapCount.toString(),
+                      color: Colors.orangeAccent,
                     ),
                     const SizedBox(
                       width: 13,
@@ -157,6 +159,7 @@ class BoardCard extends StatelessWidget {
                       icon: Icons.photo_size_select_actual_outlined,
                       iconSize: 18,
                       text: imageCount.toString(),
+                      color: Colors.black,
                     ),
                     const SizedBox(
                       width: 13,

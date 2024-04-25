@@ -36,7 +36,6 @@ class MsgBoardListScreen extends ConsumerStatefulWidget {
 }
 
 class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
-  // late Future<List<MsgBoardListModel>> boards;
   List<String> categorys = categorysList;
   final ScrollController controller = ScrollController();
   String payload = "";
