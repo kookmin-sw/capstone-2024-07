@@ -5,7 +5,6 @@ import 'package:frontend/common/const/data.dart';
 import 'package:frontend/common/layout/default_layout.dart';
 import 'package:frontend/common/provider/dio_provider.dart';
 import 'package:frontend/member/component/custom_text_form_field.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../common/component/notice_popup_dialog.dart';
 import '../../common/const/colors.dart';
@@ -44,7 +43,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   bool isPasswordDifferent = false;
 
   bool isNicknameNull = true;
-  // bool isNicknameDuplicated = true;
 
   bool isAuthNumberNull = true;
 
@@ -135,7 +133,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             ],
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 10.0),
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
             child: Center(
               child: Image.asset(
                 'asset/imgs/logo.png',
@@ -170,7 +168,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             ),
           ),
           if (isNameNull)
-            Padding(
+            const Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
                 '이름은 빈칸일 수 없습니다.',
@@ -206,8 +204,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             ),
           ),
           if (isNicknameNull)
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 8.0),
               child: Text(
                 '닉네임은 빈칸일 수 없습니다.',
                 style: TextStyle(
@@ -249,6 +247,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: PRIMARY_COLOR,
+                  textStyle: const TextStyle(
+                    color: Colors.white,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
                 ),
                 onPressed: (isEmailNull || isEmailAuthenticated)
                     ? null
@@ -294,8 +298,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             ],
           ),
           if (isEmailNull)
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 8.0),
               child: Text(
                 '이메일은 빈칸일 수 없습니다.',
                 style: TextStyle(
@@ -303,7 +307,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 ),
               ),
             ),
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
           Row(
             children: [
               SizedBox(
@@ -323,6 +327,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: PRIMARY_COLOR,
+                  textStyle: const TextStyle(
+                    color: Colors.white,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
                 ),
                 onPressed: (isEmailNull || isEmailAuthenticated)
                     ? null
@@ -368,8 +378,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             ],
           ),
           if (isAuthNumberNull)
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 8.0),
               child: Text(
                 '인증번호는 빈칸일 수 없습니다.',
                 style: TextStyle(
@@ -396,7 +406,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             '본전공 선택',
           ),
           Padding(
@@ -444,7 +454,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     },
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: 180,
                   child: DropdownButton<String>(
                     isExpanded: true,
@@ -492,12 +502,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     final divisionAndDepartments = departmentState.divisionAndDepartments;
 
     return Container(
-      padding: EdgeInsets.only(top: 10.0),
+      padding: const EdgeInsets.only(top: 10.0),
       width: MediaQuery.of(context).size.width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             '복수전공 선택',
           ),
           Padding(
@@ -545,7 +555,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     },
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: 180,
                   child: DropdownButton<String>(
                     isExpanded: true,
@@ -623,8 +633,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             ),
           ),
           if (isPasswordNull)
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 8.0),
               child: Text(
                 '비밀번호는 빈칸일 수 없습니다.',
                 style: TextStyle(
@@ -633,8 +643,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               ),
             ),
           if (isPasswordDifferent)
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 8.0),
               child: Text(
                 '비밀번호가 일치하지 않습니다.',
                 style: TextStyle(
@@ -652,7 +662,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       padding: const EdgeInsets.only(bottom: 30.0),
       child: Row(
         children: [
-          Text('개인정보 수집 및 이용 동의'),
+          const Text('개인정보 수집 및 이용 동의'),
           Checkbox(
             activeColor: PRIMARY_COLOR,
             value: isAccept,
@@ -665,7 +675,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           TextButton(
               style: ElevatedButton.styleFrom(
                 foregroundColor: PRIMARY_COLOR,
-                minimumSize: Size(80.0, 30.0),
+                minimumSize: const Size(80.0, 30.0),
               ),
               onPressed: () {
                 showDialog(
@@ -685,6 +695,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: PRIMARY_COLOR,
+                            textStyle: const TextStyle(
+                              color: Colors.white,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
                           ),
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -710,6 +726,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: PRIMARY_COLOR,
+        textStyle: const TextStyle(
+          color: Colors.white,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
         minimumSize: Size(
           MediaQuery.of(context).size.width,
           50.0,
@@ -795,7 +817,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           );
         }
       },
-      child: Text('회원가입하기'),
+      child: const Text('회원가입하기'),
     );
   }
 
@@ -814,7 +836,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             });
           },
           icon: const Icon(Icons.add),
-          label: Text('복수전공 추가'),
+          label: const Text('복수전공 추가'),
         ),
       ],
     );
@@ -832,7 +854,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             });
           },
           icon: const Icon(Icons.clear),
-          label: Text('복수전공 취소'),
+          label: const Text('복수전공 취소'),
         ),
       ],
     );
