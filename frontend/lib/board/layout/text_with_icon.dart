@@ -71,12 +71,14 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
             content: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  s,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 13,
+                Flexible(
+                  child: Text(
+                    s,
+                    overflow: TextOverflow.visible,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 13,
+                    ),
                   ),
                 ),
               ],
@@ -230,8 +232,11 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                   textCount += 1;
                   ref.read(scrapProvider).post(widget.postId);
                 }
-                ref.read(myScrapStateNotifierProvider.notifier).lastId = 9223372036854775807;
-                ref.read(myScrapStateNotifierProvider.notifier).paginate(forceRefetch: true);
+                ref.read(myScrapStateNotifierProvider.notifier).lastId =
+                    9223372036854775807;
+                ref
+                    .read(myScrapStateNotifierProvider.notifier)
+                    .paginate(forceRefetch: true);
                 isFavoriteClicked = !isFavoriteClicked;
               });
             } else if (widget.icon == Icons.image_rounded) {
@@ -245,9 +250,12 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                                 content: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      "사진 접근 허용을 해주세요!\n$value",
-                                      textAlign: TextAlign.center,
+                                    Flexible(
+                                      child: Text(
+                                        "사진 접근 허용을 해주세요!\n$value",
+                                        textAlign: TextAlign.center,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
                                   ],
                                 ),

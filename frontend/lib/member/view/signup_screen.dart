@@ -169,7 +169,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           ),
           if (isNameNull)
             const Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+              padding: EdgeInsets.only(top: 8.0),
               child: Text(
                 '이름은 빈칸일 수 없습니다.',
                 style: TextStyle(
@@ -293,7 +293,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           );
                         }
                       },
-                child: Text('전송'),
+                child: const Text('전송'),
               ),
             ],
           ),
@@ -373,7 +373,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           );
                         }
                       },
-                child: Text('확인'),
+                child: const Text('확인'),
               ),
             ],
           ),
@@ -401,7 +401,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
     final divisionAndDepartments = departmentState.divisionAndDepartments;
 
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -414,7 +414,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
+                SizedBox(
                   width: 180,
                   child: DropdownButton<String>(
                     isExpanded: true,
@@ -440,15 +440,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                               .read(
                                   firstDepartmentListNotifierProvider.notifier)
                               .setSelectedDivision(value);
-                          if (selectedDepartment != null) {
-                            ref
-                                .read(firstDepartmentListNotifierProvider
-                                    .notifier)
-                                .setSelectedDepartment(selectedDepartment!);
-                            setState(() {
-                              major1 = selectedDepartment;
-                            });
-                          }
+                          ref
+                              .read(
+                                  firstDepartmentListNotifierProvider.notifier)
+                              .setSelectedDepartment(selectedDepartment);
+                          setState(() {
+                            major1 = selectedDepartment;
+                          });
                         });
                       }
                     },
@@ -515,7 +513,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
+                SizedBox(
                   width: 180,
                   child: DropdownButton<String>(
                     isExpanded: true,
@@ -541,15 +539,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                               .read(
                                   secondDepartmentListNotifierProvider.notifier)
                               .setSelectedDivision(value);
-                          if (selectedDepartment != null) {
-                            ref
-                                .read(secondDepartmentListNotifierProvider
-                                    .notifier)
-                                .setSelectedDepartment(selectedDepartment!);
-                            setState(() {
-                              major2 = selectedDepartment;
-                            });
-                          }
+                          ref
+                              .read(
+                                  secondDepartmentListNotifierProvider.notifier)
+                              .setSelectedDepartment(selectedDepartment);
+                          setState(() {
+                            major2 = selectedDepartment;
+                          });
                         });
                       }
                     },
@@ -684,10 +680,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       content: SingleChildScrollView(
-                        child: Text(
-                          privacyPolicy,
-                          style: const TextStyle(
-                            fontSize: 12.0,
+                        child: Flexible(
+                          child: Text(
+                            privacyPolicy,
+                            overflow: TextOverflow.visible,
+                            style: const TextStyle(
+                              fontSize: 12.0,
+                            ),
                           ),
                         ),
                       ),
@@ -788,7 +787,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 );
               },
             );
-          } catch(e){
+          } catch (e) {
             showDialog(
               context: context,
               builder: (context) {
