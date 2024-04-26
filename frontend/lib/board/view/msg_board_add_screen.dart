@@ -1,5 +1,5 @@
+import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,6 +15,7 @@ import 'package:frontend/board/provider/network_image_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/member/provider/mypage/my_post_state_notifier_provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:crypto/crypto.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -184,31 +185,10 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   }
 
   String getRandomStr() {
-    var random = Random();
-    var leastCharacterIndex = [];
-    var skipCharacter = [0x2B, 0x2D, 0x20];
-    var min = 0x21;
-    var max = 0x7A;
-    var dat = [];
-    while (dat.length <= 32) {
-      var tmp = min + random.nextInt(max - min);
-      if (skipCharacter.contains(tmp)) {
-        continue;
-      }
-
-      dat.add(tmp);
-    }
-
-    while (leastCharacterIndex.length < 2) {
-      var ran = random.nextInt(32);
-      if (!leastCharacterIndex.contains(ran)) {
-        leastCharacterIndex.add(ran);
-      }
-    }
-
-    dat[leastCharacterIndex[0]] = 0x25;
-    dat[leastCharacterIndex[1]] = 0x40;
-    return String.fromCharCodes(dat.cast<int>());
+    String dt = DateTime.now().toString();
+    final bytes = utf8.encode(dt);
+    final hash = sha256.convert(bytes);
+    return hash.toString();
   }
 
   void checkFilter() async {
