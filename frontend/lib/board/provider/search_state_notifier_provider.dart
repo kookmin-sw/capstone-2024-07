@@ -1,6 +1,5 @@
 import 'dart:core';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/provider/search_repository_provider.dart';
 import 'package:frontend/board/provider/searck_keyword_provider.dart';

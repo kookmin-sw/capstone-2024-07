@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -15,17 +16,17 @@ class CustomInterceptor extends Interceptor {
   List<ErrorInterceptorHandler> requestQueue = [];
 
   CustomInterceptor(
-      this.storage,
-      this.ref,
-      this.dio,
-      );
+    this.storage,
+    this.ref,
+    this.dio,
+  );
 
   // 1) 요청을 보낼 때
   // 요청이 보내질때마다 요청 Header에 accessToken: true라는 값이 있다면 실제 토큰을 스토리지에서 가져와서 담아서 보내준다.
   @override
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    print('[REQ] [${options.method}] [${options.uri}]');
+    debugPrint('[REQ] [${options.method}] [${options.uri}]');
 
     if (options.headers['accessToken'] == 'true') {
       options.headers.remove('accessToken'); //헤더 삭제
@@ -53,7 +54,7 @@ class CustomInterceptor extends Interceptor {
   // 2) 응답을 받을 때
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    print(
+    debugPrint(
         '[RES] [${response.requestOptions.method}] [${response.requestOptions.uri}]');
     return super.onResponse(response, handler);
   }
@@ -62,9 +63,10 @@ class CustomInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     // 401 에러가 났을 때 -> 토큰을 재발급받는 시도를 하고, 토큰이 재발급되면 다시 새로운 토큰으로 요청을 한다.
-    print('[ERR] [${err.requestOptions.method}] [${err.requestOptions.uri}]');
-    print('에러메시지: ${err.message}');
-    print('헤더: ${err.requestOptions.headers}');
+    debugPrint(
+        '[ERR] [${err.requestOptions.method}] [${err.requestOptions.uri}]');
+    debugPrint('에러메시지: ${err.message}');
+    debugPrint('헤더: ${err.requestOptions.headers}');
 
     final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
 
@@ -88,21 +90,19 @@ class CustomInterceptor extends Interceptor {
         getNewToken().then((newTokenAvailable) async {
           if (newTokenAvailable) {
             final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
-            requestQueue.forEach(
-                  (handler) {
-                options.headers.addAll({
-                  'Authorization': 'Bearer $accessToken',
-                });
-                dio.fetch(options).then(
-                      (response) => handler.resolve(response),
-                  onError: (e) => handler.reject(e),
-                );
-              },
-            );
-          } else{
-            requestQueue.forEach((handler) {
+            for (var handler in requestQueue) {
+              options.headers.addAll({
+                'Authorization': 'Bearer $accessToken',
+              });
+              dio.fetch(options).then(
+                    (response) => handler.resolve(response),
+                    onError: (e) => handler.reject(e),
+                  );
+            }
+          } else {
+            for (var handler in requestQueue) {
               handler.reject(err);
-            });
+            }
             //로그아웃 처리
             ref.read(authProvider.notifier).logout();
           }
@@ -112,7 +112,7 @@ class CustomInterceptor extends Interceptor {
       }
       //isRefreshing이 true면 대기열에 들어가 기다린다.
       requestQueue.add(handler);
-    } else{
+    } else {
       return super.onError(err, handler);
     }
   }
@@ -121,7 +121,7 @@ class CustomInterceptor extends Interceptor {
     final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
 
     final dio = Dio();
-    print('보내는 refreshToken: $refreshToken');
+    debugPrint('보내는 refreshToken: $refreshToken');
     try {
       final resp = await dio.post(
         '$ip/api/users/reissue-token',
@@ -136,11 +136,11 @@ class CustomInterceptor extends Interceptor {
       final newRefreshToken = resp.data['refreshToken'];
       final newAccessToken = resp.data['accessToken'];
 
-      print('받은 refreshToken: $newRefreshToken');
-      print('받은 accessToken: $newAccessToken');
+      debugPrint('받은 refreshToken: $newRefreshToken');
+      debugPrint('받은 accessToken: $newAccessToken');
 
       if (newRefreshToken == null || newAccessToken == null) {
-        print("token null!!!");
+        debugPrint("token null!!!");
       }
 
       await storage.write(key: REFRESH_TOKEN_KEY, value: newRefreshToken);
@@ -148,6 +148,7 @@ class CustomInterceptor extends Interceptor {
 
       return true;
     } on DioException catch (e) {
+      debugPrint(e.toString());
       return false;
     }
   }
