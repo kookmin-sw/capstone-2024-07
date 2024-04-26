@@ -16,8 +16,8 @@ class NotificationService(
     val emitterRepository: EmitterRepository,
     val notificationRepository: NotificationRepository,
 ) {
-    //    60L * 1000L * 60L
-    private val DEFAULT_TIMEOUT = 20000L;
+    //
+    private val DEFAULT_TIMEOUT = 1000L * 60L * 60L;
     private val log = logger()
 
 
@@ -27,7 +27,12 @@ class NotificationService(
         emitter.onTimeout(emitter::complete)
         emitter.onCompletion { emitterRepository.delete(emitterId) }
 
-        sendNotification(emitter, makeTimeIncludeId(id), emitterId, "EventStream Created. [userId=$id]")
+        sendNotification(
+            emitter,
+            makeTimeIncludeId(id),
+            emitterId,
+            "EventStream Created. [userId=$id]"
+        )
 
         if (hasLostData(lastEventId)) {
             sendLostData(emitter, lastEventId, emitterId, id)
@@ -49,7 +54,7 @@ class NotificationService(
         }
     }
 
-    @Scheduled(fixedRate = 3000)
+    @Scheduled(fixedRate = 1000 * 60 * 3)
     fun sendHeartbeat() {
         val emitters = emitterRepository.findAll()
         emitters.forEach {
@@ -66,7 +71,12 @@ class NotificationService(
         return "${id}_${System.currentTimeMillis()}"
     }
 
-    private fun sendNotification(emitter: SseEmitter, eventId: String, emitterId: String, data: Any) {
+    private fun sendNotification(
+        emitter: SseEmitter,
+        eventId: String,
+        emitterId: String,
+        data: Any
+    ) {
         try {
             emitter.send(
                 SseEmitter.event()
@@ -76,7 +86,10 @@ class NotificationService(
             )
             log.info("Notification sent. data=$data, emitterId=$emitterId")
         } catch (e: Exception) {
-            log.error("Error occurred while sending notification. [emitterId=$emitterId]", e.message)
+            log.error(
+                "Error occurred while sending notification. [emitterId=$emitterId]",
+                e.message
+            )
             emitter.completeWithError(e)
         }
     }
@@ -85,7 +98,12 @@ class NotificationService(
         return lastEventId.isNotEmpty()
     }
 
-    private fun sendLostData(emitter: SseEmitter, lastEventId: String, emitterId: String, userId: Long) {
+    private fun sendLostData(
+        emitter: SseEmitter,
+        lastEventId: String,
+        emitterId: String,
+        userId: Long
+    ) {
         val eventCache = emitterRepository.findAllEventCacheStartWithByUserId(userId.toString())
         eventCache.filter { it.key > lastEventId }.forEach {
             sendNotification(emitter, it.key, emitterId, it.value)
