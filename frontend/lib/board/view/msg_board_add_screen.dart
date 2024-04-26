@@ -81,12 +81,14 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
             content: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  s,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 13,
+                Flexible(
+                  child: Text(
+                    s,
+                    overflow: TextOverflow.visible,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 13,
+                    ),
                   ),
                 ),
               ],

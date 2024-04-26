@@ -27,7 +27,7 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
       context: context,
       builder: (BuildContext context) {
         return SimpleDialog(
-          title: Text("내 정보"),
+          title: const Text("내 정보"),
           children: [
             Padding(
               padding: const EdgeInsets.only(
@@ -37,7 +37,7 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
                 children: [
                   Row(
                     children: [
-                      Text('이메일'),
+                      const Text('이메일'),
                       const SizedBox(
                         width: 30.0,
                       ),
@@ -49,11 +49,15 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
                   ),
                   Row(
                     children: [
-                      Text('학교'),
+                      const Text('학교'),
                       const SizedBox(
                         width: 42.0,
                       ),
-                      Text(universityName),
+                      Flexible(
+                          child: Text(
+                        universityName,
+                        overflow: TextOverflow.visible,
+                      )),
                     ],
                   ),
                   const SizedBox(
@@ -61,7 +65,7 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
                   ),
                   Row(
                     children: [
-                      Text('닉네임'),
+                      const Text('닉네임'),
                       const SizedBox(
                         width: 30.0,
                       ),
@@ -83,7 +87,7 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
       context: context,
       builder: (BuildContext context) {
         return SimpleDialog(
-          title: Text("앱 정보"),
+          title: const Text("앱 정보"),
           children: [
             Padding(
               padding: const EdgeInsets.only(
@@ -91,10 +95,10 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Row(
+                  const Row(
                     children: [
                       Text('앱 이름'),
-                      const SizedBox(
+                      SizedBox(
                         width: 30.0,
                       ),
                       Text('DeCl'),
@@ -105,7 +109,7 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
                   ),
                   Row(
                     children: [
-                      Text('앱 버전'),
+                      const Text('앱 버전'),
                       const SizedBox(
                         width: 30.0,
                       ),
@@ -146,8 +150,11 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
       context: context,
       builder: (BuildContext context) {
         return SimpleDialog(
-          title: Text(
-            title,
+          title: Flexible(
+            child: Text(
+              title,
+              overflow: TextOverflow.visible,
+            ),
           ),
           children: [
             Padding(
@@ -155,7 +162,11 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
                   left: 32.0, right: 32.0, top: 10.0, bottom: 10.0),
               child: Column(
                 children: [
-                  Text(message),
+                  Flexible(
+                      child: Text(
+                    message,
+                    overflow: TextOverflow.visible,
+                  )),
                 ],
               ),
             ),
@@ -195,11 +206,11 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              _Top(),
+              const _Top(),
               _Title(nickname: nickname),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               _buildAccountInfo(ref, context),
-              SizedBox(height: 40.0),
+              const SizedBox(height: 40.0),
               _buildNoticeInfo(ref, context),
             ],
           ),
@@ -215,22 +226,22 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
         Container(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
           width: MediaQuery.of(context).size.width,
-          child: Text("계정 정보"),
+          child: const Text("계정 정보"),
         ),
         _MenuButton(
           title: "내 정보",
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => MyInfoScreen(),
+                builder: (_) => const MyInfoScreen(),
               ),
             );
           },
           border: Border(
             top: BorderSide(color: Colors.grey.shade400),
             bottom: BorderSide(color: Colors.grey.shade400),
-            left: BorderSide(color: Colors.transparent),
-            right: BorderSide(color: Colors.transparent),
+            left: const BorderSide(color: Colors.transparent),
+            right: const BorderSide(color: Colors.transparent),
           ),
         ),
         _MenuButton(
@@ -238,7 +249,7 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => MyPostScreen(),
+                builder: (_) => const MyPostScreen(),
               ),
             );
           },
@@ -248,7 +259,7 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => MyCommentScreen(),
+                builder: (_) => const MyCommentScreen(),
               ),
             );
           },
@@ -258,7 +269,7 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => MyScrapScreen(),
+                builder: (_) => const MyScrapScreen(),
               ),
             );
           },
@@ -268,7 +279,7 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => PasswordEditScreen(),
+                builder: (_) => const PasswordEditScreen(),
               ),
             );
           },
@@ -284,7 +295,7 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
         Container(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
           width: MediaQuery.of(context).size.width,
-          child: Text("이용 안내"),
+          child: const Text("이용 안내"),
         ),
         _MenuButton(
           title: "앱 정보",
@@ -294,8 +305,8 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
           border: Border(
             top: BorderSide(color: Colors.grey.shade400),
             bottom: BorderSide(color: Colors.grey.shade400),
-            left: BorderSide(color: Colors.transparent),
-            right: BorderSide(color: Colors.transparent),
+            left: const BorderSide(color: Colors.transparent),
+            right: const BorderSide(color: Colors.transparent),
           ),
         ),
         _MenuButton(
@@ -362,13 +373,13 @@ class _Title extends StatelessWidget {
         children: [
           Text(
             '반가워요 $nickname님!',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w500,
               color: Colors.black,
             ),
           ),
-          Text(
+          const Text(
             '오늘도 디클에서 좋은 하루 보내세요!',
             style: TextStyle(
               fontSize: 16,
@@ -399,14 +410,13 @@ class _MenuButton extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         decoration: BoxDecoration(
-          border: border == null
-              ? Border(
-                  top: BorderSide(color: Colors.transparent),
-                  bottom: BorderSide(color: Colors.grey.shade400),
-                  left: BorderSide(color: Colors.transparent),
-                  right: BorderSide(color: Colors.transparent),
-                )
-              : border,
+          border: border ??
+              Border(
+                top: const BorderSide(color: Colors.transparent),
+                bottom: BorderSide(color: Colors.grey.shade400),
+                left: const BorderSide(color: Colors.transparent),
+                right: const BorderSide(color: Colors.transparent),
+              ),
         ),
         width: MediaQuery.of(context).size.width,
         height: 60.0,
@@ -414,14 +424,14 @@ class _MenuButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.circle,
                 size: 8.0,
               ),
-              SizedBox(width: 10.0),
+              const SizedBox(width: 10.0),
               Text(
                 title,
-                style: TextStyle(fontSize: 16.0),
+                style: const TextStyle(fontSize: 16.0),
               ),
             ],
           ),
