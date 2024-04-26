@@ -55,8 +55,11 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
 
   void refresh() {
     ref.read(commentPaginationProvider.notifier).paginate(forceRefetch: true);
-    ref.read(myCommentStateNotifierProvider.notifier).lastId = 9223372036854775807;
-    ref.read(myCommentStateNotifierProvider.notifier).paginate(forceRefetch: true);
+    ref.read(myCommentStateNotifierProvider.notifier).lastId =
+        9223372036854775807;
+    ref
+        .read(myCommentStateNotifierProvider.notifier)
+        .paginate(forceRefetch: true);
   }
 
   void addNewComment() async {
@@ -136,7 +139,9 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                                 await ref
                                     .read(boardStateNotifierProvider.notifier)
                                     .paginate(forceRefetch: true);
-                                await ref.read(myPostStateNotifierProvider.notifier).paginate(forceRefetch: true);
+                                await ref
+                                    .read(myPostStateNotifierProvider.notifier)
+                                    .paginate(forceRefetch: true);
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pop();
                               },
@@ -486,8 +491,10 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                       debugPrint(
                           "titleCheck : ${contentCheck.data["profanity"]}");
                       if (contentCheck.data["profanity"]) {
-                        filterDialog("댓글에 비속어가 포함되어 있는 경우 서비스 이용에 제한이 있을 수 있습니다. 정말 등록하시겠습니까?",
-                            selectCommentIndex, selectReplyIndex);
+                        filterDialog(
+                            "댓글에 비속어가 포함되어 있는 경우 서비스 이용에 제한이 있을 수 있습니다. 정말 등록하시겠습니까?",
+                            selectCommentIndex,
+                            selectReplyIndex);
                       } else {
                         if (selectCommentIndex[0] != -1) {
                           // Upload Reply
@@ -557,26 +564,38 @@ class RenderCommentList extends StatelessWidget {
     final cp = data as CursorPaginationModel;
 
     return Expanded(
-      child: ListView.separated(
-        controller: controller,
-        itemCount: cp.data.length,
-        itemBuilder: (_, index) {
-          final CommentModel comment = cp.data[index];
-          // debugPrint("$index 번째 댓글 : ${comment.content}");
-          return Comment(
-            comment: comment,
-            selectComment: selectCommentIndex[0] == comment.id ||
-                selectCommentIndex[1] == comment.id,
-            selectReplyIndex: selectReplyIndex[1],
-            isMine: myEmail == comment.userInformation.email,
-            myId: myId,
-          );
+      child: RefreshIndicator(
+        onRefresh: () async {
+          ref
+              .read(commentPaginationProvider.notifier)
+              .paginate(forceRefetch: true);
+          ref.read(myCommentStateNotifierProvider.notifier).lastId =
+              9223372036854775807;
+          ref
+              .read(myCommentStateNotifierProvider.notifier)
+              .paginate(forceRefetch: true);
         },
-        separatorBuilder: (_, index) {
-          return const SizedBox(
-            height: 1.0,
-          );
-        },
+        child: ListView.separated(
+          controller: controller,
+          itemCount: cp.data.length,
+          itemBuilder: (_, index) {
+            final CommentModel comment = cp.data[index];
+            // debugPrint("$index 번째 댓글 : ${comment.content}");
+            return Comment(
+              comment: comment,
+              selectComment: selectCommentIndex[0] == comment.id ||
+                  selectCommentIndex[1] == comment.id,
+              selectReplyIndex: selectReplyIndex[1],
+              isMine: myEmail == comment.userInformation.email,
+              myId: myId,
+            );
+          },
+          separatorBuilder: (_, index) {
+            return const SizedBox(
+              height: 1.0,
+            );
+          },
+        ),
       ),
     );
   }
