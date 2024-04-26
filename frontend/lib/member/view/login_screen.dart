@@ -44,7 +44,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final state = ref.watch(memberStateNotifierProvider);
 
     if (state is MemberModelError) {
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         getNoticeDialog(context, state.message);
       });
     }
@@ -74,7 +74,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: 16.0),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(12.0, 50.0, 12.0, 50.0),
-                  child: Container(
+                  child: SizedBox(
                     width: 220.0,
                     height: 220.0,
                     child: Image.asset(
@@ -109,7 +109,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: PRIMARY_COLOR,
-                      textStyle: TextStyle(
+                      textStyle: const TextStyle(
                         color: Colors.white,
                       ),
                       shape: RoundedRectangleBorder(
@@ -161,7 +161,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       );
                     },
                     style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all(BODY_TEXT_COLOR),
+                      foregroundColor:
+                          MaterialStateProperty.all(BODY_TEXT_COLOR),
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
