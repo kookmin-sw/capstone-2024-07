@@ -79,7 +79,7 @@ class NotificationNotifier extends StateNotifier<NotificationModel> {
       requestNotificationPermission();
     }
 
-    if (retryCount >= 12000) {
+    if (retryCount >= 3) {
       return;
     }
 
@@ -109,7 +109,7 @@ class NotificationNotifier extends StateNotifier<NotificationModel> {
 
       state = NotificationModel(lastHeartbeat, retryCount);
 
-      if (heartbeatCount > 5) {
+      if (heartbeatCount > 18) {
         SSEClient.unsubscribeFromSSE();
       }
     }).onError((e) {
