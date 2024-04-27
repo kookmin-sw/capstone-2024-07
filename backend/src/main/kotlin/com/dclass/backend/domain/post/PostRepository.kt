@@ -209,7 +209,7 @@ private class PostRepositoryImpl(
     }
 
     private fun Jpql.isHot(request: PostScrollPageRequest): Predicatable? {
-        return if (request.isHot) path(Post::postCount)(PostCount::likeCount).ge(1) else null
+        return if (request.isHot) path(Post::postCount)(PostCount::likeCount).ge(10) else null
     }
 
 }
