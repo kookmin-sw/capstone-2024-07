@@ -44,6 +44,8 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
 
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController controller = ScrollController();
+  final FocusNode _focusNode = FocusNode();
+  bool firstTime = true;
 
   void scrollListener() {
     if (controller.offset > controller.position.maxScrollExtent - 150) {
@@ -60,6 +62,8 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     ref
         .read(myCommentStateNotifierProvider.notifier)
         .paginate(forceRefetch: true);
+
+    firstTime = true;
   }
 
   void addNewComment() async {
@@ -77,7 +81,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
       'content': textEditingController.text,
     };
     await ref.watch(replyProvider).post(requestData);
-    ref.read(commentStateProvider.notifier).add(0, -1);
+    await ref.read(commentStateProvider.notifier).add(0, -1);
     refresh();
   }
 
@@ -86,7 +90,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
       'content': textEditingController.text,
     };
     await ref.watch(commentProvider).modify(commentId, requestData);
-    ref.read(commentStateProvider.notifier).add(1, -1);
+    await ref.read(commentStateProvider.notifier).add(1, -1);
     refresh();
   }
 
@@ -95,7 +99,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
       'content': textEditingController.text,
     };
     await ref.watch(replyProvider).modify(replyId, requestData);
-    ref.read(replyStateProvider.notifier).add(1, -1);
+    await ref.read(replyStateProvider.notifier).add(1, -1);
     refresh();
   }
 
@@ -325,6 +329,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                       }
 
                       textEditingController.clear();
+                      FocusManager.instance.primaryFocus?.unfocus();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -376,6 +381,14 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     } else if (selectReplyIndex[2] != -1) {
       // Delete Reply
       deleteReply(selectReplyIndex[2]);
+    }
+    if ((selectCommentIndex[0] != -1 ||
+            selectCommentIndex[1] != -1 ||
+            selectReplyIndex[1] != -1) &&
+        firstTime) {
+      // AddReply, ModifyComment, ModifyReply -> show keyboard
+      FocusScope.of(context).requestFocus(_focusNode);
+      firstTime = false;
     }
     return Scaffold(
         appBar: AppBar(
@@ -465,6 +478,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
         children: [
           Expanded(
             child: TextField(
+              focusNode: _focusNode,
               controller: textEditingController,
               decoration: InputDecoration(
                 hintText: '입력',
@@ -512,6 +526,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                         }
 
                         textEditingController.clear();
+                        FocusManager.instance.primaryFocus?.unfocus();
                       }
                     } catch (e) {
                       debugPrint("upload_content_predict : ${e.toString()}");
