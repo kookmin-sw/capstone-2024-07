@@ -79,6 +79,7 @@ flutter:
   assets:
     - asset/imgs/decle.png
     - asset/imgs/logo.png
+    - asset/imgs/logo_white.png
     - asset/jsons/departments.json
 
   fonts:
