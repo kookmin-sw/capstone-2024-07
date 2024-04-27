@@ -118,6 +118,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     child: const Text(
                       '로그인',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),

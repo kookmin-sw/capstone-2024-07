@@ -57,7 +57,9 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
                               int remainHours = resp.data['remainHours'];
                               int remainMinutes = resp.data['remainMinutes'];
 
-                              if(remainDays==0 && remainHours==0 && remainMinutes==0){
+                              if (remainDays == 0 &&
+                                  remainHours == 0 &&
+                                  remainMinutes == 0) {
                                 setState(() {
                                   isWillingToChangeMajor = true;
                                 });
@@ -66,7 +68,9 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
                                   context: context,
                                   builder: (context) {
                                     return NoticePopupDialog(
-                                      message: remainDays == 0 ? "1일 뒤에 변경이 가능합니다." : "$remainDays일 뒤에 변경이 가능합니다.",
+                                      message: remainDays == 0
+                                          ? "1일 뒤에 변경이 가능합니다."
+                                          : "$remainDays일 뒤에 변경이 가능합니다.",
                                       buttonText: "닫기",
                                       onPressed: () {
                                         Navigator.pop(context);
@@ -76,12 +80,13 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
                                 );
                               }
                             }
-                          } on DioException catch (e){
+                          } on DioException catch (e) {
                             showDialog(
                               context: context,
                               builder: (context) {
                                 return NoticePopupDialog(
-                                  message: e.response?.data["message"] ?? "에러 발생",
+                                  message:
+                                      e.response?.data["message"] ?? "에러 발생",
                                   buttonText: "닫기",
                                   onPressed: () {
                                     Navigator.pop(context);
@@ -89,7 +94,7 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
                                 );
                               },
                             );
-                          } catch (e){
+                          } catch (e) {
                             showDialog(
                               context: context,
                               builder: (context) {
@@ -220,7 +225,12 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
           ),
         ),
         onPressed: onButtonClicked,
-        child: Text(text),
+        child: Text(
+          text,
+          style: const TextStyle(
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }
@@ -264,7 +274,7 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
                     },
                   );
                 }
-              } on DioException catch (e){
+              } on DioException catch (e) {
                 showDialog(
                   context: context,
                   builder: (context) {
@@ -277,7 +287,7 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
                     );
                   },
                 );
-              } catch (e){
+              } catch (e) {
                 showDialog(
                   context: context,
                   builder: (context) {
@@ -295,7 +305,7 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
           ),
           _renderButton(
             "취소",
-                () {
+            () {
               setState(() {
                 isWillingToChangeMajor = false;
               });
