@@ -239,7 +239,12 @@ class _PasswordEditScreenState extends ConsumerState<PasswordEditScreen> {
           }
         }
       },
-      child: const Text('비밀번호 변경'),
+      child: const Text(
+        '비밀번호 변경',
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
     );
   }
 }
