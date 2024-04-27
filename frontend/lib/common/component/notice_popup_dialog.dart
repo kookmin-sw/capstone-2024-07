@@ -50,6 +50,7 @@ class NoticePopupDialog extends StatelessWidget {
                   buttonText,
                   style: TextStyle(
                     fontSize: 16.0,
+                    color: Colors.white,
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
