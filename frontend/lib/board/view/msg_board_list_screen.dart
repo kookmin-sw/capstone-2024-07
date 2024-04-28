@@ -57,6 +57,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
     payload = ref.watch(payloadNotifier);
     if (payload != "") {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        ref.read(payloadNotifier.notifier).add("");
         ref.read(boardDetailNotifier.notifier).add(int.parse(payload));
         MsgBoardDetailResponseModel resp;
         ref.watch(boardAddProvider).get(int.parse(payload)).then((value) {
@@ -96,16 +97,16 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => SearchScreen(),
+                    builder: (_) => const SearchScreen(),
                   ),
                 );
               },
-              child: Icon(
+              shape: const CircleBorder(),
+              backgroundColor: Colors.blue[300],
+              child: const Icon(
                 Icons.search,
                 color: Colors.white,
               ),
-              shape: const CircleBorder(),
-              backgroundColor: Colors.blue[300],
             ),
           ),
           Positioned(
