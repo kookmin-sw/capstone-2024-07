@@ -546,6 +546,8 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                         }
                       });
                     },
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 23,
                     style: const TextStyle(
                       fontSize: 12,
                     ),
