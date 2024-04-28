@@ -99,6 +99,15 @@ class BoardCard extends StatelessWidget {
     return time.replaceRange(16, time.length, "");
   }
 
+  String _formatText(String text, int maxLength) {
+    // 줄바꿈을 기준으로 첫 줄만 추출
+    String firstLine = text.split('\n')[0];
+    if (firstLine.length > maxLength) {
+      return '${firstLine.substring(0, maxLength)}...';
+    }
+    return firstLine;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -177,15 +186,15 @@ class BoardCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    postTitle,
+                    _formatText(postTitle, 40),
                     style: const TextStyle(
                       fontSize: 12.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    postContent,
-                    softWrap: false,
+                    _formatText(postContent, 80),
+                    softWrap: true,
                     style: const TextStyle(
                       fontSize: 10,
                     ),
