@@ -151,7 +151,7 @@ class Board extends ConsumerWidget {
                   ),
                   Text(
                     board.postContent,
-                    softWrap: false,
+                    softWrap: true,
                     style: const TextStyle(
                       fontSize: 10,
                     ),
