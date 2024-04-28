@@ -243,6 +243,15 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
         images.add("${getRandomStr()}$i.HEIC");
       }
     }
+
+    if (images.length > 10) {
+      notAllowed("사진은 최대 10개까지만 가능합니다.");
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+
     if (widget.isEdit) {
       final requestData = {
         'postId': widget.board.id,
