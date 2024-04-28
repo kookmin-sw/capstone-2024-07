@@ -593,6 +593,7 @@ class RenderCommentList extends StatelessWidget {
               .paginate(forceRefetch: true);
         },
         child: ListView.separated(
+          physics: const AlwaysScrollableScrollPhysics(),
           controller: controller,
           itemCount: cp.data.length,
           itemBuilder: (_, index) {
