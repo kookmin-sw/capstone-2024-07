@@ -12,6 +12,7 @@ import 'package:frontend/common/const/data.dart';
 import 'package:frontend/common/provider/secure_storage_provider.dart';
 import 'package:flutter_local_notifications/src/platform_specifics/android/enums.dart'
     as noti;
+import 'package:permission_handler/permission_handler.dart';
 
 class NotificationNotifier extends StateNotifier<NotificationModel> {
   NotificationNotifier(this.ref, this.storage)
@@ -45,6 +46,11 @@ class NotificationNotifier extends StateNotifier<NotificationModel> {
   }
 
   void requestNotificationPermission() {
+    Permission.notification.isDenied.then((value) {
+      if (value) {
+        Permission.notification.request();
+      }
+    });
     notification
         .resolvePlatformSpecificImplementation<
             IOSFlutterLocalNotificationsPlugin>()
