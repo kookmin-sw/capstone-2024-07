@@ -85,7 +85,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   cursorColor: PRIMARY_COLOR,
                   decoration: InputDecoration(
                     hintText: '검색어를 입력해주세요.',
-                    hintStyle: TextStyle(
+                    hintStyle: const TextStyle(
                       color: PRIMARY_COLOR,
                       fontSize: 16.0,
                       fontWeight: FontWeight.w500,
@@ -93,29 +93,20 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     filled: true,
                     fillColor: Colors.white,
                     suffixIcon: IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.search,
                         size: 30.0,
                       ),
                       color: PRIMARY_COLOR,
-                      onPressed: () {
-                        if (searchKeyword.isNotEmpty) {
-                          setState(() {
-                            isSearched = true;
-                          });
-                          ref
-                              .read(searchStateNotifierProvider.notifier)
-                              .updateAndFetch(searchKeyword);
-                        }
-                      },
+                      onPressed: () => search(ref),
                     ),
-                    enabledBorder: OutlineInputBorder(
+                    enabledBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(12.0)),
                       borderSide: BorderSide(
                           color: PRIMARY_COLOR,
                           width: 1.5), // Set your color for the border here
                     ),
-                    focusedBorder: OutlineInputBorder(
+                    focusedBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(12.0)),
                       borderSide: BorderSide(
                           color: PRIMARY_COLOR,
@@ -128,6 +119,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     });
                     ref.read(searchKeywordProvider.notifier).state = value;
                   },
+                  onFieldSubmitted: (String value) => search(ref),
                 ),
               ),
               Padding(
@@ -144,7 +136,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       });
                       Navigator.of(context).pop();
                     },
-                    child: Text('취소'),
+                    child: const Text('취소'),
                   ),
                 ),
               ),
@@ -153,6 +145,15 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         ],
       ),
     );
+  }
+
+  void search(WidgetRef ref) {
+    if (searchKeyword.isNotEmpty) {
+      setState(() {
+        isSearched = true;
+      });
+      ref.read(searchStateNotifierProvider.notifier).updateAndFetch(searchKeyword);
+    }
   }
 
   Widget _renderSearchedList() {
