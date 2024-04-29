@@ -168,7 +168,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
         ),
         GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () {
+          onTap: () async {
             if (widget.icon == Icons.favorite_outline_rounded) {
               if (isHeartClicked) {
                 alreadyHeart(context);
@@ -224,19 +224,23 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                 chatDialog(context);
               }
             } else if (widget.icon == Icons.star_outline_rounded) {
+              if (isFavoriteClicked) {
+                await ref.read(scrapProvider).delete(widget.postId);
+              } else {
+                await ref.read(scrapProvider).post(widget.postId);
+              }
+              ref.read(myScrapStateNotifierProvider.notifier).lastId =
+                  9223372036854775807;
+              ref
+                  .read(myScrapStateNotifierProvider.notifier)
+                  .paginate(forceRefetch: true);
               setState(() {
                 if (isFavoriteClicked) {
                   textCount -= 1;
-                  ref.read(scrapProvider).delete(widget.postId);
                 } else {
                   textCount += 1;
-                  ref.read(scrapProvider).post(widget.postId);
                 }
-                ref.read(myScrapStateNotifierProvider.notifier).lastId =
-                    9223372036854775807;
-                ref
-                    .read(myScrapStateNotifierProvider.notifier)
-                    .paginate(forceRefetch: true);
+
                 isFavoriteClicked = !isFavoriteClicked;
               });
             } else if (widget.icon == Icons.image_rounded) {
