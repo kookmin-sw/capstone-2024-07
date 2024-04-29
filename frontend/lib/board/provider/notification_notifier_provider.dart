@@ -22,7 +22,7 @@ class NotificationNotifier extends StateNotifier<NotificationModel> {
   final FlutterLocalNotificationsPlugin notification =
       FlutterLocalNotificationsPlugin();
 
-  void initNotification() async {
+  Future<void> initNotification() async {
     AndroidInitializationSettings android =
         const AndroidInitializationSettings("@mipmap/ic_launcher");
     DarwinInitializationSettings ios = const DarwinInitializationSettings(
@@ -76,7 +76,7 @@ class NotificationNotifier extends StateNotifier<NotificationModel> {
 
   Future<void> listen(int retryCount) async {
     if (retryCount == 0) {
-      initNotification();
+      await initNotification();
       requestNotificationPermission();
     }
 
