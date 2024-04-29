@@ -56,8 +56,9 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
   Widget build(BuildContext context) {
     payload = ref.watch(payloadNotifier);
     if (payload != "") {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        ref.read(payloadNotifier.notifier).add("");
+      debugPrint("Show Payload Page : $payload");
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+        await ref.read(payloadNotifier.notifier).add("");
         ref.read(boardDetailNotifier.notifier).add(int.parse(payload));
         MsgBoardDetailResponseModel resp;
         ref.watch(boardAddProvider).get(int.parse(payload)).then((value) {
