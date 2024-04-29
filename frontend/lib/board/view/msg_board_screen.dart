@@ -457,7 +457,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return const Text('이미 삭제된 글입니다.');
         } else {
           MsgBoardDetailResponseModel boardDetail =
               snapshot.data ?? widget.board as MsgBoardDetailResponseModel;
