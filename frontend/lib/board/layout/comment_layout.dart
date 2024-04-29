@@ -39,7 +39,6 @@ class _CommentState extends ConsumerState<Comment>
 
   String changeTime(String time) {
     DateTime t = DateTime.parse(time);
-    debugPrint(t.toString());
 
     time = time.replaceAll('T', " ");
 

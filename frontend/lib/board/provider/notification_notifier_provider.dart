@@ -35,9 +35,10 @@ class NotificationNotifier extends StateNotifier<NotificationModel> {
     await notification.initialize(
       settings,
       onDidReceiveNotificationResponse: (details) {
-        if (details.payload != null) {
+        if (details.payload != null || details.payload!.isNotEmpty) {
           // TODO : Add payload State Notifier
           ref.read(payloadNotifier.notifier).add(details.payload!);
+          debugPrint("Foreground Payload : ${details.payload}");
         }
       },
     );

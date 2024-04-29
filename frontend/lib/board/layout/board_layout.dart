@@ -22,7 +22,6 @@ class Board extends ConsumerWidget {
 
   String changeTime(String time) {
     DateTime t = DateTime.parse(time);
-    debugPrint(t.toString());
 
     time = time.replaceAll('T', " ");
 
