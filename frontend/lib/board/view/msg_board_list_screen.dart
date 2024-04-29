@@ -8,6 +8,7 @@ import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/board_detail_state_notifier_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/const/categorys.dart';
+import 'package:frontend/board/provider/comment_pagination_provider.dart';
 import 'package:frontend/board/provider/payload_state_notifier_provider.dart';
 import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/board/view/msg_board_screen.dart';
@@ -16,6 +17,7 @@ import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
 import 'package:frontend/common/provider/dio_provider.dart';
+import 'package:frontend/member/provider/mypage/my_comment_state_notifier_provider.dart';
 
 import '../../common/component/notice_popup_dialog.dart';
 import '../../common/const/data.dart';
@@ -61,6 +63,14 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
         await ref.read(payloadNotifier.notifier).add("");
         ref.read(boardDetailNotifier.notifier).add(int.parse(payload));
         MsgBoardDetailResponseModel resp;
+        ref
+            .read(commentPaginationProvider.notifier)
+            .paginate(forceRefetch: true);
+        ref.read(myCommentStateNotifierProvider.notifier).lastId =
+            9223372036854775807;
+        ref
+            .read(myCommentStateNotifierProvider.notifier)
+            .paginate(forceRefetch: true);
         ref.watch(boardAddProvider).get(int.parse(payload)).then((value) {
           resp = value;
           Navigator.push(
