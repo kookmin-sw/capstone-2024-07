@@ -23,6 +23,14 @@ class MyCommentStateNotifier extends StateNotifier<CursorPaginationModelBase> {
   bool _mounted = true;
   bool _fetchingData = false;
 
+  void clearData() {
+    state = CursorPaginationModelLoading();
+  }
+
+  void fetchData() {
+    paginate(forceRefetch: true);
+  }
+
   @override
   void dispose() {
     _mounted = false;

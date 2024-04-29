@@ -7,6 +7,9 @@ import '../../common/provider/secure_storage_provider.dart';
 import '../model/member_model.dart';
 import 'auth_repository_provider.dart';
 import 'member_repository_provider.dart';
+import 'mypage/my_comment_state_notifier_provider.dart';
+import 'mypage/my_post_state_notifier_provider.dart';
+import 'mypage/my_scrap_state_notifier_provider.dart';
 
 final memberStateNotifierProvider = StateNotifierProvider<MemberStateNotifier, MemberModelBase?>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
@@ -52,9 +55,6 @@ class MemberStateNotifier extends StateNotifier<MemberModelBase?> {
       //성공적으로 가져왔을 경우 MemberModel이 state에 담기게 된다.
       state = resp;
 
-      // if (resp is MemberModel) {
-      //   ref.read(selectedMajorProvider.notifier).state = resp.activatedDepartment;
-      // }
     } on DioException catch(e){
       if(e.response?.statusCode == 401){
         state = MemberModelError(message: "로그인되지 않았습니다.");
@@ -82,6 +82,10 @@ class MemberStateNotifier extends StateNotifier<MemberModelBase?> {
       final memberResp = await memberRepository.getMe();
       state = memberResp;
 
+      ref.read(myPostStateNotifierProvider.notifier).fetchData();
+      ref.read(myCommentStateNotifierProvider.notifier).fetchData();
+      ref.read(myScrapStateNotifierProvider.notifier).fetchData();
+
       return memberResp;
     } catch (e) {
       state = MemberModelError(message: '로그인에 실패했습니다.');
@@ -98,5 +102,9 @@ class MemberStateNotifier extends StateNotifier<MemberModelBase?> {
         storage.delete(key: ACCESS_TOKEN_KEY),
       ],
     );
+
+    ref.read(myPostStateNotifierProvider.notifier).clearData();
+    ref.read(myCommentStateNotifierProvider.notifier).clearData();
+    ref.read(myScrapStateNotifierProvider.notifier).clearData();
   }
 }
