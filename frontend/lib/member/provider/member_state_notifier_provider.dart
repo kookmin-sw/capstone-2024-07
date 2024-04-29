@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_client_sse/flutter_client_sse.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -11,7 +12,8 @@ import 'mypage/my_comment_state_notifier_provider.dart';
 import 'mypage/my_post_state_notifier_provider.dart';
 import 'mypage/my_scrap_state_notifier_provider.dart';
 
-final memberStateNotifierProvider = StateNotifierProvider<MemberStateNotifier, MemberModelBase?>((ref) {
+final memberStateNotifierProvider =
+    StateNotifierProvider<MemberStateNotifier, MemberModelBase?>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   final memberRepository = ref.watch(memberRepositoryProvider);
   final storage = ref.watch(secureStorageProvider);
@@ -41,7 +43,7 @@ class MemberStateNotifier extends StateNotifier<MemberModelBase?> {
   }
 
   Future<void> getMe() async {
-    try{
+    try {
       final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
       final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
 
@@ -54,11 +56,10 @@ class MemberStateNotifier extends StateNotifier<MemberModelBase?> {
 
       //성공적으로 가져왔을 경우 MemberModel이 state에 담기게 된다.
       state = resp;
-
-    } on DioException catch(e){
-      if(e.response?.statusCode == 401){
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
         state = MemberModelError(message: "로그인되지 않았습니다.");
-      } else{
+      } else {
         state = MemberModelError(message: "기타 에러..!");
       }
     }
@@ -106,5 +107,6 @@ class MemberStateNotifier extends StateNotifier<MemberModelBase?> {
     ref.read(myPostStateNotifierProvider.notifier).clearData();
     ref.read(myCommentStateNotifierProvider.notifier).clearData();
     ref.read(myScrapStateNotifierProvider.notifier).clearData();
+    SSEClient.unsubscribeFromSSE();
   }
 }
