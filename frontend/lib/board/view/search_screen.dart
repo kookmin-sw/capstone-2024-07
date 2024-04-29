@@ -104,13 +104,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       borderRadius: BorderRadius.all(Radius.circular(12.0)),
                       borderSide: BorderSide(
                           color: PRIMARY_COLOR,
-                          width: 1.5), // Set your color for the border here
+                          width: 1.5),
                     ),
                     focusedBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(12.0)),
                       borderSide: BorderSide(
                           color: PRIMARY_COLOR,
-                          width: 2.5), // Set your color for the border here
+                          width: 2.5),
                     ),
                   ),
                   onChanged: (String value) {
