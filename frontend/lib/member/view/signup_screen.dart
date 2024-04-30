@@ -680,14 +680,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       content: SingleChildScrollView(
-                        child: Flexible(
-                          child: Text(
-                            privacyPolicy,
-                            overflow: TextOverflow.visible,
-                            style: const TextStyle(
-                              fontSize: 12.0,
-                            ),
+                        child: Text(
+                          privacyPolicy,
+                          overflow: TextOverflow.visible,
+                          style: const TextStyle(
+                            fontSize: 12.0,
                           ),
+                          softWrap: true,
                         ),
                       ),
                       actions: [

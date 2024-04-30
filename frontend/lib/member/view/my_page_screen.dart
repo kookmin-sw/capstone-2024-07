@@ -53,11 +53,11 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
                       const SizedBox(
                         width: 42.0,
                       ),
-                      Flexible(
-                          child: Text(
+                      Text(
                         universityName,
                         overflow: TextOverflow.visible,
-                      )),
+                        softWrap: true,
+                      ),
                     ],
                   ),
                   const SizedBox(
@@ -150,11 +150,10 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
       context: context,
       builder: (BuildContext context) {
         return SimpleDialog(
-          title: Flexible(
-            child: Text(
-              title,
-              overflow: TextOverflow.visible,
-            ),
+          title: Text(
+            title,
+            overflow: TextOverflow.visible,
+            softWrap: true,
           ),
           children: [
             Padding(
@@ -162,11 +161,11 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
                   left: 32.0, right: 32.0, top: 10.0, bottom: 10.0),
               child: Column(
                 children: [
-                  Flexible(
-                      child: Text(
+                  Text(
                     message,
                     overflow: TextOverflow.visible,
-                  )),
+                    softWrap: true,
+                  ),
                 ],
               ),
             ),
