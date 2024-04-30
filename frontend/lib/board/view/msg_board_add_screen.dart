@@ -448,8 +448,10 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                               if (value != "") {
                                 title = value; // 제목
                                 writedTitle = true;
-                                canUpload = writedTitle & writedContent;
+                              } else {
+                                writedTitle = false;
                               }
+                              canUpload = writedTitle & writedContent;
                             });
                           },
                           decoration: InputDecoration(
@@ -551,8 +553,10 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                         if (value != "") {
                           content = value; // 내용
                           writedContent = true;
-                          canUpload = writedTitle & writedContent;
+                        } else {
+                          writedContent = false;
                         }
+                        canUpload = writedTitle & writedContent;
                       });
                     },
                     keyboardType: TextInputType.multiline,
