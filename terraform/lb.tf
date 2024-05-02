@@ -55,6 +55,22 @@ resource "aws_lb_listener_rule" "api" {
   }
 }
 
+resource "aws_lb_listener_rule" "ai_forward" {
+  listener_arn = aws_lb_listener.https_forward.arn
+  priority     = 99
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.ai.id
+  }
+
+  condition {
+    path_pattern {
+      values = ["/predict/*"]
+    }
+  }
+}
+
 resource "aws_lb_listener" "http_forward" {
   load_balancer_arn = aws_alb.staging.arn
   port              = 80
