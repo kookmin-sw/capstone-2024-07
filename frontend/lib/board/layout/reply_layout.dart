@@ -138,8 +138,7 @@ class _Reply extends ConsumerState<Reply> {
                                     text: "-1",
                                     commentId: -1,
                                     postId: -1,
-                                    replyId:
-                                        widget.isMine ? widget.reply.id : -2,
+                                    replyId: widget.reply.id,
                                     isClicked: false,
                                     isMine: widget.isMine,
                                   ),

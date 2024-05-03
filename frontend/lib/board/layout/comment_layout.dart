@@ -136,11 +136,8 @@ class _CommentState extends ConsumerState<Comment>
                           icon: Icons.more_horiz,
                           iconSize: 20,
                           text: "-1",
-                          commentId: widget.comment.deleted
-                              ? -3
-                              : widget.isMine
-                                  ? widget.comment.id
-                                  : -2,
+                          commentId:
+                              widget.comment.deleted ? -3 : widget.comment.id,
                           postId: -1,
                           replyId: -1,
                           isClicked: false,

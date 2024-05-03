@@ -2,12 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
+import 'package:frontend/board/provider/cloudwatch_provider.dart';
 import 'package:frontend/board/provider/comment_provider.dart';
 import 'package:frontend/board/provider/isquestion_provider.dart';
 import 'package:frontend/board/provider/image_provider.dart';
 import 'package:frontend/board/provider/comment_notifier_provider.dart';
 import 'package:frontend/board/provider/reply_notifier_provider.dart';
 import 'package:frontend/board/provider/reply_provider.dart';
+import 'package:frontend/board/provider/report_provider.dart';
 import 'package:frontend/board/provider/scrap_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/member/provider/mypage/my_scrap_state_notifier_provider.dart';
@@ -57,6 +59,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
       images = await picker.pickMultiImage();
     } catch (e) {
       debugPrint("getImageError : $e");
+      ref.watch(cloudWatchStateProvider.notifier).add(e.toString());
       return e.toString(); // permission access need!
     }
     ref.read(imageStateProvider.notifier).add(images);
@@ -289,10 +292,9 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
             } else if (widget.icon == Icons.more_horiz) {
               if (widget.commentId == -3) {
                 notAllowed("이미 삭제된 댓글입니다.");
-              } else if (widget.commentId == -2) {
-                notAllowed("댓글 수정 권한이 없습니다.");
-              } else if (widget.replyId == -2) {
-                notAllowed("대댓글 수정 권한이 없습니다.");
+              } else if (!widget.isMine) {
+                // can only report
+                moreDialogReport(context);
               } else {
                 moreDialog(context);
               }
@@ -462,6 +464,313 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                           },
                           child: const Text(
                             "수정하기",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          );
+        }));
+  }
+
+  void sendReport(String reason) async {
+    final data = {
+      'reportedObjectId':
+          widget.commentId != -1 ? widget.commentId : widget.replyId,
+      'reportType': widget.commentId != -1 ? "COMMENT" : "REPLY",
+      'reason': reason,
+    };
+    await ref.read(reportProvider).post(data);
+    notAllowed("신고되었습니다.");
+  }
+
+  void selectReportReason() {
+    showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            actionsPadding: EdgeInsets.zero,
+            backgroundColor: PRIMARY10_COLOR,
+            content: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Text(
+                    "신고 사유를 선택해주세요.",
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            sendReport('INSULTING');
+                          },
+                          child: const Text(
+                            "욕설/비하",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: BODY_TEXT_COLOR.withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            sendReport('COMMERCIAL');
+                          },
+                          child: const Text(
+                            "상업적 광고 및 판매",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: BODY_TEXT_COLOR.withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            sendReport('INAPPROPRIATE');
+                          },
+                          child: const Text(
+                            "게시판 성격에 부적절함",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: BODY_TEXT_COLOR.withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            sendReport('FRAUD');
+                          },
+                          child: const Text(
+                            "유출/사칭/사기",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: BODY_TEXT_COLOR.withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            sendReport('SPAM');
+                          },
+                          child: const Text(
+                            "낚시/놀람/도배",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: BODY_TEXT_COLOR.withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            sendReport('PORNOGRAPHIC');
+                          },
+                          child: const Text(
+                            "음란물/불건전한 만남 및 대화",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          );
+        }));
+  }
+
+  Future<dynamic> moreDialogReport(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            actionsPadding: EdgeInsets.zero,
+            backgroundColor: PRIMARY10_COLOR,
+            actions: <Widget>[
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                          ),
+                          onPressed: () {
+                            // TODO : Report Comment, Reply
+                            Navigator.of(context).pop();
+                            selectReportReason();
+                          },
+                          child: const Text(
+                            "신고하기",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: BODY_TEXT_COLOR.withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                          ),
+                          onPressed: () {
+                            // TODO : User Block
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            "차단하기",
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.normal,
