@@ -27,10 +27,10 @@ class CommentService(
 ) {
     fun create(userId: Long, request: CreateCommentRequest): CommentResponse {
         val post = postRepository.findByIdOrThrow(request.postId)
-        val comment = commentRepository.save(request.toEntity(userId))
         val community = communityRepository.findByIdOrThrow(post.communityId)
-
         commentValidator.validate(userId, community)
+        val comment = commentRepository.save(request.toEntity(userId))
+
 
         post.increaseCommentReplyCount()
 
