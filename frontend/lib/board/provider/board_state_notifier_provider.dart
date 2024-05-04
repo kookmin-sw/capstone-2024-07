@@ -13,7 +13,7 @@ final boardStateNotifierProvider =
     const initialLastPostId = 9223372036854775807;
     final communityTitle = ref.watch(categoryTitleProvider);
     final isHot = ref.watch(isHotProvider);
-    const size = 10;
+    const size = 20;
 
     final notifier = BoardStateNotifier(
         repository: repository,

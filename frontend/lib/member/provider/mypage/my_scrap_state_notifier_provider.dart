@@ -8,7 +8,7 @@ StateNotifierProvider<MyScrapStateNotifier, CursorPaginationModelBase>(
         (ref) {
       final repository = ref.watch(myPageRepositoryProvider);
       const initialLastPostId = 9223372036854775807;
-      const size = 10;
+      const size = 20;
 
       final notifier = MyScrapStateNotifier(
         repository: repository,
