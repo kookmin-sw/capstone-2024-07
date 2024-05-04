@@ -747,39 +747,6 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                       ),
                     ],
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: BODY_TEXT_COLOR.withOpacity(0.3),
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0,
-                            backgroundColor: Colors.transparent,
-                          ),
-                          onPressed: () {
-                            // TODO : User Block
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text(
-                            "차단하기",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ],
