@@ -17,11 +17,11 @@ data class UpdateDepartmentRequest(
 )
 
 data class RemainDurationResponse(
-    @Schema(description = "남은 학과 변경 일수", example = "10")
+    @Schema(description = "남은 일수", example = "10")
     val remainDays: Long,
-    @Schema(description = "남은 학과 변경 시간", example = "10")
+    @Schema(description = "남은 시간", example = "10")
     val remainHours: Long,
-    @Schema(description = "남은 학과 변경 분", example = "10")
+    @Schema(description = "남은 분", example = "10")
     val remainMinutes: Long,
 ) {
     constructor(remain: Duration) : this(
