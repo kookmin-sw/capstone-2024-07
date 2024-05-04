@@ -34,13 +34,19 @@ class ReportListenerService(
     @TransactionalEventListener
     fun delete(event: CommentReportedEvent){
         val comment = commentRepository.getByIdOrThrow(event.commentId)
+        val post = postRepository.findByIdOrThrow(comment.postId)
+        post.decreaseCommentReplyCount()
         commentRepository.delete(comment)
+
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener
     fun delete(event: ReplyReportedEvent){
         val reply = replyRepository.getByIdOrThrow(event.replyId)
+        val comment = commentRepository.getByIdOrThrow(reply.commentId)
+        val post = postRepository.findByIdOrThrow(comment.postId)
+        post.decreaseCommentReplyCount()
         replyRepository.delete(reply)
     }
 }
