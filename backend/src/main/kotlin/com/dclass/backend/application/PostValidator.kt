@@ -8,8 +8,6 @@ import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.community.findByIdOrThrow
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.post.findByIdOrThrow
-import com.dclass.backend.exception.blocklist.BlocklistException
-import com.dclass.backend.exception.blocklist.BlocklistExceptionType
 import com.dclass.backend.exception.post.PostException
 import com.dclass.backend.exception.post.PostExceptionType.FORBIDDEN_POST
 import org.springframework.stereotype.Service
@@ -24,10 +22,7 @@ class PostValidator(
     private val blocklistRepository: BlocklistRepository
 ) {
     fun validateCreatePost(userId: Long, communityTitle: String): Community {
-        val blocklist = blocklistRepository.findFirstByUserIdOrderByCreatedDateTimeDesc(userId)
-        if (blocklist != null && !blocklist.isExpired()) {
-            throw BlocklistException(BlocklistExceptionType.BLOCKED_USER)
-        }
+        blocklistRepository.findFirstByUserIdOrderByCreatedDateTimeDesc(userId)?.validate()
 
         val belong = belongRepository.getOrThrow(userId)
         val community =
