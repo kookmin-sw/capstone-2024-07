@@ -17,8 +17,11 @@ class ReplyValidator(
     private val blocklistRepository: BlocklistRepository
 ) {
     fun validate(userId: Long, departmentId: Long) {
-        if (blocklistRepository.findByUserId(userId) != null) throw BlocklistException(BlocklistExceptionType.BLOCKED_USER)
-        
+        val blocklist = blocklistRepository.findFirstByUserIdOrderByCreatedDateTimeDesc(userId)
+        if (blocklist != null && !blocklist.isExpired()) {
+            throw BlocklistException(BlocklistExceptionType.BLOCKED_USER)
+        }
+
         val belong = belongRepository.getOrThrow(userId)
 
         if (!belong.contain(departmentId)) {

@@ -31,6 +31,8 @@ class Blocklist(
             createdDateTime.plusDays(CHANGE_INTERVAL_DAYS)
         ).takeUnless { it.isNegative } ?: Duration.ZERO
 
+    fun isExpired(): Boolean = remainingTime.isZero
+
     companion object {
         const val CHANGE_INTERVAL_DAYS = 90L
     }
