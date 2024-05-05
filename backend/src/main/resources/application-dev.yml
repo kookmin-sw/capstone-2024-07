@@ -23,9 +23,6 @@ spring:
         format_sql: true
         default_batch_fetch_size: 10
 
-  main:
-    allow-bean-definition-overriding: true
-
 logging:
   level:
     org.hibernate.orm.jdbc.bind: trace
