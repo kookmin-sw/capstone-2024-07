@@ -42,3 +42,6 @@ out/
 ### application.properties ###
 application-security.yml
 application-prod.yml
+
+### MAC ###
+.DS_Store
