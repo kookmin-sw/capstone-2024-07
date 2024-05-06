@@ -242,6 +242,12 @@ data class PostDetailResponse(
     val imageCount: Int,
 
     @Schema(
+        description = "차단한 사용자의 게시글인지 여부",
+        example = "true"
+    )
+    var isBlockedUser: Boolean = false,
+
+    @Schema(
         description = "게시글이 작성된 시각",
         example = "2021-08-01T00:00:00"
     )
@@ -267,6 +273,7 @@ data class PostDetailResponse(
         false,
         false,
         post.images.size,
+        false,
         post.createdDateTime
     )
 }
