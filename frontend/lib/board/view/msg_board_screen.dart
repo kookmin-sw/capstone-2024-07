@@ -510,9 +510,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                               ),
                               onPressed: () {
                                 Navigator.of(context).pop();
-                                ref
-                                    .read(blockProvider)
-                                    .post(widget.board.userId);
+                                isReally();
                               },
                               child: const Text(
                                 "차단하기",
@@ -538,6 +536,67 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
 
   void notification() {
     // TODO : notification on/off
+  }
+
+  void isReally() {
+    showDialog(
+        context: context,
+        builder: ((context) {
+          return AlertDialog(
+            content: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Text(
+                    "이 작성자의 게시물이 목록에 노출되지 않으며, 다시 해제할 수 없습니다.",
+                    overflow: TextOverflow.visible,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      ref.read(blockProvider).post(widget.board.userId);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: PRIMARY50_COLOR,
+                    ),
+                    child: const Text(
+                      "확인",
+                      style: TextStyle(fontSize: 13, color: PRIMARY_COLOR),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: PRIMARY50_COLOR,
+                    ),
+                    child: const Text(
+                      "취소",
+                      style: TextStyle(fontSize: 13, color: PRIMARY_COLOR),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        }));
   }
 
   void notAllowed(String s) {
