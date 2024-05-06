@@ -3,7 +3,9 @@ package com.dclass.backend.domain.user
 import com.dclass.backend.exception.user.UserException
 import com.dclass.backend.exception.user.UserExceptionType.*
 import com.dclass.support.domain.BaseRootEntity
+import com.dclass.support.security.sha256Encrypt
 import jakarta.persistence.*
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "users")
@@ -71,6 +73,10 @@ class User(
     fun anonymize() {
         this.information = information.copy(name = "", nickname = "(알 수 없음)")
         this.deleted = true
+    }
+
+    fun anonymizeEmail() {
+        this.information = information.copy(email = sha256Encrypt(LocalDateTime.now().toString()))
     }
 
     fun isDeleted() = deleted
