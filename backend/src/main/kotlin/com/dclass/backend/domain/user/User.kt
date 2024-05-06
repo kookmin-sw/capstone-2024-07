@@ -6,10 +6,8 @@ import com.dclass.backend.exception.user.UserExceptionType.INVALID_USER_INFORMAT
 import com.dclass.support.domain.BaseRootEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.SQLDelete
-import org.hibernate.annotations.SQLRestriction
 
-@SQLDelete(sql = "update user set deleted = true where id = ?")
-@SQLRestriction("deleted = false")
+@SQLDelete(sql = "update users set deleted = true where id = ?")
 @Entity
 @Table(name = "users")
 class User(
@@ -72,4 +70,11 @@ class User(
     fun changeNickname(nickname: String) {
         this.information = information.copy(nickname = nickname)
     }
+
+    fun anonymize(){
+        this.information = information.copy(name = "", nickname = "(알 수 없음)")
+        this.deleted = true
+    }
+
+    fun isDeleted() = deleted
 }
