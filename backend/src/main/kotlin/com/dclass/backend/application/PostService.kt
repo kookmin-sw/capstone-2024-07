@@ -85,6 +85,7 @@ class PostService(
             images = runBlocking(Dispatchers.IO) {
                 images.map { async { awsPresigner.getPostObjectPresigned(it) } }.awaitAll()
             }
+            blockedUsers(userId, this)
         }
 
         val likePost = postRepository.findByIdOrThrow(postId)
@@ -144,5 +145,8 @@ class PostService(
         postResponse.isBlockedUser = blockedUserIds.contains(postResponse.userId)
     }
 
-
+    private fun blockedUsers(userId: Long, postResponse: PostDetailResponse) {
+        val blockedUserIds = userBlockRepository.findByBlockerUserId(userId).associateBy { it.blockedUserId }
+        postResponse.isBlockedUser = blockedUserIds.contains(postResponse.userId)
+    }
 }
