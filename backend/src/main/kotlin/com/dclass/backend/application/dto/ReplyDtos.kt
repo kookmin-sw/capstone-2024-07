@@ -153,6 +153,12 @@ data class ReplyWithUserResponse(
     val likeCount: ReplyLikes,
 
     @Schema(
+        description = "차단한 사용자 여부",
+        example = "false"
+    )
+    var isBlockedUser: Boolean = false,
+
+    @Schema(
         description = "대댓글이 작성된 시각",
         example = "2021-08-01T00:00:00"
     )

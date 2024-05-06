@@ -116,6 +116,12 @@ data class PostResponse(
     val isQuestion: Boolean,
 
     @Schema(
+        description = "차단한 사용자의 게시글인지 여부",
+        example = "true"
+    )
+    var isBlockedUser: Boolean = false,
+
+    @Schema(
         description = "게시글의 이미지 개수",
         example = "1"
     )
@@ -143,6 +149,7 @@ data class PostResponse(
         post.images.map { it.imageKey },
         post.postCount,
         post.isQuestion,
+        false,
         post.images.size,
         post.createdDateTime
     )

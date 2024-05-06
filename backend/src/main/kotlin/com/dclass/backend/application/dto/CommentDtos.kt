@@ -130,6 +130,12 @@ data class CommentWithUserResponse(
     val userInformation: UserInformation,
 
     @Schema(
+        description = "댓글을 작성한 유저의 고유 id",
+        example = "1"
+    )
+    val userId : Long,
+
+    @Schema(
         description = "댓글이 달린 게시글의 고유 식별자",
         example = "1"
     )
@@ -160,6 +166,12 @@ data class CommentWithUserResponse(
     var isLiked: Boolean,
 
     @Schema(
+        description = "차단된 사용자 여부",
+        example = "true"
+    )
+    var isBlockedUser: Boolean,
+
+    @Schema(
         description = "댓글이 작성된 시각",
         example = "2021-08-01T00:00:00"
     )
@@ -168,11 +180,13 @@ data class CommentWithUserResponse(
     constructor(comment: Comment, user: User) : this(
         id = comment.id,
         userInformation = UserInformation(user.name, user.email, user.nickname),
+        userId = user.id,
         postId = comment.postId,
         content = comment.content.takeIf { !comment.isDeleted() } ?: "삭제된 댓글 입니다.",
         likeCount = comment.commentLikes,
         deleted = comment.isDeleted(),
         isLiked = false,
+        isBlockedUser = false,
         createdAt = comment.createdDateTime
     )
 }
@@ -189,6 +203,12 @@ data class CommentReplyWithUserResponse(
         example = "1"
     )
     val userInformation: UserInformation,
+
+    @Schema(
+        description = "댓글을 작성한 유저의 고유 id",
+        example = "1"
+    )
+    val userId : Long,
 
     @Schema(
         description = "댓글이 달린 게시글의 고유 식별자",
@@ -224,6 +244,12 @@ data class CommentReplyWithUserResponse(
         example = "true"
     )
     val isLiked: Boolean,
+
+    @Schema(
+        description = "차단된 사용자 여부",
+        example = "true"
+    )
+    var isBlockedUser: Boolean,
 
     @Schema(
         description = "댓글이 작성된 시각",
@@ -263,12 +289,14 @@ data class CommentReplyWithUserResponse(
     ) : this(
         id = commentWithUserResponse.id,
         userInformation = commentWithUserResponse.userInformation,
+        userId = commentWithUserResponse.userId,
         postId = commentWithUserResponse.postId,
         content = commentWithUserResponse.content,
         likeCount = commentWithUserResponse.likeCount,
         deleted = commentWithUserResponse.deleted,
         isLiked = commentWithUserResponse.isLiked,
         createdAt = commentWithUserResponse.createdAt,
+        isBlockedUser = commentWithUserResponse.isBlockedUser,
         replies = replies
     )
 }
