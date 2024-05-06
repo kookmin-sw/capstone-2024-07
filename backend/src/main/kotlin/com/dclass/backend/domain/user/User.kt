@@ -1,8 +1,7 @@
 package com.dclass.backend.domain.user
 
 import com.dclass.backend.exception.user.UserException
-import com.dclass.backend.exception.user.UserExceptionType.INVALID_PASSWORD_ACCESS_DENIED
-import com.dclass.backend.exception.user.UserExceptionType.INVALID_USER_INFORMATION
+import com.dclass.backend.exception.user.UserExceptionType.*
 import com.dclass.support.domain.BaseRootEntity
 import jakarta.persistence.*
 
@@ -69,10 +68,15 @@ class User(
         this.information = information.copy(nickname = nickname)
     }
 
-    fun anonymize(){
+    fun anonymize() {
         this.information = information.copy(name = "", nickname = "(알 수 없음)")
         this.deleted = true
     }
 
     fun isDeleted() = deleted
+
+    fun checkExistingAndDeletedUser() {
+        if (deleted) throw UserException(RESIGNED_USER)
+        throw UserException(ALREADY_EXIST_USER)
+    }
 }

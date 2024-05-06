@@ -10,11 +10,13 @@ import com.dclass.backend.domain.belong.Belong
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.department.DepartmentRepository
 import com.dclass.backend.domain.department.getByTitleOrThrow
-import com.dclass.backend.domain.user.*
+import com.dclass.backend.domain.user.UniversityRepository
+import com.dclass.backend.domain.user.UserRepository
+import com.dclass.backend.domain.user.findByEmail
+import com.dclass.backend.domain.user.getByEmailOrThrow
 import com.dclass.backend.exception.university.UniversityException
 import com.dclass.backend.exception.university.UniversityExceptionType.NOT_FOUND_UNIVERSITY
 import com.dclass.backend.exception.user.UserException
-import com.dclass.backend.exception.user.UserExceptionType.ALREADY_EXIST_USER
 import com.dclass.backend.exception.user.UserExceptionType.RESIGNED_USER
 import com.dclass.backend.security.JwtTokenProvider
 import org.springframework.stereotype.Service
@@ -34,10 +36,7 @@ class UserAuthenticationService(
         require(request.password == request.confirmPassword) { "비밀번호가 일치하지 않습니다." }
 
         userRepository.findByEmail(request.email)?.let {
-            if (it.isDeleted()) {
-                throw UserException(RESIGNED_USER)
-            }
-            throw UserException(ALREADY_EXIST_USER)
+            it.checkExistingAndDeletedUser()
         }
 
         authenticationCodeRepository.getLastByEmail(request.email)
@@ -64,7 +63,7 @@ class UserAuthenticationService(
 
     fun generateTokenByLogin(request: AuthenticateUserRequest): LoginUserResponse {
         val user = userRepository.getByEmailOrThrow(request.email)
-        if(user.isDeleted()) throw UserException(RESIGNED_USER)
+        if (user.isDeleted()) throw UserException(RESIGNED_USER)
 
         user.authenticate(request.password)
 
@@ -75,8 +74,8 @@ class UserAuthenticationService(
     }
 
     fun generateAuthenticationCode(email: String): String {
-        if (userRepository.existsByEmail(email)) {
-            throw UserException(ALREADY_EXIST_USER)
+        userRepository.findByEmail(email)?.let {
+            it.checkExistingAndDeletedUser()
         }
         if (!universityRepository.existsByEmailSuffix(getEmailSuffix(email))) {
             throw UniversityException(NOT_FOUND_UNIVERSITY)
