@@ -18,6 +18,7 @@ import com.dclass.backend.exception.university.UniversityException
 import com.dclass.backend.exception.university.UniversityExceptionType.NOT_FOUND_UNIVERSITY
 import com.dclass.backend.exception.user.UserException
 import com.dclass.backend.exception.user.UserExceptionType.ALREADY_EXIST_USER
+import com.dclass.backend.exception.user.UserExceptionType.RESIGNED_USER
 import com.dclass.backend.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -63,6 +64,7 @@ class UserAuthenticationService(
 
     fun generateTokenByLogin(request: AuthenticateUserRequest): LoginUserResponse {
         val user = userRepository.getByEmailOrThrow(request.email)
+        if(user.isDeleted()) throw UserException(RESIGNED_USER)
 
         user.authenticate(request.password)
 
