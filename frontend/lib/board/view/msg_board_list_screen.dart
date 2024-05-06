@@ -143,6 +143,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                         count: ReactCountModel(
                             commentReplyCount: 0, likeCount: 0, scrapCount: 0),
                         isQuestion: false,
+                        isBlockedUser: false,
                         createdDateTime: "",
                         imageCount: 0,
                       ),
@@ -339,6 +340,11 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
     }
 
     final cp = data as CursorPaginationModel;
+    for (int i = 0; i < cp.data.length; i++) {
+      if (cp.data[i].isBlockedUser) {
+        cp.data.removeAt(i);
+      }
+    }
 
     return RefreshIndicator(
       onRefresh: () async {

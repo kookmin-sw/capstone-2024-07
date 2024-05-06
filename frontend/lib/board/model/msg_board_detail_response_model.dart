@@ -20,6 +20,7 @@ class MsgBoardDetailResponseModel extends MsgBoardResponseModel {
     required super.images,
     required super.count,
     required super.isQuestion,
+    required super.isBlockedUser,
     required this.isScrapped,
     required this.likedBy,
     required super.createdDateTime,

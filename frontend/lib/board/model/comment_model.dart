@@ -12,6 +12,7 @@ class CommentModel {
   final LikeCount likeCount;
   final bool deleted;
   final bool isLiked;
+  final bool isBlockedUser;
   final String createdAt;
   final List<ReplyModel> replies;
 
@@ -24,6 +25,7 @@ class CommentModel {
       this.deleted,
       this.likeCount,
       this.isLiked,
+      this.isBlockedUser,
       this.createdAt,
       this.replies);
 
@@ -77,6 +79,7 @@ class ReplyModel {
   final int commentId;
   final String content;
   final LikeCount likeCount;
+  final bool isBlockedUser;
   final String createdAt;
 
   ReplyModel(
@@ -86,6 +89,7 @@ class ReplyModel {
     this.commentId,
     this.content,
     this.likeCount,
+    this.isBlockedUser,
     this.createdAt,
   );
   factory ReplyModel.fromJson(Map<String, dynamic> json) =>

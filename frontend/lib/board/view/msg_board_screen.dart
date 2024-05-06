@@ -878,6 +878,11 @@ class RenderCommentList extends StatelessWidget {
     }
 
     final cp = data as CursorPaginationModel;
+    for (int i = 0; i < cp.data.length; i++) {
+      if (cp.data[i].isBlockedUser) {
+        cp.data.removeAt(i);
+      }
+    }
 
     return Expanded(
       child: RefreshIndicator(

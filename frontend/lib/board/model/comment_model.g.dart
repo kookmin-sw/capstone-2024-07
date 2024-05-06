@@ -15,6 +15,7 @@ CommentModel _$CommentModelFromJson(Map<String, dynamic> json) => CommentModel(
       json['deleted'] as bool,
       LikeCount.fromJson(json['likeCount'] as Map<String, dynamic>),
       json['isLiked'] as bool,
+      json['isBlockedUser'] as bool,
       json['createdAt'] as String,
       (json['replies'] as List<dynamic>)
           .map((e) => ReplyModel.fromJson(e as Map<String, dynamic>))
@@ -31,6 +32,7 @@ Map<String, dynamic> _$CommentModelToJson(CommentModel instance) =>
       'likeCount': instance.likeCount,
       'deleted': instance.deleted,
       'isLiked': instance.isLiked,
+      'isBlockedUser': instance.isBlockedUser,
       'createdAt': instance.createdAt,
       'replies': instance.replies,
     };
@@ -76,6 +78,7 @@ ReplyModel _$ReplyModelFromJson(Map<String, dynamic> json) => ReplyModel(
       (json['commentId'] as num).toInt(),
       json['content'] as String,
       LikeCount.fromJson(json['likeCount'] as Map<String, dynamic>),
+      json['isBlockedUser'] as bool,
       json['createdAt'] as String,
     );
 
@@ -87,5 +90,6 @@ Map<String, dynamic> _$ReplyModelToJson(ReplyModel instance) =>
       'commentId': instance.commentId,
       'content': instance.content,
       'likeCount': instance.likeCount,
+      'isBlockedUser': instance.isBlockedUser,
       'createdAt': instance.createdAt,
     };
