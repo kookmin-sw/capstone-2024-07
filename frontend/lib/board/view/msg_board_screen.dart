@@ -566,6 +566,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     onPressed: () {
                       Navigator.of(context).pop();
                       ref.read(blockProvider).post(widget.board.userId);
+                      Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -937,7 +938,7 @@ class RenderCommentList extends StatelessWidget {
     }
 
     final cp = data as CursorPaginationModel;
-    for (int i = 0; i < cp.data.length; i++) {
+    for (int i = cp.data.length - 1; i > 0; i--) {
       if (cp.data[i].isBlockedUser) {
         cp.data.removeAt(i);
       }

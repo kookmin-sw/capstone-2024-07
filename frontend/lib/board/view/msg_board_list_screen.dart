@@ -340,8 +340,9 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
     }
 
     final cp = data as CursorPaginationModel;
-    for (int i = 0; i < cp.data.length; i++) {
-      if (cp.data[i].isBlockedUser) {
+    for (int i = cp.data.length - 1; i >= 0; i--) {
+      final MsgBoardResponseModel pItem = cp.data[i];
+      if (pItem.isBlockedUser) {
         cp.data.removeAt(i);
       }
     }

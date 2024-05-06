@@ -35,7 +35,7 @@ class _CommentState extends ConsumerState<Comment>
     animationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 1));
     replies = widget.comment.replies;
-    for (int i = 0; i < replies.length; i++) {
+    for (int i = replies.length - 1; i > 0; i--) {
       if (replies[i].isBlockedUser) {
         replies.removeAt(i);
       }
