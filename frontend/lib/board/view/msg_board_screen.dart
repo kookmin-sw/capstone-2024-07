@@ -4,6 +4,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/model/comment_model.dart';
+import 'package:frontend/board/model/exception_model.dart';
 import 'package:frontend/board/model/msg_board_detail_response_model.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
@@ -72,8 +73,15 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
       'postId': widget.board.id.toInt(),
       'content': textEditingController.text,
     };
-    await ref.watch(commentProvider).post(requestData);
-    refresh();
+    try {
+      await ref.watch(commentProvider).post(requestData);
+      refresh();
+    } on DioException catch (e) {
+      if (e.response != null) {
+        ExceptionModel exc = e.response!.data;
+        notAllowed(exc.message);
+      }
+    }
   }
 
   void addNewReply(int commentId) async {
@@ -81,7 +89,16 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
       'commentId': commentId,
       'content': textEditingController.text,
     };
-    await ref.watch(replyProvider).post(requestData);
+
+    try {
+      await ref.watch(replyProvider).post(requestData);
+    } on DioException catch (e) {
+      if (e.response != null) {
+        ExceptionModel exc = e.response!.data;
+        notAllowed(exc.message);
+      }
+    }
+
     await ref.read(commentStateProvider.notifier).add(0, -1);
     refresh();
   }
