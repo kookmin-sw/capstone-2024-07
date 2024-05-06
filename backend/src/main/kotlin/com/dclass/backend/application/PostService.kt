@@ -34,13 +34,12 @@ class PostService(
         val activatedDepartmentId = belongRepository.getOrThrow(userId).activated
         val communityIds = communityRepository.findByDepartmentId(activatedDepartmentId)
             .map { it.id }
-        val blockedUserIds = userBlockRepository.findByBlockerUserId(userId).associateBy { it.blockedUserId }
 
         val posts = postRepository.findPostScrollPage(communityIds, request).onEach {
             it.images = runBlocking(Dispatchers.IO) {
                 it.images.map { async { awsPresigner.getPostObjectPresigned(it) } }.awaitAll()
             }
-            it.isBlockedUser = blockedUserIds.contains(it.userId)
+            blockedUsers(userId, it)
         }
 
         return PostsResponse.of(posts, request.size)
@@ -51,6 +50,7 @@ class PostService(
             it.images = runBlocking(Dispatchers.IO) {
                 it.images.map { async { awsPresigner.getPostObjectPresigned(it) } }.awaitAll()
             }
+            blockedUsers(userId, it)
         }
 
         return PostsResponse.of(posts, request.size)
@@ -61,6 +61,7 @@ class PostService(
             it.images = runBlocking(Dispatchers.IO) {
                 it.images.map { async { awsPresigner.getPostObjectPresigned(it) } }.awaitAll()
             }
+            blockedUsers(userId, it)
         }
 
         return PostsResponse.of(posts, request.size)
@@ -71,6 +72,7 @@ class PostService(
             it.images = runBlocking(Dispatchers.IO) {
                 it.images.map { async { awsPresigner.getPostObjectPresigned(it) } }.awaitAll()
             }
+            blockedUsers(userId, it)
         }
 
         return PostsResponse.of(posts, request.size)
@@ -136,4 +138,11 @@ class PostService(
 
         return post.postLikesCount
     }
+
+    private fun blockedUsers(userId: Long, postResponse: PostResponse) {
+        val blockedUserIds = userBlockRepository.findByBlockerUserId(userId).associateBy { it.blockedUserId }
+        postResponse.isBlockedUser = blockedUserIds.contains(postResponse.userId)
+    }
+
+
 }
