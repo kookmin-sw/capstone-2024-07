@@ -7,6 +7,7 @@ import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.post.findByIdOrThrow
 import com.dclass.backend.domain.scrap.ScrapRepository
+import com.dclass.backend.domain.userblock.UserBlockRepository
 import com.dclass.backend.exception.post.PostException
 import com.dclass.backend.exception.post.PostExceptionType.NOT_FOUND_POST
 import com.dclass.backend.infra.s3.AwsPresigner
@@ -26,17 +27,20 @@ class PostService(
     private val belongRepository: BelongRepository,
     private val communityRepository: CommunityRepository,
     private val scrapRepository: ScrapRepository,
+    private val userBlockRepository: UserBlockRepository,
     private val awsPresigner: AwsPresigner
 ) {
     fun getAll(userId: Long, request: PostScrollPageRequest): PostsResponse {
         val activatedDepartmentId = belongRepository.getOrThrow(userId).activated
         val communityIds = communityRepository.findByDepartmentId(activatedDepartmentId)
             .map { it.id }
+        val blockedUserIds = userBlockRepository.findByBlockerUserId(userId).associateBy { it.blockedUserId }
 
         val posts = postRepository.findPostScrollPage(communityIds, request).onEach {
             it.images = runBlocking(Dispatchers.IO) {
                 it.images.map { async { awsPresigner.getPostObjectPresigned(it) } }.awaitAll()
             }
+            it.isBlockedUser = blockedUserIds.contains(it.userId)
         }
 
         return PostsResponse.of(posts, request.size)

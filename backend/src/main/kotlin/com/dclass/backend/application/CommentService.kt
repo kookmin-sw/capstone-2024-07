@@ -9,6 +9,7 @@ import com.dclass.backend.domain.notification.NotificationEvent
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.post.findByIdOrThrow
 import com.dclass.backend.domain.reply.ReplyRepository
+import com.dclass.backend.domain.userblock.UserBlockRepository
 import com.dclass.backend.exception.comment.CommentException
 import com.dclass.backend.exception.comment.CommentExceptionType
 import org.springframework.context.ApplicationEventPublisher
@@ -24,6 +25,7 @@ class CommentService(
     private val commentValidator: CommentValidator,
     private val communityRepository: CommunityRepository,
     private val eventPublisher: ApplicationEventPublisher,
+    private val userBlockRepository: UserBlockRepository
 ) {
     fun create(userId: Long, request: CreateCommentRequest): CommentResponse {
         val post = postRepository.findByIdOrThrow(request.postId)
@@ -69,13 +71,20 @@ class CommentService(
     @Transactional(readOnly = true)
     fun findAllByPostId(userId: Long, request: CommentScrollPageRequest): CommentsResponse {
         val comments = commentRepository.findCommentWithUserByPostId(request)
+        val blockedUserIds =
+            userBlockRepository.findByBlockerUserId(userId).associateBy { it.blockedUserId }
 
-        comments.forEach { it.isLiked = it.likeCount.findUserById(userId) }
+        comments.forEach {
+            it.isLiked = it.likeCount.findUserById(userId)
+            it.isBlockedUser = blockedUserIds.contains(it.userId)
+        }
 
         val commentIds = comments.map { it.id }
 
         val replies = replyRepository.findRepliesWithUserByCommentIdIn(commentIds)
+            .onEach { it.isBlockedUser = blockedUserIds.contains(it.userId) }
             .groupBy { it.commentId }
+
 
         val data = comments.map {
             CommentReplyWithUserResponse(
