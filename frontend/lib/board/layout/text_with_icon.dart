@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/provider/block_provider.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/cloudwatch_provider.dart';
 import 'package:frontend/board/provider/comment_provider.dart';
@@ -14,6 +15,7 @@ import 'package:frontend/board/provider/scrap_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/member/provider/mypage/my_scrap_state_notifier_provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class TextWithIcon extends ConsumerStatefulWidget {
   final IconData icon;
@@ -24,6 +26,7 @@ class TextWithIcon extends ConsumerStatefulWidget {
   final int replyId;
   final bool isClicked;
   final bool isMine;
+  final int userId;
 
   const TextWithIcon({
     super.key,
@@ -35,6 +38,7 @@ class TextWithIcon extends ConsumerStatefulWidget {
     required this.replyId,
     required this.isClicked,
     required this.isMine,
+    required this.userId,
   });
 
   @override
@@ -59,8 +63,9 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
       images = await picker.pickMultiImage();
     } catch (e) {
       debugPrint("getImageError : $e");
+
       ref.watch(cloudWatchStateProvider.notifier).add(e.toString());
-      return e.toString(); // permission access need!
+      return "게시글 사진 업로드를 위해 사진 접근 허용을 해주세요. 설정에서 이를 변경할 수 있습니다."; // permission access need!
     }
     ref.read(imageStateProvider.notifier).add(images);
     return "";
@@ -259,9 +264,9 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                                   children: [
                                     Flexible(
                                       child: Text(
-                                        "사진 접근 허용을 해주세요!\n$value",
+                                        value,
                                         textAlign: TextAlign.center,
-                                        overflow: TextOverflow.ellipsis,
+                                        overflow: TextOverflow.visible,
                                       ),
                                     ),
                                   ],
@@ -271,7 +276,8 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       ElevatedButton(
-                                        onPressed: () {
+                                        onPressed: () async {
+                                          openAppSettings();
                                           Navigator.of(context).pop();
                                         },
                                         child: const Text("확인"),
@@ -732,12 +738,45 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                             backgroundColor: Colors.transparent,
                           ),
                           onPressed: () {
-                            // TODO : Report Comment, Reply
                             Navigator.of(context).pop();
                             selectReportReason();
                           },
                           child: const Text(
                             "신고하기",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: BODY_TEXT_COLOR.withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: Colors.transparent,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            // TODO
+                            ref.read(blockProvider).post(widget.userId);
+                          },
+                          child: const Text(
+                            "차단하기",
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.normal,

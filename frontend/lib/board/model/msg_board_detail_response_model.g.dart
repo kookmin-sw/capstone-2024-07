@@ -9,11 +9,11 @@ part of 'msg_board_detail_response_model.dart';
 MsgBoardDetailResponseModel _$MsgBoardDetailResponseModelFromJson(
         Map<String, dynamic> json) =>
     MsgBoardDetailResponseModel(
-      id: json['id'] as int,
-      userId: json['userId'] as int,
+      id: (json['id'] as num).toInt(),
+      userId: (json['userId'] as num).toInt(),
       userNickname: json['userNickname'] as String,
       universityName: json['universityName'] as String,
-      communityId: json['communityId'] as int,
+      communityId: (json['communityId'] as num).toInt(),
       communityTitle: json['communityTitle'] as String,
       postTitle: json['postTitle'] as String,
       postContent: json['postContent'] as String,
@@ -24,7 +24,7 @@ MsgBoardDetailResponseModel _$MsgBoardDetailResponseModelFromJson(
       isScrapped: json['isScrapped'] as bool,
       likedBy: json['likedBy'] as bool,
       createdDateTime: json['createdDateTime'] as String,
-      imageCount: json['imageCount'] as int,
+      imageCount: (json['imageCount'] as num).toInt(),
     );
 
 Map<String, dynamic> _$MsgBoardDetailResponseModelToJson(

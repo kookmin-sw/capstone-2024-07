@@ -9,11 +9,11 @@ part of 'msg_board_response_model.dart';
 MsgBoardResponseModel _$MsgBoardResponseModelFromJson(
         Map<String, dynamic> json) =>
     MsgBoardResponseModel(
-      id: json['id'] as int,
-      userId: json['userId'] as int,
+      id: (json['id'] as num).toInt(),
+      userId: (json['userId'] as num).toInt(),
       userNickname: json['userNickname'] as String,
       universityName: json['universityName'] as String,
-      communityId: json['communityId'] as int,
+      communityId: (json['communityId'] as num).toInt(),
       communityTitle: json['communityTitle'] as String,
       postTitle: json['postTitle'] as String,
       postContent: json['postContent'] as String,
@@ -21,7 +21,7 @@ MsgBoardResponseModel _$MsgBoardResponseModelFromJson(
           (json['images'] as List<dynamic>).map((e) => e as String).toList(),
       count: ReactCountModel.fromJson(json['count'] as Map<String, dynamic>),
       isQuestion: json['isQuestion'] as bool,
-      imageCount: json['imageCount'] as int,
+      imageCount: (json['imageCount'] as num).toInt(),
       createdDateTime: json['createdDateTime'] as String,
     );
 
@@ -45,9 +45,9 @@ Map<String, dynamic> _$MsgBoardResponseModelToJson(
 
 ReactCountModel _$ReactCountModelFromJson(Map<String, dynamic> json) =>
     ReactCountModel(
-      commentReplyCount: json['commentReplyCount'] as int,
-      likeCount: json['likeCount'] as int,
-      scrapCount: json['scrapCount'] as int,
+      commentReplyCount: (json['commentReplyCount'] as num).toInt(),
+      likeCount: (json['likeCount'] as num).toInt(),
+      scrapCount: (json['scrapCount'] as num).toInt(),
     );
 
 Map<String, dynamic> _$ReactCountModelToJson(ReactCountModel instance) =>

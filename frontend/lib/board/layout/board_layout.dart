@@ -81,6 +81,7 @@ class Board extends ConsumerWidget {
                       replyId: -1,
                       isClicked: board.likedBy,
                       isMine: isMine,
+                      userId: board.userId,
                     ),
                     TextWithIcon(
                       icon: Icons.chat_outlined,
@@ -91,6 +92,7 @@ class Board extends ConsumerWidget {
                       replyId: -1,
                       isClicked: false,
                       isMine: isMine,
+                      userId: board.userId,
                     ),
                     TextWithIcon(
                       icon: Icons.star_outline_rounded,
@@ -101,6 +103,7 @@ class Board extends ConsumerWidget {
                       replyId: -1,
                       isClicked: board.isScrapped,
                       isMine: isMine,
+                      userId: board.userId,
                     ),
                     const SizedBox(
                       width: 6,

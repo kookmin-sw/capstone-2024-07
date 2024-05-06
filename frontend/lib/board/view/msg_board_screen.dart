@@ -7,6 +7,7 @@ import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/model/exception_model.dart';
 import 'package:frontend/board/model/msg_board_detail_response_model.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
+import 'package:frontend/board/provider/block_provider.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/provider/comment_pagination_provider.dart';
@@ -480,6 +481,41 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                               },
                               child: const Text(
                                 "신고하기",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: BODY_TEXT_COLOR.withOpacity(0.3),
+                              width: 1,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: 0,
+                                backgroundColor: Colors.transparent,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                ref
+                                    .read(blockProvider)
+                                    .post(widget.board.userId);
+                              },
+                              child: const Text(
+                                "차단하기",
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.normal,

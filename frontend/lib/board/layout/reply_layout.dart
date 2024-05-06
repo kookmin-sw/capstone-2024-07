@@ -131,6 +131,7 @@ class _Reply extends ConsumerState<Reply> {
                                     replyId: widget.reply.id,
                                     isClicked: myClicked,
                                     isMine: widget.isMine,
+                                    userId: widget.reply.userId,
                                   ),
                                   TextWithIcon(
                                     icon: Icons.more_horiz,
@@ -141,6 +142,7 @@ class _Reply extends ConsumerState<Reply> {
                                     replyId: widget.reply.id,
                                     isClicked: false,
                                     isMine: widget.isMine,
+                                    userId: widget.reply.userId,
                                   ),
                                 ],
                               ),

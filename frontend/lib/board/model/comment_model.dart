@@ -6,6 +6,7 @@ part 'comment_model.g.dart';
 class CommentModel {
   final int id;
   final UserInformation userInformation;
+  final int userId;
   final int postId;
   final String content;
   final LikeCount likeCount;
@@ -14,8 +15,17 @@ class CommentModel {
   final String createdAt;
   final List<ReplyModel> replies;
 
-  CommentModel(this.id, this.userInformation, this.postId, this.content,
-      this.deleted, this.likeCount, this.isLiked, this.createdAt, this.replies);
+  CommentModel(
+      this.id,
+      this.userInformation,
+      this.userId,
+      this.postId,
+      this.content,
+      this.deleted,
+      this.likeCount,
+      this.isLiked,
+      this.createdAt,
+      this.replies);
 
   factory CommentModel.fromJson(Map<String, dynamic> json) =>
       _$CommentModelFromJson(json);
