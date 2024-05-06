@@ -56,12 +56,16 @@ class UserService(
         }
 
 
-
         return UserResponseWithDepartmentNames(
             user,
             groupBy[belong.major]!!.title,
             groupBy[belong.minor]!!.title,
             groupBy[belong.activated]!!.title
         )
+    }
+
+    fun resign(id: Long) {
+        val user = userRepository.getOrThrow(id)
+        user.anonymize()
     }
 }

@@ -116,4 +116,14 @@ class UserRestController(
         userService.editNickname(user.id, request)
         return ResponseEntity.noContent().build()
     }
+
+    @Operation(summary = "회원 탈퇴 API", description = "회원 탈퇴를 진행합니다")
+    @ApiResponse(responseCode = "204", description = "회원 탈퇴 성공")
+    @PostMapping("/resign")
+    fun resign(
+        @LoginUser user: User
+    ): ResponseEntity<Unit> {
+        userService.resign(user.id)
+        return ResponseEntity.noContent().build()
+    }
 }
