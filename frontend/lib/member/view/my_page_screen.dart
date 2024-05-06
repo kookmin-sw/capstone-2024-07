@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,7 +9,9 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../common/component/notice_popup_dialog.dart';
 import '../../common/const/colors.dart';
+import '../../common/const/data.dart';
 import '../../common/layout/default_layout.dart';
+import '../../common/provider/dio_provider.dart';
 import '../model/member_model.dart';
 import '../provider/member_state_notifier_provider.dart';
 import 'my_comment_screen.dart';
@@ -190,6 +193,60 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
     );
   }
 
+  void noticeBeforeResignDialog() async {
+    final dio = ref.watch(dioProvider);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return NoticePopupDialog(
+          message: "정말 탈퇴하시겠습니까?",
+          buttonText: "탈퇴하기",
+          onPressed: () async {
+            try {
+              final resp = await dio.post(
+                '$ip/api/users/resign',
+                options: Options(
+                  headers: {
+                    'accessToken': 'true',
+                  },
+                ),
+              );
+              if (resp.statusCode == 204) {
+                ref.read(memberStateNotifierProvider.notifier).logout();
+              }
+            } on DioException catch (e) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return NoticePopupDialog(
+                    message: e.response?.data["message"] ?? "에러가 발생했습니다.",
+                    buttonText: "닫기",
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  );
+                },
+              );
+            } catch (e) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return NoticePopupDialog(
+                    message: "에러가 발생했습니다.",
+                    buttonText: "닫기",
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  );
+                },
+              );
+            }
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final memberState = ref.watch(memberStateNotifierProvider);
@@ -281,6 +338,12 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
                 builder: (_) => const PasswordEditScreen(),
               ),
             );
+          },
+        ),
+        _MenuButton(
+          title: "회원 탈퇴하기",
+          onPressed: () {
+            noticeBeforeResignDialog();
           },
         ),
       ],
