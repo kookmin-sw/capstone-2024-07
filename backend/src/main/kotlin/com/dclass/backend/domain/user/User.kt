@@ -5,9 +5,7 @@ import com.dclass.backend.exception.user.UserExceptionType.INVALID_PASSWORD_ACCE
 import com.dclass.backend.exception.user.UserExceptionType.INVALID_USER_INFORMATION
 import com.dclass.support.domain.BaseRootEntity
 import jakarta.persistence.*
-import org.hibernate.annotations.SQLDelete
 
-@SQLDelete(sql = "update users set deleted = true where id = ?")
 @Entity
 @Table(name = "users")
 class User(
