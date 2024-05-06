@@ -58,12 +58,15 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
   final ImagePicker picker = ImagePicker();
 
   Future<String> getImage() async {
+    // PermissionStatus status = await Permission.photos.status;
+    // if (!status.isGranted) {
+    //   return "게시글 사진 업로드를 위해\n사진 접근 허용을 해주세요";
+    // }
     List<XFile> images = [];
     try {
       images = await picker.pickMultiImage();
     } catch (e) {
       debugPrint("getImageError : $e");
-
       ref.watch(cloudWatchStateProvider.notifier).add(e.toString());
       return "게시글 사진 업로드를 위해 사진 접근 허용을 해주세요. 설정에서 이를 변경할 수 있습니다."; // permission access need!
     }
