@@ -9,9 +9,9 @@ part of 'comment_response_model.dart';
 CommentResponseModel _$CommentResponseModelFromJson(
         Map<String, dynamic> json) =>
     CommentResponseModel(
-      json['id'] as int,
-      json['userId'] as int,
-      json['postId'] as int,
+      (json['id'] as num).toInt(),
+      (json['userId'] as num).toInt(),
+      (json['postId'] as num).toInt(),
       json['content'] as String,
       json['createdDateTime'] as String,
       json['modifiedDateTime'] as String,

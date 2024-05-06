@@ -641,6 +641,7 @@ class BottomView extends ConsumerWidget {
                     replyId: -1,
                     isClicked: false,
                     isMine: false,
+                    userId: -1,
                   ),
                 ],
               ),

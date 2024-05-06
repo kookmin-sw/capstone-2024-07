@@ -198,7 +198,11 @@
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				ADF198237E3E5683F0FAC9AD /* [CP] Embed Pods Frameworks */,
+<<<<<<< HEAD
 				5CD6E15A45CC7EF17EB04899 /* [CP] Copy Pods Resources */,
+=======
+				BC9DF3D2FB9D4E7B73E10365 /* [CP] Copy Pods Resources */,
+>>>>>>> 40eef43 (feat : 사진 접근 권한 요청 메시지 변경 및 거부시 설정으로 이동)
 			);
 			buildRules = (
 			);
@@ -355,6 +359,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BC9DF3D2FB9D4E7B73E10365 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E2307C21059A208728E8F61D /* [CP] Check Pods Manifest.lock */ = {

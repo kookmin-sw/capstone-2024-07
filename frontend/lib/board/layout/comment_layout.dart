@@ -120,6 +120,7 @@ class _CommentState extends ConsumerState<Comment>
                           replyId: -1,
                           isClicked: widget.comment.isLiked,
                           isMine: widget.isMine,
+                          userId: widget.comment.userId,
                         ),
                         TextWithIcon(
                           icon: Icons.chat_outlined,
@@ -131,6 +132,7 @@ class _CommentState extends ConsumerState<Comment>
                           replyId: -1,
                           isClicked: false,
                           isMine: widget.isMine,
+                          userId: widget.comment.userId,
                         ),
                         TextWithIcon(
                           icon: Icons.more_horiz,
@@ -142,6 +144,7 @@ class _CommentState extends ConsumerState<Comment>
                           replyId: -1,
                           isClicked: false,
                           isMine: widget.isMine,
+                          userId: widget.comment.userId,
                         ),
                       ],
                     ),

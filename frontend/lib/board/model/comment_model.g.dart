@@ -7,9 +7,10 @@ part of 'comment_model.dart';
 // **************************************************************************
 
 CommentModel _$CommentModelFromJson(Map<String, dynamic> json) => CommentModel(
-      json['id'] as int,
+      (json['id'] as num).toInt(),
       UserInformation.fromJson(json['userInformation'] as Map<String, dynamic>),
-      json['postId'] as int,
+      (json['userId'] as num).toInt(),
+      (json['postId'] as num).toInt(),
       json['content'] as String,
       json['deleted'] as bool,
       LikeCount.fromJson(json['likeCount'] as Map<String, dynamic>),
@@ -24,6 +25,7 @@ Map<String, dynamic> _$CommentModelToJson(CommentModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'userInformation': instance.userInformation,
+      'userId': instance.userId,
       'postId': instance.postId,
       'content': instance.content,
       'likeCount': instance.likeCount,
@@ -51,7 +53,7 @@ LikeCount _$LikeCountFromJson(Map<String, dynamic> json) => LikeCount(
       likes: (json['likes'] as List<dynamic>)
           .map((e) => Likes.fromJson(e as Map<String, dynamic>))
           .toList(),
-      count: json['count'] as int,
+      count: (json['count'] as num).toInt(),
     );
 
 Map<String, dynamic> _$LikeCountToJson(LikeCount instance) => <String, dynamic>{
@@ -60,7 +62,7 @@ Map<String, dynamic> _$LikeCountToJson(LikeCount instance) => <String, dynamic>{
     };
 
 Likes _$LikesFromJson(Map<String, dynamic> json) => Likes(
-      json['usersId'] as int,
+      (json['usersId'] as num).toInt(),
     );
 
 Map<String, dynamic> _$LikesToJson(Likes instance) => <String, dynamic>{
@@ -68,10 +70,10 @@ Map<String, dynamic> _$LikesToJson(Likes instance) => <String, dynamic>{
     };
 
 ReplyModel _$ReplyModelFromJson(Map<String, dynamic> json) => ReplyModel(
-      json['id'] as int,
-      json['userId'] as int,
+      (json['id'] as num).toInt(),
+      (json['userId'] as num).toInt(),
       UserInformation.fromJson(json['userInformation'] as Map<String, dynamic>),
-      json['commentId'] as int,
+      (json['commentId'] as num).toInt(),
       json['content'] as String,
       LikeCount.fromJson(json['likeCount'] as Map<String, dynamic>),
       json['createdAt'] as String,
