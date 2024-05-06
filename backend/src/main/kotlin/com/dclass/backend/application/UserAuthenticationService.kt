@@ -10,10 +10,7 @@ import com.dclass.backend.domain.belong.Belong
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.department.DepartmentRepository
 import com.dclass.backend.domain.department.getByTitleOrThrow
-import com.dclass.backend.domain.user.UniversityRepository
-import com.dclass.backend.domain.user.UserRepository
-import com.dclass.backend.domain.user.existsByEmail
-import com.dclass.backend.domain.user.getByEmailOrThrow
+import com.dclass.backend.domain.user.*
 import com.dclass.backend.exception.university.UniversityException
 import com.dclass.backend.exception.university.UniversityExceptionType.NOT_FOUND_UNIVERSITY
 import com.dclass.backend.exception.user.UserException
@@ -36,7 +33,10 @@ class UserAuthenticationService(
     fun generateTokenByRegister(request: RegisterUserRequest): LoginUserResponse {
         require(request.password == request.confirmPassword) { "비밀번호가 일치하지 않습니다." }
 
-        if (userRepository.existsByEmail(request.email)) {
+        userRepository.findByEmail(request.email)?.let {
+            if (it.isDeleted()) {
+                throw UserException(RESIGNED_USER)
+            }
             throw UserException(ALREADY_EXIST_USER)
         }
 
