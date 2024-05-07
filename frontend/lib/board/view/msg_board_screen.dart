@@ -156,7 +156,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
               children: [
                 Flexible(
                   child: Text(
-                    "신고 사유를 선택해주세요.\n신고 사유에 맞지 않는 신고일 경우,\n해당 신고는 처리되지 않습니다.\n누적 신고횟수가 3회 이상인 유저는\n구절 작성을 할 수 없게 됩니다.",
+                    "신고 사유를 선택해주세요.\n신고 사유에 맞지 않는 신고일 경우,\n해당 신고는 처리되지 않습니다.\n누적 신고횟수가 10회 이상인 게시글은 삭제되고\n해당 글의 작성자는 일정 기간 글과 댓글을 작성할 수 없게 됩니다.",
                     overflow: TextOverflow.visible,
                     textAlign: TextAlign.center,
                     style: TextStyle(
