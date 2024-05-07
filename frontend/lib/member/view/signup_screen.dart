@@ -30,7 +30,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   String major1 = "";
   String major2 = "";
 
-  bool isAccept = false;
+  bool isPrivacyPolicyAccept = false;
+  bool isContentPolicyAccept = false;
 
   //이름, 닉네임 이메일, 비밀번호, 인증번호 검증
   bool isNameNull = true;
@@ -73,7 +74,17 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 3. 개인정보의 제3자 제공에 대한 동의
 가. 해당사항없음
 
-디클(DeCl)이 위와 같이 개인정보를 수집ᆞ이용하는 것에 동의합니다.
+나는 디클(DeCl)이 위와 같이 개인정보를 수집ᆞ이용하는 것에 동의합니다.
+  ''';
+
+  final String contentPolicy = '''
+  디클은 안전하고 즐거운 커뮤니티 운영을 위해 커뮤니티 운영 규칙을 제정하여 운영하고 있습니다.
+  
+  불법, 도박, 음란물, 도배, 욕설, 자살 관련 표현 등 사용자들에게 불쾌감을 줄 수 있는 부적절한 모든 컨텐츠(글, 댓글, 사진 등)를 생성하지 않도록 유의해주세요.
+  
+  위반 시 게시글이 삭제되고 서비스 이용이 일정기간 제한될 수 있으며, 관련된 법적 문제 발생시 철저한 불관용 원칙을 적용합니다.
+  
+  나는 디클(DeCl)이 위와 같이 커뮤니티 운영 규칙을 적용하는 것에 대해 동의합니다.
   ''';
 
   @override
@@ -293,7 +304,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           );
                         }
                       },
-                child: const Text('전송'),
+                child: const Text(
+                  '전송',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
@@ -373,7 +387,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           );
                         }
                       },
-                child: const Text('확인'),
+                child: const Text(
+                  '확인',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
@@ -656,63 +673,135 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   Widget _renderIsAcceptCheckbox() {
     return Padding(
       padding: const EdgeInsets.only(bottom: 30.0),
-      child: Row(
+      child: Column(
         children: [
-          const Text('개인정보 수집 및 이용 동의'),
-          Checkbox(
-            activeColor: PRIMARY_COLOR,
-            value: isAccept,
-            onChanged: (bool? value) {
-              setState(() {
-                isAccept = value ?? false;
-              });
-            },
-          ),
-          TextButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: PRIMARY_COLOR,
-                minimumSize: const Size(80.0, 30.0),
+          Row(
+            children: [
+              const Text('개인정보 수집 및 이용 동의'),
+              Checkbox(
+                activeColor: PRIMARY_COLOR,
+                value: isPrivacyPolicyAccept,
+                onChanged: (bool? value) {
+                  setState(() {
+                    isPrivacyPolicyAccept = value ?? false;
+                  });
+                },
               ),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      content: SingleChildScrollView(
-                        child: Text(
-                          privacyPolicy,
-                          overflow: TextOverflow.visible,
-                          style: const TextStyle(
-                            fontSize: 12.0,
-                          ),
-                          softWrap: true,
-                        ),
-                      ),
-                      actions: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: PRIMARY_COLOR,
-                            textStyle: const TextStyle(
-                              color: Colors.white,
+              TextButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: PRIMARY_COLOR,
+                  minimumSize: const Size(80.0, 30.0),
+                ),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        content: SingleChildScrollView(
+                          child: Text(
+                            privacyPolicy,
+                            overflow: TextOverflow.visible,
+                            style: const TextStyle(
+                              fontSize: 12.0,
                             ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Center(
-                            child: Text('닫기'),
+                            softWrap: true,
                           ),
                         ),
-                      ],
+                        actions: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: PRIMARY_COLOR,
+                              textStyle: const TextStyle(
+                                color: Colors.white,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Center(
+                              child: Text(
+                                '닫기',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: const Text(
+                  '내용 확인',
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              const Text('콘텐츠 생성 및 이용 관련 동의'),
+              Checkbox(
+                activeColor: PRIMARY_COLOR,
+                value: isContentPolicyAccept,
+                onChanged: (bool? value) {
+                  setState(() {
+                    isContentPolicyAccept = value ?? false;
+                  });
+                },
+              ),
+              TextButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: PRIMARY_COLOR,
+                    minimumSize: const Size(80.0, 30.0),
+                  ),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          content: SingleChildScrollView(
+                            child: Text(
+                              contentPolicy,
+                              overflow: TextOverflow.visible,
+                              style: const TextStyle(
+                                fontSize: 12.0,
+                              ),
+                              softWrap: true,
+                            ),
+                          ),
+                          actions: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: PRIMARY_COLOR,
+                                textStyle: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Center(
+                                child: Text(
+                                  '닫기',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     );
                   },
-                );
-              },
-              child: const Text('내용 확인')),
+                  child: const Text('내용 확인')),
+            ],
+          ),
         ],
       ),
     );
@@ -742,7 +831,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             !isPasswordDifferent &&
             !isNicknameNull &&
             !isNameNull &&
-            isAccept) {
+            isPrivacyPolicyAccept) {
           try {
             final resp = await dio.post(
               '$ip/api/users/register',
@@ -815,7 +904,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           );
         }
       },
-      child: const Text('회원가입하기'),
+      child: const Text(
+        '회원가입하기',
+        style: TextStyle(color: Colors.white),
+      ),
     );
   }
 
