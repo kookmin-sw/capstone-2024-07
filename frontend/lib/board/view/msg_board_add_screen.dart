@@ -537,10 +537,13 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                         SizedBox(
                           width: 5,
                         ),
-                        Text(
-                          "개인정보 노출이나 모욕적인 말이 있는지 확인해주세요.",
-                          style: TextStyle(
-                            fontSize: 10,
+                        Flexible(
+                          child: Text(
+                            "부적절하거나 불쾌감을 줄 수 있는 컨텐츠는 제재를 받을 수 있습니다.",
+                            overflow: TextOverflow.visible,
+                            style: TextStyle(
+                              fontSize: 10,
+                            ),
                           ),
                         ),
                       ],

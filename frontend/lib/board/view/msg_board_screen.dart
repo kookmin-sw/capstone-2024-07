@@ -141,7 +141,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
       'reason': reason,
     };
     await ref.read(reportProvider).post(data);
-    notAllowed("신고되었습니다.");
+    notAllowed("신고되었습니다.\n검토까지는 최대 24시간 소요됩니다.");
   }
 
   void selectReportReason() {
@@ -156,8 +156,9 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
               children: [
                 Flexible(
                   child: Text(
-                    "신고 사유를 선택해주세요.",
-                    overflow: TextOverflow.ellipsis,
+                    "신고 사유를 선택해주세요.\n신고 사유에 맞지 않는 신고일 경우,\n해당 신고는 처리되지 않습니다.\n누적 신고횟수가 3회 이상인 유저는\n구절 작성을 할 수 없게 됩니다.",
+                    overflow: TextOverflow.visible,
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 13,
