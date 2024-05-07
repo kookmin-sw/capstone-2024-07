@@ -24,7 +24,7 @@ class ReportService(
 
     private fun removeIfReportAccumulated(request: UpdateReportRequest) {
         val reportCount = reportRepository.countReportById(request.reportedObjectId, request.reportType)
-        if (reportCount >= 2) {
+        if (reportCount >= 10) {
             eventPublisher.publishEvent(ReportEvent.create(request.reportedObjectId, request.reportType))
         }
     }
