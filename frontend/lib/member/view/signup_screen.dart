@@ -831,7 +831,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             !isPasswordDifferent &&
             !isNicknameNull &&
             !isNameNull &&
-            isPrivacyPolicyAccept) {
+            isPrivacyPolicyAccept &&
+            isContentPolicyAccept
+        ) {
           try {
             final resp = await dio.post(
               '$ip/api/users/register',
