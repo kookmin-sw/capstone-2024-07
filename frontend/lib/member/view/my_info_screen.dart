@@ -28,6 +28,7 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
     final dio = ref.watch(dioProvider);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -140,7 +141,7 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
           ),
           const Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              padding: EdgeInsets.symmetric(vertical: 12.0),
               child: Text(
                 "내 정보",
                 style: TextStyle(
@@ -325,12 +326,12 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
 
     final divisionAndDepartments = departmentState.divisionAndDepartments;
 
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             '본전공 선택',
             style: TextStyle(
               color: BODY_TEXT_COLOR,
@@ -341,7 +342,7 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
+                SizedBox(
                   width: 240,
                   child: DropdownButton<String>(
                     isExpanded: true,
@@ -367,21 +368,19 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
                               .read(
                                   firstDepartmentListNotifierProvider.notifier)
                               .setSelectedDivision(value);
-                          if (selectedDepartment != null) {
-                            ref
-                                .read(firstDepartmentListNotifierProvider
-                                    .notifier)
-                                .setSelectedDepartment(selectedDepartment!);
-                            setState(() {
-                              selectedMajor = selectedDepartment;
-                            });
-                          }
+                          ref
+                              .read(
+                                  firstDepartmentListNotifierProvider.notifier)
+                              .setSelectedDepartment(selectedDepartment);
+                          setState(() {
+                            selectedMajor = selectedDepartment;
+                          });
                         });
                       }
                     },
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: 240,
                   child: DropdownButton<String>(
                     isExpanded: true,
@@ -429,12 +428,12 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
     final divisionAndDepartments = departmentState.divisionAndDepartments;
 
     return Container(
-      padding: EdgeInsets.only(top: 10.0),
+      padding: const EdgeInsets.only(top: 10.0),
       width: MediaQuery.of(context).size.width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             '복수전공 선택',
             style: TextStyle(
               color: BODY_TEXT_COLOR,
@@ -445,7 +444,7 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
+                SizedBox(
                   width: 240,
                   child: DropdownButton<String>(
                     isExpanded: true,
@@ -471,21 +470,19 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
                               .read(
                                   secondDepartmentListNotifierProvider.notifier)
                               .setSelectedDivision(value);
-                          if (selectedDepartment != null) {
-                            ref
-                                .read(secondDepartmentListNotifierProvider
-                                    .notifier)
-                                .setSelectedDepartment(selectedDepartment!);
-                            setState(() {
-                              selectedMinor = selectedDepartment;
-                            });
-                          }
+                          ref
+                              .read(
+                                  secondDepartmentListNotifierProvider.notifier)
+                              .setSelectedDepartment(selectedDepartment);
+                          setState(() {
+                            selectedMinor = selectedDepartment;
+                          });
                         });
                       }
                     },
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: 240,
                   child: DropdownButton<String>(
                     isExpanded: true,
