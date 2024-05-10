@@ -36,6 +36,7 @@ class _MyPostScreenState extends ConsumerState<MyPostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -68,7 +69,7 @@ class _MyPostScreenState extends ConsumerState<MyPostScreen> {
           ),
           const Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              padding: EdgeInsets.symmetric(vertical: 12.0),
               child: Text(
                 "내가 쓴 글",
                 style: TextStyle(

@@ -44,6 +44,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -102,15 +103,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     ),
                     enabledBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                      borderSide: BorderSide(
-                          color: PRIMARY_COLOR,
-                          width: 1.5),
+                      borderSide: BorderSide(color: PRIMARY_COLOR, width: 1.5),
                     ),
                     focusedBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                      borderSide: BorderSide(
-                          color: PRIMARY_COLOR,
-                          width: 2.5),
+                      borderSide: BorderSide(color: PRIMARY_COLOR, width: 2.5),
                     ),
                   ),
                   onChanged: (String value) {
@@ -129,7 +126,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   child: TextButton(
                     onPressed: () {
                       ref.read(searchKeywordProvider.notifier).state = '';
-                      ref.read(searchStateNotifierProvider.notifier).resetSearchResults();
+                      ref
+                          .read(searchStateNotifierProvider.notifier)
+                          .resetSearchResults();
                       setState(() {
                         searchKeyword = '';
                         isSearched = false;
@@ -152,7 +151,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       setState(() {
         isSearched = true;
       });
-      ref.read(searchStateNotifierProvider.notifier).updateAndFetch(searchKeyword);
+      ref
+          .read(searchStateNotifierProvider.notifier)
+          .updateAndFetch(searchKeyword);
     }
   }
 

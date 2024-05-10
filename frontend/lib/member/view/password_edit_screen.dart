@@ -144,7 +144,7 @@ class _PasswordEditScreenState extends ConsumerState<PasswordEditScreen> {
           ),
           if (isPasswordNull)
             const Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+              padding: EdgeInsets.only(top: 8.0),
               child: Text(
                 '비밀번호는 빈칸일 수 없습니다.',
                 style: TextStyle(
@@ -153,8 +153,8 @@ class _PasswordEditScreenState extends ConsumerState<PasswordEditScreen> {
               ),
             ),
           if (isPasswordDifferent)
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 8.0),
               child: Text(
                 '비밀번호가 일치하지 않습니다.',
                 style: TextStyle(

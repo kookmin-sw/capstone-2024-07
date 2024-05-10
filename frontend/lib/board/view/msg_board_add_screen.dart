@@ -401,6 +401,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   Widget build(BuildContext context) {
     return Stack(children: [
       Scaffold(
+        backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: PRIMARY10_COLOR,

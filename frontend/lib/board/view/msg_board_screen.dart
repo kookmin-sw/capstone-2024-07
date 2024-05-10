@@ -751,6 +751,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
       firstTime = false;
     }
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: PRIMARY10_COLOR,

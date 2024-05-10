@@ -36,6 +36,7 @@ class _MyCommentScreenState extends ConsumerState<MyCommentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -68,7 +69,7 @@ class _MyCommentScreenState extends ConsumerState<MyCommentScreen> {
           ),
           const Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              padding: EdgeInsets.symmetric(vertical: 12.0),
               child: Text(
                 "댓글단 글",
                 style: TextStyle(
@@ -104,7 +105,7 @@ class _MyCommentScreenState extends ConsumerState<MyCommentScreen> {
     return RefreshIndicator(
       onRefresh: () async {
         ref.read(myCommentStateNotifierProvider.notifier).lastId =
-        9223372036854775807;
+            9223372036854775807;
         await ref
             .read(myCommentStateNotifierProvider.notifier)
             .paginate(forceRefetch: true);

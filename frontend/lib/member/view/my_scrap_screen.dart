@@ -36,6 +36,7 @@ class _MyScrapScreenState extends ConsumerState<MyScrapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -68,7 +69,7 @@ class _MyScrapScreenState extends ConsumerState<MyScrapScreen> {
           ),
           const Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              padding: EdgeInsets.symmetric(vertical: 12.0),
               child: Text(
                 "스크랩한 글",
                 style: TextStyle(
@@ -104,7 +105,7 @@ class _MyScrapScreenState extends ConsumerState<MyScrapScreen> {
     return RefreshIndicator(
       onRefresh: () async {
         ref.read(myScrapStateNotifierProvider.notifier).lastId =
-        9223372036854775807;
+            9223372036854775807;
         await ref
             .read(myScrapStateNotifierProvider.notifier)
             .paginate(forceRefetch: true);
@@ -140,8 +141,8 @@ class _MyScrapScreenState extends ConsumerState<MyScrapScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => MsgBoardScreen(
-                      board: pItem,
-                    ),
+                          board: pItem,
+                        ),
                     fullscreenDialog: true),
               );
             },
