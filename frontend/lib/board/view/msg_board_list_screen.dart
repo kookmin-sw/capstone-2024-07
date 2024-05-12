@@ -348,6 +348,14 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
       }
     }
 
+    if (cp.data.isEmpty) {
+      return Center(
+        child: Text("해당 게시판에 작성된 게시글이 없습니다.",
+          style: TextStyle(color: BODY_TEXT_COLOR, fontSize: 16.0),
+        ),
+      );
+    }
+
     return RefreshIndicator(
       onRefresh: () async {
         ref.read(boardStateNotifierProvider.notifier).lastId =
