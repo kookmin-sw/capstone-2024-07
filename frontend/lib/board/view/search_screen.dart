@@ -176,6 +176,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
     final cp = data as CursorPaginationModel;
 
+    if (cp.data.isEmpty) {
+      return Center(
+        child: Text("검색 결과가 없습니다.",
+          style: TextStyle(color: BODY_TEXT_COLOR, fontSize: 16.0),
+        ),
+      );
+    }
+
     return RefreshIndicator(
       onRefresh: () async {
         ref.read(searchStateNotifierProvider.notifier).lastId =
