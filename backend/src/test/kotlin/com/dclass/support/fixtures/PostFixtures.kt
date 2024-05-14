@@ -61,11 +61,13 @@ fun updatePostRequest(
     title: String = "수정된 제목",
     content: String = "수정된 내용",
     images: List<String> = listOf(),
+    communityTitle: String = "JOB",
 ): UpdatePostRequest {
     return UpdatePostRequest(
         postId = postId,
         title = title,
         content = content,
-        images = images
+        images = images,
+        communityTitle = communityTitle
     )
 }
