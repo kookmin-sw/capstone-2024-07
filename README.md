@@ -13,7 +13,7 @@
 
 ### 2. 소개 영상
 
-https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/06e7b8d4-30f7-4b73-8a71-b39afbe89cf9
+https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/4734f74d-356d-402d-a396-c28446fc55e6
 
 ### 3. 팀 소개
 
