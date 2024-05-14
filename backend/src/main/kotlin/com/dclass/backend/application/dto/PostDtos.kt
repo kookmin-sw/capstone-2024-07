@@ -344,6 +344,12 @@ data class UpdatePostRequest(
     val content: String,
 
     @Schema(
+        description = "게시글이 속한 커뮤니티의 타이틀",
+        example = "자유게시판"
+    )
+    var communityTitle: String,
+
+    @Schema(
         description = "게시글의 이미지 URL 리스트",
         example = "['이미지 URL']"
     )

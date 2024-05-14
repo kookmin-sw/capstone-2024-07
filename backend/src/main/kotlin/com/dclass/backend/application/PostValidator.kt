@@ -21,7 +21,7 @@ class PostValidator(
     private val postRepository: PostRepository,
     private val blocklistRepository: BlocklistRepository
 ) {
-    fun validateCreatePost(userId: Long, communityTitle: String): Community {
+    fun validate(userId: Long, communityTitle: String): Community {
         blocklistRepository.findFirstByUserIdOrderByCreatedDateTimeDesc(userId)?.validate()
 
         val belong = belongRepository.getOrThrow(userId)

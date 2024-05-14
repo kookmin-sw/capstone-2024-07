@@ -18,7 +18,7 @@ class Post(
     val userId: Long,
 
     @Column(nullable = false)
-    val communityId: Long,
+    var communityId: Long,
 
     title: String = "",
 
@@ -77,11 +77,12 @@ class Post(
     val thumbnail: String?
         get() = _images.firstOrNull()?.imageKey
 
-    fun update(title: String, content: String, images: List<Image>) {
+    fun update(title: String, content: String, images: List<Image>, communityId: Long) {
         this.title = title
         this.content = content
         this._images.clear()
         this._images.addAll(images)
+        this.communityId = communityId
         this.modifiedDateTime = LocalDateTime.now()
     }
 
