@@ -14,6 +14,8 @@
 ### 2. 소개 영상
 [![소개 영상](http://img.youtube.com/vi/f8lyoE0JIKA/0.jpg)](https://youtu.be/f8lyoE0JIKA?si=rLR_N2X6oFqUPunp)
 
+https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/ce4c876f-523f-494e-8ff0-c76241b4947c
+
 ### 3. 팀 소개
 
 |                                                                         Frontend                                                                          |                                                                         Frontend                                                                          |                                                                          Backend                                                                          |                                                                          Backend                                                                          |
