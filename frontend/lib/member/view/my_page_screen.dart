@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_client_sse/flutter_client_sse.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/member/view/my_info_screen.dart';
@@ -241,6 +242,8 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
                 },
               );
             }
+
+            SSEClient.unsubscribeFromSSE();
           },
         );
       },

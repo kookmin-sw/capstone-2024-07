@@ -12,6 +12,7 @@ import 'package:frontend/common/const/data.dart';
 import 'package:frontend/common/provider/secure_storage_provider.dart';
 import 'package:flutter_local_notifications/src/platform_specifics/android/enums.dart'
     as noti;
+import 'package:frontend/member/provider/member_state_notifier_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class NotificationNotifier extends StateNotifier<NotificationModel> {
@@ -119,9 +120,14 @@ class NotificationNotifier extends StateNotifier<NotificationModel> {
       if (heartbeatCount > 18) {
         SSEClient.unsubscribeFromSSE();
       }
-    }).onError((e) {
+    }).onError((e) async {
       debugPrint("SSE-Error : ${e.toString()}");
-      listen(retryCount + 1);
+      final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
+      final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
+
+      if (refreshToken != null && accessToken != null) {
+        listen(retryCount + 1);
+      }
     });
   }
 }
