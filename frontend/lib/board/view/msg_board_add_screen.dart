@@ -254,6 +254,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
 
     if (widget.isEdit) {
       final requestData = {
+        'communityTitle': categoryCodesList[selectCategory],
         'postId': widget.board.id,
         'title': title,
         'content': content,
