@@ -1,10 +1,6 @@
 <div align="center">
 <img src="https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/a6255c3f-ff7a-43b7-8e14-7e1199be3ac0" width="250px">
 <h1>디클</h1>
-
-| ![Play store](https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/1d1f1759-112d-4aee-9e56-1ebc678ee82b) | ![App store](https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/b497c251-fa9a-4880-ba53-05d32d3a519a) |
-| ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
-
 </div>
 
 
@@ -128,3 +124,7 @@
     ```
     flutter run
     ```
+### 7. Document
+
+- [최종 포스터](https://github.com/kookmin-sw/capstone-2024-07/files/15303472/Decl_Capstone.pdf)
+- [최종 발표자료](https://github.com/kookmin-sw/capstone-2024-07/files/15303501/7._._.pptx)

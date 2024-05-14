@@ -128,3 +128,7 @@
       ```
       flutter run
       ```
+### 7. Document
+
+- [최종 포스터](https://github.com/kookmin-sw/capstone-2024-07/files/15303472/Decl_Capstone.pdf)
+- [최종 발표자료](https://github.com/kookmin-sw/capstone-2024-07/files/15303501/7._._.pptx)
