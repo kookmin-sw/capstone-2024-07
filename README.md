@@ -136,4 +136,4 @@ https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/4734f74d-356d-402
 - [최종 포스터](https://github.com/kookmin-sw/capstone-2024-07/files/15368233/default.pdf)
 - [최종 발표자료](https://github.com/kookmin-sw/capstone-2024-07/files/15368652/-.pptx)
 - [수행결과보고서](https://github.com/kookmin-sw/capstone-2024-07/files/15329735/default.pdf)
-- [최종 보고서](https://github.com/kookmin-sw/capstone-2024-07/files/15345222/-7.docx.pdf)
+- [최종 보고서](https://github.com/kookmin-sw/capstone-2024-07/files/15426987/final.pdf)
