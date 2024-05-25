@@ -2,18 +2,19 @@
 <img src="https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/a6255c3f-ff7a-43b7-8e14-7e1199be3ac0" width="250px">
 <h1>디클</h1>
 
-| ![Play store](https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/1d1f1759-112d-4aee-9e56-1ebc678ee82b) | ![App store](https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/b497c251-fa9a-4880-ba53-05d32d3a519a) |
-| ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
+|                                                     Play Store                                                     |                                                     App Store                                                     |
+| :----------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------: |
+| <img src="https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/1d1f1759-112d-4aee-9e56-1ebc678ee82b" width="200px;" height="200px;"/> | <img src="https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/b497c251-fa9a-4880-ba53-05d32d3a519a" width="200px;" height="200px;"/> |
+
+![image](https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/07265690-0986-49e2-b73f-06e9b606811f)
 
 </div>
-
 
 ### 1. 프로젝트 소개
 - 디클(Department class)은 전국의 대학생들이 학과를 중심으로 모여 소통할 수 있는 학과별 커뮤니티 서비스입니다. 모든 유저가 자신의 소속 학교나 동아리가 아닌 학과별로 자유롭게 모여 같은 학과끼리만 이해할 수 있는 깊은 고민과 전공 관련 정보를 공유할 수 있게 돕고자 합니다.
 
 ### 2. 소개 영상
-
-https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/4734f74d-356d-402d-a396-c28446fc55e6
+[![소개 영상](http://img.youtube.com/vi/f8lyoE0JIKA/0.jpg)](https://youtu.be/f8lyoE0JIKA?si=rLR_N2X6oFqUPunp)
 
 ### 3. 팀 소개
 
@@ -135,5 +136,5 @@ https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/4734f74d-356d-402
 - [중간 발표자료](https://github.com/kookmin-sw/capstone-2024-07/files/15328685/default.pdf)
 - [최종 포스터](https://github.com/kookmin-sw/capstone-2024-07/files/15368233/default.pdf)
 - [최종 발표자료](https://github.com/kookmin-sw/capstone-2024-07/files/15368652/-.pptx)
-- [수행결과보고서](https://github.com/kookmin-sw/capstone-2024-07/files/15345152/-7.pdf)
+- [수행결과보고서](https://github.com/kookmin-sw/capstone-2024-07/files/15329735/default.pdf)
 - [최종 보고서](https://github.com/kookmin-sw/capstone-2024-07/files/15426987/final.pdf)
