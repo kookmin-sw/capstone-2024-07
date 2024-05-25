@@ -1,7 +1,9 @@
 <div align="center">
 <img src="https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/a6255c3f-ff7a-43b7-8e14-7e1199be3ac0" width="250px">
 
-<img width="826" alt="image" src="https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/9d19acb6-2774-4dfc-b023-8518f1f464b2">
+|                                                     Play Store                                                     |                                                     App Store                                                     |
+| :----------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------: |
+| ![Play store](https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/1d1f1759-112d-4aee-9e56-1ebc678ee82b) | ![App store](https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/b497c251-fa9a-4880-ba53-05d32d3a519a) |
 
 <img width="487" alt="image" src="https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/f3ddec0c-141a-483f-a80c-b87e68dd68c5">
 
