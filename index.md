@@ -13,13 +13,13 @@
 
 </div>
 
-<div align="center">
+<span align="center">
 
 |                                                     Play Store                                                     |                                                     App Store                                                     |
 | :----------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------: |
 | <img src="https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/1d1f1759-112d-4aee-9e56-1ebc678ee82b" width="200px;" height="200px;"/> | <img src="https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/b497c251-fa9a-4880-ba53-05d32d3a519a" width="200px;" height="200px;"/> |
 
-</div>
+</span>
 
 
 ### 1. 프로젝트 소개
