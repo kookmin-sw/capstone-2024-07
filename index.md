@@ -1,7 +1,7 @@
 <div align="center">
 <img src="https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/a6255c3f-ff7a-43b7-8e14-7e1199be3ac0" width="250px">
 
-<img width="487" alt="image" src="https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/f3ddec0c-141a-483f-a80c-b87e68dd68c5">
+![image](https://github.com/kookmin-sw/capstone-2024-07/assets/67682840/07265690-0986-49e2-b73f-06e9b606811f)
 
 <h1>디클</h1>
 
