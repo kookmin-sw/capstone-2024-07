@@ -760,6 +760,15 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
           ),
           shadowColor: Colors.black,
           elevation: 3,
+          leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              ref.read(commentStateProvider.notifier).add(0, -1);
+              ref.read(commentStateProvider.notifier).add(1, -1);
+              ref.read(replyStateProvider.notifier).add(1, -1);
+              Navigator.pop(context);
+            },
+          ),
           title: Text(
             categoryCodesReverseList[widget.board.communityTitle].toString(),
             style: const TextStyle(
@@ -797,6 +806,8 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     .paginate(forceRefetch: true);
               },
               child: SingleChildScrollView(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
                 child: Column(
                   children: [
                     renderBoardDetail(myId == widget.board.userId),
