@@ -783,28 +783,55 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
             ),
           ],
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: Stack(
           children: [
-            renderBoardDetail(myId == widget.board.userId),
-            RenderCommentList(
-                ref: ref,
-                controller: controller,
-                selectCommentIndex: selectCommentIndex,
-                selectReplyIndex: selectReplyIndex,
-                myEmail: myEmail,
-                myId: myId),
-            renderTextField(selectCommentIndex, selectReplyIndex),
-            KeyboardVisibilityBuilder(
-              builder: (p0, isKeyboardVisible) {
-                return isKeyboardVisible
-                    ? const SizedBox(
-                        height: 0,
-                      )
-                    : const SizedBox(
-                        height: 40,
-                      );
+            RefreshIndicator(
+              onRefresh: () async {
+                ref
+                    .read(commentPaginationProvider.notifier)
+                    .paginate(forceRefetch: true);
+                ref.read(myCommentStateNotifierProvider.notifier).lastId =
+                    9223372036854775807;
+                ref
+                    .read(myCommentStateNotifierProvider.notifier)
+                    .paginate(forceRefetch: true);
               },
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    renderBoardDetail(myId == widget.board.userId),
+                    RenderCommentList(
+                        ref: ref,
+                        controller: controller,
+                        selectCommentIndex: selectCommentIndex,
+                        selectReplyIndex: selectReplyIndex,
+                        myEmail: myEmail,
+                        myId: myId),
+                    const SizedBox(
+                      height: 100,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                renderTextField(selectCommentIndex, selectReplyIndex),
+                KeyboardVisibilityBuilder(
+                  builder: (p0, isKeyboardVisible) {
+                    return isKeyboardVisible
+                        ? const SizedBox(
+                            height: 0,
+                          )
+                        : Container(
+                            height: 40,
+                            decoration:
+                                const BoxDecoration(color: Colors.white),
+                          );
+                  },
+                ),
+              ],
             ),
           ],
         ));
@@ -946,41 +973,28 @@ class RenderCommentList extends StatelessWidget {
       }
     }
 
-    return Expanded(
-      child: RefreshIndicator(
-        onRefresh: () async {
-          ref
-              .read(commentPaginationProvider.notifier)
-              .paginate(forceRefetch: true);
-          ref.read(myCommentStateNotifierProvider.notifier).lastId =
-              9223372036854775807;
-          ref
-              .read(myCommentStateNotifierProvider.notifier)
-              .paginate(forceRefetch: true);
-        },
-        child: ListView.separated(
-          physics: const AlwaysScrollableScrollPhysics(),
-          controller: controller,
-          itemCount: cp.data.length,
-          itemBuilder: (_, index) {
-            final CommentModel comment = cp.data[index];
-            // debugPrint("$index 번째 댓글 : ${comment.content}");
-            return Comment(
-              comment: comment,
-              selectComment: selectCommentIndex[0] == comment.id ||
-                  selectCommentIndex[1] == comment.id,
-              selectReplyIndex: selectReplyIndex[1],
-              isMine: myEmail == comment.userInformation.email,
-              myId: myId,
-            );
-          },
-          separatorBuilder: (_, index) {
-            return const SizedBox(
-              height: 1.0,
-            );
-          },
-        ),
-      ),
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      controller: controller,
+      itemCount: cp.data.length,
+      itemBuilder: (_, index) {
+        final CommentModel comment = cp.data[index];
+        // debugPrint("$index 번째 댓글 : ${comment.content}");
+        return Comment(
+          comment: comment,
+          selectComment: selectCommentIndex[0] == comment.id ||
+              selectCommentIndex[1] == comment.id,
+          selectReplyIndex: selectReplyIndex[1],
+          isMine: myEmail == comment.userInformation.email,
+          myId: myId,
+        );
+      },
+      separatorBuilder: (_, index) {
+        return const SizedBox(
+          height: 1.0,
+        );
+      },
     );
   }
 }
