@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/const/categorys.dart';
@@ -8,6 +9,7 @@ import 'package:frontend/board/layout/category_circle_layout.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class Board extends ConsumerWidget {
   final MsgBoardDetailResponseModel board;
@@ -38,9 +40,46 @@ class Board extends ConsumerWidget {
     return time.replaceRange(16, time.length, "");
   }
 
+  void _launchUrl(String url) async {
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(url);
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     MsgBoardResponseModel boardForImageViewer = board;
+
+    String allText = board.postContent;
+    List<String> splitText = allText.split("\n");
+
+    List<TextSpan> spans = [];
+    for (String t in splitText) {
+      if (t.startsWith('http')) {
+        spans.add(
+          TextSpan(
+            text: '$t\n',
+            style: const TextStyle(
+              color: Colors.blue,
+              decoration: TextDecoration.underline,
+              fontSize: 10,
+            ),
+            recognizer: TapGestureRecognizer()..onTap = () => _launchUrl(t),
+          ),
+        );
+      } else {
+        spans.add(
+          TextSpan(
+            text: '$t\n',
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 10,
+            ),
+          ),
+        );
+      }
+    }
+
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -127,11 +166,17 @@ class Board extends ConsumerWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
-                    board.postContent,
+                  // Text(
+                  //   board.postContent,
+                  //   softWrap: true,
+                  //   style: const TextStyle(
+                  //     fontSize: 10,
+                  //   ),
+                  // ),
+                  RichText(
                     softWrap: true,
-                    style: const TextStyle(
-                      fontSize: 10,
+                    text: TextSpan(
+                      children: spans,
                     ),
                   ),
                   const SizedBox(
