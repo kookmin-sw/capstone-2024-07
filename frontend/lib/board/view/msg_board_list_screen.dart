@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:frontend/board/component/board_card.dart';
@@ -364,11 +365,16 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
     }
 
     if (cp.data.isEmpty) {
-      return const Center(
-        child: Text(
-          "해당 게시판에 작성된 게시글이 없습니다.",
-          style: TextStyle(color: BODY_TEXT_COLOR, fontSize: 16.0),
-        ),
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: MediaQuery.of(context).size.height/3),
+          const Text(
+            "해당 게시판에 작성된 게시글이 없습니다.",
+            style: TextStyle(color: BODY_TEXT_COLOR, fontSize: 16.0),
+          ),
+        ],
       );
     }
 
