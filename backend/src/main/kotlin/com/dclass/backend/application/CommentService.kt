@@ -13,6 +13,9 @@ import com.dclass.backend.domain.userblock.UserBlockRepository
 import com.dclass.backend.exception.comment.CommentException
 import com.dclass.backend.exception.comment.CommentExceptionType
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.orm.ObjectOptimisticLockingFailureException
+import org.springframework.retry.annotation.Backoff
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -27,12 +30,16 @@ class CommentService(
     private val eventPublisher: ApplicationEventPublisher,
     private val userBlockRepository: UserBlockRepository
 ) {
+    @Retryable(
+        ObjectOptimisticLockingFailureException::class,
+        maxAttempts = 3,
+        backoff = Backoff(delay = 500)
+    )
     fun create(userId: Long, request: CreateCommentRequest): CommentResponse {
         val post = postRepository.findByIdOrThrow(request.postId)
         val community = communityRepository.findByIdOrThrow(post.communityId)
         commentValidator.validate(userId, community)
         val comment = commentRepository.save(request.toEntity(userId))
-
 
         post.increaseCommentReplyCount()
 
@@ -50,6 +57,11 @@ class CommentService(
         comment.changeContent(request.content)
     }
 
+    @Retryable(
+        ObjectOptimisticLockingFailureException::class,
+        maxAttempts = 3,
+        backoff = Backoff(delay = 500)
+    )
     fun delete(userId: Long, request: DeleteCommentRequest) {
         val comment = commentRepository.findByIdAndUserId(request.commentId, userId)
             ?: throw CommentException(CommentExceptionType.NOT_FOUND_COMMENT)
