@@ -9,6 +9,7 @@ import com.dclass.backend.domain.post.findByIdOrThrow
 import com.dclass.backend.domain.scrap.ScrapRepository
 import com.dclass.backend.domain.userblock.UserBlockRepository
 import com.dclass.backend.exception.post.PostException
+import com.dclass.backend.exception.post.PostExceptionType
 import com.dclass.backend.exception.post.PostExceptionType.NOT_FOUND_POST
 import com.dclass.backend.infra.s3.AwsPresigner
 import com.dclass.support.domain.Image
@@ -18,6 +19,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 @Service
 @Transactional
@@ -97,7 +99,9 @@ class PostService(
     }
 
     fun create(userId: Long, request: CreatePostRequest): PostDetailResponse {
-        val community = postValidator.validate(userId, request.communityTitle,true)
+        val community = postValidator.validate(userId, request.communityTitle)
+
+        validatePostTerm(userId)
 
         val post = postRepository.save(request.toEntity(userId, community.id))
 
@@ -109,7 +113,7 @@ class PostService(
     }
 
     fun update(userId: Long, request: UpdatePostRequest): PostDetailResponse {
-        val community = postValidator.validate(userId, request.communityTitle, false)
+        val community = postValidator.validate(userId, request.communityTitle)
 
         val post = postRepository.findByIdAndUserId(request.postId, userId)
             ?: throw PostException(NOT_FOUND_POST)
@@ -150,5 +154,13 @@ class PostService(
     private fun blockedUsers(userId: Long, postResponse: PostDetailResponse) {
         val blockedUserIds = userBlockRepository.findByBlockerUserId(userId).associateBy { it.blockedUserId }
         postResponse.isBlockedUser = blockedUserIds.contains(postResponse.userId)
+    }
+
+    private fun validatePostTerm(userId: Long) {
+        val createdDateTime = postRepository.findFirstCreatedDateTimeByUserId(userId)
+        if (createdDateTime != null && createdDateTime.isAfter(LocalDateTime.now().minusMinutes(1))) {
+            throw PostException(PostExceptionType.POST_DELAY)
+        }
+
     }
 }
