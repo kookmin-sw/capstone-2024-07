@@ -14,6 +14,9 @@ import com.dclass.backend.domain.reply.getByIdOrThrow
 import com.dclass.backend.exception.comment.CommentException
 import com.dclass.backend.exception.comment.CommentExceptionType
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.orm.ObjectOptimisticLockingFailureException
+import org.springframework.retry.annotation.Backoff
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -27,6 +30,11 @@ class ReplyService(
     private val commentRepository: CommentRepository,
     private val postRepository: PostRepository
 ) {
+    @Retryable(
+        ObjectOptimisticLockingFailureException::class,
+        maxAttempts = 3,
+        backoff = Backoff(delay = 500)
+    )
     fun create(userId: Long, request: CreateReplyRequest): ReplyResponse {
         val comment = commentRepository.getByIdOrThrow(request.commentId)
 
@@ -62,6 +70,11 @@ class ReplyService(
         reply.changeContent(request.content)
     }
 
+    @Retryable(
+        ObjectOptimisticLockingFailureException::class,
+        maxAttempts = 3,
+        backoff = Backoff(delay = 500)
+    )
     fun delete(userId: Long, request: DeleteReplyRequest) {
         val reply = replyRepository.getByIdAndUserIdOrThrow(request.replyId, userId)
 
