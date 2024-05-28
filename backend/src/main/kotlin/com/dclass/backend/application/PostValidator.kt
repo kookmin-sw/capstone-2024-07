@@ -10,7 +10,6 @@ import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.post.findByIdOrThrow
 import com.dclass.backend.exception.post.PostException
 import com.dclass.backend.exception.post.PostExceptionType.FORBIDDEN_POST
-import com.dclass.backend.exception.post.PostExceptionType.POST_DELAY
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -22,7 +21,7 @@ class PostValidator(
     private val postRepository: PostRepository,
     private val blocklistRepository: BlocklistRepository
 ) {
-    fun validate(userId: Long, communityTitle: String): Community {
+    fun validate(userId: Long, communityTitle: String, isCreate: Boolean): Community {
         blocklistRepository.findFirstByUserIdOrderByCreatedDateTimeDesc(userId)?.validate()
 
         val belong = belongRepository.getOrThrow(userId)
@@ -30,10 +29,7 @@ class PostValidator(
             communityRepository.findByDepartmentIdAndTitle(belong.activated, communityTitle)
                 ?: throw PostException(FORBIDDEN_POST)
 
-        val post = postRepository.findFirstByUserIdOrderByCreatedDateTimeDesc(userId)
-        if (post != null && !post.isPostable()) {
-            throw PostException(POST_DELAY)
-        }
+        if(isCreate) postRepository.findFirstByUserIdOrderByCreatedDateTimeDesc(userId)?.isPostable()
 
         if (!belong.contain(community.departmentId)) {
             throw PostException(FORBIDDEN_POST)
