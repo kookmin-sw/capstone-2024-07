@@ -12,7 +12,6 @@ import 'package:frontend/common/const/data.dart';
 import 'package:frontend/common/provider/secure_storage_provider.dart';
 import 'package:flutter_local_notifications/src/platform_specifics/android/enums.dart'
     as noti;
-import 'package:frontend/member/provider/member_state_notifier_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class NotificationNotifier extends StateNotifier<NotificationModel> {

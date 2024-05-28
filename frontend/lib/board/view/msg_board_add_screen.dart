@@ -565,7 +565,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                       });
                     },
                     keyboardType: TextInputType.multiline,
-                    maxLines: 15,
+                    maxLines: 20,
                     style: const TextStyle(
                       fontSize: 12,
                     ),
@@ -585,6 +585,14 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
               msgBoardAddScreenState: this,
             ),
           ],
+        ),
+      ),
+      Transform.translate(
+        offset: const Offset(80.0, 570.0),
+        child: Image.asset(
+          'asset/imgs/logo.png',
+          width: 450.0,
+          opacity: const AlwaysStoppedAnimation(.2),
         ),
       ),
       isLoading
