@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -67,7 +68,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
             .read(commentPaginationProvider.notifier)
             .paginate(forceRefetch: true);
         ref.read(myCommentStateNotifierProvider.notifier).lastId =
-            9223372036854775807;
+        9223372036854775807;
         ref
             .read(myCommentStateNotifierProvider.notifier)
             .paginate(forceRefetch: true);
@@ -77,8 +78,8 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
             context,
             MaterialPageRoute(
                 builder: (context) => MsgBoardScreen(
-                      board: resp,
-                    ),
+                  board: resp,
+                ),
                 fullscreenDialog: true),
           );
         });
@@ -93,7 +94,22 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
             renderTop(),
             renderCategories(),
             Expanded(
-              child: renderBoardList(),
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  ref.read(boardStateNotifierProvider.notifier).lastId =
+                  9223372036854775807;
+                  await ref
+                      .read(boardStateNotifierProvider.notifier)
+                      .paginate(forceRefetch: true);
+                },
+                child: ListView(
+                  controller: controller,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  children: [
+                    renderBoardList(),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -163,7 +179,6 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
         ],
       ),
     );
-    //test
   }
 
   Widget renderMajorSelectBox() {
@@ -213,7 +228,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                   // 다시 paginate api 요청을 보낸다.
                   ref.read(memberStateNotifierProvider.notifier).getMe();
                   ref.read(boardStateNotifierProvider.notifier).lastId =
-                      9223372036854775807;
+                  9223372036854775807;
                   ref
                       .read(boardStateNotifierProvider.notifier)
                       .paginate(forceRefetch: true);
@@ -264,7 +279,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
               child: GestureDetector(
                 onTap: () {
                   ref.read(boardStateNotifierProvider.notifier).lastId =
-                      9223372036854775807;
+                  9223372036854775807;
                   ref
                       .read(boardStateNotifierProvider.notifier)
                       .paginate(forceRefetch: true);
@@ -349,63 +364,56 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
     }
 
     if (cp.data.isEmpty) {
-      return Center(
-        child: Text("해당 게시판에 작성된 게시글이 없습니다.",
+      return const Center(
+        child: Text(
+          "해당 게시판에 작성된 게시글이 없습니다.",
           style: TextStyle(color: BODY_TEXT_COLOR, fontSize: 16.0),
         ),
       );
     }
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        ref.read(boardStateNotifierProvider.notifier).lastId =
-            9223372036854775807;
-        await ref
-            .read(boardStateNotifierProvider.notifier)
-            .paginate(forceRefetch: true);
-      },
-      child: ListView.separated(
-        controller: controller,
-        itemCount: cp.data.length + 1,
-        itemBuilder: (_, index) {
-          if (index == cp.data.length) {
-            return Center(
-              child: cp is CursorPaginationModelFetchingMore
-                  ? const CircularProgressIndicator(
-                      color: PRIMARY_COLOR,
-                    )
-                  : const Text(
-                      'Copyright 2024. Decl Team all rights reserved.\n',
-                      style: TextStyle(
-                        color: BODY_TEXT_COLOR,
-                        fontSize: 12.0,
-                      ),
-                    ),
-            );
-          }
-
-          final MsgBoardResponseModel pItem = cp.data[index];
-
-          return GestureDetector(
-            child: BoardCard.fromModel(msgBoardResponseModel: pItem),
-            onTap: () async {
-              // 상세페이지
-              ref.read(boardDetailNotifier.notifier).add(pItem.id);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MsgBoardScreen(
-                          board: pItem,
-                        ),
-                    fullscreenDialog: true),
-              );
-            },
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: cp.data.length + 1,
+      itemBuilder: (_, index) {
+        if (index == cp.data.length) {
+          return Center(
+            child: cp is CursorPaginationModelFetchingMore
+                ? const CircularProgressIndicator(
+              color: PRIMARY_COLOR,
+            )
+                : const Text(
+              'Copyright 2024. Decl Team all rights reserved.\n',
+              style: TextStyle(
+                color: BODY_TEXT_COLOR,
+                fontSize: 12.0,
+              ),
+            ),
           );
-        },
-        separatorBuilder: (_, index) {
-          return const SizedBox(height: 1.0);
-        },
-      ),
+        }
+
+        final MsgBoardResponseModel pItem = cp.data[index];
+
+        return GestureDetector(
+          child: BoardCard.fromModel(msgBoardResponseModel: pItem),
+          onTap: () async {
+            // 상세페이지
+            ref.read(boardDetailNotifier.notifier).add(pItem.id);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MsgBoardScreen(
+                    board: pItem,
+                  ),
+                  fullscreenDialog: true),
+            );
+          },
+        );
+      },
+      separatorBuilder: (_, index) {
+        return const SizedBox(height: 1.0);
+      },
     );
   }
 }
