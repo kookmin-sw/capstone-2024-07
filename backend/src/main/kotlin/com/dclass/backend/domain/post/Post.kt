@@ -120,4 +120,8 @@ class Post(
     fun likedBy(userId: Long): Boolean {
         return postLikes.likedBy(userId)
     }
+
+    fun isPostable() = createdDateTime.isBefore(LocalDateTime.now().minusMinutes(3))
+
+
 }
