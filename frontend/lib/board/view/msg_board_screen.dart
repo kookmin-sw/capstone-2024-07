@@ -822,6 +822,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     .paginate(forceRefetch: true);
               },
               child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
                 controller: controller,
                 keyboardDismissBehavior:
                     ScrollViewKeyboardDismissBehavior.onDrag,
