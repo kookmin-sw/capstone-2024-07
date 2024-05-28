@@ -36,6 +36,9 @@ class Post(
     @Column(nullable = false)
     val createdDateTime: LocalDateTime = LocalDateTime.now(),
 
+    @Version
+    val version : Long =0L,
+
     modifiedDateTime: LocalDateTime = LocalDateTime.now(),
 
     id: Long = 0L,
