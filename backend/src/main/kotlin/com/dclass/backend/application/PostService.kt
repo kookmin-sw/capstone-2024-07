@@ -97,7 +97,7 @@ class PostService(
     }
 
     fun create(userId: Long, request: CreatePostRequest): PostDetailResponse {
-        val community = postValidator.validate(userId, request.communityTitle)
+        val community = postValidator.validate(userId, request.communityTitle,true)
 
         val post = postRepository.save(request.toEntity(userId, community.id))
 
@@ -109,7 +109,7 @@ class PostService(
     }
 
     fun update(userId: Long, request: UpdatePostRequest): PostDetailResponse {
-        val community = postValidator.validate(userId, request.communityTitle)
+        val community = postValidator.validate(userId, request.communityTitle, false)
 
         val post = postRepository.findByIdAndUserId(request.postId, userId)
             ?: throw PostException(NOT_FOUND_POST)
