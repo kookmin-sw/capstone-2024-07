@@ -18,6 +18,7 @@ import com.linecorp.kotlinjdsl.support.spring.data.jpa.extension.createQuery
 import jakarta.persistence.EntityManager
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.findByIdOrNull
+import java.time.LocalDateTime
 
 fun PostRepository.findByIdOrThrow(id: Long): Post {
     return findByIdOrNull(id) ?: throw PostException(NOT_FOUND_POST)
@@ -32,6 +33,7 @@ interface PostRepositorySupport {
     fun findPostScrollPage(request: PostScrollPageRequest): List<Post>
     fun findPostById(id: Long): PostDetailResponse
     fun findScrapPostByUserId(userId: Long): List<PostResponse>
+    fun findFirstCreatedDateTimeByUserId(userId: Long): LocalDateTime?
 
     fun findPostScrollPage(
         communityIds: List<Long>,
@@ -200,6 +202,22 @@ private class PostRepositoryImpl(
             )
         }
         return em.createQuery(query, context).setMaxResults(request.size).resultList
+    }
+
+    override fun findFirstCreatedDateTimeByUserId(userId: Long): LocalDateTime? {
+        val query = jpql {
+            select(
+                path(Post::createdDateTime)
+            ).from(
+                entity(Post::class)
+            ).where(
+                path(Post::userId).equal(userId)
+            ).orderBy(
+                path(Post::createdDateTime).desc()
+            )
+        }
+
+        return em.createQuery(query, context).resultList.firstOrNull()
     }
 
     private fun Jpql.searchOption(request: PostScrollPageRequest): Predicatable? {

@@ -121,11 +121,4 @@ class Post(
         return postLikes.likedBy(userId)
     }
 
-    fun isPostable() {
-        if (createdDateTime.isAfter(LocalDateTime.now().minusMinutes(3))) {
-            throw PostException(PostExceptionType.POST_DELAY)
-        }
-    }
-
-
 }
