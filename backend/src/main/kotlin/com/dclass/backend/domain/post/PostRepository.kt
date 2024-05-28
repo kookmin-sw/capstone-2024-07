@@ -25,6 +25,7 @@ fun PostRepository.findByIdOrThrow(id: Long): Post {
 
 interface PostRepository : JpaRepository<Post, Long>, PostRepositorySupport {
     fun findByIdAndUserId(postId: Long, userId: Long): Post?
+    fun findFirstByUserIdOrderByCreatedDateTimeDesc(userId: Long): Post?
 }
 
 interface PostRepositorySupport {
