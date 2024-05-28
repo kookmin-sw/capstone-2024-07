@@ -28,6 +28,9 @@ class User(
     @Column(nullable = false)
     private var deleted: Boolean = false
 
+    @Column
+    var lastPostDateTime: LocalDateTime? = null
+
     val name: String
         get() = information.name
 
@@ -85,4 +88,7 @@ class User(
         if (deleted) throw UserException(RESIGNED_USER)
         throw UserException(ALREADY_EXIST_USER)
     }
+
+    fun isPostable() = lastPostDateTime == null ||
+            lastPostDateTime!!.isBefore(LocalDateTime.now().minusMinutes(3))
 }

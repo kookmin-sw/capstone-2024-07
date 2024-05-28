@@ -7,8 +7,11 @@ import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.post.findByIdOrThrow
 import com.dclass.backend.domain.scrap.ScrapRepository
+import com.dclass.backend.domain.user.UserRepository
+import com.dclass.backend.domain.user.getOrThrow
 import com.dclass.backend.domain.userblock.UserBlockRepository
 import com.dclass.backend.exception.post.PostException
+import com.dclass.backend.exception.post.PostExceptionType.DELAY_POST
 import com.dclass.backend.exception.post.PostExceptionType.NOT_FOUND_POST
 import com.dclass.backend.infra.s3.AwsPresigner
 import com.dclass.support.domain.Image
@@ -28,6 +31,7 @@ class PostService(
     private val communityRepository: CommunityRepository,
     private val scrapRepository: ScrapRepository,
     private val userBlockRepository: UserBlockRepository,
+    private val userRepository: UserRepository,
     private val awsPresigner: AwsPresigner
 ) {
     fun getAll(userId: Long, request: PostScrollPageRequest): PostsResponse {
@@ -99,7 +103,12 @@ class PostService(
     fun create(userId: Long, request: CreatePostRequest): PostDetailResponse {
         val community = postValidator.validate(userId, request.communityTitle)
 
+        val user = userRepository.getOrThrow(userId)
+
+        if(!user.isPostable()) throw PostException(DELAY_POST)
+
         val post = postRepository.save(request.toEntity(userId, community.id))
+        user.lastPostDateTime = post.createdDateTime
 
         return postRepository.findPostById(post.id).apply {
             images = runBlocking(Dispatchers.IO) {
