@@ -6,6 +6,7 @@ import com.dclass.support.domain.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
+import jakarta.persistence.Version
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 import java.time.LocalDateTime
@@ -26,6 +27,9 @@ class Comment(
 
     @Column(nullable = false)
     val createdDateTime: LocalDateTime = LocalDateTime.now(),
+
+    @Version
+    val version: Long = 0L,
 
     modifiedDateTime: LocalDateTime = LocalDateTime.now(),
 
