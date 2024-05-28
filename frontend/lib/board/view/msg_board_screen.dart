@@ -49,6 +49,12 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
   final ScrollController controller = ScrollController();
   final FocusNode _focusNode = FocusNode();
   bool firstTime = true;
+  double controllerOffset = 0;
+
+  void moveScroll() {
+    controller.animateTo(controller.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300), curve: Curves.ease);
+  }
 
   void scrollListener() {
     if (controller.offset > controller.position.maxScrollExtent - 150) {
@@ -58,8 +64,12 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     }
   }
 
-  void refresh() {
-    ref.read(commentPaginationProvider.notifier).paginate(forceRefetch: true);
+  void refresh() async {
+    controllerOffset = controller.offset;
+
+    await ref
+        .read(commentPaginationProvider.notifier)
+        .paginate(forceRefetch: true);
     ref.read(myCommentStateNotifierProvider.notifier).lastId =
         9223372036854775807;
     ref
@@ -67,6 +77,11 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
         .paginate(forceRefetch: true);
 
     firstTime = true;
+
+    while (controller.position.maxScrollExtent < controllerOffset) {
+      await controller.animateTo(controllerOffset + 30,
+          duration: const Duration(milliseconds: 300), curve: Curves.ease);
+    }
   }
 
   void addNewComment() async {
@@ -77,6 +92,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     try {
       await ref.watch(commentProvider).post(requestData);
       refresh();
+      moveScroll();
     } on DioException catch (e) {
       if (e.response != null) {
         ExceptionModel exc = e.response!.data;
@@ -806,6 +822,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     .paginate(forceRefetch: true);
               },
               child: SingleChildScrollView(
+                controller: controller,
                 keyboardDismissBehavior:
                     ScrollViewKeyboardDismissBehavior.onDrag,
                 child: Column(
@@ -987,7 +1004,6 @@ class RenderCommentList extends StatelessWidget {
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      controller: controller,
       itemCount: cp.data.length,
       itemBuilder: (_, index) {
         final CommentModel comment = cp.data[index];
