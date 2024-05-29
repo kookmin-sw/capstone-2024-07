@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @Service
 class BlocklistService(
-    private val blocklistRepository: BlocklistRepository
+    private val blocklistRepository: BlocklistRepository,
 ) {
     fun remain(userId: Long): RemainDurationResponse {
         val blocklist = blocklistRepository.getLatestByUserIdOrThrow(userId)

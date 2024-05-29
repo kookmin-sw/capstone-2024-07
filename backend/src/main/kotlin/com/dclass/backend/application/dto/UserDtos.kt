@@ -11,31 +11,31 @@ import jakarta.validation.constraints.Pattern
 data class UserResponse(
     @Schema(
         description = "유저의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val id: Long,
 
     @Schema(
         description = "유저의 이름",
-        example = "쿠민이"
+        example = "쿠민이",
     )
     val name: String,
 
     @Schema(
         description = "유저의 대학교 이메일",
-        example = "test@kookmin.ac.kr"
+        example = "test@kookmin.ac.kr",
     )
     val email: String,
 
     @Schema(
         description = "유저의 닉네임",
-        example = "ku-mini"
+        example = "ku-mini",
     )
     val nickname: String,
 
     @Schema(
         description = "유저의 대학교 이름",
-        example = "국민대학교"
+        example = "국민대학교",
     )
     val universityName: String,
 ) {
@@ -44,66 +44,64 @@ data class UserResponse(
         user.name,
         user.email,
         user.nickname,
-        user.universityName
+        user.universityName,
     )
 }
-
 
 data class UserResponseWithDepartment(
     val userResponse: UserResponse,
 
     @Schema(
         description = "유저의 소속 학과들의 고유 식별자 리스트",
-        example = "[1, 2]"
+        example = "[1, 2]",
     )
     val departmentIds: List<Long>,
 ) {
     constructor(user: User, belong: Belong) : this(
         UserResponse(user),
-        belong.departmentIds
+        belong.departmentIds,
     )
 }
-
 
 data class UserResponseWithDepartmentNames(
     @Schema(
         description = "유저의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val id: Long,
 
     @Schema(
         description = "유저의 이름",
-        example = "쿠민이"
+        example = "쿠민이",
     )
     val name: String,
 
     @Schema(
         description = "유저의 대학교 이메일",
-        example = "test@kookmin.ac.kr"
+        example = "test@kookmin.ac.kr",
     )
     val email: String,
 
     @Schema(
         description = "유저의 닉네임",
-        example = "ku-mini"
+        example = "ku-mini",
     )
     val nickname: String,
 
     @Schema(
         description = "유저의 대학교 이름",
-        example = "국민대학교"
+        example = "국민대학교",
     )
     val universityName: String,
     @Schema(
         description = "유저의 전공 학과 이름",
-        example = "컴퓨터공학과"
+        example = "컴퓨터공학과",
     )
     val major: String,
 
     @Schema(
         description = "유저의 부전공 학과 이름",
-        example = "소프트웨어학과"
+        example = "소프트웨어학과",
     )
     val minor: String = "",
 
@@ -117,58 +115,58 @@ data class UserResponseWithDepartmentNames(
         user.universityName,
         major = major,
         minor = minor,
-        activatedDepartment = activatedDepartment
+        activatedDepartment = activatedDepartment,
     )
 }
 
 data class RegisterUserRequest(
     @Schema(
         description = "유저의 이름",
-        example = "쿠민이"
+        example = "쿠민이",
     )
     @field:Pattern(regexp = "[가-힣]{1,30}", message = "올바른 형식의 이름이어야 합니다")
     val name: String,
 
     @Schema(
         description = "유저의 대학교 이메일",
-        example = "dasdsa@kookmin.ac.kr"
+        example = "dasdsa@kookmin.ac.kr",
     )
     @field:Email
     val email: String,
 
     @Schema(
         description = "유저의 닉네임",
-        example = "ku-mini"
+        example = "ku-mini",
     )
     val nickname: String,
 
     @Schema(
         description = "유저의 비밀번호",
-        example = "password"
+        example = "password",
     )
     val password: String,
 
     @Schema(
         description = "유저의 비밀번호 확인",
-        example = "password"
+        example = "password",
     )
     val confirmPassword: String,
 
     @Schema(
         description = "유저의 대학교 인증 코드",
-        example = "123456"
+        example = "123456",
     )
     val authenticationCode: String,
 
     @Schema(
         description = "유저의 전공 학과 이름",
-        example = "컴퓨터공학과"
+        example = "컴퓨터공학과",
     )
     val major: String,
 
     @Schema(
         description = "유저의 부전공 학과 이름",
-        example = "경영학과"
+        example = "경영학과",
     )
     val minor: String,
 ) {
@@ -180,29 +178,29 @@ data class RegisterUserRequest(
 data class AuthenticateUserRequest(
     @Schema(
         description = "유저의 대학교 이메일",
-        example = "dsadsadfqw@kookmin.ac.kr"
+        example = "dsadsadfqw@kookmin.ac.kr",
     )
     @field:Email
     val email: String,
 
     @Schema(
         description = "유저의 대학교 인증 코드",
-        example = "123456"
+        example = "123456",
     )
-    val password: Password
+    val password: Password,
 )
 
 data class ResetPasswordRequest(
     @Schema(
         description = "유저의 이름",
-        example = "쿠민이"
+        example = "쿠민이",
     )
     @field:Pattern(regexp = "[가-힣]{1,30}", message = "올바른 형식의 이름이어야 합니다")
     val name: String,
 
     @Schema(
         description = "유저의 대학교 이메일",
-        example = "daaedwqda@kookmin.ac.kr"
+        example = "daaedwqda@kookmin.ac.kr",
     )
     @field:Email
     val email: String,
@@ -211,33 +209,32 @@ data class ResetPasswordRequest(
 data class EditPasswordRequest(
     @Schema(
         description = "유저의 기존 비밀번호",
-        example = "password"
+        example = "password",
     )
     val oldPassword: Password,
 
     @Schema(
         description = "유저의 새로운 비밀번호",
-        example = "password"
+        example = "password",
     )
     val password: Password,
 
     @Schema(
         description = "유저의 새로운 비밀번호 확인",
-        example = "password"
+        example = "password",
     )
-    val confirmPassword: Password
+    val confirmPassword: Password,
 )
 
 data class LoginUserResponse(
     val accessToken: String,
-    val refreshToken: String
+    val refreshToken: String,
 )
-
 
 data class UpdateNicknameRequest(
     @Schema(
         description = "유저의 변경할 새로운 닉네임",
-        example = "ku-mini"
+        example = "ku-mini",
     )
-    val nickname: String
+    val nickname: String,
 )

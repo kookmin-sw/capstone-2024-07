@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/scrap")
 @RestController
 class ScrapController(
-    private val scrapService: ScrapService
+    private val scrapService: ScrapService,
 ) {
 
     @Operation(summary = "스크랩 조회 API", description = "스크랩한 게시물을 조회합니다.")

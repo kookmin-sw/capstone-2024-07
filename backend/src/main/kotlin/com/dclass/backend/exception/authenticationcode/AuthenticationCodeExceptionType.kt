@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus
 enum class AuthenticationCodeExceptionType(
     private val httpStatus: HttpStatus,
     private val code: String,
-    private val errorMessage: String
+    private val errorMessage: String,
 ) : BaseExceptionType {
 
     NOT_EQUAL_CODE(HttpStatus.BAD_REQUEST, "A01", "인증 코드가 일치하지 않습니다"),

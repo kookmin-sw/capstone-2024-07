@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/comments")
 @RestController
 class CommentController(
-    private val commentService: CommentService
+    private val commentService: CommentService,
 ) {
 
     @Operation(summary = "댓글 생성 API", description = "게시글에 댓글을 생성합니다.")
@@ -23,7 +23,7 @@ class CommentController(
     @PostMapping
     fun createComment(
         @LoginUser user: User,
-        @RequestBody @Valid request: CreateCommentRequest
+        @RequestBody @Valid request: CreateCommentRequest,
     ): ResponseEntity<CommentResponse> {
         val comment = commentService.create(user.id, request)
         return ResponseEntity.ok(comment)
@@ -35,7 +35,7 @@ class CommentController(
     fun updateComment(
         @LoginUser user: User,
         @PathVariable commentId: Long,
-        @RequestBody request: CommentRequest
+        @RequestBody request: CommentRequest,
     ): ResponseEntity<Unit> {
         commentService.update(user.id, UpdateCommentRequest(commentId, request.content))
         return ResponseEntity.noContent().build()
@@ -57,9 +57,9 @@ class CommentController(
     @GetMapping
     fun getComments(
         @LoginUser user: User,
-        request : CommentScrollPageRequest
+        request: CommentScrollPageRequest,
     ): ResponseEntity<CommentsResponse> {
-        val comments = commentService.findAllByPostId(user.id,request)
+        val comments = commentService.findAllByPostId(user.id, request)
         return ResponseEntity.ok(comments)
     }
 
@@ -68,7 +68,7 @@ class CommentController(
     @PostMapping("/likes")
     fun likeComment(
         @LoginUser user: User,
-        @RequestBody request: LikeCommentRequest
+        @RequestBody request: LikeCommentRequest,
     ): ResponseEntity<Unit> {
         commentService.like(user.id, request)
         return ResponseEntity.noContent().build()

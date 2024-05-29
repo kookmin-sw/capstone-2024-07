@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/post")
 @RestController
 class PostController(
-    private val postService: PostService
+    private val postService: PostService,
 ) {
 
     @Operation(summary = "게시글 조회 API", description = "게시글을 조회합니다.")
@@ -22,7 +22,7 @@ class PostController(
     @GetMapping("/{postId}")
     fun getPost(
         @LoginUser user: User,
-        @PathVariable postId: Long
+        @PathVariable postId: Long,
     ): ResponseEntity<PostDetailResponse> {
         val postResponse = postService.getById(user.id, postId)
         return ResponseEntity.ok(postResponse)
@@ -33,7 +33,7 @@ class PostController(
     @GetMapping
     fun getPosts(
         @LoginUser user: User,
-        request: PostScrollPageRequest
+        request: PostScrollPageRequest,
     ): ResponseEntity<PostsResponse> {
         return ResponseEntity.ok(postService.getAll(user.id, request))
     }
@@ -43,7 +43,7 @@ class PostController(
     @GetMapping("/mine")
     fun getMyPosts(
         @LoginUser user: User,
-        request: PostScrollPageRequest
+        request: PostScrollPageRequest,
     ): ResponseEntity<PostsResponse> {
         return ResponseEntity.ok(postService.getByUserId(user.id, request))
     }
@@ -53,7 +53,7 @@ class PostController(
     @GetMapping("/scrapped")
     fun getScrappedPosts(
         @LoginUser user: User,
-        request: PostScrollPageRequest
+        request: PostScrollPageRequest,
     ): ResponseEntity<PostsResponse> {
         return ResponseEntity.ok(postService.getScrapped(user.id, request))
     }
@@ -63,7 +63,7 @@ class PostController(
     @GetMapping("/commented")
     fun getCommentedPosts(
         @LoginUser user: User,
-        request: PostScrollPageRequest
+        request: PostScrollPageRequest,
     ): ResponseEntity<PostsResponse> {
         return ResponseEntity.ok(postService.getCommentedAndReplied(user.id, request))
     }
@@ -73,7 +73,7 @@ class PostController(
     @PostMapping
     fun createPost(
         @LoginUser user: User,
-        @RequestBody request: CreatePostRequest
+        @RequestBody request: CreatePostRequest,
     ): ResponseEntity<PostDetailResponse> {
         return ResponseEntity.ok(postService.create(user.id, request))
     }
@@ -83,7 +83,7 @@ class PostController(
     @PutMapping("/{postId}")
     fun updateLikes(
         @LoginUser user: User,
-        @PathVariable postId: Long
+        @PathVariable postId: Long,
     ): ResponseEntity<Int> {
         return ResponseEntity.ok(postService.likes(user.id, postId))
     }
@@ -93,7 +93,7 @@ class PostController(
     @PutMapping
     fun updatePost(
         @LoginUser user: User,
-        @RequestBody request: UpdatePostRequest
+        @RequestBody request: UpdatePostRequest,
     ): ResponseEntity<PostDetailResponse> {
         return ResponseEntity.ok(postService.update(user.id, request))
     }
@@ -103,10 +103,9 @@ class PostController(
     @DeleteMapping("/{postId}")
     fun deletePost(
         @LoginUser user: User,
-        @PathVariable postId: Long
+        @PathVariable postId: Long,
     ): ResponseEntity<Unit> {
         postService.delete(user.id, DeletePostRequest(postId))
         return ResponseEntity.noContent().build()
     }
 }
-

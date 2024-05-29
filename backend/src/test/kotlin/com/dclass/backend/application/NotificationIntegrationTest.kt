@@ -31,7 +31,6 @@ class NotificationIntegrationTest(
     private val universityRepository: UniversityRepository,
 ) : BehaviorSpec({
 
-
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 
     Given("특정 사용자가 알림을 구독하고 있는 경우") {
@@ -52,7 +51,9 @@ class NotificationIntegrationTest(
         }
 
         When("해당 사용자에게 알림을 전송하면") {
-            notificationService.send(NotificationCommentRequest(user.id, 1, 1, "알림내용", "FREE", NotificationType.COMMENT))
+            notificationService.send(
+                NotificationCommentRequest(user.id, 1, 1, "알림내용", "FREE", NotificationType.COMMENT),
+            )
 
             Then("알림이 전송된다") {
                 val notification = notificationRepository.findAll().first()
@@ -62,7 +63,9 @@ class NotificationIntegrationTest(
         }
 
         When("해당 사용자가 알림을 읽으면") {
-            val notification = notificationRepository.save(Notification(user.id, 1, "알림내용", type = NotificationType.COMMENT))
+            val notification = notificationRepository.save(
+                Notification(user.id, 1, "알림내용", type = NotificationType.COMMENT),
+            )
             notificationService.readNotification(notification.id)
 
             Then("알림이 읽힌다") {

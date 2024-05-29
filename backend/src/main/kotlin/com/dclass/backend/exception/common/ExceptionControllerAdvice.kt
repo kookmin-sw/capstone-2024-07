@@ -21,50 +21,50 @@ class ExceptionControllerAdvice {
         return ResponseEntity.status(type.httpStatus()).body(
             ExceptionResponse(
                 code = type.code(),
-                message = type.errorMessage()
-            )
+                message = type.errorMessage(),
+            ),
         )
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleMethodArgumentNotValid(
         request: HttpServletRequest,
-        e: MethodArgumentNotValidException
+        e: MethodArgumentNotValidException,
     ): ResponseEntity<ExceptionResponse> {
         val globalErrorMessage = e.globalErrors.joinToString(
             prefix = "[Global Error : ",
             separator = ", ",
             postfix = "], \t",
-            transform = { "${it.defaultMessage}" }
+            transform = { "${it.defaultMessage}" },
         )
         val fieldErrorMessage = e.fieldErrors.joinToString(
             prefix = "[Field Error : ",
             separator = " ",
             postfix = "]",
-            transform = { "${it.field} : ${it.defaultMessage}" }
+            transform = { "${it.field} : ${it.defaultMessage}" },
         )
         val errorMessage = globalErrorMessage + fieldErrorMessage
         log.warn("잘못된 요청이 들어왔습니다. URI: ${request.requestURI},  내용:  $errorMessage")
         return ResponseEntity.badRequest().body(
             ExceptionResponse(
                 code = "G01",
-                message = errorMessage
-            )
+                message = errorMessage,
+            ),
         )
     }
 
     @ExceptionHandler(MissingServletRequestParameterException::class)
     fun handleMissingServletRequestParameterException(
         request: HttpServletRequest,
-        e: MissingServletRequestParameterException
+        e: MissingServletRequestParameterException,
     ): ResponseEntity<ExceptionResponse> {
         val errorMessage = "${e.parameterName} 값이 누락되었습니다."
         log.warn("잘못된 요청이 들어왔습니다. URI: ${request.requestURI},  내용:  $errorMessage")
         return ResponseEntity.badRequest().body(
             ExceptionResponse(
                 code = "G02",
-                message = errorMessage
-            )
+                message = errorMessage,
+            ),
         )
     }
 
@@ -79,8 +79,8 @@ class ExceptionControllerAdvice {
         return ResponseEntity.internalServerError().body(
             ExceptionResponse(
                 code = "G03",
-                message = "서버가 응답할 수 없습니다."
-            )
+                message = "서버가 응답할 수 없습니다.",
+            ),
         )
     }
 }

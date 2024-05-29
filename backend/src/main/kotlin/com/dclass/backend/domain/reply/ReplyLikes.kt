@@ -7,7 +7,7 @@ import jakarta.persistence.FetchType
 
 @Embeddable
 class ReplyLikes(
-    likes: List<ReplyLike> = emptyList()
+    likes: List<ReplyLike> = emptyList(),
 ) {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "reply_likes")

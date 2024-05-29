@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class AwsMailSender(
-    private val client: SesClient
+    private val client: SesClient,
 ) : MailSender {
 
     override suspend fun send(toAddress: String, subjectVal: String, bodyHtml: String) {

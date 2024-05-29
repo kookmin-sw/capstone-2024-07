@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 data class CommentRequest(
     @Schema(
         description = "댓글의 내용",
-        example = "댓글 내용"
+        example = "댓글 내용",
     )
     @field:NotNull
     val content: String,
@@ -20,13 +20,13 @@ data class CommentRequest(
 data class CreateCommentRequest(
     @Schema(
         description = "게시글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val postId: Long,
 
     @Schema(
         description = "댓글의 내용",
-        example = "댓글 내용"
+        example = "댓글 내용",
     )
     @field:NotNull
     val content: String,
@@ -39,13 +39,13 @@ data class CreateCommentRequest(
 data class UpdateCommentRequest(
     @Schema(
         description = "댓글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val commentId: Long,
 
     @Schema(
         description = "댓글의 내용",
-        example = "댓글 내용"
+        example = "댓글 내용",
     )
     @field:NotNull
     val content: String,
@@ -54,7 +54,7 @@ data class UpdateCommentRequest(
 data class DeleteCommentRequest(
     @Schema(
         description = "댓글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val commentId: Long,
 )
@@ -62,46 +62,45 @@ data class DeleteCommentRequest(
 data class LikeCommentRequest(
     @Schema(
         description = "댓글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val commentId: Long,
 )
 
-
 data class CommentResponse(
     @Schema(
         description = "댓글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val id: Long,
 
     @Schema(
         description = "댓글을 작성한 유저의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val userId: Long,
 
     @Schema(
         description = "댓글이 달린 게시글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val postId: Long,
 
     @Schema(
         description = "댓글의 내용",
-        example = "댓글 내용"
+        example = "댓글 내용",
     )
     val content: String,
 
     @Schema(
         description = "댓글이 작성된 시각",
-        example = "2021-08-01T00:00:00"
+        example = "2021-08-01T00:00:00",
     )
     val createdDateTime: LocalDateTime,
 
     @Schema(
         description = "댓글이 수정된 시각",
-        example = "2021-08-01T00:00:00"
+        example = "2021-08-01T00:00:00",
     )
     val modifiedDateTime: LocalDateTime,
 ) {
@@ -111,69 +110,68 @@ data class CommentResponse(
         comment.postId,
         comment.content,
         comment.createdDateTime,
-        comment.modifiedDateTime
+        comment.modifiedDateTime,
     )
 }
-
 
 data class CommentWithUserResponse(
     @Schema(
         description = "댓글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val id: Long,
 
     @Schema(
         description = "댓글을 작성한 유저의 정보",
-        example = "1"
+        example = "1",
     )
     val userInformation: UserInformation,
 
     @Schema(
         description = "댓글을 작성한 유저의 고유 id",
-        example = "1"
+        example = "1",
     )
-    val userId : Long,
+    val userId: Long,
 
     @Schema(
         description = "댓글이 달린 게시글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val postId: Long,
 
     @Schema(
         description = "댓글의 내용",
-        example = "댓글 내용"
+        example = "댓글 내용",
     )
     val content: String,
 
     @Schema(
         description = "댓글의 좋아요 수",
-        example = "1"
+        example = "1",
     )
     val likeCount: CommentLikes,
 
     @Schema(
         description = "댓글의 삭제 여부",
-        example = "false"
+        example = "false",
     )
     val deleted: Boolean,
 
     @Schema(
         description = "댓글의 좋아요 여부",
-        example = "true"
+        example = "true",
     )
     var isLiked: Boolean,
 
     @Schema(
         description = "차단된 사용자 여부",
-        example = "true"
+        example = "true",
     )
     var isBlockedUser: Boolean,
 
     @Schema(
         description = "댓글이 작성된 시각",
-        example = "2021-08-01T00:00:00"
+        example = "2021-08-01T00:00:00",
     )
     val createdAt: LocalDateTime,
 ) {
@@ -187,38 +185,38 @@ data class CommentWithUserResponse(
         deleted = comment.isDeleted(),
         isLiked = false,
         isBlockedUser = false,
-        createdAt = comment.createdDateTime
+        createdAt = comment.createdDateTime,
     )
 }
 
 data class CommentReplyWithUserResponse(
     @Schema(
         description = "댓글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val id: Long,
 
     @Schema(
         description = "댓글을 작성한 유저의 정보",
-        example = "1"
+        example = "1",
     )
     val userInformation: UserInformation,
 
     @Schema(
         description = "댓글을 작성한 유저의 고유 id",
-        example = "1"
+        example = "1",
     )
-    val userId : Long,
+    val userId: Long,
 
     @Schema(
         description = "댓글이 달린 게시글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val postId: Long,
 
     @Schema(
         description = "댓글의 내용",
-        example = "댓글 내용"
+        example = "댓글 내용",
     )
     val content: String,
 
@@ -229,31 +227,31 @@ data class CommentReplyWithUserResponse(
             "likes": [1, 2],
             "count": 2
         }
-        """
+        """,
     )
     val likeCount: CommentLikes,
 
     @Schema(
         description = "댓글의 삭제 여부",
-        example = "false"
+        example = "false",
     )
     val deleted: Boolean,
 
     @Schema(
         description = "댓글의 좋아요 여부",
-        example = "true"
+        example = "true",
     )
     val isLiked: Boolean,
 
     @Schema(
         description = "차단된 사용자 여부",
-        example = "true"
+        example = "true",
     )
     var isBlockedUser: Boolean,
 
     @Schema(
         description = "댓글이 작성된 시각",
-        example = "2021-08-01T00:00:00"
+        example = "2021-08-01T00:00:00",
     )
     val createdAt: LocalDateTime,
 
@@ -278,14 +276,14 @@ data class CommentReplyWithUserResponse(
                 "createdAt": "2021-08-01T00:00:00"
             }
         ]
-    """
+    """,
     )
-    val replies: List<ReplyWithUserResponse>
+    val replies: List<ReplyWithUserResponse>,
 
 ) {
     constructor(
         commentWithUserResponse: CommentWithUserResponse,
-        replies: List<ReplyWithUserResponse>
+        replies: List<ReplyWithUserResponse>,
     ) : this(
         id = commentWithUserResponse.id,
         userInformation = commentWithUserResponse.userInformation,
@@ -297,26 +295,26 @@ data class CommentReplyWithUserResponse(
         isLiked = commentWithUserResponse.isLiked,
         createdAt = commentWithUserResponse.createdAt,
         isBlockedUser = commentWithUserResponse.isBlockedUser,
-        replies = replies
+        replies = replies,
     )
 }
 
 data class CommentScrollPageRequest(
     @Schema(
         description = "게시글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val postId: Long,
 
     @Schema(
         description = "댓글의 마지막 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val lastCommentId: Long? = null,
 
     @Schema(
         description = "댓글의 페이지 크기",
-        example = "20"
+        example = "20",
     )
     val size: Int = 20,
 )
@@ -324,15 +322,15 @@ data class CommentScrollPageRequest(
 data class CommentsResponse(
     @Schema(
         description = "댓글 목록",
-        example = "['댓글 목록']"
+        example = "['댓글 목록']",
     )
     val data: List<CommentReplyWithUserResponse>,
 
     @Schema(
         description = "댓글 목록의 메타데이터",
-        example = "{'count': 10, 'hasMore': true}"
+        example = "{'count': 10, 'hasMore': true}",
     )
-    val meta: MetaData
+    val meta: MetaData,
 ) {
     companion object {
         fun of(data: List<CommentReplyWithUserResponse>, limit: Int): CommentsResponse {

@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class ReplyValidator(
     private val belongRepository: BelongRepository,
-    private val blocklistRepository: BlocklistRepository
+    private val blocklistRepository: BlocklistRepository,
 ) {
     fun validate(userId: Long, departmentId: Long) {
         blocklistRepository.findFirstByUserIdOrderByCreatedDateTimeDesc(userId)?.validate()

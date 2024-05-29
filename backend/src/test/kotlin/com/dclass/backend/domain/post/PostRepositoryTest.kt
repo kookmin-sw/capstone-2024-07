@@ -11,7 +11,7 @@ import io.kotest.matchers.shouldBe
 
 @RepositoryTest
 class PostRepositoryTest(
-    private val postRepository: PostRepository
+    private val postRepository: PostRepository,
 ) : ExpectSpec({
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 

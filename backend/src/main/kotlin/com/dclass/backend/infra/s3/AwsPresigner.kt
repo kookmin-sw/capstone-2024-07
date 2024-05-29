@@ -11,7 +11,7 @@ import kotlin.time.Duration.Companion.minutes
 @Component
 class AwsPresigner(
     private val s3Properties: AwsS3Properties,
-    private val client: S3Client
+    private val client: S3Client,
 ) {
     companion object {
         const val POST_IMAGE_FOLDER = "post"

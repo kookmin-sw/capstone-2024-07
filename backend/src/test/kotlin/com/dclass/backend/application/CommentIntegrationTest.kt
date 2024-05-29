@@ -46,7 +46,7 @@ class CommentIntegrationTest(
                 comment(1, 1, "저녁 메뉴 추천 받습니다"),
                 comment(1, 2, "게임 같이 하실 분"),
                 comment(1, 3, "내 대댓글은 어디 있을까?"),
-            )
+            ),
         )
 
         val replies = replyRepository.saveAll(
@@ -56,7 +56,7 @@ class CommentIntegrationTest(
                 reply(4, comments[0].id, "글쎄 그건 간식 아냐?"),
                 reply(6, comments[1].id, "저도 같이 하고 싶어요"),
                 reply(7, comments[1].id, "무슨 게임 할거야?"),
-            )
+            ),
         )
 
         When("해당 게시글에 댓글을 작성하면") {
@@ -123,6 +123,5 @@ class CommentIntegrationTest(
                 reply!!.replyLikes.count shouldBe 1
             }
         }
-
     }
 })

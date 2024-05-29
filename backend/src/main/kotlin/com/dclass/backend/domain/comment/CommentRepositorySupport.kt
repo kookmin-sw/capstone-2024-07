@@ -16,7 +16,7 @@ interface CommentRepositorySupport {
 
 class CommentRepositoryImpl(
     private val em: EntityManager,
-    private val context: JpqlRenderContext
+    private val context: JpqlRenderContext,
 ) : CommentRepositorySupport {
 
     override fun findCommentWithUserByPostId(request: CommentScrollPageRequest): List<CommentWithUserResponse> {
@@ -31,7 +31,7 @@ class CommentRepositoryImpl(
                 path(Comment::postId).eq(request.postId),
                 path(Comment::id).greaterThan(request.lastCommentId ?: Long.MIN_VALUE),
             ).orderBy(
-                path(Comment::id).asc()
+                path(Comment::id).asc(),
             )
         }
 
@@ -43,20 +43,20 @@ class CommentRepositoryImpl(
             val replyCount = expression(Long::class, "cnt")
 
             val subquery = select(
-                count(entity(Reply::class))
+                count(entity(Reply::class)),
             ).from(
                 entity(Comment::class),
-                join(Reply::class).on(path(Comment::id).eq(path(Reply::commentId)))
+                join(Reply::class).on(path(Comment::id).eq(path(Reply::commentId))),
             ).where(
-                path(Comment::postId).eq(postId)
+                path(Comment::postId).eq(postId),
             ).asSubquery().`as`(replyCount)
 
             select(
-                count(path(Comment::id)).plus(subquery)
+                count(path(Comment::id)).plus(subquery),
             ).from(
-                entity(Comment::class)
+                entity(Comment::class),
             ).where(
-                path(Comment::postId).eq(postId)
+                path(Comment::postId).eq(postId),
             )
         }
 

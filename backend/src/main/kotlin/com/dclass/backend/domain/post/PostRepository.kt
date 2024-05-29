@@ -37,36 +37,36 @@ interface PostRepositorySupport {
 
     fun findPostScrollPage(
         communityIds: List<Long>,
-        request: PostScrollPageRequest
+        request: PostScrollPageRequest,
     ): List<PostResponse>
 
     fun findPostScrollPageByUserId(
         userId: Long,
-        request: PostScrollPageRequest
+        request: PostScrollPageRequest,
     ): List<PostResponse>
 
     fun findCommentedAndRepliedPostByUserId(
         userId: Long,
-        request: PostScrollPageRequest
+        request: PostScrollPageRequest,
     ): List<PostResponse>
 }
 
 private class PostRepositoryImpl(
     private val em: EntityManager,
-    private val context: JpqlRenderContext
+    private val context: JpqlRenderContext,
 ) : PostRepositorySupport {
     override fun findPostScrollPage(
-        request: PostScrollPageRequest
+        request: PostScrollPageRequest,
     ): List<Post> {
         val query = jpql {
             select(
-                entity(Post::class)
+                entity(Post::class),
             ).from(
-                entity(Post::class)
+                entity(Post::class),
             ).where(
-                path(Post::id).lessThan(request.lastId ?: Long.MAX_VALUE)
+                path(Post::id).lessThan(request.lastId ?: Long.MAX_VALUE),
             ).orderBy(
-                path(Post::id).desc()
+                path(Post::id).desc(),
             )
         }
 
@@ -78,13 +78,13 @@ private class PostRepositoryImpl(
             selectNew<PostDetailResponse>(
                 entity(Post::class),
                 entity(User::class),
-                path(Community::title)
+                path(Community::title),
             ).from(
                 entity(Post::class),
                 join(User::class).on(path(Post::userId).equal(path(User::id))),
-                join(Community::class).on(path(Post::communityId).equal(path(Community::id)))
+                join(Community::class).on(path(Post::communityId).equal(path(Community::id))),
             ).where(
-                path(Post::id).equal(id)
+                path(Post::id).equal(id),
             )
         }
 
@@ -93,26 +93,25 @@ private class PostRepositoryImpl(
 
     override fun findPostScrollPage(
         communityIds: List<Long>,
-        request: PostScrollPageRequest
+        request: PostScrollPageRequest,
     ): List<PostResponse> {
-
         val query = jpql {
             selectNew<PostResponse>(
                 entity(Post::class),
                 entity(User::class),
-                path(Community::title)
+                path(Community::title),
             ).from(
                 entity(Post::class),
                 join(Community::class).on(path(Post::communityId).equal(path(Community::id))),
-                join(User::class).on(path(Post::userId).equal(path(User::id)))
+                join(User::class).on(path(Post::userId).equal(path(User::id))),
             ).whereAnd(
                 path(Post::id).lessThan(request.lastId ?: Long.MAX_VALUE),
                 path(Post::communityId).`in`(communityIds),
                 request.communityTitle?.let { path(Community::title).equal(it) },
                 isHot(request),
-                searchOption(request)
+                searchOption(request),
             ).orderBy(
-                path(Post::id).desc()
+                path(Post::id).desc(),
             )
         }
         return em.createQuery(query, context).setMaxResults(request.size).resultList
@@ -120,27 +119,25 @@ private class PostRepositoryImpl(
 
     override fun findPostScrollPageByUserId(
         userId: Long,
-        request: PostScrollPageRequest
+        request: PostScrollPageRequest,
     ): List<PostResponse> {
-
         val query = jpql {
             selectNew<PostResponse>(
                 entity(Post::class),
                 entity(User::class),
-                path(Community::title)
+                path(Community::title),
             ).from(
                 entity(Post::class),
                 join(Community::class).on(path(Post::communityId).equal(path(Community::id))),
-                join(User::class).on(path(Post::userId).equal(path(User::id)))
+                join(User::class).on(path(Post::userId).equal(path(User::id))),
             ).whereAnd(
                 path(Post::id).lessThan(request.lastId ?: Long.MAX_VALUE),
                 path(Post::userId).equal(userId),
             ).orderBy(
-                path(Post::id).desc()
+                path(Post::id).desc(),
             )
         }
         return em.createQuery(query, context).setMaxResults(request.size).resultList
-
     }
 
     override fun findScrapPostByUserId(userId: Long): List<PostResponse> {
@@ -148,16 +145,16 @@ private class PostRepositoryImpl(
             selectNew<PostResponse>(
                 entity(Post::class),
                 entity(User::class),
-                path(Community::title)
+                path(Community::title),
             ).from(
                 entity(Post::class),
                 join(Community::class).on(path(Post::communityId).equal(path(Community::id))),
                 join(User::class).on(path(Post::userId).equal(path(User::id))),
-                join(Scrap::class).on(path(Post::id).equal(path(Scrap::postId)))
+                join(Scrap::class).on(path(Post::id).equal(path(Scrap::postId))),
             ).whereAnd(
-                path(Scrap::userId).equal(userId)
+                path(Scrap::userId).equal(userId),
             ).orderBy(
-                path(Post::id).desc()
+                path(Post::id).desc(),
             )
         }
         return em.createQuery(query, context).resultList
@@ -165,40 +162,39 @@ private class PostRepositoryImpl(
 
     override fun findCommentedAndRepliedPostByUserId(
         userId: Long,
-        request: PostScrollPageRequest
+        request: PostScrollPageRequest,
     ): List<PostResponse> {
         val query = jpql {
-
             val subquery = select(
-                path(Comment::postId)
+                path(Comment::postId),
             ).from(
                 entity(Comment::class),
-                join(Reply::class).on(path(Comment::id).equal(path(Reply::commentId)))
+                join(Reply::class).on(path(Comment::id).equal(path(Reply::commentId))),
             ).where(
                 path(Reply::userId).equal(userId),
             ).asSubquery()
 
             val subquery2 = select(
-                path(Comment::postId)
+                path(Comment::postId),
             ).from(
-                entity(Comment::class)
+                entity(Comment::class),
             ).where(
-                path(Comment::userId).equal(userId)
+                path(Comment::userId).equal(userId),
             ).asSubquery()
 
             selectNew<PostResponse>(
                 entity(Post::class),
                 entity(User::class),
-                path(Community::title)
+                path(Community::title),
             ).from(
                 entity(Post::class),
                 join(Community::class).on(path(Post::communityId).equal(path(Community::id))),
-                join(User::class).on(path(Post::userId).equal(path(User::id)))
+                join(User::class).on(path(Post::userId).equal(path(User::id))),
             ).whereAnd(
                 path(Post::id).`in`(subquery).or(path(Post::id).`in`(subquery2)),
                 path(Post::id).lessThan(request.lastId ?: Long.MAX_VALUE),
             ).orderBy(
-                path(Post::id).desc()
+                path(Post::id).desc(),
             )
         }
         return em.createQuery(query, context).setMaxResults(request.size).resultList
@@ -207,13 +203,13 @@ private class PostRepositoryImpl(
     override fun findFirstCreatedDateTimeByUserId(userId: Long): LocalDateTime? {
         val query = jpql {
             select(
-                path(Post::createdDateTime)
+                path(Post::createdDateTime),
             ).from(
-                entity(Post::class)
+                entity(Post::class),
             ).where(
-                path(Post::userId).equal(userId)
+                path(Post::userId).equal(userId),
             ).orderBy(
-                path(Post::createdDateTime).desc()
+                path(Post::createdDateTime).desc(),
             )
         }
 
@@ -221,14 +217,17 @@ private class PostRepositoryImpl(
     }
 
     private fun Jpql.searchOption(request: PostScrollPageRequest): Predicatable? {
-        return if (request.keyword != null) or(
-            path(Post::title).like("%${request.keyword}%"),
-            path(Post::content).like("%${request.keyword}%")
-        ) else null
+        return if (request.keyword != null) {
+            or(
+                path(Post::title).like("%${request.keyword}%"),
+                path(Post::content).like("%${request.keyword}%"),
+            )
+        } else {
+            null
+        }
     }
 
     private fun Jpql.isHot(request: PostScrollPageRequest): Predicatable? {
         return if (request.isHot) path(Post::postCount)(PostCount::likeCount).ge(10) else null
     }
-
 }

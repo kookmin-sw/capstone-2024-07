@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class UUIDBasedPasswordGenerator: PasswordGenerator {
+class UUIDBasedPasswordGenerator : PasswordGenerator {
     override fun generate(): String {
         return UUID.randomUUID().toString().take(6)
     }

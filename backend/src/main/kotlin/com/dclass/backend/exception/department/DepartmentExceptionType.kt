@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus
 enum class DepartmentExceptionType(
     private val httpStatus: HttpStatus,
     private val code: String,
-    private val errorMessage: String
+    private val errorMessage: String,
 ) : BaseExceptionType {
 
     NOT_FOUND_DEPARTMENT(HttpStatus.NOT_FOUND, "C01", "존재하지 않는 학과입니다."),

@@ -12,7 +12,7 @@ data class UserInformation(
     val email: String,
 
     @Column(nullable = false, length = 13)
-    val nickname: String
+    val nickname: String,
 ) {
     fun same(name: String): Boolean {
         return this.name == name

@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/report")
 @RestController
 class ReportController(
-    private val reportService: ReportService
+    private val reportService: ReportService,
 ) {
     @PostMapping
     fun update(
         @LoginUser user: User,
-        @RequestBody request: UpdateReportRequest
+        @RequestBody request: UpdateReportRequest,
     ): ResponseEntity<Unit> {
         reportService.report(user.id, request)
         return ResponseEntity.noContent().build()

@@ -17,9 +17,8 @@ class NotificationService(
     val notificationRepository: NotificationRepository,
 ) {
     //
-    private val DEFAULT_TIMEOUT = 1000L * 60L * 60L;
+    private val DEFAULT_TIMEOUT = 1000L * 60L * 60L
     private val log = logger()
-
 
     fun subscribe(id: Long, lastEventId: String): SseEmitter {
         val emitterId = makeTimeIncludeId(id)
@@ -31,16 +30,15 @@ class NotificationService(
             emitter,
             makeTimeIncludeId(id),
             emitterId,
-            "EventStream Created. [userId=$id]"
+            "EventStream Created. [userId=$id]",
         )
 
         if (hasLostData(lastEventId)) {
             sendLostData(emitter, lastEventId, emitterId, id)
         }
 
-        return emitter;
+        return emitter
     }
-
 
     fun send(request: NotificationRequest) {
         val notification = notificationRepository.save(request.toEntity())
@@ -75,20 +73,20 @@ class NotificationService(
         emitter: SseEmitter,
         eventId: String,
         emitterId: String,
-        data: Any
+        data: Any,
     ) {
         try {
             emitter.send(
                 SseEmitter.event()
                     .id(eventId)
                     .name(emitterId)
-                    .data(data)
+                    .data(data),
             )
             log.info("Notification sent. data=$data, emitterId=$emitterId")
         } catch (e: Exception) {
             log.error(
                 "Error occurred while sending notification. [emitterId=$emitterId]",
-                e.message
+                e.message,
             )
             emitter.completeWithError(e)
         }
@@ -102,12 +100,11 @@ class NotificationService(
         emitter: SseEmitter,
         lastEventId: String,
         emitterId: String,
-        userId: Long
+        userId: Long,
     ) {
         val eventCache = emitterRepository.findAllEventCacheStartWithByUserId(userId.toString())
         eventCache.filter { it.key > lastEventId }.forEach {
             sendNotification(emitter, it.key, emitterId, it.value)
         }
     }
-
 }

@@ -18,7 +18,7 @@ private const val BEARER = "Bearer"
 @Component
 class LoginUserResolver(
     private val jwtTokenProvider: JwtTokenProvider,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : HandlerMethodArgumentResolver {
 
     override fun supportsParameter(parameter: MethodParameter): Boolean {
@@ -29,7 +29,7 @@ class LoginUserResolver(
         parameter: MethodParameter,
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
-        binderFactory: WebDataBinderFactory?
+        binderFactory: WebDataBinderFactory?,
     ): User {
         val token = extractBearerToken(webRequest)
         jwtTokenProvider.validateToken(token)

@@ -22,7 +22,7 @@ class Belong(
 
     modifiedDateTime: LocalDateTime = LocalDateTime.now(),
 
-    id: Long = 0L
+    id: Long = 0L,
 ) : BaseEntity(id) {
 
     @Column(nullable = false)
@@ -45,7 +45,7 @@ class Belong(
     val remainingTime: Duration
         get() = Duration.between(
             LocalDateTime.now(),
-            modifiedDateTime.plusDays(CHANGE_INTERVAL_DAYS)
+            modifiedDateTime.plusDays(CHANGE_INTERVAL_DAYS),
         ).takeUnless { it.isNegative } ?: Duration.ZERO
 
     @Column(nullable = false)

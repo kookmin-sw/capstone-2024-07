@@ -25,7 +25,7 @@ data class NotificationEvent(
                 null,
                 comment.content,
                 community.title,
-                COMMENT
+                COMMENT,
             )
 
         fun replyToPostUser(post: Post, comment: Comment, reply: Reply, community: Community) =
@@ -36,7 +36,7 @@ data class NotificationEvent(
                 reply.id,
                 reply.content,
                 community.title,
-                REPLY
+                REPLY,
             )
 
         fun replyToCommentUser(post: Post, comment: Comment, reply: Reply, community: Community) =
@@ -47,7 +47,7 @@ data class NotificationEvent(
                 reply.id,
                 reply.content,
                 community.title,
-                REPLY
+                REPLY,
             )
     }
 }

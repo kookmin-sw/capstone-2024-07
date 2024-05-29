@@ -12,9 +12,9 @@ import org.hibernate.annotations.SQLRestriction
 class Department(
     @Column(nullable = false)
     val title: String = "",
-    id: Long = 0L
+    id: Long = 0L,
 ) : BaseEntity(id) {
-    
+
     @Column(nullable = false)
     private var deleted: Boolean = false
 }

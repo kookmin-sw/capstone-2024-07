@@ -17,13 +17,13 @@ class Blocklist(
     @Column(nullable = false)
     val createdDateTime: LocalDateTime = LocalDateTime.now(),
 
-    id: Long = 0L
+    id: Long = 0L,
 ) : BaseEntity(id) {
 
     val remainingTime: Duration
         get() = Duration.between(
             LocalDateTime.now(),
-            createdDateTime.plusDays(CHANGE_INTERVAL_DAYS)
+            createdDateTime.plusDays(CHANGE_INTERVAL_DAYS),
         ).takeUnless { it.isNegative } ?: Duration.ZERO
 
     fun isExpired(): Boolean = remainingTime.isZero

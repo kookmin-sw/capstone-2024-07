@@ -14,5 +14,5 @@ class UserBlock(
     @Column(nullable = false)
     val blockedUserId: Long,
 
-    id: Long = 0L
+    id: Long = 0L,
 ) : BaseEntity(id)

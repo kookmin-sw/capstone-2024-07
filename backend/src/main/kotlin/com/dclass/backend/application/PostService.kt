@@ -30,7 +30,7 @@ class PostService(
     private val communityRepository: CommunityRepository,
     private val scrapRepository: ScrapRepository,
     private val userBlockRepository: UserBlockRepository,
-    private val awsPresigner: AwsPresigner
+    private val awsPresigner: AwsPresigner,
 ) {
     fun getAll(userId: Long, request: PostScrollPageRequest): PostsResponse {
         val activatedDepartmentId = belongRepository.getOrThrow(userId).activated
@@ -161,6 +161,5 @@ class PostService(
         if (createdDateTime != null && createdDateTime.isAfter(LocalDateTime.now().minusMinutes(1))) {
             throw PostException(PostExceptionType.POST_DELAY)
         }
-
     }
 }

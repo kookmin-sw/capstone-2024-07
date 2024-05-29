@@ -28,12 +28,12 @@ class ReplyService(
     private val eventPublisher: ApplicationEventPublisher,
     private val communityRepository: CommunityRepository,
     private val commentRepository: CommentRepository,
-    private val postRepository: PostRepository
+    private val postRepository: PostRepository,
 ) {
     @Retryable(
         ObjectOptimisticLockingFailureException::class,
         maxAttempts = 3,
-        backoff = Backoff(delay = 500)
+        backoff = Backoff(delay = 500),
     )
     fun create(userId: Long, request: CreateReplyRequest): ReplyResponse {
         val comment = commentRepository.getByIdOrThrow(request.commentId)
@@ -62,7 +62,6 @@ class ReplyService(
         post.increaseCommentReplyCount()
 
         return ReplyResponse(reply)
-
     }
 
     fun update(userId: Long, request: UpdateReplyRequest) {
@@ -73,7 +72,7 @@ class ReplyService(
     @Retryable(
         ObjectOptimisticLockingFailureException::class,
         maxAttempts = 3,
-        backoff = Backoff(delay = 500)
+        backoff = Backoff(delay = 500),
     )
     fun delete(userId: Long, request: DeleteReplyRequest) {
         val reply = replyRepository.getByIdAndUserIdOrThrow(request.replyId, userId)

@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @Service
 class UserBlockService(
-    private val userBlockRepository: UserBlockRepository
+    private val userBlockRepository: UserBlockRepository,
 ) {
     fun block(userId: Long, blockedUserId: Long) {
         userBlockRepository.save(UserBlock(userId, blockedUserId))

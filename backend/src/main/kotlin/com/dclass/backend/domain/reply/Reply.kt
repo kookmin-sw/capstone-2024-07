@@ -29,7 +29,7 @@ class Reply(
 
     modifiedDateTime: LocalDateTime = LocalDateTime.now(),
 
-    id: Long = 0L
+    id: Long = 0L,
 ) : BaseEntity(id) {
 
     @Column(nullable = false)

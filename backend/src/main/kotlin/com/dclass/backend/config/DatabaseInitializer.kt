@@ -63,7 +63,6 @@ class DatabaseInitializer(
 //        populateDummyReplies()
     }
 
-
     private fun populateUniversity() {
         val universities = listOf(
             University(name = "가천길대학", emailSuffix = "gachon.ac.kr"),
@@ -477,7 +476,7 @@ class DatabaseInitializer(
             University(name = "호원대학교", emailSuffix = "howon.ac.kr"),
             University(name = "홍익대학교", emailSuffix = "hongik.ac.kr"),
             University(name = "홍익대학교(세종)", emailSuffix = "hongik.ac.kr"),
-            University(name = "화신사이버대학교", emailSuffix = "hscu.ac.kr")
+            University(name = "화신사이버대학교", emailSuffix = "hscu.ac.kr"),
         )
         universityRepository.saveAll(universities)
     }
@@ -646,18 +645,14 @@ class DatabaseInitializer(
             Department(title = "메이크업아티스트학과"),
             Department(title = "모델학과"),
             Department(title = "조리제빵학과"),
-            Department(id = 999, title = "")
+            Department(id = 999, title = ""),
         )
 
         departmentRepository.saveAll(departments)
-
-
     }
 
     private fun populateUser() {
-
         val university = universityRepository.findById(205).get()!!
-
 
         val users = listOf(
             User(
@@ -679,7 +674,7 @@ class DatabaseInitializer(
                 email = "chulsu@kookmin.ac.kr",
                 nickname = "chulsukim",
                 password = "5678efgh",
-                university = university
+                university = university,
             ),
             User(
                 name = "이영희",
@@ -729,7 +724,7 @@ class DatabaseInitializer(
                 nickname = "seungmine",
                 password = "7890qrst",
                 university = university,
-            )
+            ),
         )
 
         val savedUser = userRepository.saveAll(users)
@@ -737,12 +732,11 @@ class DatabaseInitializer(
         belongRepository.saveAll(
             savedUser.map {
                 Belong(userId = it.id, ids = listOf(75, 163))
-            }
+            },
         )
     }
 
     private fun populateCommunity() {
-
         val departments = departmentRepository.findAll()
             .forEach {
                 communityRepository.saveAll(
@@ -753,16 +747,14 @@ class DatabaseInitializer(
                         Community(title = "STUDY", departmentId = it.id),
                         Community(title = "QUESTION", departmentId = it.id),
                         Community(title = "PROMOTION", departmentId = it.id),
-                    )
+                    ),
                 )
             }
     }
 
-
     private fun populateDummyPosts() {
         val users = userRepository.findAll()
         val communityIds = (445L..450L).toList()
-
 
         val dummyPosts = mutableListOf<Post>()
 
@@ -782,7 +774,7 @@ class DatabaseInitializer(
     }
 
     private fun createDummyPost(user: User, community: Community, number: Int): Post {
-        val title = "Dummy Post Title ${number}"
+        val title = "Dummy Post Title $number"
         val content = "Dummy Post Content"
         val createdDateTime = LocalDateTime.now()
 
@@ -809,7 +801,7 @@ class DatabaseInitializer(
     }
 
     private fun createDummyComment(user: User, post: Post, num: Int): Comment {
-        val content = "댓글 ${num}"
+        val content = "댓글 $num"
         val createdDateTime = LocalDateTime.now()
 
         return Comment(user.id, post.id, content, createdDateTime = createdDateTime)
@@ -838,13 +830,10 @@ class DatabaseInitializer(
         replyRepository.saveAll(dummyReplies)
     }
 
-
     private fun createDummyReply(user: User, comment: Comment, num: Int): Reply {
-        val content = "대댓글 ${num}"
+        val content = "대댓글 $num"
         val createdDateTime = LocalDateTime.now()
 
         return Reply(user.id, comment.id, content, createdDateTime = createdDateTime)
     }
-
-
 }

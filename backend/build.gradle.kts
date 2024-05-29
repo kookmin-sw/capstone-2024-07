@@ -4,6 +4,7 @@ plugins {
     val kotlinVersion = "1.9.22"
     id("org.springframework.boot") version "3.2.3"
     id("io.spring.dependency-management") version "1.1.4"
+    id("org.jmailen.kotlinter") version "3.16.0"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
@@ -43,11 +44,11 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
 //    implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0")
 
-    //flyway
+    // flyway
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-mysql")
 
-    //swagger
+    // swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 
     implementation("org.springframework.retry:spring-retry")

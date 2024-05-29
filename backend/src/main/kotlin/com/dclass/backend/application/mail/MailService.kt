@@ -12,7 +12,7 @@ import org.thymeleaf.spring6.ISpringTemplateEngine
 @Service
 class MailService(
     private val mailSender: MailSender,
-    private val templateEngine: ISpringTemplateEngine
+    private val templateEngine: ISpringTemplateEngine,
 ) {
     fun sendAuthenticationCodeMail(email: String, authenticationCode: String) =
         CoroutineScope(Dispatchers.IO).launch {
@@ -23,7 +23,7 @@ class MailService(
             mailSender.send(
                 email,
                 "메일 인증 코드를 발송해 드립니다. ",
-                templateEngine.process("mail/email-authentication.html", context)
+                templateEngine.process("mail/email-authentication.html", context),
             )
         }
 
@@ -34,15 +34,15 @@ class MailService(
                 setVariables(
                     mapOf(
                         "name" to event.name,
-                        "password" to event.password
-                    )
+                        "password" to event.password,
+                    ),
                 )
             }
 
             mailSender.send(
                 event.email,
                 "${event.name}님, 임시 비밀번호를 발송해 드립니다.",
-                templateEngine.process("mail/password-reset.html", context)
+                templateEngine.process("mail/password-reset.html", context),
             )
         }
 }

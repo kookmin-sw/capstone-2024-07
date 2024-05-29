@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/block")
 @RestController
 class UserBlockController(
-    private val userBlockService: UserBlockService
+    private val userBlockService: UserBlockService,
 ) {
     @Operation(summary = "유저 차단 API", description = "사용자를 차단합니다.")
     @ApiResponse(responseCode = "200", description = "사용자 차단 성공")

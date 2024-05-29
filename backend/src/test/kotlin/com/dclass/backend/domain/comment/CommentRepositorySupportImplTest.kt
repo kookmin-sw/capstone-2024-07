@@ -18,7 +18,7 @@ import io.kotest.matchers.collections.shouldHaveSize
 class CommentRepositorySupportImplTest(
     private val userRepository: UserRepository,
     private val commentRepository: CommentRepository,
-    private val universityRepository: UniversityRepository
+    private val universityRepository: UniversityRepository,
 ) : BehaviorSpec({
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 
@@ -34,7 +34,7 @@ class CommentRepositorySupportImplTest(
                 comment(userId = user1.id, postId = 1L),
                 comment(userId = user1.id, postId = 1L),
                 comment(userId = user1.id, postId = 1L),
-            )
+            ),
         )
 
         val comments2 = commentRepository.saveAll(
@@ -44,7 +44,7 @@ class CommentRepositorySupportImplTest(
                 comment(userId = user2.id, postId = 1L),
                 comment(userId = user2.id, postId = 1L),
                 comment(userId = user2.id, postId = 1L),
-            )
+            ),
         )
 
         When("게시글에 해당하는 댓글을 조회하면") {

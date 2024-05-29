@@ -71,7 +71,7 @@ class UserServiceTest : BehaviorSpec({
         When("기존 비밀번호와 함께 새 비밀번호를 변경하면") {
             userService.editPassword(
                 user.id,
-                EditPasswordRequest(user.password, password, password)
+                EditPasswordRequest(user.password, password, password),
             )
 
             Then("새 비밀번호로 변경된다") {
@@ -84,7 +84,7 @@ class UserServiceTest : BehaviorSpec({
                 shouldThrow<UserException> {
                     userService.editPassword(
                         user.id,
-                        EditPasswordRequest(WRONG_PASSWORD, password, password)
+                        EditPasswordRequest(WRONG_PASSWORD, password, password),
                     )
                 }.exceptionType() shouldBe UserExceptionType.INVALID_PASSWORD_ACCESS_DENIED
             }
@@ -95,7 +95,7 @@ class UserServiceTest : BehaviorSpec({
                 shouldThrow<IllegalArgumentException> {
                     userService.editPassword(
                         user.id,
-                        EditPasswordRequest(user.password, password, WRONG_PASSWORD)
+                        EditPasswordRequest(user.password, password, WRONG_PASSWORD),
                     )
                 }
             }

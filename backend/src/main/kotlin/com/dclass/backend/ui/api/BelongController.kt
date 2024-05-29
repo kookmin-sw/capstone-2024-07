@@ -22,7 +22,7 @@ class BelongController(
     @ApiResponse(responseCode = "200", description = "학과 변경 성공")
     @PutMapping("/switch-departments")
     fun switchDepartments(
-        @LoginUser user: User
+        @LoginUser user: User,
     ): ResponseEntity<SwitchDepartmentResponse> {
         return ResponseEntity.ok(belongService.switchDepartment(user.id))
     }
@@ -32,7 +32,7 @@ class BelongController(
     @PutMapping("/change-departments")
     fun changeDepartments(
         @RequestBody @Valid request: UpdateDepartmentRequest,
-        @LoginUser user: User
+        @LoginUser user: User,
     ): ResponseEntity<Unit> {
         belongService.editDepartments(user.id, request)
         return ResponseEntity.noContent().build()
@@ -42,7 +42,7 @@ class BelongController(
     @ApiResponse(responseCode = "200", description = "남은 학과 변경 일수 조회 성공")
     @GetMapping("/remain")
     fun remain(
-        @LoginUser user: User
+        @LoginUser user: User,
     ): ResponseEntity<RemainDurationResponse> {
         return ResponseEntity.ok(belongService.remain(user.id))
     }

@@ -46,14 +46,14 @@ class PostIntegrationTest(
         belongRepository.save(
             belong(
                 userId = user.id,
-                departmentIds = listOf(community.departmentId, community.departmentId + 1)
-            )
+                departmentIds = listOf(community.departmentId, community.departmentId + 1),
+            ),
         )
 
         When("게시글을 작성하면") {
             val actual = postService.create(
                 user.id,
-                createPostRequest()
+                createPostRequest(),
             )
 
             Then("게시글이 생성된다") {
@@ -105,7 +105,6 @@ class PostIntegrationTest(
                 actual.count.likeCount shouldBe 1
             }
         }
-
     }
 
     Given("특정 학과에 속한 학생이 게시글을 작성한 경우") {
@@ -116,8 +115,8 @@ class PostIntegrationTest(
             belongRepository.save(
                 belong(
                     userId = user.id,
-                    departmentIds = listOf(community.departmentId)
-                )
+                    departmentIds = listOf(community.departmentId),
+                ),
             )
         val post = postRepository.save(post(userId = user.id, communityId = community.id))
 
@@ -134,18 +133,17 @@ class PostIntegrationTest(
              * 테스트마다 비용이 부과되어 주석처리
              */
             Then("이미지가 조회된다") {
-                //actual.images.forEach { it shouldStartWith "https://dclass" }
+                // actual.images.forEach { it shouldStartWith "https://dclass" }
             }
         }
-
 
         val anotherUser = userRepository.save(user(university = univ))
         val notBelong =
             belongRepository.save(
                 belong(
                     userId = anotherUser.id,
-                    departmentIds = listOf(NEVER_EXIST_ID)
-                )
+                    departmentIds = listOf(NEVER_EXIST_ID),
+                ),
             )
 
         When("다른 학과에 속한 학생이 게시글을 조회하면") {
@@ -166,13 +164,13 @@ class PostIntegrationTest(
                 community(departmentId = 1L, title = "FREE"),
                 community(departmentId = 1L, title = "GRADUATE"),
                 community(departmentId = 1L, title = "JOB"),
-            )
+            ),
         )
         belongRepository.save(
             belong(
                 userId = user.id,
-                departmentIds = communities.map { it.departmentId }.distinct()
-            )
+                departmentIds = communities.map { it.departmentId }.distinct(),
+            ),
         )
 
         repeat(5) {
@@ -180,24 +178,26 @@ class PostIntegrationTest(
                 post(
                     userId = user.id,
                     communityId = communities[0].id,
-                    postCount = PostCount()
-                )
+                    postCount = PostCount(),
+                ),
             )
             postRepository.save(
                 post(
                     userId = user.id,
                     communityId = communities[1].id,
-                    postCount = PostCount()
-                )
+                    postCount = PostCount(),
+                ),
             )
             postRepository.save(
                 post(
                     userId = user.id,
                     communityId = communities[2].id,
-                    postCount = PostCount()
-                )
+                    postCount = PostCount(),
+                ),
             )
-            postRepository.save(post(title = "검색용 제목", content = "내용입니다", userId = user.id, communityId = communities[2].id))
+            postRepository.save(
+                post(title = "검색용 제목", content = "내용입니다", userId = user.id, communityId = communities[2].id),
+            )
         }
 
         val anotherUser = userRepository.save(user(university = univ))
@@ -207,7 +207,7 @@ class PostIntegrationTest(
                 community(departmentId = 2L, title = "다른 자유"),
                 community(departmentId = 2L, title = "다른 대학원"),
                 community(departmentId = 2L, title = "다른 취업"),
-            )
+            ),
         )
 
         repeat(5) {
@@ -215,24 +215,31 @@ class PostIntegrationTest(
                 post(
                     userId = anotherUser.id,
                     communityId = notMyCommunities[0].id,
-                    postCount = PostCount()
-                )
+                    postCount = PostCount(),
+                ),
             )
             postRepository.save(
                 post(
                     userId = anotherUser.id,
                     communityId = notMyCommunities[1].id,
-                    postCount = PostCount()
-                )
+                    postCount = PostCount(),
+                ),
             )
             postRepository.save(
                 post(
                     userId = anotherUser.id,
                     communityId = notMyCommunities[2].id,
-                    postCount = PostCount()
-                )
+                    postCount = PostCount(),
+                ),
             )
-            postRepository.save(post(title = "검색용 제목", content = "내용입니다", userId = anotherUser.id, communityId = notMyCommunities[2].id))
+            postRepository.save(
+                post(
+                    title = "검색용 제목",
+                    content = "내용입니다",
+                    userId = anotherUser.id,
+                    communityId = notMyCommunities[2].id,
+                ),
+            )
         }
 
         When("모든 게시글을 조회하면") {

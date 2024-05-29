@@ -14,9 +14,9 @@ import java.util.*
 import javax.crypto.SecretKey
 
 @Component
-class JwtTokenProvider (
-    @Value("\${jwt.secret}") private val secretKey: String
-){
+class JwtTokenProvider(
+    @Value("\${jwt.secret}") private val secretKey: String,
+) {
     private var signingKey: SecretKey = secretKey.toByteArray().let {
         Keys.hmacShaKeyFor(it)
     }
@@ -52,7 +52,7 @@ class JwtTokenProvider (
             .subject
     }
 
-    fun validateToken(token: String): Unit {
+    fun validateToken(token: String) {
         try {
             getClaimsJws(token)
         } catch (e: SignatureException) {

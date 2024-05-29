@@ -11,7 +11,7 @@ import org.springframework.transaction.event.TransactionalEventListener
 
 @Component
 class NotificationListener(
-    private val notificationService: NotificationService
+    private val notificationService: NotificationService,
 ) {
 
     @TransactionalEventListener
@@ -25,8 +25,8 @@ class NotificationListener(
                         commentId = event.commentId,
                         content = event.content,
                         communityTitle = event.community,
-                        type = event.type
-                    )
+                        type = event.type,
+                    ),
                 )
             } else {
                 notificationService.send(
@@ -37,8 +37,8 @@ class NotificationListener(
                         replyId = event.replyId!!,
                         content = event.content,
                         communityTitle = event.community,
-                        type = event.type
-                    )
+                        type = event.type,
+                    ),
                 )
             }
         }
