@@ -92,7 +92,7 @@ class _Reply extends ConsumerState<Reply> {
                               Text(
                                 widget.reply.userInformation.nickname,
                                 style: TextStyle(
-                                  fontSize: 11,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                   color: widget.selectReply
                                       ? PRIMARY_COLOR
@@ -153,7 +153,7 @@ class _Reply extends ConsumerState<Reply> {
                       Text(
                         widget.reply.content,
                         style: TextStyle(
-                          fontSize: 10,
+                          fontSize: 12,
                           fontWeight: FontWeight.normal,
                           color:
                               widget.selectReply ? PRIMARY_COLOR : Colors.black,

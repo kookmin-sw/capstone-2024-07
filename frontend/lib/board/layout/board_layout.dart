@@ -62,7 +62,7 @@ class Board extends ConsumerWidget {
             style: const TextStyle(
               color: Colors.blue,
               decoration: TextDecoration.underline,
-              fontSize: 10,
+              fontSize: 12,
             ),
             recognizer: TapGestureRecognizer()..onTap = () => _launchUrl(t),
           ),
@@ -73,7 +73,7 @@ class Board extends ConsumerWidget {
             text: '$t\n',
             style: const TextStyle(
               color: Colors.black,
-              fontSize: 10,
+              fontSize: 12,
             ),
           ),
         );
@@ -173,6 +173,9 @@ class Board extends ConsumerWidget {
                   //     fontSize: 10,
                   //   ),
                   // ),
+                  const SizedBox(
+                    height: 5,
+                  ),
                   RichText(
                     softWrap: true,
                     text: TextSpan(

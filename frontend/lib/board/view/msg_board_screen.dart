@@ -881,7 +881,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
               snapshot.data ?? widget.board as MsgBoardDetailResponseModel;
           return Board(
             board: boardDetail,
-            titleSize: 13,
+            titleSize: 14,
             isMine: isMine,
           );
         }
