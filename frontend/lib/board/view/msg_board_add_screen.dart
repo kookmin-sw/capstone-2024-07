@@ -269,7 +269,8 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
         resp = await boardAddAPI.modify(requestData);
       } on DioException catch (e) {
         if (e.response != null) {
-          ExceptionModel exc = e.response!.data;
+          Map<String, dynamic> data = e.response!.data;
+          ExceptionModel exc = ExceptionModel.fromJson(data);
           debugPrint("boardModifyError : ${exc.message}");
           notAllowed(exc.message);
         } else {
@@ -316,17 +317,18 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
         resp = await boardAddAPI.post(requestData);
       } on DioException catch (e) {
         if (e.response != null) {
-          ExceptionModel exc = e.response!.data;
+          Map<String, dynamic> data = e.response!.data;
+          ExceptionModel exc = ExceptionModel.fromJson(data);
           debugPrint("boardPostError : ${exc.message}");
           notAllowed(exc.message);
           return;
         } else {
-          debugPrint("boardModifyError : ${e.message}");
+          debugPrint("boardPostError : ${e.message}");
           notAllowed(e.message!);
           return;
         }
       } catch (e) {
-        debugPrint("boardModifyError : ${e.toString()}");
+        debugPrint("boardPostError : ${e.toString()}");
         notAllowed("다시 시도해주세요!");
         return;
       } finally {
