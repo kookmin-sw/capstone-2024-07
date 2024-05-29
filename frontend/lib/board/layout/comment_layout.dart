@@ -89,7 +89,7 @@ class _CommentState extends ConsumerState<Comment>
                     Text(
                       widget.comment.userInformation.nickname,
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 13,
                         fontWeight: FontWeight.bold,
                         color: widget.selectComment ? PRIMARY_COLOR : null,
                       ),
@@ -160,7 +160,7 @@ class _CommentState extends ConsumerState<Comment>
             Text(
               widget.comment.content,
               style: TextStyle(
-                fontSize: 10,
+                fontSize: 12,
                 color: widget.selectComment ? PRIMARY_COLOR : null,
               ),
             ),
