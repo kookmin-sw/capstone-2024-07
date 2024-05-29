@@ -12,7 +12,7 @@ data class ReplyRequest(
 
     @Schema(
         description = "대댓글의 내용",
-        example = "대댓글 내용"
+        example = "대댓글 내용",
     )
     val content: String,
 )
@@ -21,14 +21,14 @@ data class CreateReplyRequest(
 
     @Schema(
         description = "댓글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     @field:NotNull
     val commentId: Long,
 
     @Schema(
         description = "대댓글의 내용",
-        example = "대댓글 내용"
+        example = "대댓글 내용",
     )
     @field:NotNull
     val content: String,
@@ -41,13 +41,13 @@ data class CreateReplyRequest(
 data class UpdateReplyRequest(
     @Schema(
         description = "대댓글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val replyId: Long,
 
     @Schema(
         description = "대댓글의 내용",
-        example = "대댓글 내용"
+        example = "대댓글 내용",
     )
     @field:NotNull
     val content: String,
@@ -56,7 +56,7 @@ data class UpdateReplyRequest(
 data class DeleteReplyRequest(
     @Schema(
         description = "대댓글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val replyId: Long,
 )
@@ -64,7 +64,7 @@ data class DeleteReplyRequest(
 data class LikeReplyRequest(
     @Schema(
         description = "대댓글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val replyId: Long,
 )
@@ -72,37 +72,37 @@ data class LikeReplyRequest(
 data class ReplyResponse(
     @Schema(
         description = "댓글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val id: Long,
 
     @Schema(
         description = "댓글을 작성한 유저의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val userId: Long,
 
     @Schema(
         description = "대댓글이 달린 댓글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val commentId: Long,
 
     @Schema(
         description = "대댓글의 내용",
-        example = "대댓글 내용"
+        example = "대댓글 내용",
     )
     val content: String,
 
     @Schema(
         description = "대댓글의 좋아요 수",
-        example = "0"
+        example = "0",
     )
     val likeCount: ReplyLikes,
 
     @Schema(
         description = "대댓글이 작성된 시각",
-        example = "2021-08-01T00:00:00"
+        example = "2021-08-01T00:00:00",
     )
     val createdAt: LocalDateTime,
 ) {
@@ -112,20 +112,20 @@ data class ReplyResponse(
         commentId = reply.commentId,
         content = reply.content,
         likeCount = reply.replyLikes,
-        createdAt = reply.createdDateTime
+        createdAt = reply.createdDateTime,
     )
 }
 
 data class ReplyWithUserResponse(
     @Schema(
         description = "대댓글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val id: Long,
 
     @Schema(
         description = "대댓글을 작성한 유저의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val userId: Long,
 
@@ -136,31 +136,31 @@ data class ReplyWithUserResponse(
 
     @Schema(
         description = "대댓글이 달린 댓글의 고유 식별자",
-        example = "1"
+        example = "1",
     )
     val commentId: Long,
 
     @Schema(
         description = "대댓글의 내용",
-        example = "대댓글 내용"
+        example = "대댓글 내용",
     )
     val content: String,
 
     @Schema(
         description = "대댓글의 좋아요 수",
-        example = "0"
+        example = "0",
     )
     val likeCount: ReplyLikes,
 
     @Schema(
         description = "차단한 사용자 여부",
-        example = "false"
+        example = "false",
     )
     var isBlockedUser: Boolean = false,
 
     @Schema(
         description = "대댓글이 작성된 시각",
-        example = "2021-08-01T00:00:00"
+        example = "2021-08-01T00:00:00",
     )
     val createdAt: LocalDateTime,
 ) {
@@ -171,7 +171,7 @@ data class ReplyWithUserResponse(
         commentId = reply.commentId,
         content = reply.content,
         likeCount = reply.replyLikes,
-        createdAt = reply.createdDateTime
+        createdAt = reply.createdDateTime,
     )
 }
 

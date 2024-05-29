@@ -35,16 +35,16 @@ class UserAuthenticationService(
     private val departmentRepository: DepartmentRepository,
     private val blocklistRepository: BlocklistRepository,
     private val jwtTokenProvider: JwtTokenProvider,
-    private val entityManager: EntityManager
+    private val entityManager: EntityManager,
 ) {
     fun generateTokenByRegister(request: RegisterUserRequest): LoginUserResponse {
         require(request.password == request.confirmPassword) { "비밀번호가 일치하지 않습니다." }
 
         userRepository.findByEmail(request.email)?.also {
-            if(it.isDeleted()){
+            if (it.isDeleted()) {
                 blocklistRepository.findFirstByUserIdOrderByCreatedDateTimeDesc(it.id)?.validate()
             }
-            if(!it.isDeleted()){
+            if (!it.isDeleted()) {
                 throw UserException(UserExceptionType.ALREADY_EXIST_USER)
             }
             it.anonymizeEmail()
@@ -65,12 +65,12 @@ class UserAuthenticationService(
             Belong(
                 user.id,
                 listOf(majorDepartment.id, minorDepartment.id),
-            )
+            ),
         )
 
         return LoginUserResponse(
             jwtTokenProvider.createAccessToken(user.email),
-            jwtTokenProvider.createRefreshToken(user.email)
+            jwtTokenProvider.createRefreshToken(user.email),
         )
     }
 
@@ -82,16 +82,16 @@ class UserAuthenticationService(
 
         return LoginUserResponse(
             jwtTokenProvider.createAccessToken(user.email),
-            jwtTokenProvider.createRefreshToken(user.email)
+            jwtTokenProvider.createRefreshToken(user.email),
         )
     }
 
     fun generateAuthenticationCode(email: String): String {
         userRepository.findByEmail(email)?.let {
-            if(it.isDeleted()){
+            if (it.isDeleted()) {
                 blocklistRepository.findFirstByUserIdOrderByCreatedDateTimeDesc(it.id)?.validate()
             }
-            if(!it.isDeleted()){
+            if (!it.isDeleted()) {
                 throw UserException(UserExceptionType.ALREADY_EXIST_USER)
             }
         }

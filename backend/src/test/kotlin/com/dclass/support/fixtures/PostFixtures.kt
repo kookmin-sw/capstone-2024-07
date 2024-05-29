@@ -24,7 +24,7 @@ fun post(
         userId = userId,
         communityId = communityId,
         images = images,
-        postCount = postCount
+        postCount = postCount,
     )
 }
 
@@ -36,7 +36,7 @@ fun postCount(
     return PostCount(
         commentReplyCount = replyCount,
         likeCount = likeCount,
-        scrapCount = scrapCount
+        scrapCount = scrapCount,
     )
 }
 
@@ -52,7 +52,7 @@ fun createPostRequest(
         title = title,
         content = content,
         isQuestion = isQuestion,
-        images = images
+        images = images,
     )
 }
 
@@ -68,6 +68,6 @@ fun updatePostRequest(
         title = title,
         content = content,
         images = images,
-        communityTitle = communityTitle
+        communityTitle = communityTitle,
     )
 }

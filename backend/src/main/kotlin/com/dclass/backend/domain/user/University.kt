@@ -19,5 +19,5 @@ class University(
     @Column(nullable = false)
     val logo: String = "",
 
-    id: Long = 0L
+    id: Long = 0L,
 ) : BaseEntity(id)

@@ -49,7 +49,7 @@ class ScrapServiceTest : BehaviorSpec({
         val scrap = scrap()
 
         every { scrapRepository.findByUserIdAndPostId(any(), any()) } throws ScrapException(
-            ScrapExceptionType.NOT_FOUND_SCRAP
+            ScrapExceptionType.NOT_FOUND_SCRAP,
         )
 
         When("스크랩을 삭제하면") {
@@ -63,7 +63,7 @@ class ScrapServiceTest : BehaviorSpec({
 
     Given("특정 사용자가 게시글을 스크랩을 했을 경우") {
         val scrap = scrap()
-        val post =  post()
+        val post = post()
 
         every { scrapRepository.findByUserIdAndPostId(any(), any()) } returns scrap
         every { postRepository.findByIdOrThrow(any()) } returns post
@@ -77,13 +77,13 @@ class ScrapServiceTest : BehaviorSpec({
             }
 
             Then("스크랩 갯수가 감소한다") {
-                post.postCount.scrapCount shouldBeLessThan  0
+                post.postCount.scrapCount shouldBeLessThan 0
             }
         }
     }
 
     Given("특정 사용자가 스크랩한 게시글을 조회하면") {
-        every { postRepository.findScrapPostByUserId(any()) } returns listOf(PostResponse(post(),user(),"FREE"))
+        every { postRepository.findScrapPostByUserId(any()) } returns listOf(PostResponse(post(), user(), "FREE"))
 
         When("스크랩한 게시글을 조회하면") {
             val actual = scrapService.getAll(1L)

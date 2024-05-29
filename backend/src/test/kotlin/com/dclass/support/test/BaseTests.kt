@@ -20,7 +20,6 @@ annotation class TestEnvironment
 @ExtendWith(MockKExtension::class)
 annotation class UnitTest
 
-
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 @Import(KotlinJdslAutoConfiguration::class)

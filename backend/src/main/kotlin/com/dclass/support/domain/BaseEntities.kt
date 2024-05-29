@@ -11,7 +11,7 @@ import java.util.*
 abstract class BaseEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L
+    val id: Long = 0L,
 ) {
     override fun equals(other: Any?): Boolean =
         Objects.equals(id, (other as? BaseEntity)?.id)
@@ -24,7 +24,7 @@ abstract class BaseEntity(
 abstract class BaseRootEntity<T : AbstractAggregateRoot<T>>(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L
+    val id: Long = 0L,
 ) : AbstractAggregateRoot<T>() {
     override fun equals(other: Any?): Boolean =
         Objects.equals(id, (other as? BaseRootEntity<T>)?.id)

@@ -18,7 +18,7 @@ class PostRepositorySupportTest(
     private val userRepository: UserRepository,
     private val postRepository: PostRepository,
     private val communityRepository: CommunityRepository,
-    private val universityRepository: UniversityRepository
+    private val universityRepository: UniversityRepository,
 ) : BehaviorSpec({
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 

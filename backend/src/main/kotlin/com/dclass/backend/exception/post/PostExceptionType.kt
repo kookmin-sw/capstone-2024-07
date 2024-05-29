@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus
 enum class PostExceptionType(
     private val httpStatus: HttpStatus,
     private val code: String,
-    private val errorMessage: String
+    private val errorMessage: String,
 ) : BaseExceptionType {
 
     NOT_FOUND_POST(HttpStatus.NOT_FOUND, "P01", "존재하지 않는 게시글입니다"),

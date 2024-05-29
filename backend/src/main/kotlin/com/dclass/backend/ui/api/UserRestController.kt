@@ -24,7 +24,7 @@ class UserRestController(
     private val userService: UserService,
     private val userAuthenticationService: UserAuthenticationService,
     private val blacklistService: BlacklistService,
-    private val mailService: MailService
+    private val mailService: MailService,
 ) {
 
     @Operation(summary = "회원가입 API", description = "이메일 인증 후 회원가입을 진행합니다")
@@ -65,7 +65,7 @@ class UserRestController(
     @PostMapping("/edit-password")
     fun editPassword(
         @RequestBody @Valid request: EditPasswordRequest,
-        @LoginUser user: User
+        @LoginUser user: User,
     ): ResponseEntity<Unit> {
         userService.editPassword(user.id, request)
         return ResponseEntity.noContent().build()
@@ -75,7 +75,7 @@ class UserRestController(
     @ApiResponse(responseCode = "204", description = "이메일 인증코드 발급 성공")
     @PostMapping("/authentication-code")
     fun generateAuthenticationCode(
-        @RequestParam email: String
+        @RequestParam email: String,
     ): ResponseEntity<Unit> {
         val authenticationCode = userAuthenticationService
             .generateAuthenticationCode(email)
@@ -88,7 +88,7 @@ class UserRestController(
     @PostMapping("/authenticate-email")
     fun authenticateEmail(
         @RequestParam email: String,
-        @RequestParam authenticationCode: String
+        @RequestParam authenticationCode: String,
     ): ResponseEntity<Unit> {
         userAuthenticationService.authenticateEmail(email, authenticationCode)
         return ResponseEntity.noContent().build()
@@ -99,19 +99,18 @@ class UserRestController(
     @SecurityRequirement(name = ACCESS_TOKEN_SECURITY_SCHEME_KEY)
     @GetMapping("/me")
     fun getMyInformation(
-        @LoginUser user: User
+        @LoginUser user: User,
     ): ResponseEntity<UserResponseWithDepartmentNames> {
         val response = userService.getInformation(user.id)
         return ResponseEntity.ok(response)
     }
-
 
     @Operation(summary = "닉네임 변경 API", description = "닉네임을 변경합니다")
     @ApiResponse(responseCode = "204", description = "닉네임 변경 성공")
     @PutMapping("/change-nickname")
     fun changeNickname(
         @RequestBody @Valid request: UpdateNicknameRequest,
-        @LoginUser user: User
+        @LoginUser user: User,
     ): ResponseEntity<Unit> {
         userService.editNickname(user.id, request)
         return ResponseEntity.noContent().build()
@@ -121,7 +120,7 @@ class UserRestController(
     @ApiResponse(responseCode = "204", description = "회원 탈퇴 성공")
     @PostMapping("/resign")
     fun resign(
-        @LoginUser user: User
+        @LoginUser user: User,
     ): ResponseEntity<Unit> {
         userService.resign(user.id)
         return ResponseEntity.noContent().build()

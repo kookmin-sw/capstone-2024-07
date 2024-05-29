@@ -28,12 +28,12 @@ class CommentService(
     private val commentValidator: CommentValidator,
     private val communityRepository: CommunityRepository,
     private val eventPublisher: ApplicationEventPublisher,
-    private val userBlockRepository: UserBlockRepository
+    private val userBlockRepository: UserBlockRepository,
 ) {
     @Retryable(
         ObjectOptimisticLockingFailureException::class,
         maxAttempts = 3,
-        backoff = Backoff(delay = 500)
+        backoff = Backoff(delay = 500),
     )
     fun create(userId: Long, request: CreateCommentRequest): CommentResponse {
         val post = postRepository.findByIdOrThrow(request.postId)
@@ -60,12 +60,12 @@ class CommentService(
     @Retryable(
         ObjectOptimisticLockingFailureException::class,
         maxAttempts = 3,
-        backoff = Backoff(delay = 500)
+        backoff = Backoff(delay = 500),
     )
     fun delete(userId: Long, request: DeleteCommentRequest) {
         val comment = commentRepository.findByIdAndUserId(request.commentId, userId)
             ?: throw CommentException(CommentExceptionType.NOT_FOUND_COMMENT)
-        if(comment.isDeleted()) throw CommentException(CommentExceptionType.DELETED_COMMENT)
+        if (comment.isDeleted()) throw CommentException(CommentExceptionType.DELETED_COMMENT)
         commentRepository.delete(comment)
 
         val post = postRepository.findByIdOrThrow(comment.postId)
@@ -98,11 +98,10 @@ class CommentService(
             .onEach { it.isBlockedUser = blockedUserIds.contains(it.userId) }
             .groupBy { it.commentId }
 
-
         val data = comments.map {
             CommentReplyWithUserResponse(
                 it,
-                replies = replies[it.id] ?: emptyList()
+                replies = replies[it.id] ?: emptyList(),
             )
         }
         return CommentsResponse.of(data, request.size)

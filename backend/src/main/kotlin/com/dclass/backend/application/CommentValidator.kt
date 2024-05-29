@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class CommentValidator(
     private val belongRepository: BelongRepository,
-    private val blocklistRepository: BlocklistRepository
+    private val blocklistRepository: BlocklistRepository,
 ) {
     fun validate(userId: Long, community: Community) {
         blocklistRepository.findFirstByUserIdOrderByCreatedDateTimeDesc(userId)?.validate()

@@ -13,14 +13,13 @@ interface ReportEvent {
 }
 
 class PostReportedEvent(
-    val postId: Long
+    val postId: Long,
 ) : ReportEvent
 
 class CommentReportedEvent(
-    val commentId: Long
+    val commentId: Long,
 ) : ReportEvent
 
 class ReplyReportedEvent(
-    val replyId: Long
+    val replyId: Long,
 ) : ReportEvent
-

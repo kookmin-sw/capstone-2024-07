@@ -11,17 +11,17 @@ interface ReportRepositorySupport {
 
 class ReportRepositoryImpl(
     private val em: EntityManager,
-    private val context: JpqlRenderContext
+    private val context: JpqlRenderContext,
 ) : ReportRepositorySupport {
     override fun countReportById(objectId: Long, type: ReportType): Long {
         val query = jpql {
             select(
-                count(entity(Report::class))
+                count(entity(Report::class)),
             ).from(
-                entity(Report::class)
+                entity(Report::class),
             ).whereAnd(
                 path(Report::reportedObjectId).eq(objectId),
-                path(Report::reportType).eq(type)
+                path(Report::reportType).eq(type),
             )
         }
 

@@ -15,7 +15,6 @@ import com.dclass.backend.exception.department.DepartmentExceptionType.NOT_FOUND
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
-
 @Transactional
 @Service
 class UserService(
@@ -55,12 +54,11 @@ class UserService(
                 ?: throw DepartmentException(NOT_FOUND_DEPARTMENT)
         }
 
-
         return UserResponseWithDepartmentNames(
             user,
             groupBy[belong.major]!!.title,
             groupBy[belong.minor]!!.title,
-            groupBy[belong.activated]!!.title
+            groupBy[belong.activated]!!.title,
         )
     }
 

@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 @RestController
 @RequestMapping("/api/notifications")
 class NotificationController(
-    private val notificationService: NotificationService
+    private val notificationService: NotificationService,
 ) {
 
     @Operation(summary = "알림 구독 API", description = "알림을 구독합니다")
@@ -21,7 +21,7 @@ class NotificationController(
     @GetMapping("/subscribe", produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     fun subscribe(
         @LoginUser user: User,
-        @RequestHeader(value = "Last-Event_ID", required = false, defaultValue = "") lastEventId: String
+        @RequestHeader(value = "Last-Event_ID", required = false, defaultValue = "") lastEventId: String,
     ): ResponseEntity<SseEmitter> {
         val emitter = notificationService.subscribe(user.id, lastEventId)
         return ResponseEntity.ok(emitter)
@@ -32,7 +32,7 @@ class NotificationController(
     @GetMapping("/{notificationId}")
     fun readNotification(
         @LoginUser user: User,
-        @PathVariable notificationId: Long
+        @PathVariable notificationId: Long,
     ): ResponseEntity<Unit> {
         notificationService.readNotification(notificationId)
         return ResponseEntity.ok().build()

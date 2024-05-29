@@ -15,19 +15,19 @@ interface ReplyRepositorySupport {
 
 class ReplyRepositoryImpl(
     private val em: EntityManager,
-    private val context: JpqlRenderContext
+    private val context: JpqlRenderContext,
 ) : ReplyRepositorySupport {
 
     override fun findRepliesWithUserByCommentIdIn(commentIds: List<Long>): List<ReplyWithUserResponse> {
         val query = jpql {
             selectNew<ReplyWithUserResponse>(
                 entity(Reply::class),
-                entity(User::class)
+                entity(User::class),
             ).from(
                 entity(Reply::class),
-                join(User::class).on(path(Reply::userId).eq(path(User::id)))
+                join(User::class).on(path(Reply::userId).eq(path(User::id))),
             ).where(
-                replyExist(commentIds)
+                replyExist(commentIds),
             )
         }
 

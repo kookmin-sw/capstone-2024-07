@@ -28,7 +28,7 @@ class SwaggerConfig {
     private fun authComponents(): Components {
         return Components().addSecuritySchemes(
             ACCESS_TOKEN_SECURITY_SCHEME_KEY,
-            accessTokenSecurityScheme()
+            accessTokenSecurityScheme(),
         )
     }
 

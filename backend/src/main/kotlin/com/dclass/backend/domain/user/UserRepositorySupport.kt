@@ -26,7 +26,7 @@ class UserRepositoryImpl(
                 entity(User::class),
                 join(Belong::class).on(path(Belong::userId).eq(path(User::id))),
             ).where(
-                path(Belong::userId).eq(id)
+                path(Belong::userId).eq(id),
             )
         }
 

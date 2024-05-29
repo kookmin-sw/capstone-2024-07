@@ -25,7 +25,7 @@ class AuthenticationCode(
     var authenticated: Boolean = false,
 
     @Column(nullable = false)
-    val createdDateTime: LocalDateTime = LocalDateTime.now()
+    val createdDateTime: LocalDateTime = LocalDateTime.now(),
 ) : BaseEntity() {
 
     @Column(nullable = false)

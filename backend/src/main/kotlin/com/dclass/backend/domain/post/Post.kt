@@ -37,7 +37,7 @@ class Post(
     val createdDateTime: LocalDateTime = LocalDateTime.now(),
 
     @Version
-    val version : Long =0L,
+    val version: Long = 0L,
 
     modifiedDateTime: LocalDateTime = LocalDateTime.now(),
 
@@ -120,5 +120,4 @@ class Post(
     fun likedBy(userId: Long): Boolean {
         return postLikes.likedBy(userId)
     }
-
 }

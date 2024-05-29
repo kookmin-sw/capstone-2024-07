@@ -12,14 +12,13 @@ val PASSWORD: Password = Password("password")
 val NEW_PASSWORD: Password = Password("new_password")
 val WRONG_PASSWORD: Password = Password("wrong_password")
 
-
 fun user(
     id: Long = 0L,
     name: String = "username",
     email: String = UUID.randomUUID().toString().take(6) + "@kookmin.ac.kr",
     nickname: String = usernames.random(),
     password: String = "password",
-    university: University = university()
+    university: University = university(),
 ): User {
     return User(
         id = id,
@@ -27,6 +26,6 @@ fun user(
         email = email,
         password = password,
         nickname = nickname,
-        university = university
+        university = university,
     )
 }

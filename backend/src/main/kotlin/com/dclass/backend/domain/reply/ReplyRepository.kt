@@ -14,5 +14,4 @@ fun ReplyRepository.getByIdAndUserIdOrThrow(replyId: Long, userId: Long): Reply 
 
 interface ReplyRepository : JpaRepository<Reply, Long>, ReplyRepositorySupport {
     fun findByIdAndUserId(replyId: Long, userId: Long): Reply?
-
 }

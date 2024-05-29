@@ -25,7 +25,7 @@ private class PasswordSerializer : JsonSerializer<Password>() {
 @JsonDeserialize(using = PasswordDeserializer::class)
 @Embeddable
 data class Password(
-    var value: String
+    var value: String,
 ) {
     init {
         value = sha256Encrypt(value)

@@ -26,7 +26,7 @@ class Notification(
     @Column(nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
 
-    id: Long = 0L
+    id: Long = 0L,
 ) : BaseEntity(id) {
     fun read() {
         isRead = true

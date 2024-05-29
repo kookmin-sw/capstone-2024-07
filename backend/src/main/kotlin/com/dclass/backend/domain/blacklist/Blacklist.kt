@@ -12,7 +12,7 @@ import org.hibernate.annotations.SQLRestriction
 class Blacklist(
     @Column(nullable = false)
     val invalidRefreshToken: String,
-    id: Long = 0L
+    id: Long = 0L,
 ) : BaseEntity(id) {
     @Column(nullable = false)
     private var deleted: Boolean = false

@@ -5,7 +5,6 @@ import aws.sdk.kotlin.services.ses.SesClient
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
-
 @Configuration
 class SesConfiguration(private val awsProperties: AwsProperties) {
     @Bean(destroyMethod = "close")

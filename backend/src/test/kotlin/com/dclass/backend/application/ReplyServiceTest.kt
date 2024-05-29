@@ -45,7 +45,7 @@ class ReplyServiceTest : BehaviorSpec({
         eventPublisher,
         communityRepository,
         commentRepository,
-        postRepository
+        postRepository,
     )
 
     Given("삭제된 댓글이 존재하는 경우") {
@@ -83,7 +83,7 @@ class ReplyServiceTest : BehaviorSpec({
                     any(),
                     any(),
                     any(),
-                    any()
+                    any(),
                 )
             } returns mockk()
         }

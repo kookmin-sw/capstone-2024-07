@@ -16,14 +16,13 @@ import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.event.TransactionalEventListener
 
-
 @Service
 @Transactional
 class ReportListenerService(
     private val postRepository: PostRepository,
     private val commentRepository: CommentRepository,
     private val replyRepository: ReplyRepository,
-    private val blocklistRepository: BlocklistRepository
+    private val blocklistRepository: BlocklistRepository,
 ) {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -42,7 +41,6 @@ class ReportListenerService(
         post.decreaseCommentReplyCount()
         blocklistRepository.save(Blocklist(comment.userId))
         commentRepository.delete(comment)
-
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)

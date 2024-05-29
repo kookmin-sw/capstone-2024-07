@@ -9,7 +9,6 @@ import com.dclass.backend.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
-
 @Transactional
 @Service
 class BlacklistService(
@@ -25,7 +24,7 @@ class BlacklistService(
         val email = jwtTokenProvider.getSubject(refreshToken)
         return LoginUserResponse(
             jwtTokenProvider.createAccessToken(email),
-            jwtTokenProvider.createRefreshToken(email)
+            jwtTokenProvider.createRefreshToken(email),
         )
     }
 }

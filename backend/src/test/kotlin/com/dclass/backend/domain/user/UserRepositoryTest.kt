@@ -26,12 +26,11 @@ class UserRepositoryTest(
 
         When("사용자의 정보를 조회하면") {
             val findInfo = userRepository.findUserInfoWithDepartment(user.id)
-            
+
             Then("사용자의 정보와 소속된 학과 정보가 반환된다") {
                 findInfo.departmentIds shouldHaveSize 2
                 findInfo.departmentIds shouldContainExactly belong.departmentIds
             }
         }
-
     }
 })

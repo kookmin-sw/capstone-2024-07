@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 @Service
 class ReportService(
     private val reportRepository: ReportRepository,
-    private val eventPublisher: ApplicationEventPublisher
+    private val eventPublisher: ApplicationEventPublisher,
 ) {
     fun report(userId: Long, request: UpdateReportRequest) {
         reportRepository.findByReporterIdAndAndReportedObjectId(userId, request.reportedObjectId)?.let {

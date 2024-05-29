@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/replies")
 @RestController
 class ReplyController(
-    private val replyService: ReplyService
+    private val replyService: ReplyService,
 ) {
 
     @Operation(summary = "대댓글 생성 API", description = "댓글에 대댓글을 생성합니다.")
@@ -22,7 +22,7 @@ class ReplyController(
     @PostMapping
     fun createReply(
         @LoginUser user: User,
-        @RequestBody request: CreateReplyRequest
+        @RequestBody request: CreateReplyRequest,
     ): ResponseEntity<ReplyResponse> {
         val reply = replyService.create(user.id, request)
         return ResponseEntity.ok(reply)
@@ -34,7 +34,7 @@ class ReplyController(
     fun updateReply(
         @LoginUser user: User,
         @PathVariable replyId: Long,
-        @RequestBody request: ReplyRequest
+        @RequestBody request: ReplyRequest,
     ): ResponseEntity<Unit> {
         replyService.update(user.id, UpdateReplyRequest(replyId, request.content))
         return ResponseEntity.noContent().build()
@@ -45,7 +45,7 @@ class ReplyController(
     @DeleteMapping("/{replyId}")
     fun deleteReply(
         @LoginUser user: User,
-        @PathVariable replyId: Long
+        @PathVariable replyId: Long,
     ): ResponseEntity<Unit> {
         replyService.delete(user.id, DeleteReplyRequest(replyId))
         return ResponseEntity.noContent().build()
@@ -56,7 +56,7 @@ class ReplyController(
     @PostMapping("/likes")
     fun likeReply(
         @LoginUser user: User,
-        @RequestBody request: LikeReplyRequest
+        @RequestBody request: LikeReplyRequest,
     ): ResponseEntity<Unit> {
         replyService.like(user.id, request)
         return ResponseEntity.noContent().build()

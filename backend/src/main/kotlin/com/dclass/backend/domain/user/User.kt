@@ -22,7 +22,7 @@ class User(
     @JoinColumn(name = "university_id", nullable = false)
     val university: University,
 
-    id: Long = 0L
+    id: Long = 0L,
 ) : BaseRootEntity<User>(id) {
 
     @Column(nullable = false)
@@ -46,9 +46,12 @@ class User(
         nickname: String,
         password: String,
         university: University,
-        id: Long = 0L
+        id: Long = 0L,
     ) : this(
-        UserInformation(name, email, nickname), Password(password), university, id,
+        UserInformation(name, email, nickname),
+        Password(password),
+        university,
+        id,
     )
 
     fun authenticate(password: Password) {

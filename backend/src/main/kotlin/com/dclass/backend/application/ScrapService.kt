@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 class ScrapService(
     private val scrapRepository: ScrapRepository,
     private val postRepository: PostRepository,
-    private val validator: ScrapValidator
+    private val validator: ScrapValidator,
 ) {
 
     fun create(userId: Long, postId: Long) {
@@ -27,7 +27,7 @@ class ScrapService(
 
     fun delete(userId: Long, postId: Long) {
         val scrap = scrapRepository.findByUserIdAndPostId(userId, postId) ?: throw ScrapException(
-            NOT_FOUND_SCRAP
+            NOT_FOUND_SCRAP,
         )
         val post = postRepository.findByIdOrThrow(postId)
         post.decreaseScrapCount()

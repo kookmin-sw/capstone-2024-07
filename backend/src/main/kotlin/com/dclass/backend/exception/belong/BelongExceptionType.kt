@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus
 enum class BelongExceptionType(
     private val httpStatus: HttpStatus,
     private val code: String,
-    private val errorMessage: String
+    private val errorMessage: String,
 ) : BaseExceptionType {
 
     NOT_FOUND_BELONG(HttpStatus.NOT_FOUND, "B01", "해당 소속을 찾을 수 없습니다."),

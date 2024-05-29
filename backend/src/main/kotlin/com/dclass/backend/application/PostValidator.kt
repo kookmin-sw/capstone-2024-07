@@ -19,7 +19,7 @@ class PostValidator(
     private val belongRepository: BelongRepository,
     private val communityRepository: CommunityRepository,
     private val postRepository: PostRepository,
-    private val blocklistRepository: BlocklistRepository
+    private val blocklistRepository: BlocklistRepository,
 ) {
     fun validate(userId: Long, communityTitle: String): Community {
         blocklistRepository.findFirstByUserIdOrderByCreatedDateTimeDesc(userId)?.validate()
@@ -28,7 +28,6 @@ class PostValidator(
         val community =
             communityRepository.findByDepartmentIdAndTitle(belong.activated, communityTitle)
                 ?: throw PostException(FORBIDDEN_POST)
-
 
         if (!belong.contain(community.departmentId)) {
             throw PostException(FORBIDDEN_POST)

@@ -20,7 +20,7 @@ class ScrapValidator(
     private val scrapRepository: ScrapRepository,
     private val belongRepository: BelongRepository,
     private val postRepository: PostRepository,
-    private val communityRepository: CommunityRepository
+    private val communityRepository: CommunityRepository,
 ) {
     fun validateScrapPost(userId: Long, postId: Long): Post {
         if (scrapRepository.existsByUserIdAndPostId(userId, postId)) {
@@ -36,4 +36,3 @@ class ScrapValidator(
         return post
     }
 }
-
