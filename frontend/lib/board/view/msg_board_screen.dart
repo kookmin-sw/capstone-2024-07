@@ -95,7 +95,8 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
       moveScroll();
     } on DioException catch (e) {
       if (e.response != null) {
-        ExceptionModel exc = e.response!.data;
+        Map<String, dynamic> data = e.response!.data;
+        ExceptionModel exc = ExceptionModel.fromJson(data);
         notAllowed(exc.message);
       }
     }
@@ -111,7 +112,8 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
       await ref.watch(replyProvider).post(requestData);
     } on DioException catch (e) {
       if (e.response != null) {
-        ExceptionModel exc = e.response!.data;
+        Map<String, dynamic> data = e.response!.data;
+        ExceptionModel exc = ExceptionModel.fromJson(data);
         notAllowed(exc.message);
       }
     }
