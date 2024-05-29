@@ -808,38 +808,37 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
             ),
           ],
         ),
-        body: Stack(
+        body: Column(
           children: [
-            RefreshIndicator(
-              onRefresh: () async {
-                ref
-                    .read(commentPaginationProvider.notifier)
-                    .paginate(forceRefetch: true);
-                ref.read(myCommentStateNotifierProvider.notifier).lastId =
-                    9223372036854775807;
-                ref
-                    .read(myCommentStateNotifierProvider.notifier)
-                    .paginate(forceRefetch: true);
-              },
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                controller: controller,
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.onDrag,
-                child: Column(
-                  children: [
-                    renderBoardDetail(myId == widget.board.userId),
-                    RenderCommentList(
-                        ref: ref,
-                        controller: controller,
-                        selectCommentIndex: selectCommentIndex,
-                        selectReplyIndex: selectReplyIndex,
-                        myEmail: myEmail,
-                        myId: myId),
-                    const SizedBox(
-                      height: 100,
-                    ),
-                  ],
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  ref
+                      .read(commentPaginationProvider.notifier)
+                      .paginate(forceRefetch: true);
+                  ref.read(myCommentStateNotifierProvider.notifier).lastId =
+                      9223372036854775807;
+                  ref
+                      .read(myCommentStateNotifierProvider.notifier)
+                      .paginate(forceRefetch: true);
+                },
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  controller: controller,
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
+                  child: Column(
+                    children: [
+                      renderBoardDetail(myId == widget.board.userId),
+                      RenderCommentList(
+                          ref: ref,
+                          controller: controller,
+                          selectCommentIndex: selectCommentIndex,
+                          selectReplyIndex: selectReplyIndex,
+                          myEmail: myEmail,
+                          myId: myId),
+                    ],
+                  ),
                 ),
               ),
             ),
