@@ -52,37 +52,37 @@ resource "aws_route" "internet_access" {
   gateway_id             = aws_internet_gateway.cluster_igw.id
 }
 
-resource "aws_eip" "nat_gateway" {
-  # count      = var.az_count
-  vpc        = true
-  depends_on = [aws_internet_gateway.cluster_igw]
-}
+# resource "aws_eip" "nat_gateway" {
+#   # count      = var.az_count
+#   vpc        = true
+#   depends_on = [aws_internet_gateway.cluster_igw]
+# }
 
 
-resource "aws_nat_gateway" "nat_gateway" {
-  # count         = var.az_count
-  # subnet_id     = element(aws_subnet.public.*.id, count.index)
-  # allocation_id = element(aws_eip.nat_gateway.*.id, count.index)
-  allocation_id = aws_eip.nat_gateway.id
-  subnet_id     = aws_subnet.public[0].id
-
-  tags = {
-    Name = "NAT gw ${var.env_suffix}"
-  }
-}
+# resource "aws_nat_gateway" "nat_gateway" {
+#   # count         = var.az_count
+#   # subnet_id     = element(aws_subnet.public.*.id, count.index)
+#   # allocation_id = element(aws_eip.nat_gateway.*.id, count.index)
+#   allocation_id = aws_eip.nat_gateway.id
+#   subnet_id     = aws_subnet.public[0].id
+#
+#   tags = {
+#     Name = "NAT gw ${var.env_suffix}"
+#   }
+# }
 
 resource "aws_route_table" "private_route" {
   # count  = var.az_count
   vpc_id = aws_vpc.cluster_vpc.id
 
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat_gateway.id
-  }
-
-  tags = {
-    Name = "private-route-table-${var.env_suffix}"
-  }
+#   route {
+#     cidr_block     = "0.0.0.0/0"
+#     nat_gateway_id = aws_nat_gateway.nat_gateway.id
+#   }
+#
+#   tags = {
+#     Name = "private-route-table-${var.env_suffix}"
+#   }
 }
 
 resource "aws_route_table" "public_route" {
