@@ -45,3 +45,6 @@ app.*.map.json
 
 # ip list
 lib/common/const/ip_list.dart
+
+# FVM Version Cache
+.fvm/
