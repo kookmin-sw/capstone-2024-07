@@ -433,169 +433,173 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
             ),
           ],
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 15,
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: titleController,
-                          onChanged: (value) {
-                            setState(() {
-                              if (value != "") {
-                                title = value; // 제목
-                                writedTitle = true;
-                              } else {
-                                writedTitle = false;
-                              }
-                              canUpload = writedTitle & writedContent;
-                            });
-                          },
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "제목",
-                              disabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color:
-                                          BODY_TEXT_COLOR.withOpacity(0.5)))),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 25,
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 15, right: 10),
-                            child: DropdownButton(
-                              value: selectCategory,
-                              icon: const Icon(Icons.arrow_drop_down_outlined),
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 10,
-                              ),
-                              underline: Container(),
-                              elevation: 0,
-                              dropdownColor: Colors.grey.shade200,
-                              borderRadius: BorderRadius.circular(20),
-                              items: categorysList
-                                  .sublist(2, categorysList.length)
-                                  .map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                              onChanged: (value) => {
-                                setState(() {
-                                  if (value != null) {
-                                    selectCategory = value; // 게시판 종류
-                                  }
-                                })
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: BODY_TEXT_COLOR.withOpacity(0.3),
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: PRIMARY20_COLOR,
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+        body: Stack(children: [
+          Transform.translate(
+            offset: const Offset(80.0, 430.0),
+            child: Image.asset(
+              'asset/imgs/logo.png',
+              width: 450.0,
+              opacity: const AlwaysStoppedAnimation(.2),
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                ),
+                child: Column(
+                  children: [
+                    Row(
                       children: [
-                        Text(
-                          "잠깐!",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 10,
+                        Expanded(
+                          child: TextField(
+                            controller: titleController,
+                            onChanged: (value) {
+                              setState(() {
+                                if (value != "") {
+                                  title = value; // 제목
+                                  writedTitle = true;
+                                } else {
+                                  writedTitle = false;
+                                }
+                                canUpload = writedTitle & writedContent;
+                              });
+                            },
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "제목",
+                                disabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color:
+                                            BODY_TEXT_COLOR.withOpacity(0.5)))),
                           ),
                         ),
                         SizedBox(
-                          width: 5,
-                        ),
-                        Flexible(
-                          child: Text(
-                            "부적절하거나 불쾌감을 줄 수 있는 컨텐츠는 제재를 받을 수 있습니다.",
-                            overflow: TextOverflow.visible,
-                            style: TextStyle(
-                              fontSize: 10,
+                          height: 25,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 15, right: 10),
+                              child: DropdownButton(
+                                value: selectCategory,
+                                icon:
+                                    const Icon(Icons.arrow_drop_down_outlined),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 10,
+                                ),
+                                underline: Container(),
+                                elevation: 0,
+                                dropdownColor: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(20),
+                                items: categorysList
+                                    .sublist(2, categorysList.length)
+                                    .map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                                onChanged: (value) => {
+                                  setState(() {
+                                    if (value != null) {
+                                      selectCategory = value; // 게시판 종류
+                                    }
+                                  })
+                                },
+                              ),
                             ),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  TextField(
-                    controller: contentController,
-                    onChanged: (value) {
-                      setState(() {
-                        if (value != "") {
-                          content = value; // 내용
-                          writedContent = true;
-                        } else {
-                          writedContent = false;
-                        }
-                        canUpload = writedTitle & writedContent;
-                      });
-                    },
-                    keyboardType: TextInputType.multiline,
-                    maxLines: 20,
-                    style: const TextStyle(
-                      fontSize: 12,
-                    ),
-                    decoration: const InputDecoration(
-                      hintText: "지금 가장 고민이 되거나 궁금한 내용이 무엇인가요?",
-                      border: InputBorder.none,
-                      hintStyle: TextStyle(
-                        fontSize: 12,
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: BODY_TEXT_COLOR.withOpacity(0.3),
+                            width: 1,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: PRIMARY20_COLOR,
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "잠깐!",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Flexible(
+                            child: Text(
+                              "부적절하거나 불쾌감을 줄 수 있는 컨텐츠는 제재를 받을 수 있습니다.",
+                              overflow: TextOverflow.visible,
+                              style: TextStyle(
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    TextField(
+                      controller: contentController,
+                      onChanged: (value) {
+                        setState(() {
+                          if (value != "") {
+                            content = value; // 내용
+                            writedContent = true;
+                          } else {
+                            writedContent = false;
+                          }
+                          canUpload = writedTitle & writedContent;
+                        });
+                      },
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 20,
+                      style: const TextStyle(
+                        fontSize: 12,
+                      ),
+                      decoration: const InputDecoration(
+                        hintText: "지금 가장 고민이 되거나 궁금한 내용이 무엇인가요?",
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            BottomView(
-              widget: widget,
-              msgBoardAddScreenState: this,
-            ),
-          ],
-        ),
-      ),
-      Transform.translate(
-        offset: const Offset(80.0, 570.0),
-        child: Image.asset(
-          'asset/imgs/logo.png',
-          width: 450.0,
-          opacity: const AlwaysStoppedAnimation(.2),
-        ),
+              BottomView(
+                widget: widget,
+                msgBoardAddScreenState: this,
+              ),
+            ],
+          ),
+        ]),
       ),
       isLoading
           ? Container(
@@ -723,7 +727,7 @@ class ImageViewer extends ConsumerWidget {
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Colors.black.withOpacity(0.2),
+                          color: const Color.fromARGB(255, 214, 214, 214),
                         ),
                         width: 100,
                         child: Image(
@@ -761,7 +765,7 @@ class ImageViewer extends ConsumerWidget {
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Colors.black.withOpacity(0.2),
+                          color: const Color.fromARGB(255, 214, 214, 214),
                         ),
                         width: 100,
                         child: Image.file(
@@ -818,7 +822,7 @@ class ImageViewer extends ConsumerWidget {
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Colors.black.withOpacity(0.2),
+                          color: const Color.fromARGB(255, 214, 214, 214),
                         ),
                         width: 100,
                         child: Image.file(
