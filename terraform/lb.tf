@@ -55,22 +55,6 @@ resource "aws_lb_listener_rule" "api" {
   }
 }
 
-resource "aws_lb_listener_rule" "ai_forward" {
-  listener_arn = aws_lb_listener.https_forward.arn
-  priority     = 99
-
-  action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.ai.id
-  }
-
-  condition {
-    path_pattern {
-      values = ["/predict/*"]
-    }
-  }
-}
-
 resource "aws_lb_listener" "http_forward" {
   load_balancer_arn = aws_alb.staging.arn
   port              = 80
@@ -84,17 +68,6 @@ resource "aws_lb_listener" "http_forward" {
       protocol    = "HTTPS"
       status_code = "HTTP_301"
     }
-  }
-}
-
-resource "aws_lb_listener" "ai_forward" {
-  load_balancer_arn = aws_alb.staging.arn
-  port              = 8000
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.ai.id
   }
 }
 
@@ -114,29 +87,6 @@ resource "aws_lb_target_group" "staging" {
     healthy_threshold   = 5
     unhealthy_threshold = 5
   }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_lb_target_group" "ai" {
-  vpc_id                = aws_vpc.cluster_vpc.id
-  name                  = "service-alb-tg-ai"
-  port                  = 8000
-  protocol              = "HTTP"
-  target_type           = "ip"
-  deregistration_delay  = 30
-
-  health_check {
-    interval            = 120
-    path                = "/health-check"
-    timeout             = 60
-    matcher             = "200"
-    healthy_threshold   = 5
-    unhealthy_threshold = 5
-  }
-
 
   lifecycle {
     create_before_destroy = true
