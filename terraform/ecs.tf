@@ -54,17 +54,27 @@ resource "aws_ecs_task_definition" "service" {
 
 resource "aws_ecs_cluster" "staging" {
   name = "service-ecs-cluster-${var.env_suffix}"
+}
 
+resource "aws_ecs_cluster_capacity_providers" "ecs" {
+  cluster_name = aws_ecs_cluster.staging.name
+
+  capacity_providers = ["FARGATE_SPOT", "FARGATE"]
 }
 
 resource "aws_ecs_service" "staging" {
-  name                  = "staging"
-  cluster               = aws_ecs_cluster.staging.id
-  task_definition       = aws_ecs_task_definition.service.arn
+  name                 = "staging"
+  cluster              = aws_ecs_cluster.staging.id
+  task_definition      = aws_ecs_task_definition.service.arn
   desired_count = 1
-#  desired_count         = length(data.aws_availability_zones.available.names)/2
-  force_new_deployment  = true
-  launch_type           = "FARGATE"
+  #  desired_count         = length(data.aws_availability_zones.available.names)/2
+  force_new_deployment = true
+#   launch_type          = "FARGATE"
+
+  capacity_provider_strategy {
+    capacity_provider = "FARGATE_SPOT"
+    weight            = 1  # Fargate Spot에 대한 weight를 설정합니다. 다른 capacity provider보다 낮은 값을 설정하여 Fargate Spot이 선호될 수 있도록 합니다.
+  }
 
   network_configuration {
     security_groups  = [aws_security_group.ecs_tasks.id]
@@ -91,12 +101,17 @@ resource "aws_ecs_service" "staging" {
 }
 
 resource "aws_ecs_service" "ai" {
-  name                  = "ai"
-  cluster               = aws_ecs_cluster.staging.id
-  task_definition       = aws_ecs_task_definition.ai.arn
-  desired_count = 1
-  force_new_deployment  = true
-  launch_type           = "FARGATE"
+  name                 = "ai"
+  cluster              = aws_ecs_cluster.staging.id
+  task_definition      = aws_ecs_task_definition.ai.arn
+  desired_count        = 1
+  force_new_deployment = true
+#   launch_type          = "FARGATE"
+
+  capacity_provider_strategy {
+    capacity_provider = "FARGATE_SPOT"
+    weight            = 1  # Fargate Spot에 대한 weight를 설정합니다. 다른 capacity provider보다 낮은 값을 설정하여 Fargate Spot이 선호될 수 있도록 합니다.
+  }
 
   network_configuration {
     security_groups  = [aws_security_group.ai_ecs_tasks.id]
@@ -122,23 +137,28 @@ resource "aws_ecs_service" "ai" {
 }
 
 resource "aws_ecs_task_definition" "ai" {
-  family                   = "ai"
-  network_mode             = "awsvpc"
+  family       = "ai"
+  network_mode = "awsvpc"
 
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   cpu                      = 256
   memory                   = 512
   requires_compatibilities = ["FARGATE"]
-  container_definitions = jsonencode([{
-    name  = "ai"
-    image = "${aws_ecr_repository.ai.repository_url}:latest", # ECR에 올라온 이미지를 사용합니다
-    cpu   = 0
-    portMappings = [{ # 3000번 포트를 외부에 엽니다
-      hostPort      = 8000
-      protocol      = "tcp"
-      containerPort = 8000
-    }]
-  }])
+  container_definitions    = jsonencode([
+    {
+      name         = "ai"
+      image        = "${aws_ecr_repository.ai.repository_url}:latest", # ECR에 올라온 이미지를 사용합니다
+      cpu          = 0
+      portMappings = [
+        {
+          # 3000번 포트를 외부에 엽니다
+          hostPort      = 8000
+          protocol      = "tcp"
+          containerPort = 8000
+        }
+      ]
+    }
+  ])
 
   tags = {
     Environment = var.env_suffix
