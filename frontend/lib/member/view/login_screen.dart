@@ -1,4 +1,3 @@
-import 'package:app_version_update/app_version_update.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/member/view/password_reset_screen.dart';
@@ -38,55 +37,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         );
       },
     );
-  }
-
-  @override
-  void initState() {
-    _verifyVersion();
-    super.initState();
-  }
-
-  void _verifyVersion() async {
-    await AppVersionUpdate.checkForUpdates(
-      appleId: '6499332881',
-      playStoreId: 'com.capstone.decl',
-      country: 'kr',
-    ).then((result) async {
-      if (result.canUpdate!) {
-        // await AppVersionUpdate.showBottomSheetUpdate(context: context, appVersionResult: appVersionResult)
-        // await AppVersionUpdate.showPageUpdate(context: context, appVersionResult: appVersionResult)
-        // or use your own widget with information received from AppVersionResult
-
-        //##############################################################################################
-        await AppVersionUpdate.showAlertUpdate(
-          appVersionResult: result,
-          context: context,
-          mandatory: true,
-          backgroundColor: Colors.grey[200],
-          title: '새로운 업데이트',
-          titleTextStyle: const TextStyle(
-              color: Colors.black, fontWeight: FontWeight.w600, fontSize: 24.0),
-          content: '새로운 업데이트가 있습니다.',
-          contentTextStyle: const TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.w400,
-          ),
-          updateButtonText: '다운로드',
-          updateTextStyle: const TextStyle(
-            color: Colors.white,
-          ),
-          updateButtonStyle: ButtonStyle(
-            backgroundColor: const MaterialStatePropertyAll(PRIMARY_COLOR),
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-          ),
-          cancelButtonText: 'LATER',
-        );
-      }
-    });
   }
 
   @override

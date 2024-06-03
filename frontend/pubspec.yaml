@@ -54,7 +54,6 @@ dependencies:
   permission_handler: ^11.3.1
   aws_cloudwatch: ^1.0.0
   intl: ^0.18.0
-  app_version_update: ^4.0.1
   url_launcher: ^6.0.20
   shorebird_code_push: ^1.1.3
 
