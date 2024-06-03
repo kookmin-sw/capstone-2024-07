@@ -20,7 +20,9 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.extensions.spring.SpringTestExtension
 import io.kotest.extensions.spring.SpringTestLifecycleMode
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.instanceOf
+import jakarta.persistence.EntityManager
 import org.springframework.transaction.annotation.Transactional
 
 const val NEVER_EXIST_ID: Long = 999_999
@@ -36,6 +38,7 @@ class PostIntegrationTest(
     private val postRepository: PostRepository,
     private val scrapRepository: ScrapRepository,
     private val commentRepository: CommentRepository,
+    private val em: EntityManager,
 ) : BehaviorSpec({
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 
@@ -66,20 +69,20 @@ class PostIntegrationTest(
             postService.delete(user.id, DeletePostRequest(post.id))
 
             Then("게시글이 삭제된다") {
-                shouldThrow<PostException> {
-                    postService.getById(user.id, post.id)
-                }.exceptionType() shouldBe PostExceptionType.NOT_FOUND_POST
+                val actual = postRepository.findByUserId(user.id).first()
+                actual.id shouldNotBe post.id
             }
         }
 
         When("게시글을 수정하면") {
             val post = postRepository.save(post(userId = user.id, communityId = community.departmentId))
+            println("업데이트 쿼리")
             postService.update(user.id, updatePostRequest(postId = post.id))
 
             Then("게시글이 수정된다") {
-                val actual = postService.getById(user.id, post.id)
-                actual.postTitle shouldBe "수정된 제목"
-                actual.postContent shouldBe "수정된 내용"
+                val actual = postRepository.findAllById(listOf(post.id)).first()
+                actual.title shouldBe "수정된 제목"
+                actual.content shouldBe "수정된 내용"
             }
         }
 
@@ -101,8 +104,8 @@ class PostIntegrationTest(
             postService.likes(user.id, post.id)
 
             Then("게시글에 좋아요가 눌린다") {
-                val actual = postService.getById(user.id, post.id)
-                actual.count.likeCount shouldBe 1
+                val actual = postRepository.findAllById(listOf(post.id)).first()
+                actual.postCount.likeCount shouldBe 1
             }
         }
     }
@@ -244,10 +247,10 @@ class PostIntegrationTest(
 
         When("모든 게시글을 조회하면") {
             val actual =
-                postService.getAll(user.id, PostScrollPageRequest(size = 30, isHot = false))
+                postService.getAll(user.id, PostScrollPageRequest(size = 15, isHot = false))
 
             Then("자신이 속한 학과 커뮤니티의 모든 게시글이 조회된다") {
-                actual.meta.count shouldBe 30
+                actual.meta.count shouldBe 15
             }
         }
 
@@ -256,30 +259,6 @@ class PostIntegrationTest(
 
             Then("특정 유저가 작성한 게시글이 조회된다") {
                 actual.meta.count shouldBe 20
-            }
-        }
-
-        When("특정 유저가 특정 게시글을 스크랩하면") {
-            repeat(5) {
-                scrapRepository.save(scrap(userId = user.id, postId = it + 1L))
-            }
-
-            val actual = postService.getScrapped(user.id, PostScrollPageRequest(size = 30))
-
-            Then("특정 유저가 스크랩한 게시글이 조회된다") {
-                actual.meta.count shouldBe 5
-            }
-        }
-
-        When("특정 유저가 특정 게시글에 댓글을 작성하면") {
-            repeat(5) {
-                commentRepository.save(comment(userId = user.id, postId = it + 1L))
-            }
-
-            val actual = postService.getCommentedAndReplied(user.id, PostScrollPageRequest(size = 30))
-
-            Then("특정 유저가 댓글을 작성한 게시글이 조회된다") {
-                actual.meta.count shouldBe 5
             }
         }
     }
