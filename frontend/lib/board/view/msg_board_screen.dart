@@ -28,8 +28,6 @@ import 'package:frontend/member/provider/member_state_notifier_provider.dart';
 import 'package:frontend/member/provider/mypage/my_comment_state_notifier_provider.dart';
 import 'package:frontend/member/provider/mypage/my_post_state_notifier_provider.dart';
 
-import '../../common/const/ip_list.dart';
-
 class MsgBoardScreen extends ConsumerStatefulWidget {
   final MsgBoardResponseModel board;
   const MsgBoardScreen({super.key, required this.board});
@@ -663,84 +661,6 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
         }));
   }
 
-  void filterDialog(String s, List<int> selectCommentIndex,
-      List<int> selectReplyIndex) async {
-    await showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: ((context) {
-          return AlertDialog(
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: Text(
-                    s,
-                    overflow: TextOverflow.visible,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-
-                      if (selectCommentIndex[0] != -1) {
-                        // Upload Reply
-                        addNewReply(selectCommentIndex[0]);
-                      } else if (selectCommentIndex[1] != -1) {
-                        // Modify Comment
-                        modifyComment(selectCommentIndex[1]);
-                      } else if (selectReplyIndex[1] != -1) {
-                        // Modify Reply
-                        modifyReply(selectReplyIndex[1]);
-                      } else {
-                        addNewComment();
-                      }
-
-                      textEditingController.clear();
-                      FocusManager.instance.primaryFocus?.unfocus();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: PRIMARY50_COLOR,
-                    ),
-                    child: const Text(
-                      "네",
-                      style: TextStyle(fontSize: 13, color: PRIMARY_COLOR),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: PRIMARY50_COLOR,
-                    ),
-                    child: const Text(
-                      "아니요",
-                      style: TextStyle(fontSize: 13, color: PRIMARY_COLOR),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          );
-        }));
-  }
-
   @override
   Widget build(BuildContext context) {
     final memberState = ref.watch(memberStateNotifierProvider);
@@ -918,34 +838,21 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                       return;
                     }
                     try {
-                      var dio = Dio();
-                      Response contentCheck = await dio.post(
-                          '$pythonIP/predict/',
-                          data: {"message": textEditingController.text});
-                      debugPrint(
-                          "titleCheck : ${contentCheck.data["profanity"]}");
-                      if (contentCheck.data["profanity"]) {
-                        filterDialog(
-                            "댓글에 비속어가 포함되어 있는 경우 서비스 이용에 제한이 있을 수 있습니다. 정말 등록하시겠습니까?",
-                            selectCommentIndex,
-                            selectReplyIndex);
+                      if (selectCommentIndex[0] != -1) {
+                        // Upload Reply
+                        addNewReply(selectCommentIndex[0]);
+                      } else if (selectCommentIndex[1] != -1) {
+                        // Modify Comment속
+                        modifyComment(selectCommentIndex[1]);
+                      } else if (selectReplyIndex[1] != -1) {
+                        // Modify Reply
+                        modifyReply(selectReplyIndex[1]);
                       } else {
-                        if (selectCommentIndex[0] != -1) {
-                          // Upload Reply
-                          addNewReply(selectCommentIndex[0]);
-                        } else if (selectCommentIndex[1] != -1) {
-                          // Modify Comment속
-                          modifyComment(selectCommentIndex[1]);
-                        } else if (selectReplyIndex[1] != -1) {
-                          // Modify Reply
-                          modifyReply(selectReplyIndex[1]);
-                        } else {
-                          addNewComment();
-                        }
-
-                        textEditingController.clear();
-                        FocusManager.instance.primaryFocus?.unfocus();
+                        addNewComment();
                       }
+
+                      textEditingController.clear();
+                      FocusManager.instance.primaryFocus?.unfocus();
                     } catch (e) {
                       debugPrint("upload_content_predict : ${e.toString()}");
                     }
