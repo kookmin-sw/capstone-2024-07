@@ -48,7 +48,7 @@ class _AppState extends ConsumerState<_App> {
     return MaterialApp.router(
       routerConfig: router,
       theme: ThemeData(
-        fontFamily: 'NotoSans',
+        fontFamily: 'GmarketSans',
         primarySwatch: Colors.purple,
       ),
       debugShowCheckedModeBanner: false,
