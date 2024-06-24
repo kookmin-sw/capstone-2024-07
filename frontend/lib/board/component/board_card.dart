@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/common/const/fonts.dart';
 
 import '../../common/const/colors.dart';
 import '../const/categorys.dart';
@@ -87,22 +88,23 @@ class BoardCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: BODY_TEXT_COLOR.withOpacity(0.5),
-            width: 1,
-          ),
-        ),
-      ),
+          borderRadius: BorderRadius.circular(10),
+          color: BOARD_CARD_COLOR,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 0,
+              blurRadius: 4.0,
+              offset: const Offset(0, 3),
+            )
+          ]),
       margin: const EdgeInsets.only(
         top: 10,
         left: 10,
         right: 10,
       ),
       child: Padding(
-        padding: const EdgeInsets.only(
-          bottom: 10,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -139,15 +141,6 @@ class BoardCard extends StatelessWidget {
                     const SizedBox(
                       width: 13,
                     ),
-                    TextWithIconForView(
-                      icon: Icons.photo_size_select_actual_outlined,
-                      iconSize: 18,
-                      text: imageCount.toString(),
-                      color: Colors.black,
-                    ),
-                    const SizedBox(
-                      width: 13,
-                    ),
                   ],
                 ),
               ],
@@ -155,34 +148,36 @@ class BoardCard extends StatelessWidget {
             const SizedBox(
               height: 5,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _formatText(postTitle, 40),
-                    style: const TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _formatText(postTitle, 40),
+                  style: const TextStyle(
+                    fontSize: 12.0,
+                    fontFamily: MyFontFamily.GmarketSansBold,
                   ),
-                  Text(
-                    _formatText(postContent, 80),
-                    softWrap: true,
-                    style: const TextStyle(
-                      fontSize: 10,
-                    ),
+                ),
+                Text(
+                  _formatText(postContent, 80),
+                  softWrap: true,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontFamily: MyFontFamily.GmarketSansMedium,
                   ),
-                  const SizedBox(
-                    height: 5,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "${changeTime(createdDateTime)} | $userNickname",
+                  style: const TextStyle(
+                    fontSize: 8,
+                    color: BOARD_CARD_TIME_COLOR,
+                    fontFamily: MyFontFamily.GmarketSansMedium,
                   ),
-                  Text(
-                    "${changeTime(createdDateTime)} | $userNickname",
-                    style: const TextStyle(fontSize: 10),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
@@ -198,12 +193,13 @@ class BoardCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(50),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 3),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
         child: Center(
           child: Text(
             category,
             style: const TextStyle(
               fontSize: 10,
+              fontFamily: MyFontFamily.GmarketSansMedium,
             ),
           ),
         ),

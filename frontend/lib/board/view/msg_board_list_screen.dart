@@ -17,11 +17,11 @@ import 'package:frontend/board/view/msg_board_screen.dart';
 import 'package:frontend/board/view/search_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
+import 'package:frontend/common/const/fonts.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
 import 'package:frontend/common/provider/dio_provider.dart';
 import 'package:frontend/member/provider/mypage/my_comment_state_notifier_provider.dart';
 
-import '../../common/component/notice_popup_dialog.dart';
 import '../../common/const/data.dart';
 import '../../member/model/member_model.dart';
 import '../../member/provider/member_state_notifier_provider.dart';
@@ -69,7 +69,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
             .read(commentPaginationProvider.notifier)
             .paginate(forceRefetch: true);
         ref.read(myCommentStateNotifierProvider.notifier).lastId =
-        9223372036854775807;
+            9223372036854775807;
         ref
             .read(myCommentStateNotifierProvider.notifier)
             .paginate(forceRefetch: true);
@@ -79,8 +79,8 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
             context,
             MaterialPageRoute(
                 builder: (context) => MsgBoardScreen(
-                  board: resp,
-                ),
+                      board: resp,
+                    ),
                 fullscreenDialog: true),
           );
         });
@@ -98,7 +98,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
               child: RefreshIndicator(
                 onRefresh: () async {
                   ref.read(boardStateNotifierProvider.notifier).lastId =
-                  9223372036854775807;
+                      9223372036854775807;
                   await ref
                       .read(boardStateNotifierProvider.notifier)
                       .paginate(forceRefetch: true);
@@ -118,26 +118,6 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
       floatingActionButton: Stack(
         fit: StackFit.expand,
         children: [
-          Positioned(
-            right: 10,
-            bottom: 100,
-            child: FloatingActionButton(
-              heroTag: 'searchButton',
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const SearchScreen(),
-                  ),
-                );
-              },
-              shape: const CircleBorder(),
-              backgroundColor: Colors.blue[300],
-              child: const Icon(
-                Icons.search,
-                color: Colors.white,
-              ),
-            ),
-          ),
           Positioned(
             right: 10,
             bottom: 30,
@@ -170,10 +150,11 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                 );
               },
               shape: const CircleBorder(),
-              backgroundColor: PRIMARY50_COLOR,
+              backgroundColor: FLOATING_BUTTON_COLOR,
               child: const Icon(
                 Icons.add,
                 color: Colors.white,
+                size: 45,
               ),
             ),
           ),
@@ -206,9 +187,11 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
     final dio = ref.watch(dioProvider);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      height: 30,
+      padding: const EdgeInsets.only(left: 12, right: 5),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(20),
+        color: MAJOR_SELECT_COLOR,
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
@@ -229,31 +212,24 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                   // 다시 paginate api 요청을 보낸다.
                   ref.read(memberStateNotifierProvider.notifier).getMe();
                   ref.read(boardStateNotifierProvider.notifier).lastId =
-                  9223372036854775807;
+                      9223372036854775807;
                   ref
                       .read(boardStateNotifierProvider.notifier)
                       .paginate(forceRefetch: true);
                 }
               } catch (e) {
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return NoticePopupDialog(
-                      message: "오류발생",
-                      buttonText: "닫기",
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    );
-                  },
-                );
+                debugPrint("Select Major Error : $e");
               }
             }
           },
-          icon: const Icon(Icons.keyboard_arrow_down_rounded),
+          icon: const Icon(
+            Icons.arrow_drop_down,
+            color: Colors.black,
+          ),
           style: const TextStyle(
             color: Colors.black,
-            fontSize: 16,
+            fontSize: 10,
+            fontFamily: MyFontFamily.GmarketSansMedium,
           ),
           items: majors.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
@@ -271,54 +247,55 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
 
   Widget renderTop() {
     return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
-        height: 50.0,
-        width: MediaQuery.of(context).size.width,
-        child: Stack(
-          children: [
-            Center(
-              child: GestureDetector(
-                onTap: () {
-                  ref.read(boardStateNotifierProvider.notifier).lastId =
-                  9223372036854775807;
-                  ref
-                      .read(boardStateNotifierProvider.notifier)
-                      .paginate(forceRefetch: true);
-                },
-                child: Image.asset(
-                  'asset/imgs/logo.png',
-                  width: 60.0,
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                renderMajorSelectBox(),
-                SizedBox(
-                  width: 70,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const MyPageScreen(),
-                        ),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.person,
-                    ),
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
+      height: 50.0,
+      width: MediaQuery.of(context).size.width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          renderMajorSelectBox(),
+          Row(
+            children: [
+              SizedBox(
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const SearchScreen(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.search,
+                    color: Colors.black,
                   ),
                 ),
-              ],
-            ),
-          ],
-        ));
+              ),
+              SizedBox(
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const MyPageScreen(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.person,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget renderCategories() {
     return Padding(
-      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 5),
+      padding: const EdgeInsets.only(top: 10.0),
       child: SizedBox(
         height: 40,
         child: ListView(
@@ -326,11 +303,11 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
           children: [
             for (var category in categorys)
               Padding(
-                padding: const EdgeInsets.all(7.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
                 child: CategoryCircleWithProvider(
                   category: category,
                   categoryCode: categoryCodesList[category]!,
-                  type: true,
                 ),
               )
           ],
@@ -369,7 +346,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: MediaQuery.of(context).size.height/3),
+          SizedBox(height: MediaQuery.of(context).size.height / 3),
           const Text(
             "해당 게시판에 작성된 게시글이 없습니다.",
             style: TextStyle(color: BODY_TEXT_COLOR, fontSize: 16.0),
@@ -387,15 +364,15 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
           return Center(
             child: cp is CursorPaginationModelFetchingMore
                 ? const CircularProgressIndicator(
-              color: PRIMARY_COLOR,
-            )
+                    color: PRIMARY_COLOR,
+                  )
                 : const Text(
-              'Copyright 2024. Decl Team all rights reserved.\n',
-              style: TextStyle(
-                color: BODY_TEXT_COLOR,
-                fontSize: 12.0,
-              ),
-            ),
+                    'Copyright 2024. Decl Team all rights reserved.\n',
+                    style: TextStyle(
+                      color: BODY_TEXT_COLOR,
+                      fontSize: 12.0,
+                    ),
+                  ),
           );
         }
 
@@ -406,19 +383,18 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
           onTap: () async {
             // 상세페이지
             ref.read(boardDetailNotifier.notifier).add(pItem.id);
-            Navigator.push(
-              context,
+            Navigator.of(context).push(
               MaterialPageRoute(
-                  builder: (context) => MsgBoardScreen(
-                    board: pItem,
-                  ),
-                  fullscreenDialog: true),
+                builder: (_) => MsgBoardScreen(
+                  board: pItem,
+                ),
+              ),
             );
           },
         );
       },
       separatorBuilder: (_, index) {
-        return const SizedBox(height: 1.0);
+        return const SizedBox(height: 10.0);
       },
     );
   }
