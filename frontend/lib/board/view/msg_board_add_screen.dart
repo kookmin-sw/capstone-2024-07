@@ -13,6 +13,7 @@ import 'package:frontend/board/provider/image_provider.dart';
 import 'package:frontend/board/provider/isquestion_provider.dart';
 import 'package:frontend/board/provider/network_image_provider.dart';
 import 'package:frontend/common/const/colors.dart';
+import 'package:frontend/common/const/fonts.dart';
 import 'package:frontend/member/provider/mypage/my_post_state_notifier_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:crypto/crypto.dart';
@@ -34,7 +35,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   bool canUpload = false;
   bool writedTitle = false;
   bool writedContent = false;
-  String selectCategory = "자유게시판";
+  String selectCategory = "자유";
   String title = "", content = "";
   bool isQuestion = false;
   List<XFile> realImages = [];
