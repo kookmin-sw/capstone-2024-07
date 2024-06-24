@@ -853,17 +853,14 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                   child: TextField(
                     focusNode: _focusNode,
                     controller: textEditingController,
+                    style: const TextStyle(
+                      fontFamily: MyFontFamily.GmarketSansMedium,
+                    ),
                     decoration: InputDecoration(
                       hintText: '입력',
                       contentPadding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 20),
                       border: InputBorder.none,
-                      hintStyle: const TextStyle(
-                        fontFamily: MyFontFamily.GmarketSansMedium,
-                      ),
-                      labelStyle: const TextStyle(
-                        fontFamily: MyFontFamily.GmarketSansMedium,
-                      ),
                       suffixIcon: GestureDetector(
                         child: Padding(
                           padding: const EdgeInsets.all(5),
