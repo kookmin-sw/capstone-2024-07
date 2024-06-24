@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/common/const/colors.dart';
+import 'package:frontend/common/const/fonts.dart';
 
 class Reply extends ConsumerStatefulWidget {
   final ReplyModel reply;
@@ -71,11 +72,19 @@ class _Reply extends ConsumerState<Reply> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  color: BODY_TEXT_COLOR.withOpacity(0.1),
+                  color: BOARD_CARD_COLOR,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.25),
+                      spreadRadius: 0,
+                      blurRadius: 2.0,
+                      offset: const Offset(0, 1),
+                    )
+                  ],
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(
-                    top: 15,
+                    top: 10,
                     left: 15,
                     right: 15,
                     bottom: 15,
@@ -93,7 +102,7 @@ class _Reply extends ConsumerState<Reply> {
                                 widget.reply.userInformation.nickname,
                                 style: TextStyle(
                                   fontSize: 13,
-                                  fontWeight: FontWeight.bold,
+                                  fontFamily: MyFontFamily.GmarketSansBold,
                                   color: widget.selectReply
                                       ? PRIMARY_COLOR
                                       : Colors.black,
@@ -105,8 +114,8 @@ class _Reply extends ConsumerState<Reply> {
                               Text(
                                 changeTime(widget.reply.createdAt),
                                 style: const TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.normal,
+                                  fontSize: 8,
+                                  fontFamily: MyFontFamily.GmarketSansMedium,
                                 ),
                               ),
                             ],
@@ -114,7 +123,7 @@ class _Reply extends ConsumerState<Reply> {
                           Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(50),
-                              color: BODY_TEXT_COLOR.withOpacity(0.1),
+                              color: Colors.white,
                             ),
                             child: Padding(
                               padding:
@@ -154,7 +163,7 @@ class _Reply extends ConsumerState<Reply> {
                         widget.reply.content,
                         style: TextStyle(
                           fontSize: 12,
-                          fontWeight: FontWeight.normal,
+                          fontFamily: MyFontFamily.GmarketSansMedium,
                           color:
                               widget.selectReply ? PRIMARY_COLOR : Colors.black,
                         ),

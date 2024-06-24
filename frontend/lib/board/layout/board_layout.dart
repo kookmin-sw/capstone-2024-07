@@ -2,11 +2,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/const/categorys.dart';
+import 'package:frontend/board/layout/big_button_layout.dart';
 import 'package:frontend/board/model/msg_board_detail_response_model.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/category_circle_layout.dart';
-import 'package:frontend/board/layout/text_with_icon.dart';
+import 'package:frontend/common/const/fonts.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -63,6 +64,7 @@ class Board extends ConsumerWidget {
               color: Colors.blue,
               decoration: TextDecoration.underline,
               fontSize: 12,
+              fontFamily: MyFontFamily.GmarketSansMedium,
             ),
             recognizer: TapGestureRecognizer()..onTap = () => _launchUrl(t),
           ),
@@ -74,6 +76,7 @@ class Board extends ConsumerWidget {
             style: const TextStyle(
               color: Colors.black,
               fontSize: 12,
+              fontFamily: MyFontFamily.GmarketSansMedium,
             ),
           ),
         );
@@ -81,10 +84,10 @@ class Board extends ConsumerWidget {
     }
 
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: BODY_TEXT_COLOR.withOpacity(0.5),
+            color: BOX_LINE_COLOR,
             width: 1,
           ),
         ),
@@ -97,103 +100,77 @@ class Board extends ConsumerWidget {
       child: Padding(
         padding: const EdgeInsets.only(
           bottom: 10,
+          left: 10,
+          right: 10,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CategoryCircle(
-                  category:
-                      categoryCodesReverseList[board.communityTitle].toString(),
-                  type: false,
-                ),
-                Row(
-                  children: [
-                    TextWithIcon(
-                      icon: Icons.favorite_outline_rounded,
-                      iconSize: 15,
-                      text: board.count.likeCount.toString(),
-                      commentId: -1,
-                      postId: board.id,
-                      replyId: -1,
-                      isClicked: board.likedBy,
-                      isMine: isMine,
-                      userId: board.userId,
-                    ),
-                    TextWithIcon(
-                      icon: Icons.chat_outlined,
-                      iconSize: 15,
-                      text: board.count.commentReplyCount.toString(),
-                      commentId: -1,
-                      postId: -1,
-                      replyId: -1,
-                      isClicked: false,
-                      isMine: isMine,
-                      userId: board.userId,
-                    ),
-                    TextWithIcon(
-                      icon: Icons.star_outline_rounded,
-                      iconSize: 18,
-                      text: board.count.scrapCount.toString(),
-                      commentId: -1,
-                      postId: board.id,
-                      replyId: -1,
-                      isClicked: board.isScrapped,
-                      isMine: isMine,
-                      userId: board.userId,
-                    ),
-                    const SizedBox(
-                      width: 6,
-                    ),
-                  ],
-                ),
-              ],
+            CategoryCircle(
+              category:
+                  categoryCodesReverseList[board.communityTitle].toString(),
             ),
             const SizedBox(
               height: 5,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    board.postTitle,
-                    style: TextStyle(
-                      fontSize: titleSize,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  // Text(
-                  //   board.postContent,
-                  //   softWrap: true,
-                  //   style: const TextStyle(
-                  //     fontSize: 10,
-                  //   ),
-                  // ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  RichText(
-                    softWrap: true,
-                    text: TextSpan(
-                      children: spans,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  ImageViewer(
-                    board: boardForImageViewer,
-                  ),
-                  Text(
-                    "${changeTime(board.createdDateTime)} | ${board.userNickname}",
-                    style: const TextStyle(fontSize: 10),
-                  ),
-                ],
+            Text(
+              board.postTitle,
+              style: TextStyle(
+                fontSize: titleSize,
+                fontFamily: MyFontFamily.GmarketSansBold,
               ),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            RichText(
+              softWrap: true,
+              text: TextSpan(
+                children: spans,
+              ),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            ImageViewer(
+              board: boardForImageViewer,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "${changeTime(board.createdDateTime)} | ${board.userNickname}",
+                  style: const TextStyle(
+                    fontSize: 8,
+                    fontFamily: MyFontFamily.GmarketSansMedium,
+                  ),
+                ),
+                Row(
+                  children: [
+                    BigButton(
+                      icon: Icons.favorite_outline_rounded,
+                      iconSize: 13,
+                      text: board.count.likeCount.toString(),
+                      postId: board.id,
+                      isClicked: board.likedBy,
+                      isMine: isMine,
+                      userId: board.userId,
+                    ),
+                    const SizedBox(
+                      width: 13,
+                    ),
+                    BigButton(
+                      icon: Icons.star_outline_rounded,
+                      iconSize: 20,
+                      text: board.count.scrapCount.toString(),
+                      postId: board.id,
+                      isClicked: board.isScrapped,
+                      isMine: isMine,
+                      userId: board.userId,
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),

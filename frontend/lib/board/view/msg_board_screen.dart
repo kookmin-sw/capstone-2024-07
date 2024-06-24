@@ -22,6 +22,7 @@ import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/comment_layout.dart';
+import 'package:frontend/common/const/fonts.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
 import 'package:frontend/member/model/member_model.dart';
 import 'package:frontend/member/provider/member_state_notifier_provider.dart';
@@ -211,10 +212,10 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     ],
                   ),
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
-                          color: BODY_TEXT_COLOR.withOpacity(0.3),
+                          color: BODY_TEXT_COLOR,
                           width: 1,
                         ),
                       ),
@@ -244,10 +245,10 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     ],
                   ),
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
-                          color: BODY_TEXT_COLOR.withOpacity(0.3),
+                          color: BODY_TEXT_COLOR,
                           width: 1,
                         ),
                       ),
@@ -277,10 +278,10 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     ],
                   ),
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
-                          color: BODY_TEXT_COLOR.withOpacity(0.3),
+                          color: BODY_TEXT_COLOR,
                           width: 1,
                         ),
                       ),
@@ -310,10 +311,10 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     ],
                   ),
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
-                          color: BODY_TEXT_COLOR.withOpacity(0.3),
+                          color: BODY_TEXT_COLOR,
                           width: 1,
                         ),
                       ),
@@ -343,10 +344,10 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     ],
                   ),
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
-                          color: BODY_TEXT_COLOR.withOpacity(0.3),
+                          color: BODY_TEXT_COLOR,
                           width: 1,
                         ),
                       ),
@@ -420,7 +421,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                                 "삭제하기",
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontWeight: FontWeight.normal,
+                                  fontFamily: MyFontFamily.GmarketSansMedium,
                                 ),
                               ),
                             ),
@@ -428,10 +429,10 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                         ],
                       ),
                       Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
-                              color: BODY_TEXT_COLOR.withOpacity(0.3),
+                              color: BODY_TEXT_COLOR,
                               width: 1,
                             ),
                           ),
@@ -460,7 +461,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                                 "수정하기",
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontWeight: FontWeight.normal,
+                                  fontFamily: MyFontFamily.GmarketSansMedium,
                                 ),
                               ),
                             ),
@@ -500,7 +501,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                                 "신고하기",
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontWeight: FontWeight.normal,
+                                  fontFamily: MyFontFamily.GmarketSansMedium,
                                 ),
                               ),
                             ),
@@ -508,10 +509,10 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                         ],
                       ),
                       Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           border: Border(
                             bottom: BorderSide(
-                              color: BODY_TEXT_COLOR.withOpacity(0.3),
+                              color: BODY_TEXT_COLOR,
                               width: 1,
                             ),
                           ),
@@ -533,7 +534,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                                 "차단하기",
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontWeight: FontWeight.normal,
+                                  fontFamily: MyFontFamily.GmarketSansMedium,
                                 ),
                               ),
                             ),
@@ -570,6 +571,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 13,
+                      fontFamily: MyFontFamily.GmarketSansMedium,
                     ),
                   ),
                 ),
@@ -591,7 +593,11 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     ),
                     child: const Text(
                       "확인",
-                      style: TextStyle(fontSize: 13, color: PRIMARY_COLOR),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: PRIMARY_COLOR,
+                        fontFamily: MyFontFamily.GmarketSansMedium,
+                      ),
                     ),
                   ),
                   const SizedBox(
@@ -607,7 +613,11 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     ),
                     child: const Text(
                       "취소",
-                      style: TextStyle(fontSize: 13, color: PRIMARY_COLOR),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: PRIMARY_COLOR,
+                        fontFamily: MyFontFamily.GmarketSansMedium,
+                      ),
                     ),
                   ),
                 ],
@@ -632,6 +642,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 13,
+                      fontFamily: MyFontFamily.GmarketSansMedium,
                     ),
                   ),
                 ),
@@ -651,7 +662,11 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     ),
                     child: const Text(
                       "확인",
-                      style: TextStyle(fontSize: 13, color: PRIMARY_COLOR),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: PRIMARY_COLOR,
+                        fontFamily: MyFontFamily.GmarketSansMedium,
+                      ),
                     ),
                   ),
                 ],
@@ -699,7 +714,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
           shadowColor: Colors.black,
           elevation: 3,
           leading: IconButton(
-            icon: const Icon(Icons.close),
+            icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
               ref.read(commentStateProvider.notifier).add(0, -1);
               ref.read(commentStateProvider.notifier).add(1, -1);
@@ -710,10 +725,9 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
           title: Text(
             categoryCodesReverseList[widget.board.communityTitle].toString(),
             style: const TextStyle(
-              fontSize: 15,
-              color: Colors.black,
-              fontWeight: FontWeight.normal,
-            ),
+                fontSize: 15,
+                color: Colors.black,
+                fontFamily: MyFontFamily.GmarketSansMedium),
           ),
           actions: [
             IconButton(
@@ -772,7 +786,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                   builder: (p0, isKeyboardVisible) {
                     return isKeyboardVisible
                         ? const SizedBox(
-                            height: 0,
+                            height: 10,
                           )
                         : Container(
                             height: 40,
@@ -795,7 +809,14 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          return const Text('이미 삭제된 글입니다.');
+          return const Text(
+            '이미 삭제된 글입니다.',
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.black,
+              fontFamily: MyFontFamily.GmarketSansBold,
+            ),
+          );
         } else {
           MsgBoardDetailResponseModel boardDetail =
               snapshot.data ?? widget.board as MsgBoardDetailResponseModel;
@@ -810,58 +831,86 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
   }
 
   Widget renderTextField(selectCommentIndex, selectReplyIndex) {
-    return Container(
-      color: Colors.white,
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              focusNode: _focusNode,
-              controller: textEditingController,
-              decoration: InputDecoration(
-                hintText: '입력',
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: BODY_TEXT_COLOR.withOpacity(0.5),
-                  ),
-                ),
-                suffixIcon: GestureDetector(
-                  child: const Icon(
-                    Icons.send,
-                    color: PRIMARY50_COLOR,
-                    size: 30,
-                  ),
-                  onTap: () async {
-                    if (textEditingController.text == "") {
-                      return;
-                    }
-                    try {
-                      if (selectCommentIndex[0] != -1) {
-                        // Upload Reply
-                        addNewReply(selectCommentIndex[0]);
-                      } else if (selectCommentIndex[1] != -1) {
-                        // Modify Comment속
-                        modifyComment(selectCommentIndex[1]);
-                      } else if (selectReplyIndex[1] != -1) {
-                        // Modify Reply
-                        modifyReply(selectReplyIndex[1]);
-                      } else {
-                        addNewComment();
-                      }
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(colors: TEXT_FIELD_COLORS),
+          borderRadius: BorderRadius.circular(30),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(1.5),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: Colors.white,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    focusNode: _focusNode,
+                    controller: textEditingController,
+                    decoration: InputDecoration(
+                      hintText: '입력',
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                      border: InputBorder.none,
+                      hintStyle: const TextStyle(
+                        fontFamily: MyFontFamily.GmarketSansMedium,
+                      ),
+                      labelStyle: const TextStyle(
+                        fontFamily: MyFontFamily.GmarketSansMedium,
+                      ),
+                      suffixIcon: GestureDetector(
+                        child: Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: TEXT_FIELD_SEND_COLOR,
+                                borderRadius: BorderRadius.circular(30)),
+                            child: const Icon(
+                              Icons.arrow_upward_rounded,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ),
+                        ),
+                        onTap: () async {
+                          if (textEditingController.text == "") {
+                            return;
+                          }
+                          try {
+                            if (selectCommentIndex[0] != -1) {
+                              // Upload Reply
+                              addNewReply(selectCommentIndex[0]);
+                            } else if (selectCommentIndex[1] != -1) {
+                              // Modify Comment속
+                              modifyComment(selectCommentIndex[1]);
+                            } else if (selectReplyIndex[1] != -1) {
+                              // Modify Reply
+                              modifyReply(selectReplyIndex[1]);
+                            } else {
+                              addNewComment();
+                            }
 
-                      textEditingController.clear();
-                      FocusManager.instance.primaryFocus?.unfocus();
-                    } catch (e) {
-                      debugPrint("upload_content_predict : ${e.toString()}");
-                    }
-                  },
+                            textEditingController.clear();
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          } catch (e) {
+                            debugPrint(
+                                "upload_content_predict : ${e.toString()}");
+                          }
+                        },
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
