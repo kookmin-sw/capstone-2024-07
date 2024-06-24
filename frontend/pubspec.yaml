@@ -103,6 +103,15 @@ flutter:
           weight: 300
         - asset: asset/fonts/NotoSansKR-Thin.otf
           weight: 100
+    - family: GmarketSansBold
+      fonts:
+        - asset: asset/fonts/GmarketSansBold.otf
+    - family: GmarketSansMedium
+      fonts:
+        - asset: asset/fonts/GmarketSansMedium.otf
+    - family: GmarketSansLight
+      fonts:
+        - asset: asset/fonts/GmarketSansLight.otf
 
   # To add assets to your application, add an assets section, like this:
   # assets:
