@@ -4,6 +4,7 @@ import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/layout/reply_layout.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
+import 'package:frontend/common/const/fonts.dart';
 
 class Comment extends ConsumerStatefulWidget {
   final CommentModel comment;
@@ -63,10 +64,10 @@ class _CommentState extends ConsumerState<Comment>
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: BODY_TEXT_COLOR.withOpacity(0.5),
+            color: BOX_LINE_COLOR,
             width: 1,
           ),
         ),
@@ -90,7 +91,7 @@ class _CommentState extends ConsumerState<Comment>
                       widget.comment.userInformation.nickname,
                       style: TextStyle(
                         fontSize: 13,
-                        fontWeight: FontWeight.bold,
+                        fontFamily: MyFontFamily.GmarketSansBold,
                         color: widget.selectComment ? PRIMARY_COLOR : null,
                       ),
                     ),
@@ -100,16 +101,15 @@ class _CommentState extends ConsumerState<Comment>
                     Text(
                       changeTime(widget.comment.createdAt),
                       style: const TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.normal,
-                      ),
+                          fontSize: 8,
+                          fontFamily: MyFontFamily.GmarketSansMedium),
                     ),
                   ],
                 ),
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(50),
-                    color: BODY_TEXT_COLOR.withOpacity(0.1),
+                    color: BODY_TEXT_COLOR,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 3),
@@ -162,6 +162,7 @@ class _CommentState extends ConsumerState<Comment>
               style: TextStyle(
                 fontSize: 12,
                 color: widget.selectComment ? PRIMARY_COLOR : null,
+                fontFamily: MyFontFamily.GmarketSansMedium,
               ),
             ),
             for (var reply in replies)

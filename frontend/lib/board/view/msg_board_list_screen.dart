@@ -231,6 +231,10 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
             fontSize: 10,
             fontFamily: MyFontFamily.GmarketSansMedium,
           ),
+          underline: Container(),
+          elevation: 0,
+          dropdownColor: Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(20),
           items: majors.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,

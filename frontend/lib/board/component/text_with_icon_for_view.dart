@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/common/const/fonts.dart';
 
 class TextWithIconForView extends StatefulWidget {
   final IconData icon;
@@ -36,6 +37,7 @@ class _TextWithIconForViewState extends State<TextWithIconForView> {
           widget.text,
           style: const TextStyle(
             fontSize: 12,
+            fontFamily: MyFontFamily.GmarketSansMedium,
           ),
         ),
       ],
