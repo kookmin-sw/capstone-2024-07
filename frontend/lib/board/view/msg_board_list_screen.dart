@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -111,6 +112,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   children: [
                     renderStudyList(),
+                    adSlider(),
                     renderBoardList(),
                   ],
                 ),
@@ -481,5 +483,45 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
         width: 0,
       );
     }
+  }
+
+  Widget adSlider() {
+    int current = 0;
+    final CarouselController controller = CarouselController();
+    List imageList = [
+      "https://pixabay.com/get/gdf303026c09bdf863eba76c3a8d6d15d33a5e34fce3ee8cc20c194efaa47defe8bddabaa5495f7b7cb86ec9665624920e2bfdc7f049c4f00e3204b5e0576b65d_1280.jpg",
+      "https://pixabay.com/get/g1e0d0f74fa4ab562447367cca607a66330d4d7a08e25686857a2930f6702ff267ecc3249d4e26ab42c2d168a9c625ce0a2426f940e941733bed5177ce911e897_1280.jpg",
+      "https://pixabay.com/get/g751c4c7eaa244b2d9b7fbe2079894f55293c50f65265cc603d1831d8c5bd542db385ff397039e10bd23bedac1824413c02517dcbe71cc51f1c06a45ddf4cea22_1280.jpg",
+      "https://pixabay.com/get/gdab65061a6f72817e4c983087119f3e688af08ca44de4cce98401b5ed401a5b3252e6a880681fd6bc45eab42220f25646254a712a4ef7df6903e3cef0467fcd7_1280.jpg",
+    ];
+    return CarouselSlider(
+      carouselController: controller,
+      items: imageList.map(
+        (imgLink) {
+          return Builder(
+            builder: (context) {
+              return SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Image(
+                  fit: BoxFit.fill,
+                  image: NetworkImage(
+                    imgLink,
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ).toList(),
+      options: CarouselOptions(
+        height: 300,
+        viewportFraction: 1.0,
+        autoPlay: true,
+        autoPlayInterval: const Duration(seconds: 4),
+        onPageChanged: (index, reason) {
+          // TODO : set current
+        },
+      ),
+    );
   }
 }
