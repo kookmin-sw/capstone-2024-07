@@ -5,11 +5,14 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:frontend/board/component/board_card.dart';
+import 'package:frontend/board/layout/study_box_layout.dart';
 import 'package:frontend/board/model/msg_board_detail_response_model.dart';
+import 'package:frontend/board/provider/api_category_provider.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/board_detail_state_notifier_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/const/categorys.dart';
+import 'package:frontend/board/provider/category_provider.dart';
 import 'package:frontend/board/provider/comment_pagination_provider.dart';
 import 'package:frontend/board/provider/payload_state_notifier_provider.dart';
 import 'package:frontend/board/view/msg_board_add_screen.dart';
@@ -107,6 +110,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                   controller: controller,
                   physics: const AlwaysScrollableScrollPhysics(),
                   children: [
+                    renderStudyList(),
                     renderBoardList(),
                   ],
                 ),
@@ -401,5 +405,81 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
         return const SizedBox(height: 10.0);
       },
     );
+  }
+
+  Widget renderStudyList() {
+    final communityTitle = ref.watch(categoryTitleProvider);
+    final isHot = ref.watch(isHotProvider);
+    if (communityTitle == null && !isHot) {
+      return Padding(
+        padding: const EdgeInsets.only(
+          top: 10.0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "최신 스터디, 프로젝트",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontFamily: MyFontFamily.GmarketSansBold,
+                      fontSize: 11,
+                    ),
+                  ),
+                  GestureDetector(
+                    child: const Text(
+                      "더 보기 >",
+                      style: TextStyle(
+                        color: CLOUD_COLOR,
+                        fontFamily: MyFontFamily.GmarketSansMedium,
+                        fontSize: 10,
+                      ),
+                    ),
+                    onTap: () {
+                      ref.read(categoryTitleProvider.notifier).state = "STUDY";
+                      ref.read(isHotProvider.notifier).state = false;
+
+                      ref.read(categoryStateProvider.notifier).clear();
+                      ref.read(categoryStateProvider.notifier).add("스터디/프로젝트");
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      for (int i = 0; i < 10; i++)
+                        const Padding(
+                          padding: EdgeInsets.only(
+                            left: 10.0,
+                            right: 5.0,
+                            top: 5.0,
+                            bottom: 17.0,
+                          ),
+                          child: StudyBox(),
+                        )
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    } else {
+      return const SizedBox(
+        width: 0,
+      );
+    }
   }
 }
