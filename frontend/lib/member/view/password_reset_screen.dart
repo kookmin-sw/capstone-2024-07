@@ -102,7 +102,7 @@ class _PasswordResetScreenState extends ConsumerState<PasswordResetScreen> {
           '이름과 학교 이메일을 입력하시면 새로운 비밀번호를 이메일로 전송해드립니다.',
           style: TextStyle(
             fontSize: 14,
-            color: BODY_TEXT_COLOR,
+            color: Colors.black54,
           ),
         ),
       ],
