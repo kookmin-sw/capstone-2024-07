@@ -94,9 +94,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Text(
                       '학과끼리 통하는 이야기, 디클',
                       style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500
-                      ),
+                          color: Colors.black, fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),
@@ -104,6 +102,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 TextFormField(
                   decoration: InputDecoration(
                     hintText: '학교 이메일을 입력해주세요.',
+                    hintStyle: TextStyle(fontWeight: FontWeight.w400),
                     contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
@@ -131,6 +130,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 TextFormField(
                   decoration: InputDecoration(
                     hintText: '비밀번호를 입력해주세요.',
+                    hintStyle: TextStyle(fontWeight: FontWeight.w400),
                     contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
