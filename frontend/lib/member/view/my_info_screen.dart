@@ -175,7 +175,7 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-        border: Border.all(color: BODY_TEXT_COLOR),
+        border: Border.all(color: Colors.grey),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
       height: 170.0,
@@ -203,7 +203,7 @@ class _MyInfoScreenState extends ConsumerState<MyInfoScreen> {
           Text(
             content,
             style: const TextStyle(
-              color: BODY_TEXT_COLOR,
+              color: Colors.black54,
             ),
           ),
         ],
