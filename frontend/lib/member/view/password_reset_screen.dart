@@ -252,7 +252,13 @@ class _PasswordResetScreenState extends ConsumerState<PasswordResetScreen> {
           }
         }
       },
-      child: Text('비밀번호 초기화'),
+      child: Text(
+        '비밀번호 초기화',
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w700
+        ),
+      ),
     );
   }
 }

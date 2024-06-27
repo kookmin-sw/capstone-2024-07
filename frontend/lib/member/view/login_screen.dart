@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/member/view/password_reset_screen.dart';
 import 'package:frontend/member/view/signup_screen.dart';
@@ -20,7 +22,6 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  bool isWillingToResetPassword = false;
   String email = '';
   String password = '';
 
@@ -39,10 +40,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
+  void onContactPressed() async {
+    final Email email = Email(
+        body: '문의할 사항을 아래에 작성해주세요.',
+        subject: '[디클 문의]',
+        recipients: ['99jiasmin@gmail.com'],
+        cc: [],
+        bcc: [],
+        attachmentPaths: [],
+        isHTML: false);
+
+    try {
+      await FlutterEmailSender.send(email);
+    } catch (error) {
+      getNoticeDialog(
+          context, '기본 메일 앱을 사용할 수 없습니다. \n이메일로 연락주세요! 99jiasmin@gmail.com');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(memberStateNotifierProvider);
 
+    // 로그인 오류가 났을 경우엔 팝업으로 알림보내기
     if (state is MemberModelError) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         getNoticeDialog(context, state.message);
@@ -51,155 +71,180 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     return DefaultLayout(
       child: SingleChildScrollView(
+        // SingleChildScrollView -> 화면 크기를 늘려주는것
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        // keyboardDismissBehavior = 스크롤을 움직이면 올라왔던 키보드가 바로 다시 내려가게 함..
         child: SafeArea(
           top: true,
           bottom: false,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Center(
-                    child: Image.asset(
+                const SizedBox(height: 120.0),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
                       'asset/imgs/logo.png',
-                      width: 80.0,
+                      width: 140,
                     ),
-                  ),
-                ),
-                _renderTitle(),
-                _renderSubTitle(),
-                const SizedBox(height: 16.0),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12.0, 50.0, 12.0, 50.0),
-                  child: SizedBox(
-                    width: 220.0,
-                    height: 220.0,
-                    child: Image.asset(
-                      'asset/imgs/decle.png',
+                    const SizedBox(height: 10.0),
+                    Text(
+                      '학과끼리 통하는 이야기, 디클',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                CustomTextFormField(
-                  hintText: '이메일을 입력해주세요.',
+                const SizedBox(height: 30.0),
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: '학교 이메일을 입력해주세요.',
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(
+                        color: PRIMARY_COLOR,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                  ),
                   onChanged: (String value) {
                     email = value;
                   },
                 ),
                 const SizedBox(height: 16.0),
-                CustomTextFormField(
-                  hintText: '비밀번호를 입력해주세요.',
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: '비밀번호를 입력해주세요.',
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(
+                        color: PRIMARY_COLOR,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                      ),
+                    ),
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                  ),
+                  obscureText: true,
                   onChanged: (String value) {
                     password = value;
                   },
-                  obscureText: true,
                 ),
-                const SizedBox(height: 16.0),
-                SizedBox(
+                const SizedBox(height: 30.0),
+                Container(
                   height: 40.0,
                   child: ElevatedButton(
-                    onPressed: state is MemberModelLoading //로딩중이면 로그인 버튼 못누르도록
+                    onPressed: state is MemberModelLoading // 로딩 중이면 로그인 버튼 비활성화
                         ? null
                         : () async {
-                            ref
+                            await ref
                                 .read(memberStateNotifierProvider.notifier)
                                 .login(email: email, password: password);
                           },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: PRIMARY_COLOR,
-                      textStyle: const TextStyle(
-                        color: Colors.white,
-                      ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(12),
                       ),
+                      backgroundColor: PRIMARY_COLOR,
                     ),
-                    child: const Text(
+                    child: Text(
                       '로그인',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ),
-                const SizedBox(height: 8.0),
-                SizedBox(
+                const SizedBox(height: 10.0),
+                Container(
                   height: 40.0,
                   child: TextButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const SignupScreen(),
-                        ),
-                      );
-                    },
+                    onPressed:
+                        state is MemberModelLoading // 로딩 중이면 회원가입 버튼 비활성화
+                            ? null
+                            : () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => SignupScreen(),
+                                  ),
+                                );
+                              },
                     style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: BorderSide(color: PRIMARY_COLOR),
+                        ),
+                      ),
                       foregroundColor: MaterialStateProperty.all(PRIMARY_COLOR),
-                      side: MaterialStateProperty.all(
-                        const BorderSide(
-                          color: PRIMARY_COLOR,
-                          width: 1.0,
-                        ),
-                      ),
-                      shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
                     ),
-                    child: const Text('회원가입'),
+                    child: Text(
+                      '회원가입',
+                      style: TextStyle(color: PRIMARY_COLOR),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 8.0),
-                SizedBox(
-                  height: 40.0,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const PasswordResetScreen(),
-                        ),
-                      );
-                    },
-                    style: ButtonStyle(
-                      foregroundColor:
-                          MaterialStateProperty.all(BODY_TEXT_COLOR),
-                      shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
+                SizedBox(height: 20.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => PasswordResetScreen(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        '비밀번호 분실',
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
-                    child: const Text('비밀번호 초기화'),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Icon(
+                        Icons.circle,
+                        color: Colors.grey,
+                        size: 5.0,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: onContactPressed,
+                      child: Text(
+                        '문의하기',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _renderTitle() {
-    return const Text(
-      '학과별 정보공유 커뮤니티, 디클',
-      style: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w500,
-        color: Colors.black,
-      ),
-    );
-  }
-
-  Widget _renderSubTitle() {
-    return const Text(
-      '학교 이메일과 비밀번호를 입력해서 로그인 해주세요!',
-      style: TextStyle(
-        fontSize: 16,
-        color: BODY_TEXT_COLOR,
       ),
     );
   }

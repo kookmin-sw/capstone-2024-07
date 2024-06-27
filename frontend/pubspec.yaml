@@ -89,29 +89,14 @@ flutter:
     - shorebird.yaml
 
   fonts:
-    - family: NotoSans
-      fonts:
-        - asset: asset/fonts/NotoSansKR-Black.otf
-          weight: 900
-        - asset: asset/fonts/NotoSansKR-Bold.otf
-          weight: 700
-        - asset: asset/fonts/NotoSansKR-Medium.otf
-          weight: 500
-        - asset: asset/fonts/NotoSansKR-Regular.otf
-          weight: 400
-        - asset: asset/fonts/NotoSansKR-Light.otf
-          weight: 300
-        - asset: asset/fonts/NotoSansKR-Thin.otf
-          weight: 100
-    - family: GmarketSansBold
+    - family: GmarketSans
       fonts:
         - asset: asset/fonts/GmarketSansBold.otf
-    - family: GmarketSansMedium
-      fonts:
+          weight: 700
         - asset: asset/fonts/GmarketSansMedium.otf
-    - family: GmarketSansLight
-      fonts:
+          weight: 500
         - asset: asset/fonts/GmarketSansLight.otf
+          weight: 100
 
   # To add assets to your application, add an assets section, like this:
   # assets:
