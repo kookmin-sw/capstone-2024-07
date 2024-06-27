@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/member/provider/mypage/my_scrap_state_notifier_provider.dart';
@@ -28,8 +29,8 @@ class _MyScrapScreenState extends ConsumerState<MyScrapScreen> {
   void scrollListener() {
     if (controller.offset > controller.position.maxScrollExtent - 150) {
       ref.read(myScrapStateNotifierProvider.notifier).paginate(
-            fetchMore: true,
-          );
+        fetchMore: true,
+      );
     }
   }
 
@@ -102,31 +103,38 @@ class _MyScrapScreenState extends ConsumerState<MyScrapScreen> {
 
     final cp = data as CursorPaginationModel;
 
+    if (cp.data.isEmpty) {
+      return const Center(
+        child: Text("스크랩한 게시글이 없습니다."),
+      );
+    }
+
     return RefreshIndicator(
       onRefresh: () async {
         ref.read(myScrapStateNotifierProvider.notifier).lastId =
-            9223372036854775807;
+        9223372036854775807;
         await ref
             .read(myScrapStateNotifierProvider.notifier)
             .paginate(forceRefetch: true);
       },
       child: ListView.separated(
         controller: controller,
+        physics: const AlwaysScrollableScrollPhysics(),
         itemCount: cp.data.length + 1,
         itemBuilder: (_, index) {
           if (index == cp.data.length) {
             return Center(
               child: cp is CursorPaginationModelFetchingMore
                   ? const CircularProgressIndicator(
-                      color: PRIMARY_COLOR,
-                    )
+                color: PRIMARY_COLOR,
+              )
                   : const Text(
-                      'Copyright 2024. Decl Team all rights reserved.\n',
-                      style: TextStyle(
-                        color: BODY_TEXT_COLOR,
-                        fontSize: 12.0,
-                      ),
-                    ),
+                'Copyright 2024. Decl Team all rights reserved.\n',
+                style: TextStyle(
+                  color: BODY_TEXT_COLOR,
+                  fontSize: 12.0,
+                ),
+              ),
             );
           }
 
@@ -141,8 +149,8 @@ class _MyScrapScreenState extends ConsumerState<MyScrapScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => MsgBoardScreen(
-                          board: pItem,
-                        ),
+                      board: pItem,
+                    ),
                     fullscreenDialog: true),
               );
             },
