@@ -266,11 +266,39 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
           child: Column(
             children: [
               const _Top(),
-              _Title(nickname: nickname),
               const SizedBox(height: 20.0),
               _buildAccountInfo(ref, context),
               const SizedBox(height: 40.0),
               _buildNoticeInfo(ref, context),
+              const SizedBox(height: 40.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: noticeBeforeResignDialog,
+                    child: Text(
+                      '회원 탈퇴',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Icon(
+                      Icons.circle,
+                      color: Colors.grey,
+                      size: 5.0,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: noticeBeforeLogoutDialog,
+                    child: Text(
+                      '로그아웃',
+                      style: TextStyle(color: Colors.black45),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20.0),
             ],
           ),
         ),
@@ -285,7 +313,10 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
         Container(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
           width: MediaQuery.of(context).size.width,
-          child: const Text("계정 정보"),
+          child: const Text(
+            "계정 정보",
+            style: TextStyle(color: Colors.black45),
+          ),
         ),
         _MenuButton(
           title: "내 정보",
@@ -296,12 +327,6 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
               ),
             );
           },
-          border: Border(
-            top: BorderSide(color: Colors.grey.shade400),
-            bottom: BorderSide(color: Colors.grey.shade400),
-            left: const BorderSide(color: Colors.transparent),
-            right: const BorderSide(color: Colors.transparent),
-          ),
         ),
         _MenuButton(
           title: "내가 쓴 글",
@@ -343,12 +368,6 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
             );
           },
         ),
-        _MenuButton(
-          title: "회원 탈퇴하기",
-          onPressed: () {
-            noticeBeforeResignDialog();
-          },
-        ),
       ],
     );
   }
@@ -360,30 +379,21 @@ class _MypageScreenState extends ConsumerState<MyPageScreen> {
         Container(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
           width: MediaQuery.of(context).size.width,
-          child: const Text("이용 안내"),
+          child: const Text(
+            "이용 안내",
+            style: TextStyle(color: Colors.black45),
+          ),
         ),
         _MenuButton(
           title: "앱 정보",
           onPressed: () {
             onAppInfoPressed();
           },
-          border: Border(
-            top: BorderSide(color: Colors.grey.shade400),
-            bottom: BorderSide(color: Colors.grey.shade400),
-            left: const BorderSide(color: Colors.transparent),
-            right: const BorderSide(color: Colors.transparent),
-          ),
         ),
         _MenuButton(
           title: "문의하기",
           onPressed: () {
             onContactPressed();
-          },
-        ),
-        _MenuButton(
-          title: "로그아웃",
-          onPressed: () {
-            noticeBeforeLogoutDialog();
           },
         ),
       ],
@@ -398,57 +408,32 @@ class _Top extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+      child: Stack(
         children: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(
-              Icons.keyboard_arrow_left,
-              color: PRIMARY_COLOR,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(
+                  Icons.keyboard_arrow_left,
+                  color: Colors.black,
+                ),
+              ),
+            ],
           ),
-          const Icon(
-            Icons.home_outlined,
-            color: PRIMARY_COLOR,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Title extends StatelessWidget {
-  final String nickname;
-
-  const _Title({
-    required this.nickname,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '반가워요 $nickname님!',
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
-            ),
-          ),
-          const Text(
-            '오늘도 디클에서 좋은 하루 보내세요!',
-            style: TextStyle(
-              fontSize: 16,
-              color: BODY_TEXT_COLOR,
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 11.0),
+            child: Center(
+              child: Text(
+                '마이페이지',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
           ),
         ],
@@ -488,15 +473,16 @@ class _MenuButton extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(
-                Icons.circle,
-                size: 8.0,
-              ),
-              const SizedBox(width: 10.0),
               Text(
                 title,
                 style: const TextStyle(fontSize: 16.0),
+              ),
+              Icon(
+                Icons.arrow_forward_ios_outlined,
+                size: 14.0,
+                color: Colors.grey,
               ),
             ],
           ),
