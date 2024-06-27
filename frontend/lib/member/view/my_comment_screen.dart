@@ -102,6 +102,12 @@ class _MyCommentScreenState extends ConsumerState<MyCommentScreen> {
 
     final cp = data as CursorPaginationModel;
 
+    if (cp.data.isEmpty) {
+      return const Center(
+        child: Text("작성한 댓글이 없습니다."),
+      );
+    }
+
     return RefreshIndicator(
       onRefresh: () async {
         ref.read(myCommentStateNotifierProvider.notifier).lastId =
@@ -112,6 +118,7 @@ class _MyCommentScreenState extends ConsumerState<MyCommentScreen> {
       },
       child: ListView.separated(
         controller: controller,
+        physics: const AlwaysScrollableScrollPhysics(),
         itemCount: cp.data.length + 1,
         itemBuilder: (_, index) {
           if (index == cp.data.length) {
