@@ -477,7 +477,7 @@ class _MenuButton extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(fontSize: 16.0),
+                style: const TextStyle(fontSize: 14.0),
               ),
               Icon(
                 Icons.arrow_forward_ios_outlined,
