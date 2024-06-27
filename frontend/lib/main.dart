@@ -25,20 +25,6 @@ class _AppState extends ConsumerState<_App> {
   @override
   void initState() {
     super.initState();
-
-    shorebirdCodePush.currentPatchNumber().then((value) {
-      print('current patch number is $value');
-    });
-
-    _checkForUpdates();
-  }
-
-  Future<void> _checkForUpdates() async {
-    final isUpdateAvailable = await shorebirdCodePush.isNewPatchAvailableForDownload();
-
-    if (isUpdateAvailable) {
-      await shorebirdCodePush.downloadUpdateIfAvailable();
-    }
   }
 
   @override
