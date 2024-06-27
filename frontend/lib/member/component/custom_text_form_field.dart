@@ -58,6 +58,7 @@ class CustomTextFormField extends StatelessWidget {
         hintStyle: const TextStyle(
           color: Colors.black54,
           fontSize: 14.0,
+          fontWeight: FontWeight.w400,
         ),
         fillColor: INPUT_BG_COLOR, //배경색
         filled: true, //배경색 있음.
