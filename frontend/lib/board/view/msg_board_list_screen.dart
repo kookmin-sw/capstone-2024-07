@@ -359,7 +359,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
           SizedBox(height: MediaQuery.of(context).size.height / 3),
           const Text(
             "해당 게시판에 작성된 게시글이 없습니다.",
-            style: TextStyle(color: BODY_TEXT_COLOR, fontSize: 16.0),
+            style: TextStyle(color: BOARD_CARD_TIME_COLOR, fontSize: 16.0),
           ),
         ],
       );
