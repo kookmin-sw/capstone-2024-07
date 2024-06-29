@@ -88,7 +88,7 @@ class BoardCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: BOARD_CARD_COLOR,
+          color: Colors.white,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
@@ -99,8 +99,8 @@ class BoardCard extends StatelessWidget {
           ]),
       margin: const EdgeInsets.only(
         top: 10,
-        left: 10,
-        right: 10,
+        left: 20,
+        right: 20,
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),

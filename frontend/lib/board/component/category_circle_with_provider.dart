@@ -39,7 +39,7 @@ class CategoryCircleWithProvider extends ConsumerWidget {
       child: Container(
         // category circle
         decoration: BoxDecoration(
-          color: isClicked ? CATEGORY_COLOR : BODY_TEXT_COLOR,
+          color: isClicked ? CATEGORY_COLOR : MAJOR_SELECT_COLOR,
           borderRadius: BorderRadius.circular(50),
         ),
         child: SizedBox(
