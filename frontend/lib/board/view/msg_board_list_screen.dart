@@ -21,7 +21,7 @@ import 'package:frontend/board/view/msg_board_screen.dart';
 import 'package:frontend/board/view/search_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
-import 'package:frontend/common/const/fonts.dart';
+
 import 'package:frontend/common/model/cursor_pagination_model.dart';
 import 'package:frontend/common/provider/dio_provider.dart';
 import 'package:frontend/member/provider/mypage/my_comment_state_notifier_provider.dart';

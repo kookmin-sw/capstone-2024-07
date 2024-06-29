@@ -22,7 +22,7 @@ import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/board_layout.dart';
 import 'package:frontend/board/layout/comment_layout.dart';
-import 'package:frontend/common/const/fonts.dart';
+
 import 'package:frontend/common/model/cursor_pagination_model.dart';
 import 'package:frontend/member/model/member_model.dart';
 import 'package:frontend/member/provider/member_state_notifier_provider.dart';
@@ -725,9 +725,10 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
           title: Text(
             categoryCodesReverseList[widget.board.communityTitle].toString(),
             style: const TextStyle(
-                fontSize: 15,
-                color: Colors.black,
-                fontFamily: MyFontFamily.GmarketSansMedium),
+              fontSize: 15,
+              color: Colors.black,
+              fontWeight: FontWeight.w400,
+            ),
           ),
           actions: [
             IconButton(

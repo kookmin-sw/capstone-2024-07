@@ -4,7 +4,6 @@ import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/layout/reply_layout.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
-import 'package:frontend/common/const/fonts.dart';
 
 class Comment extends ConsumerStatefulWidget {
   final CommentModel comment;
@@ -101,8 +100,9 @@ class _CommentState extends ConsumerState<Comment>
                     Text(
                       changeTime(widget.comment.createdAt),
                       style: const TextStyle(
-                          fontSize: 8,
-                          fontFamily: MyFontFamily.GmarketSansMedium),
+                        fontSize: 8,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ],
                 ),

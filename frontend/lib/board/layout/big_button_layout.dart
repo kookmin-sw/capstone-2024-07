@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/scrap_provider.dart';
 import 'package:frontend/common/const/colors.dart';
-import 'package:frontend/common/const/fonts.dart';
+
 import 'package:frontend/member/provider/mypage/my_scrap_state_notifier_provider.dart';
 
 class BigButton extends ConsumerStatefulWidget {

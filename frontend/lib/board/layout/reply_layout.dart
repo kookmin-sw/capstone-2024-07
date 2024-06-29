@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/common/const/colors.dart';
-import 'package:frontend/common/const/fonts.dart';
 
 class Reply extends ConsumerStatefulWidget {
   final ReplyModel reply;

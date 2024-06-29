@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/common/const/fonts.dart';
 
 import '../../common/const/colors.dart';
 import '../provider/api_category_provider.dart';
