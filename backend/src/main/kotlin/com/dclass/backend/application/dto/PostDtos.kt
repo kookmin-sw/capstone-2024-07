@@ -28,16 +28,16 @@ data class PostScrollPageRequest(
     val size: Int,
 
     @Schema(
-        description = "게시글의 인기순 정렬 여부",
-        example = "true",
-    )
-    val isHot: Boolean = false,
-
-    @Schema(
         description = "검색 키워드",
         example = "검색 키워드",
     )
     val keyword: String? = null,
+
+    @Schema(
+        description = "게시글의 인기순 정렬 여부",
+        example = "true",
+    )
+    val isHot: Boolean = false,
 ) {
     init {
         communityTitle = CommunityType.from(communityTitle)?.name
@@ -114,6 +114,13 @@ data class PostResponse(
     )
     val isQuestion: Boolean,
 
+
+    @Schema(
+        description = "게시글이 익명인지 여부",
+        example = "true",
+    )
+    val isAnonymous: Boolean,
+
     @Schema(
         description = "차단한 사용자의 게시글인지 여부",
         example = "true",
@@ -148,6 +155,7 @@ data class PostResponse(
         post.images.map { it.imageKey },
         post.postCount,
         post.isQuestion,
+        post.isAnonymous,
         false,
         post.images.size,
         post.createdDateTime,
@@ -222,6 +230,12 @@ data class PostDetailResponse(
     val isQuestion: Boolean,
 
     @Schema(
+        description = "게시글이 익명인지 여부",
+        example = "true",
+    )
+    val isAnonymous: Boolean,
+
+    @Schema(
         description = "게시글이 스크랩된 여부",
         example = "true",
     )
@@ -268,6 +282,7 @@ data class PostDetailResponse(
         post.images.map { it.imageKey },
         post.postCount,
         post.isQuestion,
+        post.isAnonymous,
         false,
         false,
         post.images.size,
@@ -302,6 +317,12 @@ data class CreatePostRequest(
     val isQuestion: Boolean,
 
     @Schema(
+        description = "게시글이 익명인지 여부",
+        example = "true",
+    )
+    val isAnonymous: Boolean,
+
+    @Schema(
         description = "게시글의 이미지 URL 리스트",
         example = "['이미지 URL']",
     )
@@ -315,6 +336,7 @@ data class CreatePostRequest(
         content = content,
         images = images.map { Image(it) },
         isQuestion = isQuestion,
+        isAnonymous = isAnonymous,
     )
 
     init {
@@ -340,6 +362,12 @@ data class UpdatePostRequest(
         example = "게시글 내용",
     )
     val content: String,
+
+    @Schema(
+        description = "게시글이 질문인지 여부",
+        example = "true",
+    )
+    val isAnonymous: Boolean,
 
     @Schema(
         description = "게시글이 속한 커뮤니티의 타이틀",
