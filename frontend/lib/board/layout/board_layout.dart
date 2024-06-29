@@ -64,7 +64,7 @@ class Board extends ConsumerWidget {
               color: Colors.blue,
               decoration: TextDecoration.underline,
               fontSize: 12,
-              fontFamily: MyFontFamily.GmarketSansMedium,
+              fontWeight: FontWeight.w400,
             ),
             recognizer: TapGestureRecognizer()..onTap = () => _launchUrl(t),
           ),
@@ -76,7 +76,7 @@ class Board extends ConsumerWidget {
             style: const TextStyle(
               color: Colors.black,
               fontSize: 12,
-              fontFamily: MyFontFamily.GmarketSansMedium,
+              fontWeight: FontWeight.w400,
             ),
           ),
         );
@@ -117,7 +117,7 @@ class Board extends ConsumerWidget {
               board.postTitle,
               style: TextStyle(
                 fontSize: titleSize,
-                fontFamily: MyFontFamily.GmarketSansBold,
+                fontWeight: FontWeight.w500,
               ),
             ),
             const SizedBox(
@@ -142,7 +142,7 @@ class Board extends ConsumerWidget {
                   "${changeTime(board.createdDateTime)} | ${board.userNickname}",
                   style: const TextStyle(
                     fontSize: 8,
-                    fontFamily: MyFontFamily.GmarketSansMedium,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
                 Row(

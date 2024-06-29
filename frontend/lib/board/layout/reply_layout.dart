@@ -102,7 +102,7 @@ class _Reply extends ConsumerState<Reply> {
                                 widget.reply.userInformation.nickname,
                                 style: TextStyle(
                                   fontSize: 13,
-                                  fontFamily: MyFontFamily.GmarketSansBold,
+                                  fontWeight: FontWeight.w500,
                                   color: widget.selectReply
                                       ? PRIMARY_COLOR
                                       : Colors.black,
@@ -115,7 +115,7 @@ class _Reply extends ConsumerState<Reply> {
                                 changeTime(widget.reply.createdAt),
                                 style: const TextStyle(
                                   fontSize: 8,
-                                  fontFamily: MyFontFamily.GmarketSansMedium,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ),
                             ],
@@ -163,7 +163,7 @@ class _Reply extends ConsumerState<Reply> {
                         widget.reply.content,
                         style: TextStyle(
                           fontSize: 12,
-                          fontFamily: MyFontFamily.GmarketSansMedium,
+                          fontWeight: FontWeight.w400,
                           color:
                               widget.selectReply ? PRIMARY_COLOR : Colors.black,
                         ),

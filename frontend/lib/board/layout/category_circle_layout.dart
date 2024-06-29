@@ -26,7 +26,7 @@ class CategoryCircle extends ConsumerWidget {
             category,
             style: const TextStyle(
               fontSize: 10,
-              fontFamily: MyFontFamily.GmarketSansMedium,
+              fontWeight: FontWeight.w400,
             ),
           ),
         ),

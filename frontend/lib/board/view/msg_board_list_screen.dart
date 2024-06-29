@@ -112,7 +112,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   children: [
                     renderStudyList(),
-                    adSlider(),
+                    // adSlider(),
                     renderBoardList(),
                   ],
                 ),
@@ -235,7 +235,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
           style: const TextStyle(
             color: Colors.black,
             fontSize: 10,
-            fontFamily: MyFontFamily.GmarketSansMedium,
+            fontWeight: FontWeight.w400,
           ),
           underline: Container(),
           elevation: 0,
@@ -429,7 +429,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                     "최신 스터디, 프로젝트",
                     style: TextStyle(
                       color: Colors.black,
-                      fontFamily: MyFontFamily.GmarketSansBold,
+                      fontWeight: FontWeight.w500,
                       fontSize: 11,
                     ),
                   ),
@@ -438,7 +438,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                       "더 보기 >",
                       style: TextStyle(
                         color: CLOUD_COLOR,
-                        fontFamily: MyFontFamily.GmarketSansMedium,
+                        fontWeight: FontWeight.w400,
                         fontSize: 10,
                       ),
                     ),

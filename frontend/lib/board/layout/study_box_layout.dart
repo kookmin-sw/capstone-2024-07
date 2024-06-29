@@ -57,7 +57,7 @@ class _StudyBox extends ConsumerState<StudyBox> {
                     style: TextStyle(
                       fontSize: 10,
                       color: STUDY_PERSON_COLOR,
-                      fontFamily: MyFontFamily.GmarketSansBold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   Text(
@@ -65,7 +65,7 @@ class _StudyBox extends ConsumerState<StudyBox> {
                     style: TextStyle(
                       fontSize: 10,
                       color: Colors.black,
-                      fontFamily: MyFontFamily.GmarketSansBold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -84,7 +84,7 @@ class _StudyBox extends ConsumerState<StudyBox> {
                     style: TextStyle(
                       fontSize: 13,
                       color: Colors.black,
-                      fontFamily: MyFontFamily.GmarketSansBold,
+                      fontWeight: FontWeight.w500,
                       height: 1,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -98,7 +98,7 @@ class _StudyBox extends ConsumerState<StudyBox> {
                     style: TextStyle(
                       fontSize: 10,
                       color: Colors.black,
-                      fontFamily: MyFontFamily.GmarketSansMedium,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                   SizedBox(
@@ -109,7 +109,7 @@ class _StudyBox extends ConsumerState<StudyBox> {
                     style: TextStyle(
                       fontSize: 10,
                       color: TAG_COLOR,
-                      fontFamily: MyFontFamily.GmarketSansMedium,
+                      fontWeight: FontWeight.w400,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),

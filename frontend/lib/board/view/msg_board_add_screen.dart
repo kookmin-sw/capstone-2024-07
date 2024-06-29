@@ -88,7 +88,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 13,
-                      fontFamily: MyFontFamily.GmarketSansMedium,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
@@ -111,7 +111,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                       style: TextStyle(
                         fontSize: 13,
                         color: PRIMARY_COLOR,
-                        fontFamily: MyFontFamily.GmarketSansMedium,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -138,7 +138,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 13,
-                      fontFamily: MyFontFamily.GmarketSansMedium,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
@@ -163,7 +163,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                       style: TextStyle(
                         fontSize: 13,
                         color: PRIMARY_COLOR,
-                        fontFamily: MyFontFamily.GmarketSansMedium,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -186,7 +186,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                       style: TextStyle(
                         fontSize: 13,
                         color: PRIMARY_COLOR,
-                        fontFamily: MyFontFamily.GmarketSansMedium,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -360,13 +360,13 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                       ? Text(
                           "'$selectCategory'에 글을 수정할까요?",
                           style: const TextStyle(
-                            fontFamily: MyFontFamily.GmarketSansMedium,
+                            fontWeight: FontWeight.w400,
                           ),
                         )
                       : Text(
                           "'$selectCategory'에 글을 등록할까요?",
                           style: const TextStyle(
-                            fontFamily: MyFontFamily.GmarketSansMedium,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                 ],
@@ -386,7 +386,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                       child: const Text(
                         "네",
                         style: TextStyle(
-                          fontFamily: MyFontFamily.GmarketSansMedium,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                     ),
@@ -400,7 +400,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                       child: const Text(
                         "아니요",
                         style: TextStyle(
-                          fontFamily: MyFontFamily.GmarketSansMedium,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                     ),
@@ -430,7 +430,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
             style: const TextStyle(
               fontSize: 15,
               color: Colors.black,
-              fontFamily: MyFontFamily.GmarketSansMedium,
+              fontWeight: FontWeight.w400,
             ),
           ),
           actions: [
@@ -440,7 +440,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                 "완료",
                 style: TextStyle(
                   color: canUpload ? Colors.black : Colors.grey,
-                  fontFamily: MyFontFamily.GmarketSansMedium,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
             ),
@@ -484,10 +484,10 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                               border: InputBorder.none,
                               hintText: "제목",
                               hintStyle: TextStyle(
-                                fontFamily: MyFontFamily.GmarketSansMedium,
+                                fontWeight: FontWeight.w400,
                               ),
                               labelStyle: TextStyle(
-                                fontFamily: MyFontFamily.GmarketSansMedium,
+                                fontWeight: FontWeight.w400,
                               ),
                               disabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
@@ -516,7 +516,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 10,
-                                  fontFamily: MyFontFamily.GmarketSansMedium,
+                                  fontWeight: FontWeight.w400,
                                 ),
                                 underline: Container(),
                                 elevation: 0,
@@ -572,7 +572,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                             "잠깐!",
                             style: TextStyle(
                               fontSize: 10,
-                              fontFamily: MyFontFamily.GmarketSansBold,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           SizedBox(
@@ -584,7 +584,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                               overflow: TextOverflow.visible,
                               style: TextStyle(
                                 fontSize: 10,
-                                fontFamily: MyFontFamily.GmarketSansMedium,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
                           ),
@@ -608,7 +608,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                       maxLines: 15,
                       style: const TextStyle(
                         fontSize: 12,
-                        fontFamily: MyFontFamily.GmarketSansMedium,
+                        fontWeight: FontWeight.w400,
                       ),
                       decoration: const InputDecoration(
                         hintText: "지금 가장 고민이 되거나 궁금한 내용이 무엇인가요?",
@@ -705,7 +705,7 @@ class BottomView extends ConsumerWidget {
                     "삭제",
                     style: TextStyle(
                       color: Colors.red,
-                      fontFamily: MyFontFamily.GmarketSansMedium,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),

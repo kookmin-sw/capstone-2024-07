@@ -93,9 +93,9 @@ flutter:
     - family: GmarketSans
       fonts:
         - asset: asset/fonts/GmarketSansBold.otf
-          weight: 700
-        - asset: asset/fonts/GmarketSansMedium.otf
           weight: 500
+        - asset: asset/fonts/GmarketSansMedium.otf
+          weight: 300
         - asset: asset/fonts/GmarketSansLight.otf
           weight: 100
 
