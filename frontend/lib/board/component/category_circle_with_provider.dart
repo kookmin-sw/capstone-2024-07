@@ -52,9 +52,7 @@ class CategoryCircleWithProvider extends ConsumerWidget {
                 category,
                 style: TextStyle(
                   fontSize: 10,
-                  fontFamily: isClicked
-                      ? MyFontFamily.GmarketSansBold
-                      : MyFontFamily.GmarketSansMedium,
+                  fontWeight: isClicked ? FontWeight.w500 : FontWeight.w400,
                   color: isClicked ? Colors.white : Colors.black,
                 ),
               ),

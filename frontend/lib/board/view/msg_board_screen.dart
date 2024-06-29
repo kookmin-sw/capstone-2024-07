@@ -421,7 +421,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                                 "삭제하기",
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontFamily: MyFontFamily.GmarketSansMedium,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ),
                             ),
@@ -461,7 +461,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                                 "수정하기",
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontFamily: MyFontFamily.GmarketSansMedium,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ),
                             ),
@@ -501,7 +501,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                                 "신고하기",
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontFamily: MyFontFamily.GmarketSansMedium,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ),
                             ),
@@ -534,7 +534,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                                 "차단하기",
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontFamily: MyFontFamily.GmarketSansMedium,
+                                  fontWeight: FontWeight.w400,
                                 ),
                               ),
                             ),
@@ -571,7 +571,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 13,
-                      fontFamily: MyFontFamily.GmarketSansMedium,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
@@ -596,7 +596,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                       style: TextStyle(
                         fontSize: 13,
                         color: PRIMARY_COLOR,
-                        fontFamily: MyFontFamily.GmarketSansMedium,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -616,7 +616,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                       style: TextStyle(
                         fontSize: 13,
                         color: PRIMARY_COLOR,
-                        fontFamily: MyFontFamily.GmarketSansMedium,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -642,7 +642,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 13,
-                      fontFamily: MyFontFamily.GmarketSansMedium,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
@@ -665,7 +665,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                       style: TextStyle(
                         fontSize: 13,
                         color: PRIMARY_COLOR,
-                        fontFamily: MyFontFamily.GmarketSansMedium,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -814,7 +814,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
             style: TextStyle(
               fontSize: 15,
               color: Colors.black,
-              fontFamily: MyFontFamily.GmarketSansBold,
+              fontWeight: FontWeight.w500,
             ),
           );
         } else {
@@ -854,7 +854,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     focusNode: _focusNode,
                     controller: textEditingController,
                     style: const TextStyle(
-                      fontFamily: MyFontFamily.GmarketSansMedium,
+                      fontWeight: FontWeight.w400,
                     ),
                     decoration: InputDecoration(
                       hintText: '입력',

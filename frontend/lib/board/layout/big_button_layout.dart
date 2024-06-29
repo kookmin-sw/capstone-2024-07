@@ -57,7 +57,7 @@ class _BigButtonState extends ConsumerState<BigButton>
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 13,
-                      fontFamily: MyFontFamily.GmarketSansMedium,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
@@ -80,7 +80,7 @@ class _BigButtonState extends ConsumerState<BigButton>
                       style: TextStyle(
                         fontSize: 13,
                         color: PRIMARY_COLOR,
-                        fontFamily: MyFontFamily.GmarketSansMedium,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -193,7 +193,7 @@ class _BigButtonState extends ConsumerState<BigButton>
                   isHeart ? "좋아요 | $textCount" : "스크랩 | $textCount",
                   style: const TextStyle(
                     fontSize: 12,
-                    fontFamily: MyFontFamily.GmarketSansMedium,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ],
@@ -247,7 +247,7 @@ class _BigButtonState extends ConsumerState<BigButton>
                   style: TextStyle(
                     fontSize: 13,
                     color: Colors.black,
-                    fontFamily: MyFontFamily.GmarketSansMedium,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ],
@@ -265,7 +265,7 @@ class _BigButtonState extends ConsumerState<BigButton>
                       style: TextStyle(
                         fontSize: 13,
                         color: PRIMARY_COLOR,
-                        fontFamily: MyFontFamily.GmarketSansMedium,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),

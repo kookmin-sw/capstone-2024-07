@@ -90,7 +90,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 13,
-                      fontFamily: MyFontFamily.GmarketSansMedium,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
@@ -113,7 +113,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                       style: TextStyle(
                         fontSize: 13,
                         color: PRIMARY_COLOR,
-                        fontFamily: MyFontFamily.GmarketSansMedium,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -277,8 +277,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                                         textAlign: TextAlign.center,
                                         overflow: TextOverflow.visible,
                                         style: const TextStyle(
-                                          fontFamily:
-                                              MyFontFamily.GmarketSansMedium,
+                                          fontWeight: FontWeight.w400,
                                         ),
                                       ),
                                     ),
@@ -296,8 +295,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                                         child: const Text(
                                           "확인",
                                           style: TextStyle(
-                                            fontFamily:
-                                                MyFontFamily.GmarketSansMedium,
+                                            fontWeight: FontWeight.w400,
                                           ),
                                         ),
                                       ),
@@ -353,7 +351,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                   textCount == -1 ? "" : "$textCount",
                   style: const TextStyle(
                     fontSize: 12,
-                    fontFamily: MyFontFamily.GmarketSansMedium,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ],
@@ -375,7 +373,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                 Text(
                   "이미 좋아요를 눌렀습니다.",
                   style: TextStyle(
-                    fontFamily: MyFontFamily.GmarketSansMedium,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ],
@@ -391,7 +389,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                     child: const Text(
                       "확인",
                       style: TextStyle(
-                        fontFamily: MyFontFamily.GmarketSansMedium,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -413,7 +411,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                 Text(
                   "이 댓글에 대댓글을 달까요?",
                   style: TextStyle(
-                    fontFamily: MyFontFamily.GmarketSansMedium,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ],
@@ -432,7 +430,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                     child: const Text(
                       "네",
                       style: TextStyle(
-                        fontFamily: MyFontFamily.GmarketSansMedium,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -446,7 +444,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                     child: const Text(
                       "아니요",
                       style: TextStyle(
-                        fontFamily: MyFontFamily.GmarketSansMedium,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -484,7 +482,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                             "삭제하기",
                             style: TextStyle(
                               color: Colors.black,
-                              fontFamily: MyFontFamily.GmarketSansMedium,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
@@ -517,7 +515,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                             "수정하기",
                             style: TextStyle(
                               color: Colors.black,
-                              fontFamily: MyFontFamily.GmarketSansMedium,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
@@ -559,7 +557,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 13,
-                      fontFamily: MyFontFamily.GmarketSansBold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
@@ -585,7 +583,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                             "욕설/비하",
                             style: TextStyle(
                               color: Colors.black,
-                              fontFamily: MyFontFamily.GmarketSansMedium,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
@@ -618,7 +616,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                             "상업적 광고 및 판매",
                             style: TextStyle(
                               color: Colors.black,
-                              fontFamily: MyFontFamily.GmarketSansMedium,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
@@ -651,7 +649,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                             "게시판 성격에 부적절함",
                             style: TextStyle(
                               color: Colors.black,
-                              fontFamily: MyFontFamily.GmarketSansMedium,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
@@ -684,7 +682,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                             "유출/사칭/사기",
                             style: TextStyle(
                               color: Colors.black,
-                              fontFamily: MyFontFamily.GmarketSansMedium,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
@@ -717,7 +715,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                             "낚시/놀람/도배",
                             style: TextStyle(
                               color: Colors.black,
-                              fontFamily: MyFontFamily.GmarketSansMedium,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
@@ -750,7 +748,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                             "음란물/불건전한 만남 및 대화",
                             style: TextStyle(
                               color: Colors.black,
-                              fontFamily: MyFontFamily.GmarketSansMedium,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
@@ -791,7 +789,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                             "신고하기",
                             style: TextStyle(
                               color: Colors.black,
-                              fontFamily: MyFontFamily.GmarketSansMedium,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
@@ -824,7 +822,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                             "차단하기",
                             style: TextStyle(
                               color: Colors.black,
-                              fontFamily: MyFontFamily.GmarketSansMedium,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
@@ -853,7 +851,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 13,
-                      fontFamily: MyFontFamily.GmarketSansMedium,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
@@ -877,7 +875,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                       style: TextStyle(
                         fontSize: 13,
                         color: PRIMARY_COLOR,
-                        fontFamily: MyFontFamily.GmarketSansMedium,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -897,7 +895,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                       style: TextStyle(
                         fontSize: 13,
                         color: PRIMARY_COLOR,
-                        fontFamily: MyFontFamily.GmarketSansMedium,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),

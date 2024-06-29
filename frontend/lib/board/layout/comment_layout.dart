@@ -91,7 +91,7 @@ class _CommentState extends ConsumerState<Comment>
                       widget.comment.userInformation.nickname,
                       style: TextStyle(
                         fontSize: 13,
-                        fontFamily: MyFontFamily.GmarketSansBold,
+                        fontWeight: FontWeight.w500,
                         color: widget.selectComment ? PRIMARY_COLOR : null,
                       ),
                     ),
@@ -162,7 +162,7 @@ class _CommentState extends ConsumerState<Comment>
               style: TextStyle(
                 fontSize: 12,
                 color: widget.selectComment ? PRIMARY_COLOR : null,
-                fontFamily: MyFontFamily.GmarketSansMedium,
+                fontWeight: FontWeight.w400,
               ),
             ),
             for (var reply in replies)

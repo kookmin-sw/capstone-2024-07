@@ -37,7 +37,7 @@ class _TextWithIconForViewState extends State<TextWithIconForView> {
           widget.text,
           style: const TextStyle(
             fontSize: 12,
-            fontFamily: MyFontFamily.GmarketSansMedium,
+            fontWeight: FontWeight.w400,
           ),
         ),
       ],

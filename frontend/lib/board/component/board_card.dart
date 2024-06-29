@@ -155,7 +155,7 @@ class BoardCard extends StatelessWidget {
                   _formatText(postTitle, 40),
                   style: const TextStyle(
                     fontSize: 12.0,
-                    fontFamily: MyFontFamily.GmarketSansBold,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
@@ -163,7 +163,7 @@ class BoardCard extends StatelessWidget {
                   softWrap: true,
                   style: const TextStyle(
                     fontSize: 10,
-                    fontFamily: MyFontFamily.GmarketSansMedium,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
                 const SizedBox(
@@ -174,7 +174,7 @@ class BoardCard extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 8,
                     color: BOARD_CARD_TIME_COLOR,
-                    fontFamily: MyFontFamily.GmarketSansMedium,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ],
@@ -199,7 +199,7 @@ class BoardCard extends StatelessWidget {
             category,
             style: const TextStyle(
               fontSize: 10,
-              fontFamily: MyFontFamily.GmarketSansMedium,
+              fontWeight: FontWeight.w400,
             ),
           ),
         ),
