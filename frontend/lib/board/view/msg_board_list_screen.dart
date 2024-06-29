@@ -92,7 +92,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: BOARD_CARD_COLOR,
       body: SafeArea(
         child: Column(
           children: [
@@ -156,7 +156,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                 );
               },
               shape: const CircleBorder(),
-              backgroundColor: FLOATING_BUTTON_COLOR,
+              backgroundColor: CATEGORY_COLOR,
               child: const Icon(
                 Icons.add,
                 color: Colors.white,
@@ -257,7 +257,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
 
   Widget renderTop() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 2.0),
       height: 50.0,
       width: MediaQuery.of(context).size.width,
       child: Row(
@@ -308,19 +308,22 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
       padding: const EdgeInsets.only(top: 10.0),
       child: SizedBox(
         height: 40,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: [
-            for (var category in categorys)
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-                child: CategoryCircleWithProvider(
-                  category: category,
-                  categoryCode: categoryCodesList[category]!,
-                ),
-              )
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              for (var category in categorys)
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0, vertical: 6.0),
+                  child: CategoryCircleWithProvider(
+                    category: category,
+                    categoryCode: categoryCodesList[category]!,
+                  ),
+                )
+            ],
+          ),
         ),
       ),
     );
@@ -421,7 +424,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -458,19 +461,21 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
               children: [
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      for (int i = 0; i < 10; i++)
-                        const Padding(
-                          padding: EdgeInsets.only(
-                            left: 10.0,
-                            right: 5.0,
-                            top: 5.0,
-                            bottom: 17.0,
-                          ),
-                          child: StudyBox(),
-                        )
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20.0),
+                    child: Row(
+                      children: [
+                        for (int i = 0; i < 10; i++)
+                          const Padding(
+                            padding: EdgeInsets.only(
+                              right: 25.0,
+                              top: 5.0,
+                              bottom: 17.0,
+                            ),
+                            child: StudyBox(),
+                          )
+                      ],
+                    ),
                   ),
                 ),
               ],
