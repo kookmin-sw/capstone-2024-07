@@ -7,7 +7,7 @@ import 'package:frontend/board/model/msg_board_detail_response_model.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/category_circle_layout.dart';
-import 'package:frontend/common/const/fonts.dart';
+
 import 'package:photo_view/photo_view.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher_string.dart';

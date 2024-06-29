@@ -13,7 +13,7 @@ import 'package:frontend/board/provider/reply_provider.dart';
 import 'package:frontend/board/provider/report_provider.dart';
 import 'package:frontend/board/provider/scrap_provider.dart';
 import 'package:frontend/common/const/colors.dart';
-import 'package:frontend/common/const/fonts.dart';
+
 import 'package:frontend/member/provider/mypage/my_scrap_state_notifier_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';

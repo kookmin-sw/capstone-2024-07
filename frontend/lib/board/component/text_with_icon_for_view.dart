@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/common/const/fonts.dart';
 
 class TextWithIconForView extends StatefulWidget {
   final IconData icon;
