@@ -308,22 +308,21 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
       padding: const EdgeInsets.only(top: 10.0),
       child: SizedBox(
         height: 40,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              for (var category in categorys)
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0, vertical: 6.0),
-                  child: CategoryCircleWithProvider(
-                    category: category,
-                    categoryCode: categoryCodesList[category]!,
-                  ),
-                )
-            ],
-          ),
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: [
+            for (var category in categorys)
+              Padding(
+                padding: categorys[categorys.length - 1] == category
+                    ? const EdgeInsets.only(
+                        left: 18.0, right: 18.0, top: 6.0, bottom: 6.0)
+                    : const EdgeInsets.only(left: 18.0, top: 6.0, bottom: 6.0),
+                child: CategoryCircleWithProvider(
+                  category: category,
+                  categoryCode: categoryCodesList[category]!,
+                ),
+              )
+          ],
         ),
       ),
     );
@@ -491,7 +490,6 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
   }
 
   Widget adSlider() {
-    int current = 0;
     final CarouselController controller = CarouselController();
     List imageList = [
       "https://pixabay.com/get/gdf303026c09bdf863eba76c3a8d6d15d33a5e34fce3ee8cc20c194efaa47defe8bddabaa5495f7b7cb86ec9665624920e2bfdc7f049c4f00e3204b5e0576b65d_1280.jpg",
