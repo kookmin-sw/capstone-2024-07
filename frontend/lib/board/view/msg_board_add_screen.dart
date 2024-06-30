@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
 import 'package:frontend/board/model/exception_model.dart';
@@ -42,6 +45,13 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   late TextEditingController titleController;
   late TextEditingController contentController;
   bool isLoading = false;
+
+  bool isOffline = false;
+  bool isAlways = false;
+  bool isNotLimit = false;
+  bool isAnonymous = false;
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
 
   @override
   void initState() {
@@ -414,216 +424,562 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      Scaffold(
-        backgroundColor: Colors.white,
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: PRIMARY10_COLOR,
-          shadowColor: Colors.black,
-          elevation: 3,
-          iconTheme: const IconThemeData(
-            color: Colors.black,
-          ),
-          title: Text(
-            widget.isEdit ? "글 수정" : "글 작성",
-            style: const TextStyle(
-              fontSize: 15,
+      GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            backgroundColor: PRIMARY10_COLOR,
+            shadowColor: Colors.black,
+            elevation: 3,
+            iconTheme: const IconThemeData(
               color: Colors.black,
-              fontWeight: FontWeight.w400,
             ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: upLoadDialog,
-              child: Text(
-                "완료",
-                style: TextStyle(
-                  color: canUpload ? Colors.black : Colors.grey,
-                  fontWeight: FontWeight.w400,
-                ),
+            title: Text(
+              widget.isEdit ? "글 수정" : "글 작성",
+              style: const TextStyle(
+                fontSize: 15,
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
               ),
             ),
-          ],
-        ),
-        body: Stack(children: [
-          Transform.translate(
-            offset: const Offset(80.0, 430.0),
-            child: Image.asset(
-              'asset/imgs/logo.png',
-              width: 450.0,
-              opacity: const AlwaysStoppedAnimation(.2),
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 15,
+            actions: [
+              TextButton(
+                onPressed: upLoadDialog,
+                child: Text(
+                  "완료",
+                  style: TextStyle(
+                    color: canUpload ? Colors.black : Colors.grey,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: titleController,
-                            onChanged: (value) {
-                              setState(() {
-                                if (value != "") {
-                                  title = value; // 제목
-                                  writedTitle = true;
-                                } else {
-                                  writedTitle = false;
-                                }
-                                canUpload = writedTitle & writedContent;
-                              });
-                            },
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "제목",
-                              hintStyle: TextStyle(
-                                fontWeight: FontWeight.w400,
-                              ),
-                              labelStyle: TextStyle(
-                                fontWeight: FontWeight.w400,
-                              ),
-                              disabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: BOX_LINE_COLOR,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 25,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade200,
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 15, right: 10),
-                              child: DropdownButton(
-                                value: selectCategory,
-                                icon: const Icon(
-                                  Icons.arrow_drop_down_outlined,
-                                  color: Colors.black,
-                                ),
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 10,
+              ),
+            ],
+          ),
+          body: Stack(children: [
+            Transform.translate(
+              offset: const Offset(80.0, 430.0),
+              child: Image.asset(
+                'asset/imgs/logo.png',
+                width: 450.0,
+                opacity: const AlwaysStoppedAnimation(.2),
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: titleController,
+                              onChanged: (value) {
+                                setState(() {
+                                  if (value != "") {
+                                    title = value; // 제목
+                                    writedTitle = true;
+                                  } else {
+                                    writedTitle = false;
+                                  }
+                                  canUpload = writedTitle & writedContent;
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "제목",
+                                hintStyle: TextStyle(
                                   fontWeight: FontWeight.w400,
                                 ),
-                                underline: Container(),
-                                elevation: 0,
-                                dropdownColor: Colors.grey.shade200,
-                                borderRadius: BorderRadius.circular(20),
-                                items: categorysList
-                                    .sublist(2, categorysList.length)
-                                    .map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(
-                                      value,
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (value) => {
-                                  setState(() {
-                                    if (value != null) {
-                                      selectCategory = value; // 게시판 종류
-                                    }
-                                  })
-                                },
+                                labelStyle: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                disabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: BOX_LINE_COLOR,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: BOX_LINE_COLOR,
-                            width: 1,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: PRIMARY20_COLOR,
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "잠깐!",
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500,
                             ),
                           ),
                           SizedBox(
-                            width: 5,
-                          ),
-                          Flexible(
-                            child: Text(
-                              "부적절하거나 불쾌감을 줄 수 있는 컨텐츠는 제재를 받을 수 있습니다.",
-                              overflow: TextOverflow.visible,
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w400,
+                            height: 25,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade200,
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 15, right: 10),
+                                child: DropdownButton(
+                                  value: selectCategory,
+                                  icon: const Icon(
+                                    Icons.arrow_drop_down_outlined,
+                                    color: Colors.black,
+                                  ),
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  underline: Container(),
+                                  elevation: 0,
+                                  dropdownColor: Colors.grey.shade200,
+                                  borderRadius: BorderRadius.circular(20),
+                                  items: categorysList
+                                      .sublist(2, categorysList.length)
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value,
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) => {
+                                    setState(() {
+                                      if (value != null) {
+                                        selectCategory = value; // 게시판 종류
+                                      }
+                                    })
+                                  },
+                                ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    TextField(
-                      controller: contentController,
-                      onChanged: (value) {
-                        setState(() {
-                          if (value != "") {
-                            content = value; // 내용
-                            writedContent = true;
-                          } else {
-                            writedContent = false;
-                          }
-                          canUpload = writedTitle & writedContent;
-                        });
-                      },
-                      keyboardType: TextInputType.multiline,
-                      maxLines: 15,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
+                      Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: BOX_LINE_COLOR,
+                              width: 1,
+                            ),
+                          ),
+                        ),
                       ),
-                      decoration: const InputDecoration(
-                        hintText: "지금 가장 고민이 되거나 궁금한 내용이 무엇인가요?",
-                        border: InputBorder.none,
+                      selectCategory == "스터디/프로젝트"
+                          ? Column(
+                              children: [
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: MAJOR_SELECT_COLOR,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(7.0),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  color: Colors.white,
+                                                ),
+                                                child: const Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 7.0,
+                                                    vertical: 4.0,
+                                                  ),
+                                                  child: Text(
+                                                    "진행기간",
+                                                    style: TextStyle(
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                )),
+                                            const SizedBox(
+                                              width: 18,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () async {
+                                                final selectedDate =
+                                                    await showDatePicker(
+                                                  context: context,
+                                                  initialDate: startDate,
+                                                  firstDate: DateTime.now(),
+                                                  lastDate: DateTime(2100),
+                                                );
+                                                if (selectedDate != null) {
+                                                  setState(() {
+                                                    startDate = selectedDate;
+                                                    if (endDate
+                                                        .isBefore(startDate)) {
+                                                      endDate = selectedDate;
+                                                    }
+                                                  });
+                                                }
+                                              },
+                                              child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    color: Colors.white,
+                                                  ),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                      horizontal: 7.0,
+                                                      vertical: 4.0,
+                                                    ),
+                                                    child: Text(
+                                                      "${startDate.year.toString()}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}",
+                                                      style: const TextStyle(
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  )),
+                                            ),
+                                            const SizedBox(
+                                              width: 7,
+                                            ),
+                                            const Text(
+                                              "~",
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 7,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () async {
+                                                final selectedDate =
+                                                    await showDatePicker(
+                                                  context: context,
+                                                  initialDate: endDate,
+                                                  firstDate: startDate,
+                                                  lastDate: DateTime(2100),
+                                                );
+                                                if (selectedDate != null) {
+                                                  setState(() {
+                                                    endDate = selectedDate;
+                                                  });
+                                                }
+                                              },
+                                              child: Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    color: Colors.white,
+                                                  ),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                      horizontal: 7.0,
+                                                      vertical: 4.0,
+                                                    ),
+                                                    child: Text(
+                                                      "${endDate.year.toString()}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}",
+                                                      style: const TextStyle(
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  )),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          isAlways = !isAlways;
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 7, vertical: 3),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              isAlways
+                                                  ? Icons.check_box_rounded
+                                                  : Icons
+                                                      .check_box_outline_blank_rounded,
+                                              size: 20,
+                                              color: isAlways
+                                                  ? ACTIVE_COLOR
+                                                  : null,
+                                            ),
+                                            const SizedBox(
+                                              width: 2,
+                                            ),
+                                            const Text(
+                                              "항시진행",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    FlutterSwitch(
+                                        showOnOff: true,
+                                        inactiveText: "오프라인",
+                                        activeText: "온라인",
+                                        activeTextColor: Colors.white,
+                                        inactiveTextColor: Colors.white,
+                                        activeTextFontWeight: FontWeight.w400,
+                                        inactiveTextFontWeight: FontWeight.w400,
+                                        width: 110.0,
+                                        height: 33.0,
+                                        inactiveColor: INACTIVE_COLOR,
+                                        value: isOffline,
+                                        activeColor: ACTIVE_COLOR,
+                                        onToggle: (bool? value) {
+                                          setState(() {
+                                            isOffline = value ?? false;
+                                          });
+                                        }),
+                                    const SizedBox(
+                                      width: 20,
+                                    ),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: MAJOR_SELECT_COLOR,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(7.0),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                color: Colors.white,
+                                              ),
+                                              child: const Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 7.0,
+                                                  vertical: 4.0,
+                                                ),
+                                                child: Text(
+                                                  "모집인원",
+                                                  style: TextStyle(
+                                                    fontSize: 10,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 18,
+                                            ),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              width: 20,
+                                              height: 20,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 3.0, top: 7.0),
+                                                child: TextField(
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 10,
+                                                  ),
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  inputFormatters: <TextInputFormatter>[
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly
+                                                  ],
+                                                  maxLength: 1,
+                                                  decoration:
+                                                      const InputDecoration(
+                                                    hintText: "0",
+                                                    counterText: "",
+                                                    border: InputBorder.none,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            const Text(
+                                              "명",
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 2,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          isNotLimit = !isNotLimit;
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 7, vertical: 3),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              isNotLimit
+                                                  ? Icons.check_box_rounded
+                                                  : Icons
+                                                      .check_box_outline_blank_rounded,
+                                              size: 20,
+                                              color: isNotLimit
+                                                  ? ACTIVE_COLOR
+                                                  : null,
+                                            ),
+                                            const SizedBox(
+                                              width: 2,
+                                            ),
+                                            const Text(
+                                              "제한없음",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: BOX_LINE_COLOR,
+                                        width: 1,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                              ],
+                            )
+                          : const SizedBox(
+                              height: 10,
+                            ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: PRIMARY20_COLOR,
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "잠깐!",
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Flexible(
+                              child: Text(
+                                "부적절하거나 불쾌감을 줄 수 있는 컨텐츠는 제재를 받을 수 있습니다.",
+                                overflow: TextOverflow.visible,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                      TextField(
+                        controller: contentController,
+                        onChanged: (value) {
+                          setState(() {
+                            if (value != "") {
+                              content = value; // 내용
+                              writedContent = true;
+                            } else {
+                              writedContent = false;
+                            }
+                            canUpload = writedTitle & writedContent;
+                          });
+                        },
+                        keyboardType: TextInputType.multiline,
+                        maxLines: 14,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: selectCategory == "스터디/프로젝트"
+                              ? "구체적인 스터디 모임 내용을 자세하게 적으면,\n인원 모집에 도움이 됩니다.\n\n#해시태그 를 달아 모집글을 더 노출시켜보세요!"
+                              : "지금 가장 고민이 되거나 궁금한 내용이 무엇인가요?",
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              BottomView(
-                widget: widget,
-                msgBoardAddScreenState: this,
-              ),
-            ],
-          ),
-        ]),
+                BottomView(
+                  widget: widget,
+                  msgBoardAddScreenState: this,
+                ),
+              ],
+            ),
+          ]),
+        ),
       ),
       isLoading
           ? Container(
@@ -679,6 +1035,17 @@ class BottomView extends ConsumerWidget {
                     icon: Icons.image_rounded,
                     iconSize: 17,
                     text: "사진",
+                    commentId: -1,
+                    postId: -1,
+                    replyId: -1,
+                    isClicked: false,
+                    isMine: false,
+                    userId: -1,
+                  ),
+                  TextWithIcon(
+                    icon: Icons.check_box_outline_blank_rounded,
+                    iconSize: 17,
+                    text: "익명",
                     commentId: -1,
                     postId: -1,
                     replyId: -1,
