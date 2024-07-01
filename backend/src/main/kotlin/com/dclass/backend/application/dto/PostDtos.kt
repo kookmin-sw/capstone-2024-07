@@ -119,7 +119,7 @@ data class PostResponse(
         description = "게시글이 익명인지 여부",
         example = "true",
     )
-    val isAnonymous: Boolean,
+    val isAnonymous: Boolean = false,
 
     @Schema(
         description = "차단한 사용자의 게시글인지 여부",
@@ -233,7 +233,7 @@ data class PostDetailResponse(
         description = "게시글이 익명인지 여부",
         example = "true",
     )
-    val isAnonymous: Boolean,
+    val isAnonymous: Boolean = false,
 
     @Schema(
         description = "게시글이 스크랩된 여부",
@@ -320,7 +320,7 @@ data class CreatePostRequest(
         description = "게시글이 익명인지 여부",
         example = "true",
     )
-    val isAnonymous: Boolean,
+    val isAnonymous: Boolean = false,
 
     @Schema(
         description = "게시글의 이미지 URL 리스트",
@@ -367,7 +367,7 @@ data class UpdatePostRequest(
         description = "게시글이 질문인지 여부",
         example = "true",
     )
-    val isAnonymous: Boolean,
+    val isAnonymous: Boolean = false,
 
     @Schema(
         description = "게시글이 속한 커뮤니티의 타이틀",
