@@ -30,9 +30,15 @@ data class CreateCommentRequest(
     )
     @field:NotNull
     val content: String,
+
+    @Schema(
+        description = "익명 여부",
+        example = "false",
+    )
+    val isAnonymous: Boolean = false,
 ) {
     fun toEntity(userId: Long): Comment {
-        return Comment(userId, postId, content)
+        return Comment(userId, postId, content, isAnonymous)
     }
 }
 
@@ -93,6 +99,12 @@ data class CommentResponse(
     val content: String,
 
     @Schema(
+        description = "익명 여부",
+        example = "false",
+    )
+    val isAnonymous: Boolean = false,
+
+    @Schema(
         description = "댓글이 작성된 시각",
         example = "2021-08-01T00:00:00",
     )
@@ -109,6 +121,7 @@ data class CommentResponse(
         comment.userId,
         comment.postId,
         comment.content,
+        comment.isAnonymous,
         comment.createdDateTime,
         comment.modifiedDateTime,
     )
@@ -170,6 +183,12 @@ data class CommentWithUserResponse(
     var isBlockedUser: Boolean,
 
     @Schema(
+        description = "익명 여부",
+        example = "false",
+    )
+    val isAnonymous: Boolean = false,
+
+    @Schema(
         description = "댓글이 작성된 시각",
         example = "2021-08-01T00:00:00",
     )
@@ -177,7 +196,7 @@ data class CommentWithUserResponse(
 ) {
     constructor(comment: Comment, user: User) : this(
         id = comment.id,
-        userInformation = UserInformation(user.name, user.email, user.nickname),
+        userInformation = UserInformation(user.name, user.email, if(comment.isAnonymous) "익명" else user.nickname),
         userId = user.id,
         postId = comment.postId,
         content = comment.content.takeIf { !comment.isDeleted() } ?: "삭제된 댓글 입니다.",
@@ -185,6 +204,7 @@ data class CommentWithUserResponse(
         deleted = comment.isDeleted(),
         isLiked = false,
         isBlockedUser = false,
+        isAnonymous = comment.isAnonymous,
         createdAt = comment.createdDateTime,
     )
 }
@@ -250,6 +270,12 @@ data class CommentReplyWithUserResponse(
     var isBlockedUser: Boolean,
 
     @Schema(
+        description = "익명 여부",
+        example = "false",
+    )
+    val isAnonymous: Boolean = false,
+
+    @Schema(
         description = "댓글이 작성된 시각",
         example = "2021-08-01T00:00:00",
     )
@@ -295,6 +321,7 @@ data class CommentReplyWithUserResponse(
         isLiked = commentWithUserResponse.isLiked,
         createdAt = commentWithUserResponse.createdAt,
         isBlockedUser = commentWithUserResponse.isBlockedUser,
+        isAnonymous = commentWithUserResponse.isAnonymous,
         replies = replies,
     )
 }

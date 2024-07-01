@@ -23,6 +23,8 @@ class Comment(
 
     content: String = "",
 
+    isAnonymous : Boolean = false,
+
     commentLikes: CommentLikes = CommentLikes(),
 
     @Column(nullable = false)
@@ -57,6 +59,10 @@ class Comment(
 
     val likeCount: Int
         get() = commentLikes.count
+
+    @Column(nullable = false)
+    var isAnonymous: Boolean = isAnonymous
+        private set
 
     fun likedBy(userId: Long) =
         commentLikes.findUserById(userId)
