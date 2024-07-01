@@ -22,6 +22,8 @@ class Reply(
 
     content: String = "",
 
+    isAnonymous : Boolean = false,
+
     replyLikes: ReplyLikes = ReplyLikes(),
 
     @Column(nullable = false)
@@ -37,6 +39,10 @@ class Reply(
 
     @Column(nullable = false, length = 255)
     var content: String = content
+        private set
+
+    @Column(nullable = false)
+    var isAnonymous: Boolean = isAnonymous
         private set
 
     @Embedded

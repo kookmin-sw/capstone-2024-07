@@ -32,9 +32,15 @@ data class CreateReplyRequest(
     )
     @field:NotNull
     val content: String,
+
+    @Schema(
+        description = "익명 여부",
+        example = "false",
+    )
+    val isAnonymous: Boolean = false,
 ) {
     fun toEntity(userId: Long): Reply {
-        return Reply(userId, commentId, content)
+        return Reply(userId, commentId, content, isAnonymous)
     }
 }
 
@@ -95,6 +101,12 @@ data class ReplyResponse(
     val content: String,
 
     @Schema(
+        description = "익명 여부",
+        example = "false",
+    )
+    val isAnonymous: Boolean,
+
+    @Schema(
         description = "대댓글의 좋아요 수",
         example = "0",
     )
@@ -111,6 +123,7 @@ data class ReplyResponse(
         userId = reply.userId,
         commentId = reply.commentId,
         content = reply.content,
+        isAnonymous = reply.isAnonymous,
         likeCount = reply.replyLikes,
         createdAt = reply.createdDateTime,
     )
@@ -147,6 +160,12 @@ data class ReplyWithUserResponse(
     val content: String,
 
     @Schema(
+        description = "익명 여부",
+        example = "false",
+    )
+    val isAnonymous: Boolean,
+
+    @Schema(
         description = "대댓글의 좋아요 수",
         example = "0",
     )
@@ -167,9 +186,10 @@ data class ReplyWithUserResponse(
     constructor(reply: Reply, user: User) : this(
         id = reply.id,
         userId = reply.userId,
-        userInformation = UserInformation(user.name, user.email, user.nickname),
+        userInformation = UserInformation(user.name, user.email, if(reply.isAnonymous) "익명" else user.nickname),
         commentId = reply.commentId,
         content = reply.content,
+        isAnonymous = reply.isAnonymous,
         likeCount = reply.replyLikes,
         createdAt = reply.createdDateTime,
     )

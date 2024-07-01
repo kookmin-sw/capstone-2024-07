@@ -1,6 +1,12 @@
 package com.dclass.backend.application
 
-import com.dclass.backend.application.dto.*
+import com.dclass.backend.application.dto.CreatePostRequest
+import com.dclass.backend.application.dto.DeletePostRequest
+import com.dclass.backend.application.dto.PostDetailResponse
+import com.dclass.backend.application.dto.PostResponse
+import com.dclass.backend.application.dto.PostScrollPageRequest
+import com.dclass.backend.application.dto.PostsResponse
+import com.dclass.backend.application.dto.UpdatePostRequest
 import com.dclass.backend.domain.belong.BelongRepository
 import com.dclass.backend.domain.belong.getOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
@@ -118,7 +124,7 @@ class PostService(
         val post = postRepository.findByIdAndUserId(request.postId, userId)
             ?: throw PostException(NOT_FOUND_POST)
 
-        post.update(request.title, request.content, request.images.map { Image(it) }, community.id)
+        post.update(request.title, request.content, request.isAnonymous, request.images.map { Image(it) }, community.id)
 
         val postResponse = postRepository.findPostById(post.id).apply {
             images = runBlocking(Dispatchers.IO) {

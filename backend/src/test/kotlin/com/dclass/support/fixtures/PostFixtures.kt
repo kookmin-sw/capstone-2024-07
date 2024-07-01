@@ -45,6 +45,7 @@ fun createPostRequest(
     title: String = "title",
     content: String = "content",
     isQuestion: Boolean = false,
+    isAnonymous: Boolean = false,
     images: List<String> = listOf(),
 ): CreatePostRequest {
     return CreatePostRequest(
@@ -52,6 +53,7 @@ fun createPostRequest(
         title = title,
         content = content,
         isQuestion = isQuestion,
+        isAnonymous = isAnonymous,
         images = images,
     )
 }
@@ -62,6 +64,7 @@ fun updatePostRequest(
     content: String = "수정된 내용",
     images: List<String> = listOf(),
     communityTitle: String = "JOB",
+    isAnonymous: Boolean = false,
 ): UpdatePostRequest {
     return UpdatePostRequest(
         postId = postId,
@@ -69,5 +72,6 @@ fun updatePostRequest(
         content = content,
         images = images,
         communityTitle = communityTitle,
+        isAnonymous = isAnonymous,
     )
 }

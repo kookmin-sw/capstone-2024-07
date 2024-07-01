@@ -4,7 +4,14 @@ import com.dclass.backend.exception.post.PostException
 import com.dclass.backend.exception.post.PostExceptionType
 import com.dclass.support.domain.BaseEntity
 import com.dclass.support.domain.Image
-import jakarta.persistence.*
+import jakarta.persistence.CollectionTable
+import jakarta.persistence.Column
+import jakarta.persistence.ElementCollection
+import jakarta.persistence.Embedded
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.Table
+import jakarta.persistence.Version
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 import java.time.LocalDateTime
@@ -32,6 +39,8 @@ class Post(
     var postCount: PostCount = PostCount(),
 
     isQuestion: Boolean = false,
+
+    isAnonymous: Boolean = false,
 
     @Column(nullable = false)
     val createdDateTime: LocalDateTime = LocalDateTime.now(),
@@ -74,15 +83,20 @@ class Post(
         private set
 
     @Column(nullable = false)
+    var isAnonymous: Boolean = isAnonymous
+        private set
+
+    @Column(nullable = false)
     var modifiedDateTime: LocalDateTime = modifiedDateTime
         private set
 
     val thumbnail: String?
         get() = _images.firstOrNull()?.imageKey
 
-    fun update(title: String, content: String, images: List<Image>, communityId: Long) {
+    fun update(title: String, content: String, isAnonymous: Boolean, images: List<Image>, communityId: Long) {
         this.title = title
         this.content = content
+        this.isAnonymous = isAnonymous
         this._images.clear()
         this._images.addAll(images)
         this.communityId = communityId
