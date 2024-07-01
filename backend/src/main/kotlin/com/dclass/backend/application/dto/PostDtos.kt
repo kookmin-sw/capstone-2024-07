@@ -146,7 +146,7 @@ data class PostResponse(
     ) : this(
         post.id,
         post.userId,
-        user.nickname,
+        if(post.isAnonymous) "익명" else user.nickname,
         user.universityName,
         post.communityId,
         communityTitle,
@@ -273,7 +273,7 @@ data class PostDetailResponse(
     ) : this(
         post.id,
         post.userId,
-        user.nickname,
+        if(post.isAnonymous) "익명" else user.nickname,
         user.universityName,
         post.communityId,
         communityTitle,
