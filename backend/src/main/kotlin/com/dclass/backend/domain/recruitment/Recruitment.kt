@@ -49,6 +49,8 @@ class Recruitment(
     @Version
     val version: Long = 0L,
 
+    modifiedDateTime: LocalDateTime = LocalDateTime.now(),
+
     id: Long = 0L,
 ) : BaseEntity(id) {
 
@@ -87,5 +89,9 @@ class Recruitment(
 
     @Column(nullable = false)
     var anonymousNumber: Int = anonymousNumber
+        private set
+
+    @Column(nullable = false)
+    var modifiedDateTime: LocalDateTime = modifiedDateTime
         private set
 }
