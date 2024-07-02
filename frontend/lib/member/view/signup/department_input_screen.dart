@@ -26,7 +26,8 @@ class _DepartmentInputScreenState extends ConsumerState<DepartmentInputScreen> {
   @override
   Widget build(BuildContext context) {
     final departmentGroups = ref.watch(departmentProvider).asData?.value ?? [];
-    final filteredDepartmentGroups = departmentGroups.where((group) => group.groupName != "미선택").toList();
+    final filteredDepartmentGroups =
+        departmentGroups.where((group) => group.groupName != "미선택").toList();
 
     return Scaffold(
       appBar: AppBar(),
@@ -49,10 +50,14 @@ class _DepartmentInputScreenState extends ConsumerState<DepartmentInputScreen> {
                   selectedDepartment1 = null;
                 });
               },
-              items: filteredDepartmentGroups.map<DropdownMenuItem<String>>((DepartmentGroup group) {
+              items: filteredDepartmentGroups
+                  .map<DropdownMenuItem<String>>((DepartmentGroup group) {
                 return DropdownMenuItem<String>(
                   value: group.groupName,
-                  child: Text(group.groupName),
+                  child: Text(
+                    group.groupName,
+                    style: TextStyle(fontWeight: FontWeight.w400),
+                  ),
                 );
               }).toList(),
             ),
@@ -64,7 +69,9 @@ class _DepartmentInputScreenState extends ConsumerState<DepartmentInputScreen> {
                   setState(() {
                     selectedDepartment1 = newValue;
                   });
-                  ref.read(signupProvider.notifier).updateMajor1(newValue?.title ?? '');
+                  ref
+                      .read(signupProvider.notifier)
+                      .updateMajor1(newValue?.title ?? '');
                 },
                 items: filteredDepartmentGroups
                     .firstWhere((group) => group.groupName == selectedGroup1!)
@@ -72,11 +79,14 @@ class _DepartmentInputScreenState extends ConsumerState<DepartmentInputScreen> {
                     .map<DropdownMenuItem<Department>>((Department department) {
                   return DropdownMenuItem<Department>(
                     value: department,
-                    child: Text(department.title),
+                    child: Text(
+                      department.title,
+                      style: TextStyle(fontWeight: FontWeight.w400),
+                    ),
                   );
                 }).toList(),
               ),
-            SizedBox(height: 16.0),
+            SizedBox(height: 30.0),
             Text(
               '복수전공 선택 (선택사항)',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
@@ -90,10 +100,14 @@ class _DepartmentInputScreenState extends ConsumerState<DepartmentInputScreen> {
                   selectedDepartment2 = null;
                 });
               },
-              items: departmentGroups.map<DropdownMenuItem<String>>((DepartmentGroup group) {
+              items: departmentGroups
+                  .map<DropdownMenuItem<String>>((DepartmentGroup group) {
                 return DropdownMenuItem<String>(
                   value: group.groupName,
-                  child: Text(group.groupName),
+                  child: Text(
+                    group.groupName,
+                    style: TextStyle(fontWeight: FontWeight.w400),
+                  ),
                 );
               }).toList(),
             ),
@@ -105,7 +119,9 @@ class _DepartmentInputScreenState extends ConsumerState<DepartmentInputScreen> {
                   setState(() {
                     selectedDepartment2 = newValue;
                   });
-                  ref.read(signupProvider.notifier).updateMajor2(newValue?.title ?? '');
+                  ref
+                      .read(signupProvider.notifier)
+                      .updateMajor2(newValue?.title ?? '');
                 },
                 items: departmentGroups
                     .firstWhere((group) => group.groupName == selectedGroup2!)
@@ -113,28 +129,41 @@ class _DepartmentInputScreenState extends ConsumerState<DepartmentInputScreen> {
                     .map<DropdownMenuItem<Department>>((Department department) {
                   return DropdownMenuItem<Department>(
                     value: department,
-                    child: Text(department.title),
+                    child: Text(
+                      department.title,
+                      style: TextStyle(fontWeight: FontWeight.w400),
+                    ),
                   );
                 }).toList(),
               ),
             Spacer(),
             ElevatedButton(
-              onPressed: selectedDepartment1 != null ? () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SignupCompleteScreen(),
-                  ),
-                );
-              } : null,
+              onPressed: selectedDepartment1 != null
+                  ? () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignupCompleteScreen(),
+                        ),
+                      );
+                    }
+                  : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: selectedDepartment1 != null ? Color(0xFFAA71D8) : Colors.grey,
+                backgroundColor: selectedDepartment1 != null
+                    ? Color(0xFFAA71D8)
+                    : Colors.grey,
                 minimumSize: Size(double.infinity, 48),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: Text('다음'),
+              child: Text(
+                '다음',
+                style: TextStyle(
+                    color: selectedDepartment1 != null
+                        ? Colors.white
+                        : Colors.black45),
+              ),
             ),
           ],
         ),

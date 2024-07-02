@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SignupState {
+  final String name;
+  final String nickname;
   final String email;
   final String authNumber;
   final String password;
@@ -9,6 +11,8 @@ class SignupState {
   final String major2;
 
   SignupState({
+    this.name = '',
+    this.nickname = '',
     this.email = '',
     this.authNumber = '',
     this.password = '',
@@ -18,6 +22,8 @@ class SignupState {
   });
 
   SignupState copyWith({
+    String? name,
+    String? nickname,
     String? email,
     String? authNumber,
     String? password,
@@ -26,6 +32,8 @@ class SignupState {
     String? major2,
   }) {
     return SignupState(
+      name: name ?? this.name,
+      nickname: nickname ?? this.nickname,
       email: email ?? this.email,
       authNumber: authNumber ?? this.authNumber,
       password: password ?? this.password,
@@ -38,6 +46,14 @@ class SignupState {
 
 class SignupNotifier extends StateNotifier<SignupState> {
   SignupNotifier() : super(SignupState());
+
+  void updateName(String name) {
+    state = state.copyWith(name: name);
+  }
+
+  void updateNickname(String nickname) {
+    state = state.copyWith(nickname: nickname);
+  }
 
   void updateEmail(String email) {
     state = state.copyWith(email: email);
