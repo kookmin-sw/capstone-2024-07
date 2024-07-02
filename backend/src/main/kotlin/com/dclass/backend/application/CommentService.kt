@@ -1,11 +1,19 @@
 package com.dclass.backend.application
 
-import com.dclass.backend.application.dto.*
+import com.dclass.backend.application.dto.CommentReplyWithUserResponse
+import com.dclass.backend.application.dto.CommentResponse
+import com.dclass.backend.application.dto.CommentScrollPageRequest
+import com.dclass.backend.application.dto.CommentsResponse
+import com.dclass.backend.application.dto.CreateCommentRequest
+import com.dclass.backend.application.dto.DeleteCommentRequest
+import com.dclass.backend.application.dto.LikeCommentRequest
+import com.dclass.backend.application.dto.UpdateCommentRequest
 import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.comment.getByIdOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.community.findByIdOrThrow
 import com.dclass.backend.domain.notification.NotificationEvent
+import com.dclass.backend.domain.post.PostCommentIds
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.post.findByIdOrThrow
 import com.dclass.backend.domain.reply.ReplyRepository
@@ -29,6 +37,7 @@ class CommentService(
     private val communityRepository: CommunityRepository,
     private val eventPublisher: ApplicationEventPublisher,
     private val userBlockRepository: UserBlockRepository,
+
 ) {
     @Retryable(
         ObjectOptimisticLockingFailureException::class,
@@ -39,7 +48,11 @@ class CommentService(
         val post = postRepository.findByIdOrThrow(request.postId)
         val community = communityRepository.findByIdOrThrow(post.communityId)
         commentValidator.validate(userId, community)
-        val comment = commentRepository.save(request.toEntity(userId))
+        val comment = commentRepository.save(request.toEntity(userId, post.userId == userId))
+
+        if (request.isAnonymous && !comment.isOwner) {
+            post.addCommentId(userId)
+        }
 
         post.increaseCommentReplyCount()
 
@@ -86,16 +99,23 @@ class CommentService(
         val comments = commentRepository.findCommentWithUserByPostId(request)
         val blockedUserIds =
             userBlockRepository.findByBlockerUserId(userId).associateBy { it.blockedUserId }
+        val post = postRepository.findByIdOrThrow(request.postId)
 
         comments.forEach {
             it.isLiked = it.likeCount.findUserById(userId)
             it.isBlockedUser = blockedUserIds.contains(it.userId)
+            it.userInformation.nickname =
+                determineNickname(it.isAnonymous, it.isOwner, it.userInformation.nickname, post.postCommentIds, it.userId)
         }
 
         val commentIds = comments.map { it.id }
 
         val replies = replyRepository.findRepliesWithUserByCommentIdIn(commentIds)
-            .onEach { it.isBlockedUser = blockedUserIds.contains(it.userId) }
+            .onEach {
+                it.isBlockedUser = blockedUserIds.contains(it.userId)
+                it.userInformation.nickname =
+                    determineNickname(it.isAnonymous, it.isOwner, it.userInformation.nickname, post.postCommentIds, it.userId)
+            }
             .groupBy { it.commentId }
 
         val data = comments.map {
@@ -105,5 +125,20 @@ class CommentService(
             )
         }
         return CommentsResponse.of(data, request.size)
+    }
+
+    private fun determineNickname(
+        isAnonymous: Boolean,
+        isOwner: Boolean,
+        nickname: String,
+        ids: PostCommentIds,
+        userId: Long,
+    ): String {
+        return when {
+            isAnonymous && isOwner -> "익명(글쓴이)"
+            isAnonymous ->
+                "익명" + ids.commentIds[userId]
+            else -> nickname
+        }
     }
 }

@@ -1,6 +1,10 @@
 package com.dclass.backend.application
 
-import com.dclass.backend.application.dto.*
+import com.dclass.backend.application.dto.CreateReplyRequest
+import com.dclass.backend.application.dto.DeleteReplyRequest
+import com.dclass.backend.application.dto.LikeReplyRequest
+import com.dclass.backend.application.dto.ReplyResponse
+import com.dclass.backend.application.dto.UpdateReplyRequest
 import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.comment.getByIdOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
@@ -47,7 +51,11 @@ class ReplyService(
 
         replyValidator.validate(userId, community.departmentId)
 
-        val reply = replyRepository.save(request.toEntity(userId))
+        val reply = replyRepository.save(request.toEntity(userId, post.userId == userId))
+
+        if (request.isAnonymous && !reply.isOwner) {
+            post.addCommentId(userId)
+        }
 
         if (post.isEligibleForSSE(userId)) {
             val event = NotificationEvent.replyToPostUser(post, comment, reply, community)
