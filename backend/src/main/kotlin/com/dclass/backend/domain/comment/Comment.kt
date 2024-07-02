@@ -23,7 +23,7 @@ class Comment(
 
     content: String = "",
 
-    isAnonymous : Boolean = false,
+    isAnonymous: Boolean = false,
 
     isOwner: Boolean = false,
 
