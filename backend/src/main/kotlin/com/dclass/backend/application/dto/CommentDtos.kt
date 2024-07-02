@@ -37,8 +37,8 @@ data class CreateCommentRequest(
     )
     val isAnonymous: Boolean = false,
 ) {
-    fun toEntity(userId: Long): Comment {
-        return Comment(userId, postId, content, isAnonymous)
+    fun toEntity(userId: Long, isOwner: Boolean): Comment {
+        return Comment(userId, postId, content, isAnonymous, isOwner)
     }
 }
 
@@ -105,6 +105,12 @@ data class CommentResponse(
     val isAnonymous: Boolean = false,
 
     @Schema(
+        description = "댓글 작성자와 글 작성자가 같은지 여부",
+        example = "false",
+    )
+    val isOwner: Boolean = false,
+
+    @Schema(
         description = "댓글이 작성된 시각",
         example = "2021-08-01T00:00:00",
     )
@@ -122,6 +128,7 @@ data class CommentResponse(
         comment.postId,
         comment.content,
         comment.isAnonymous,
+        comment.isOwner,
         comment.createdDateTime,
         comment.modifiedDateTime,
     )
@@ -189,6 +196,12 @@ data class CommentWithUserResponse(
     val isAnonymous: Boolean = false,
 
     @Schema(
+        description = "댓글 작성자와 글 작성자가 같은지 여부",
+        example = "false",
+    )
+    val isOwner: Boolean = false,
+
+    @Schema(
         description = "댓글이 작성된 시각",
         example = "2021-08-01T00:00:00",
     )
@@ -196,7 +209,7 @@ data class CommentWithUserResponse(
 ) {
     constructor(comment: Comment, user: User) : this(
         id = comment.id,
-        userInformation = UserInformation(user.name, user.email, if(comment.isAnonymous) "익명" else user.nickname),
+        userInformation = UserInformation(user.name, user.email, user.nickname),
         userId = user.id,
         postId = comment.postId,
         content = comment.content.takeIf { !comment.isDeleted() } ?: "삭제된 댓글 입니다.",
@@ -204,6 +217,7 @@ data class CommentWithUserResponse(
         deleted = comment.isDeleted(),
         isLiked = false,
         isBlockedUser = false,
+        isOwner = comment.isOwner,
         isAnonymous = comment.isAnonymous,
         createdAt = comment.createdDateTime,
     )

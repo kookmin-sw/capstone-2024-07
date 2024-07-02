@@ -39,8 +39,8 @@ data class CreateReplyRequest(
     )
     val isAnonymous: Boolean = false,
 ) {
-    fun toEntity(userId: Long): Reply {
-        return Reply(userId, commentId, content, isAnonymous)
+    fun toEntity(userId: Long, isOwner: Boolean): Reply {
+        return Reply(userId, commentId, content, isAnonymous, isOwner)
     }
 }
 
@@ -178,6 +178,12 @@ data class ReplyWithUserResponse(
     var isBlockedUser: Boolean = false,
 
     @Schema(
+        description = "대댓글 작성자와 글 작성자가 같은지 여부",
+        example = "false",
+    )
+    val isOwner: Boolean = false,
+
+    @Schema(
         description = "대댓글이 작성된 시각",
         example = "2021-08-01T00:00:00",
     )
@@ -186,10 +192,11 @@ data class ReplyWithUserResponse(
     constructor(reply: Reply, user: User) : this(
         id = reply.id,
         userId = reply.userId,
-        userInformation = UserInformation(user.name, user.email, if(reply.isAnonymous) "익명" else user.nickname),
+        userInformation = UserInformation(user.name, user.email, user.nickname),
         commentId = reply.commentId,
         content = reply.content,
         isAnonymous = reply.isAnonymous,
+        isOwner = reply.isOwner,
         likeCount = reply.replyLikes,
         createdAt = reply.createdDateTime,
     )
