@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/member/view/signup/password_input_screen.dart';
+import 'package:dio/dio.dart';
 
+import '../../../common/component/notice_popup_dialog.dart';
+import '../../../common/const/data.dart';
+import '../../../common/provider/dio_provider.dart';
 import '../../provider/signup_provider.dart';
+import 'password_input_screen.dart';
 
 class AuthCodeInputScreen extends ConsumerStatefulWidget {
   @override
@@ -15,6 +19,67 @@ class _AuthCodeInputScreenState extends ConsumerState<AuthCodeInputScreen> {
   @override
   Widget build(BuildContext context) {
     final signupState = ref.watch(signupProvider);
+    final dio = ref.read(dioProvider);
+
+    void verifyAuthCode() async {
+      try {
+        final response = await dio.post(
+          '$ip/api/users/authenticate-email',
+          queryParameters: {
+            'email': signupState.email,
+            'authenticationCode': signupState.authNumber
+          },
+        );
+
+        if (response.statusCode == 204) {
+          setState(() {
+            isAuthNumberValid = true;
+          });
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PasswordInputScreen(),
+            ),
+          );
+        } else {
+          setState(() {
+            isAuthNumberValid = false;
+          });
+        }
+      } on DioException catch (e) {
+        setState(() {
+          isAuthNumberValid = false;
+        });
+        showDialog(
+          context: context,
+          builder: (context) {
+            return NoticePopupDialog(
+              message: e.response?.data["message"] ?? "에러 발생",
+              buttonText: "닫기",
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            );
+          },
+        );
+      } catch (e) {
+        setState(() {
+          isAuthNumberValid = false;
+        });
+        showDialog(
+          context: context,
+          builder: (context) {
+            return NoticePopupDialog(
+              message: "알 수 없는 에러가 발생했습니다.",
+              buttonText: "닫기",
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            );
+          },
+        );
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(),
@@ -47,27 +112,9 @@ class _AuthCodeInputScreenState extends ConsumerState<AuthCodeInputScreen> {
             ),
             Spacer(),
             ElevatedButton(
-              onPressed: signupState.authNumber.isNotEmpty
-                  ? () {
-                      // Validate auth number logic
-                      setState(() {
-                        isAuthNumberValid = signupState.authNumber ==
-                            '123456'; // Example validation
-                      });
-                      if (isAuthNumberValid) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PasswordInputScreen(),
-                          ),
-                        );
-                      }
-                    }
-                  : null,
+              onPressed: signupState.authNumber.isNotEmpty ? verifyAuthCode : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: signupState.authNumber.isNotEmpty
-                    ? Color(0xFFAA71D8)
-                    : Colors.grey,
+                backgroundColor: signupState.authNumber.isNotEmpty ? Color(0xFFAA71D8) : Colors.grey,
                 minimumSize: Size(double.infinity, 48),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -75,7 +122,7 @@ class _AuthCodeInputScreenState extends ConsumerState<AuthCodeInputScreen> {
               ),
               child: Text(
                 '확인',
-                style: TextStyle(color: signupState.authNumber.isNotEmpty? Colors.white : Colors.black45),
+                style: TextStyle(color: signupState.authNumber.isNotEmpty ? Colors.white : Colors.black45),
               ),
             ),
           ],

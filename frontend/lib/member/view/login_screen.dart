@@ -4,6 +4,7 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/member/view/password_reset_screen.dart';
 import 'package:frontend/member/view/signup/email_input_screen.dart';
+import 'package:frontend/member/view/signup/name_nickname_input_screen.dart';
 import 'package:frontend/member/view/signup_screen.dart';
 
 import '../../common/component/notice_popup_dialog.dart';
@@ -189,7 +190,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             : () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (_) => EmailInputScreen(),
+                                    builder: (_) => NameNicknameInputScreen(),
                                   ),
                                 );
                               },
