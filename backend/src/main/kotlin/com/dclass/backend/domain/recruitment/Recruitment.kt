@@ -51,6 +51,10 @@ class Recruitment(
 
     id: Long = 0L,
 ) : BaseEntity(id) {
+
+    @Column(nullable = false)
+    private var deleted: Boolean = false
+
     @Column(nullable = false)
     var recruitable: Boolean = recruitable
         private set
