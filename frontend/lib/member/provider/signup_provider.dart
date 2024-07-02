@@ -78,6 +78,10 @@ class SignupNotifier extends StateNotifier<SignupState> {
   void updateMajor2(String major2) {
     state = state.copyWith(major2: major2);
   }
+
+  void resetState() {
+    state = SignupState();
+  }
 }
 
 final signupProvider = StateNotifierProvider<SignupNotifier, SignupState>((ref) {

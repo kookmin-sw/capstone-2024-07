@@ -37,6 +37,7 @@ class SignupCompleteScreen extends ConsumerWidget {
                 message: "회원가입이 완료되었습니다.",
                 buttonText: "닫기",
                 onPressed: () {
+                  ref.read(signupProvider.notifier).resetState();
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => LoginScreen()),
