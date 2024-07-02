@@ -114,7 +114,6 @@ data class PostResponse(
     )
     val isQuestion: Boolean,
 
-
     @Schema(
         description = "게시글이 익명인지 여부",
         example = "true",
@@ -146,7 +145,7 @@ data class PostResponse(
     ) : this(
         post.id,
         post.userId,
-        if(post.isAnonymous) "익명" else user.nickname,
+        if (post.isAnonymous) "익명" else user.nickname,
         user.universityName,
         post.communityId,
         communityTitle,
@@ -273,7 +272,7 @@ data class PostDetailResponse(
     ) : this(
         post.id,
         post.userId,
-        if(post.isAnonymous) "익명" else user.nickname,
+        if (post.isAnonymous) "익명" else user.nickname,
         user.universityName,
         post.communityId,
         communityTitle,
