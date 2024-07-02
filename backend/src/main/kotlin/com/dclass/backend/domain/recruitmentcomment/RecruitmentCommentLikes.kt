@@ -10,7 +10,7 @@ class RecruitmentCommentLikes(
     likes: List<RecruitmentCommentLike> = emptyList(),
 ) {
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "comment_likes")
+    @CollectionTable(name = "recruitment_comment_likes")
     private val _likes: MutableList<RecruitmentCommentLike> = likes.toMutableList()
 
     val likes: List<RecruitmentCommentLike>
