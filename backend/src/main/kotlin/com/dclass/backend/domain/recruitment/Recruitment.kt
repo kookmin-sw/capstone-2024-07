@@ -35,6 +35,8 @@ class Recruitment(
 
     endDateTime: LocalDateTime,
 
+    contact: RecruitmentContactMethod = RecruitmentContactMethod(),
+
     recruitmentLikes: RecruitmentLikes = RecruitmentLikes(),
 
     title: String = "",
@@ -85,6 +87,10 @@ class Recruitment(
 
     @Embedded
     var recruitmentLikes: RecruitmentLikes = recruitmentLikes
+        private set
+
+    @Embedded
+    var contact: RecruitmentContactMethod = contact
         private set
 
     @Column(nullable = false)
