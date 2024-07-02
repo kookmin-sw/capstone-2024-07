@@ -5,5 +5,5 @@ import jakarta.persistence.Embeddable
 @Embeddable
 data class RecruitmentContactMethod(
     val input: String = "",
-    val type: RecruitmentContactMethodType = RecruitmentContactMethodType.GOOGLE_FORM
+    val type: RecruitmentContactMethodType = RecruitmentContactMethodType.GOOGLE_FORM,
 )
