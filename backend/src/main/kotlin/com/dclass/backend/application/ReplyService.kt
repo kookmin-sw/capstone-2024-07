@@ -5,6 +5,7 @@ import com.dclass.backend.application.dto.DeleteReplyRequest
 import com.dclass.backend.application.dto.LikeReplyRequest
 import com.dclass.backend.application.dto.ReplyResponse
 import com.dclass.backend.application.dto.UpdateReplyRequest
+import com.dclass.backend.domain.anonymous.AnonymousRepository
 import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.comment.getByIdOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
@@ -33,6 +34,7 @@ class ReplyService(
     private val communityRepository: CommunityRepository,
     private val commentRepository: CommentRepository,
     private val postRepository: PostRepository,
+    private val anonymousRepository: AnonymousRepository,
 ) {
     @Retryable(
         ObjectOptimisticLockingFailureException::class,
@@ -53,8 +55,8 @@ class ReplyService(
 
         val reply = replyRepository.save(request.toEntity(userId, post.userId == userId))
 
-        if (request.isAnonymous && !reply.isOwner) {
-            post.addCommentId(userId)
+        if (request.isAnonymous && !anonymousRepository.existsByUserIdAndPostId(userId, post.id)) {
+            anonymousRepository.save(request.toAnonymousEntity(userId, post.id))
         }
 
         if (post.isEligibleForSSE(userId)) {

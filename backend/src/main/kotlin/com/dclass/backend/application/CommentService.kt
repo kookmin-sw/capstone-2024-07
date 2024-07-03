@@ -8,12 +8,12 @@ import com.dclass.backend.application.dto.CreateCommentRequest
 import com.dclass.backend.application.dto.DeleteCommentRequest
 import com.dclass.backend.application.dto.LikeCommentRequest
 import com.dclass.backend.application.dto.UpdateCommentRequest
+import com.dclass.backend.domain.anonymous.AnonymousRepository
 import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.comment.getByIdOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.community.findByIdOrThrow
 import com.dclass.backend.domain.notification.NotificationEvent
-import com.dclass.backend.domain.post.PostCommentIds
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.post.findByIdOrThrow
 import com.dclass.backend.domain.reply.ReplyRepository
@@ -37,8 +37,9 @@ class CommentService(
     private val communityRepository: CommunityRepository,
     private val eventPublisher: ApplicationEventPublisher,
     private val userBlockRepository: UserBlockRepository,
+    private val anonymousRepository: AnonymousRepository,
 
-) {
+    ) {
     @Retryable(
         ObjectOptimisticLockingFailureException::class,
         maxAttempts = 3,
@@ -50,8 +51,8 @@ class CommentService(
         commentValidator.validate(userId, community)
         val comment = commentRepository.save(request.toEntity(userId, post.userId == userId))
 
-        if (request.isAnonymous && !comment.isOwner) {
-            post.addCommentId(userId)
+        if (request.isAnonymous && !anonymousRepository.existsByUserIdAndPostId(userId, post.id)) {
+            anonymousRepository.save(request.toAnonymousEntity(userId, post.id))
         }
 
         post.increaseCommentReplyCount()
@@ -99,24 +100,26 @@ class CommentService(
         val comments = commentRepository.findCommentWithUserByPostId(request)
         val blockedUserIds =
             userBlockRepository.findByBlockerUserId(userId).associateBy { it.blockedUserId }
-        val post = postRepository.findByIdOrThrow(request.postId)
+        val anonymousList = anonymousRepository.findByPostId(request.postId)
+
+        val commentIds = comments.map { it.id }
+
+        val anonymousIndexMap = anonymousList.mapIndexed { index, anon -> anon.userId to index }.toMap()
 
         comments.forEach {
             it.isLiked = it.likeCount.findUserById(userId)
             it.isBlockedUser = blockedUserIds.contains(it.userId)
-            it.userInformation.nickname =
-                determineNickname(it.isAnonymous, it.isOwner, it.userInformation.nickname, post.postCommentIds, it.userId)
+            val index = anonymousIndexMap[it.userId] ?: -1
+            it.userInformation.nickname = determineNickname(it.isOwner, it.isAnonymous, it.userInformation.nickname, index)
         }
-
-        val commentIds = comments.map { it.id }
 
         val replies = replyRepository.findRepliesWithUserByCommentIdIn(commentIds)
             .onEach {
                 it.isBlockedUser = blockedUserIds.contains(it.userId)
-                it.userInformation.nickname =
-                    determineNickname(it.isAnonymous, it.isOwner, it.userInformation.nickname, post.postCommentIds, it.userId)
-            }
-            .groupBy { it.commentId }
+                val index = anonymousIndexMap[it.userId] ?: -1
+                it.userInformation.nickname = determineNickname(it.isOwner, it.isAnonymous, it.userInformation.nickname, index)
+            }.groupBy { it.commentId }
+
 
         val data = comments.map {
             CommentReplyWithUserResponse(
@@ -128,16 +131,14 @@ class CommentService(
     }
 
     private fun determineNickname(
-        isAnonymous: Boolean,
         isOwner: Boolean,
+        isAnonymous: Boolean,
         nickname: String,
-        ids: PostCommentIds,
-        userId: Long,
+        index: Int,
     ): String {
         return when {
-            isAnonymous && isOwner -> "익명(글쓴이)"
-            isAnonymous ->
-                "익명" + ids.commentIds[userId]
+            isAnonymous && index != -1 && isOwner -> "익명(글쓴이)"
+            index != -1  && isAnonymous -> "익명" + (index + 1)
             else -> nickname
         }
     }
