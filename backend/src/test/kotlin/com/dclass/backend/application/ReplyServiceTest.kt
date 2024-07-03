@@ -4,6 +4,7 @@ import com.dclass.backend.application.dto.CreateReplyRequest
 import com.dclass.backend.application.dto.DeleteReplyRequest
 import com.dclass.backend.application.dto.LikeReplyRequest
 import com.dclass.backend.application.dto.UpdateReplyRequest
+import com.dclass.backend.domain.anonymous.AnonymousRepository
 import com.dclass.backend.domain.comment.Comment
 import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.comment.getByIdOrThrow
@@ -27,7 +28,11 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.ints.shouldBeLessThan
 import io.kotest.matchers.shouldBe
-import io.mockk.*
+import io.mockk.every
+import io.mockk.justRun
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.verify
 import org.springframework.context.ApplicationEventPublisher
 
 class ReplyServiceTest : BehaviorSpec({
@@ -38,6 +43,7 @@ class ReplyServiceTest : BehaviorSpec({
     val communityRepository = mockk<CommunityRepository>()
     val commentRepository = mockk<CommentRepository>()
     val postRepository = mockk<PostRepository>()
+    val anonymousRepository = mockk<AnonymousRepository>()
 
     val replyService = ReplyService(
         replyRepository,
@@ -46,6 +52,7 @@ class ReplyServiceTest : BehaviorSpec({
         communityRepository,
         commentRepository,
         postRepository,
+        anonymousRepository,
     )
 
     Given("삭제된 댓글이 존재하는 경우") {
