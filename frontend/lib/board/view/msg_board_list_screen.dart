@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:frontend/board/component/board_card.dart';
+import 'package:frontend/board/layout/invite_layout.dart';
 import 'package:frontend/board/layout/study_box_layout.dart';
 import 'package:frontend/board/model/msg_board_detail_response_model.dart';
 import 'package:frontend/board/provider/api_category_provider.dart';
@@ -113,6 +114,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                   children: [
                     renderStudyList(),
                     // adSlider(),
+                    const Invite(),
                     renderBoardList(),
                   ],
                 ),
