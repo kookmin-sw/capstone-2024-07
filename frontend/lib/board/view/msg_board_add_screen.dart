@@ -53,6 +53,8 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
 
+  double width = 0, height = 0;
+
   @override
   void initState() {
     super.initState();
@@ -69,6 +71,15 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
 
     titleController = TextEditingController(text: title);
     contentController = TextEditingController(text: content);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
+
+    debugPrint("크기 : $width $height");
   }
 
   void refresh() async {
@@ -605,8 +616,8 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                                     ),
                                                   ),
                                                 )),
-                                            const SizedBox(
-                                              width: 18,
+                                            SizedBox(
+                                              width: width < 380 ? 11 : 18,
                                             ),
                                             GestureDetector(
                                               onTap: () async {
@@ -755,10 +766,11 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                         activeText: "온라인",
                                         activeTextColor: Colors.white,
                                         inactiveTextColor: Colors.white,
+                                        valueFontSize: 14,
                                         activeTextFontWeight: FontWeight.w400,
                                         inactiveTextFontWeight: FontWeight.w400,
                                         width: 110.0,
-                                        height: 33.0,
+                                        height: 28.0,
                                         inactiveColor: INACTIVE_COLOR,
                                         value: isOffline,
                                         activeColor: ACTIVE_COLOR,
@@ -916,17 +928,17 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                           borderRadius: BorderRadius.circular(50),
                           color: PRIMARY20_COLOR,
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               "잠깐!",
                               style: TextStyle(
-                                fontSize: 10,
+                                fontSize: width < 380 ? 9 : 10,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 5,
                             ),
                             Flexible(
@@ -934,7 +946,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                 "부적절하거나 불쾌감을 줄 수 있는 컨텐츠는 제재를 받을 수 있습니다.",
                                 overflow: TextOverflow.visible,
                                 style: TextStyle(
-                                  fontSize: 10,
+                                  fontSize: width < 380 ? 9 : 10,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
@@ -956,7 +968,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                           });
                         },
                         keyboardType: TextInputType.multiline,
-                        maxLines: 14,
+                        maxLines: height < 700 ? 7 : 14,
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
