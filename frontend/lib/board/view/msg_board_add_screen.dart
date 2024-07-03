@@ -533,8 +533,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                   elevation: 0,
                                   dropdownColor: Colors.grey.shade200,
                                   borderRadius: BorderRadius.circular(20),
-                                  items: categorysList
-                                      .sublist(2, categorysList.length)
+                                  items: categorysList2
                                       .map<DropdownMenuItem<String>>(
                                           (String value) {
                                     return DropdownMenuItem<String>(
@@ -567,7 +566,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                           ),
                         ),
                       ),
-                      selectCategory == "스터디/프로젝트"
+                      selectCategory == "스터디" || selectCategory == "프로젝트"
                           ? Column(
                               children: [
                                 const SizedBox(
@@ -963,7 +962,8 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                           fontWeight: FontWeight.w400,
                         ),
                         decoration: InputDecoration(
-                          hintText: selectCategory == "스터디/프로젝트"
+                          hintText: selectCategory == "스터디" ||
+                                  selectCategory == "프로젝트"
                               ? "구체적인 스터디 모임 내용을 자세하게 적으면,\n인원 모집에 도움이 됩니다.\n\n#해시태그 를 달아 모집글을 더 노출시켜보세요!"
                               : "지금 가장 고민이 되거나 궁금한 내용이 무엇인가요?",
                           border: InputBorder.none,

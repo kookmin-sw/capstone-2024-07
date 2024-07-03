@@ -99,6 +99,10 @@ class BoardStateNotifier extends StateNotifier<CursorPaginationModelBase> {
           state = CursorPaginationModelLoading();
         }
       }
+
+      if (communityTitle == "PROJECT") {
+        communityTitle = "STUDY";
+      }
       final resp =
           await repository.paginate(lastId, communityTitle, size, isHot);
 

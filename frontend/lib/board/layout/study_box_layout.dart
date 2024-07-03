@@ -22,7 +22,7 @@ class _StudyBox extends ConsumerState<StudyBox> {
     return Container(
       width: 115,
       decoration: BoxDecoration(
-        color: BOARD_CARD_COLOR,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(

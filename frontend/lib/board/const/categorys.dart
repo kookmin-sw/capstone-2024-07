@@ -8,6 +8,15 @@ const List<String> categorysList = [
   "흥보",
 ];
 
+const List<String> categorysList2 = [
+  "자유",
+  "스터디",
+  "프로젝트",
+  "취업",
+  "대학원",
+  "흥보",
+];
+
 Map<String, String> categoryCodesList = {
   "전체": "ALL",
   "인기": "HOT",
