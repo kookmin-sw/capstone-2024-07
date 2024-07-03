@@ -35,8 +35,6 @@ class Post(
 
     images: List<Image> = emptyList(),
 
-    postCommentIds: PostCommentIds = PostCommentIds(),
-
     @Embedded
     var postCount: PostCount = PostCount(),
 
@@ -79,10 +77,6 @@ class Post(
 
     val images: List<Image>
         get() = _images
-
-    @Embedded
-    var postCommentIds: PostCommentIds = postCommentIds
-        private set
 
     @Column(nullable = false)
     var isQuestion: Boolean = isQuestion
@@ -131,10 +125,6 @@ class Post(
         }
         postLikes.add(userId)
         postCount = postCount.syncLikeCount(postLikesCount)
-    }
-
-    fun addCommentId(userId: Long) {
-        postCommentIds.add(userId)
     }
 
     fun isEligibleForSSE(userid: Long): Boolean {
