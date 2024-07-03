@@ -1,5 +1,6 @@
 package com.dclass.backend.application.dto
 
+import com.dclass.backend.domain.anonymous.Anonymous
 import com.dclass.backend.domain.reply.Reply
 import com.dclass.backend.domain.reply.ReplyLikes
 import com.dclass.backend.domain.user.User
@@ -41,6 +42,10 @@ data class CreateReplyRequest(
 ) {
     fun toEntity(userId: Long, isOwner: Boolean): Reply {
         return Reply(userId, commentId, content, isAnonymous, isOwner)
+    }
+
+    fun toAnonymousEntity(userId: Long, postId: Long): Anonymous {
+        return Anonymous(userId, postId)
     }
 }
 

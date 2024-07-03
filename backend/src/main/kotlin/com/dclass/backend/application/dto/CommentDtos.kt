@@ -1,5 +1,6 @@
 package com.dclass.backend.application.dto
 
+import com.dclass.backend.domain.anonymous.Anonymous
 import com.dclass.backend.domain.comment.Comment
 import com.dclass.backend.domain.comment.CommentLikes
 import com.dclass.backend.domain.user.User
@@ -39,6 +40,10 @@ data class CreateCommentRequest(
 ) {
     fun toEntity(userId: Long, isOwner: Boolean): Comment {
         return Comment(userId, postId, content, isAnonymous, isOwner)
+    }
+
+    fun toAnonymousEntity(userId: Long, postId: Long): Anonymous {
+        return Anonymous(userId, postId)
     }
 }
 
