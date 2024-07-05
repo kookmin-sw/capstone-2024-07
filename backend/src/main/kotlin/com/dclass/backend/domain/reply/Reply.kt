@@ -24,8 +24,6 @@ class Reply(
 
     isAnonymous: Boolean = false,
 
-    isOwner: Boolean = false,
-
     replyLikes: ReplyLikes = ReplyLikes(),
 
     @Column(nullable = false)
@@ -45,10 +43,6 @@ class Reply(
 
     @Column(nullable = false)
     var isAnonymous: Boolean = isAnonymous
-        private set
-
-    @Column(nullable = false)
-    var isOwner: Boolean = isOwner
         private set
 
     @Embedded
