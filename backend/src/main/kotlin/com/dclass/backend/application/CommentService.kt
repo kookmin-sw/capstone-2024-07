@@ -1,5 +1,6 @@
 package com.dclass.backend.application
 
+import com.dclass.backend.application.dto.CommentReplyResponse
 import com.dclass.backend.application.dto.CommentReplyWithUserResponse
 import com.dclass.backend.application.dto.CommentResponse
 import com.dclass.backend.application.dto.CommentScrollPageRequest
@@ -8,15 +9,18 @@ import com.dclass.backend.application.dto.CreateCommentRequest
 import com.dclass.backend.application.dto.DeleteCommentRequest
 import com.dclass.backend.application.dto.LikeCommentRequest
 import com.dclass.backend.application.dto.UpdateCommentRequest
+import com.dclass.backend.domain.anonymous.Anonymous
 import com.dclass.backend.domain.anonymous.AnonymousRepository
 import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.comment.getByIdOrThrow
 import com.dclass.backend.domain.community.CommunityRepository
 import com.dclass.backend.domain.community.findByIdOrThrow
 import com.dclass.backend.domain.notification.NotificationEvent
+import com.dclass.backend.domain.post.Post
 import com.dclass.backend.domain.post.PostRepository
 import com.dclass.backend.domain.post.findByIdOrThrow
 import com.dclass.backend.domain.reply.ReplyRepository
+import com.dclass.backend.domain.userblock.UserBlock
 import com.dclass.backend.domain.userblock.UserBlockRepository
 import com.dclass.backend.exception.comment.CommentException
 import com.dclass.backend.exception.comment.CommentExceptionType
@@ -49,7 +53,7 @@ class CommentService(
         val post = postRepository.findByIdOrThrow(request.postId)
         val community = communityRepository.findByIdOrThrow(post.communityId)
         commentValidator.validate(userId, community)
-        val comment = commentRepository.save(request.toEntity(userId, post.userId == userId))
+        val comment = commentRepository.save(request.toEntity(userId))
 
         if (request.isAnonymous && !anonymousRepository.existsByUserIdAndPostId(userId, post.id)) {
             anonymousRepository.save(request.toAnonymousEntity(userId, post.id))
@@ -101,23 +105,19 @@ class CommentService(
         val blockedUserIds =
             userBlockRepository.findByBlockerUserId(userId).associateBy { it.blockedUserId }
         val anonymousList = anonymousRepository.findByPostId(request.postId)
+        val post = postRepository.findByIdOrThrow(request.postId)
 
         val commentIds = comments.map { it.id }
 
-        val anonymousIndexMap = anonymousList.mapIndexed { index, anon -> anon.userId to index }.toMap()
 
         comments.forEach {
             it.isLiked = it.likeCount.findUserById(userId)
-            it.isBlockedUser = blockedUserIds.contains(it.userId)
-            val index = anonymousIndexMap[it.userId] ?: -1
-            it.userInformation.nickname = determineNickname(it.isOwner, it.isAnonymous, it.userInformation.nickname, index)
+            updateUserInfo(it, blockedUserIds, anonymousList, post)
         }
 
         val replies = replyRepository.findRepliesWithUserByCommentIdIn(commentIds)
             .onEach {
-                it.isBlockedUser = blockedUserIds.contains(it.userId)
-                val index = anonymousIndexMap[it.userId] ?: -1
-                it.userInformation.nickname = determineNickname(it.isOwner, it.isAnonymous, it.userInformation.nickname, index)
+                updateUserInfo(it, blockedUserIds, anonymousList, post)
             }.groupBy { it.commentId }
 
 
@@ -128,6 +128,18 @@ class CommentService(
             )
         }
         return CommentsResponse.of(data, request.size)
+    }
+
+    private fun updateUserInfo(
+        it: CommentReplyResponse,
+        blockedUserIds: Map<Long, UserBlock>,
+        anonymousList: List<Anonymous>,
+        post: Post
+    ) {
+        it.isBlockedUser = blockedUserIds.contains(it.userId)
+        val index = anonymousList.indexOfFirst { anon -> anon.userId == it.userId }
+        val isOwner = it.userId == post.userId
+        it.userInformation.nickname = determineNickname(isOwner, it.isAnonymous, it.userInformation.nickname, index)
     }
 
     private fun determineNickname(

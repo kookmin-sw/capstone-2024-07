@@ -38,8 +38,8 @@ data class CreateCommentRequest(
     )
     val isAnonymous: Boolean = false,
 ) {
-    fun toEntity(userId: Long, isOwner: Boolean): Comment {
-        return Comment(userId, postId, content, isAnonymous, isOwner)
+    fun toEntity(userId: Long): Comment {
+        return Comment(userId, postId, content, isAnonymous)
     }
 
     fun toAnonymousEntity(userId: Long, postId: Long): Anonymous {
@@ -78,6 +78,14 @@ data class LikeCommentRequest(
     val commentId: Long,
 )
 
+interface CommentReplyResponse {
+    val userId: Long
+    var isBlockedUser: Boolean
+    val isAnonymous: Boolean
+    val userInformation: UserInformation
+}
+
+
 data class CommentResponse(
     @Schema(
         description = "댓글의 고유 식별자",
@@ -109,11 +117,6 @@ data class CommentResponse(
     )
     val isAnonymous: Boolean = false,
 
-    @Schema(
-        description = "댓글 작성자와 글 작성자가 같은지 여부",
-        example = "false",
-    )
-    val isOwner: Boolean = false,
 
     @Schema(
         description = "댓글이 작성된 시각",
@@ -133,7 +136,6 @@ data class CommentResponse(
         comment.postId,
         comment.content,
         comment.isAnonymous,
-        comment.isOwner,
         comment.createdDateTime,
         comment.modifiedDateTime,
     )
@@ -150,13 +152,13 @@ data class CommentWithUserResponse(
         description = "댓글을 작성한 유저의 정보",
         example = "1",
     )
-    val userInformation: UserInformation,
+    override val userInformation: UserInformation,
 
     @Schema(
         description = "댓글을 작성한 유저의 고유 id",
         example = "1",
     )
-    val userId: Long,
+    override val userId: Long,
 
     @Schema(
         description = "댓글이 달린 게시글의 고유 식별자",
@@ -192,26 +194,20 @@ data class CommentWithUserResponse(
         description = "차단된 사용자 여부",
         example = "true",
     )
-    var isBlockedUser: Boolean,
+    override var isBlockedUser: Boolean,
 
     @Schema(
         description = "익명 여부",
         example = "false",
     )
-    val isAnonymous: Boolean = false,
-
-    @Schema(
-        description = "댓글 작성자와 글 작성자가 같은지 여부",
-        example = "false",
-    )
-    val isOwner: Boolean = false,
+    override val isAnonymous: Boolean = false,
 
     @Schema(
         description = "댓글이 작성된 시각",
         example = "2021-08-01T00:00:00",
     )
     val createdAt: LocalDateTime,
-) {
+) : CommentReplyResponse {
     constructor(comment: Comment, user: User) : this(
         id = comment.id,
         userInformation = UserInformation(user.name, user.email, user.nickname),
@@ -222,7 +218,6 @@ data class CommentWithUserResponse(
         deleted = comment.isDeleted(),
         isLiked = false,
         isBlockedUser = false,
-        isOwner = comment.isOwner,
         isAnonymous = comment.isAnonymous,
         createdAt = comment.createdDateTime,
     )
