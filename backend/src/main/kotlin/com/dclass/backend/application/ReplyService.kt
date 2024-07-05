@@ -53,7 +53,7 @@ class ReplyService(
 
         replyValidator.validate(userId, community.departmentId)
 
-        val reply = replyRepository.save(request.toEntity(userId, post.userId == userId))
+        val reply = replyRepository.save(request.toEntity(userId))
 
         if (request.isAnonymous && !anonymousRepository.existsByUserIdAndPostId(userId, post.id)) {
             anonymousRepository.save(request.toAnonymousEntity(userId, post.id))

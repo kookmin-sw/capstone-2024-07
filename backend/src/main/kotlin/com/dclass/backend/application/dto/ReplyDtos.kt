@@ -40,8 +40,8 @@ data class CreateReplyRequest(
     )
     val isAnonymous: Boolean = false,
 ) {
-    fun toEntity(userId: Long, isOwner: Boolean): Reply {
-        return Reply(userId, commentId, content, isAnonymous, isOwner)
+    fun toEntity(userId: Long): Reply {
+        return Reply(userId, commentId, content, isAnonymous)
     }
 
     fun toAnonymousEntity(userId: Long, postId: Long): Anonymous {
@@ -145,12 +145,12 @@ data class ReplyWithUserResponse(
         description = "대댓글을 작성한 유저의 고유 식별자",
         example = "1",
     )
-    val userId: Long,
+    override val userId: Long,
 
     @Schema(
         description = "대댓글을 작성한 유저의 정보",
     )
-    val userInformation: UserInformation,
+    override val userInformation: UserInformation,
 
     @Schema(
         description = "대댓글이 달린 댓글의 고유 식별자",
@@ -168,7 +168,7 @@ data class ReplyWithUserResponse(
         description = "익명 여부",
         example = "false",
     )
-    val isAnonymous: Boolean,
+    override val isAnonymous: Boolean,
 
     @Schema(
         description = "대댓글의 좋아요 수",
@@ -180,20 +180,14 @@ data class ReplyWithUserResponse(
         description = "차단한 사용자 여부",
         example = "false",
     )
-    var isBlockedUser: Boolean = false,
-
-    @Schema(
-        description = "대댓글 작성자와 글 작성자가 같은지 여부",
-        example = "false",
-    )
-    val isOwner: Boolean = false,
+    override var isBlockedUser: Boolean = false,
 
     @Schema(
         description = "대댓글이 작성된 시각",
         example = "2021-08-01T00:00:00",
     )
     val createdAt: LocalDateTime,
-) {
+) : CommentReplyResponse {
     constructor(reply: Reply, user: User) : this(
         id = reply.id,
         userId = reply.userId,
@@ -201,7 +195,6 @@ data class ReplyWithUserResponse(
         commentId = reply.commentId,
         content = reply.content,
         isAnonymous = reply.isAnonymous,
-        isOwner = reply.isOwner,
         likeCount = reply.replyLikes,
         createdAt = reply.createdDateTime,
     )
