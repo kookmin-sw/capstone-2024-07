@@ -25,8 +25,6 @@ class Comment(
 
     isAnonymous: Boolean = false,
 
-    isOwner: Boolean = false,
-
     commentLikes: CommentLikes = CommentLikes(),
 
     @Column(nullable = false)
@@ -64,10 +62,6 @@ class Comment(
 
     @Column(nullable = false)
     var isAnonymous: Boolean = isAnonymous
-        private set
-
-    @Column(nullable = false)
-    var isOwner: Boolean = isOwner
         private set
 
     fun likedBy(userId: Long) =
