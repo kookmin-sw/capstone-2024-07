@@ -13,7 +13,7 @@ import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/provider/image_provider.dart';
-import 'package:frontend/board/provider/isquestion_provider.dart';
+import 'package:frontend/board/provider/anonymous_provider.dart';
 import 'package:frontend/board/provider/network_image_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/member/provider/mypage/my_post_state_notifier_provider.dart';
@@ -39,7 +39,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   bool writedContent = false;
   String selectCategory = "자유";
   String title = "", content = "";
-  bool isQuestion = false;
+  bool isAnonymous = false;
   List<XFile> realImages = [];
   List<String> networkImages = [];
   late TextEditingController titleController;
@@ -49,7 +49,6 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   bool isOffline = false;
   bool isAlways = false;
   bool isNotLimit = false;
-  bool isAnonymous = false;
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
 
@@ -63,7 +62,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
           categoryCodesReverseList[widget.board.communityTitle].toString();
       title = widget.board.postTitle;
       content = widget.board.postContent;
-      isQuestion = widget.board.isQuestion;
+      isAnonymous = widget.board.isAnonymous;
       canUpload = widget.isEdit;
 
       canUpload = writedTitle = writedContent = true;
@@ -225,6 +224,8 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   }
 
   Future<void> upLoad() async {
+    isAnonymous = ref.watch(isAnonymousStateProvider);
+
     List<String> images = [];
     int i = 0;
     for (; i < networkImages.length; i++) {
@@ -270,6 +271,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
         'postId': widget.board.id,
         'title': title,
         'content': content,
+        'isAnonymous': isAnonymous,
         'images': images,
       };
       List<http.Response> httpImages = [];
@@ -321,7 +323,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
         'communityTitle': categoryCodesList[selectCategory],
         'title': title,
         'content': content,
-        'isQuestion': isQuestion,
+        'isAnonymous': isAnonymous,
         'images': images,
       };
       MsgBoardResponseModel resp;
@@ -1015,9 +1017,6 @@ class BottomView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     msgBoardAddScreenState.boardAddAPI = ref.watch(boardAddProvider);
-    if (!msgBoardAddScreenState.widget.isEdit) {
-      msgBoardAddScreenState.isQuestion = ref.watch(isQuestionStateProvider);
-    }
     return Column(
       children: [
         ImageViewer(

@@ -16,7 +16,6 @@ class BoardCard extends StatelessWidget {
   final String postContent;
   final List<String> images;
   final ReactCountModel count;
-  final bool isQuestion;
   final int imageCount;
   final String createdDateTime;
 
@@ -31,7 +30,6 @@ class BoardCard extends StatelessWidget {
     required this.postContent,
     required this.images,
     required this.count,
-    required this.isQuestion,
     required this.imageCount,
     required this.createdDateTime,
     super.key,
@@ -50,7 +48,6 @@ class BoardCard extends StatelessWidget {
       postContent: msgBoardResponseModel.postContent,
       images: msgBoardResponseModel.images,
       count: msgBoardResponseModel.count,
-      isQuestion: msgBoardResponseModel.isQuestion,
       imageCount: msgBoardResponseModel.imageCount,
       createdDateTime: msgBoardResponseModel.createdDateTime,
     );

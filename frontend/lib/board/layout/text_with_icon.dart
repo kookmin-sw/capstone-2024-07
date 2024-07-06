@@ -5,7 +5,7 @@ import 'package:frontend/board/provider/block_provider.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/cloudwatch_provider.dart';
 import 'package:frontend/board/provider/comment_provider.dart';
-import 'package:frontend/board/provider/isquestion_provider.dart';
+import 'package:frontend/board/provider/anonymous_provider.dart';
 import 'package:frontend/board/provider/image_provider.dart';
 import 'package:frontend/board/provider/comment_notifier_provider.dart';
 import 'package:frontend/board/provider/reply_notifier_provider.dart';
@@ -50,8 +50,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
     with SingleTickerProviderStateMixin {
   bool isHeartClicked = false;
   bool isFavoriteClicked = false;
-  bool isQuestionClicked = false;
-  bool cantClicked = true;
+  bool isAnonymousClicked = false;
   // ignore: prefer_typing_uninitialized_variables
   var textCount;
 
@@ -140,8 +139,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
     } else if (widget.icon == Icons.star_outline_rounded) {
       isFavoriteClicked = widget.isClicked;
     } else if (widget.icon == Icons.check_box_outline_blank_rounded) {
-      isQuestionClicked = widget.isClicked;
-      cantClicked = isQuestionClicked;
+      isAnonymousClicked = widget.isClicked;
     }
     textCount = int.tryParse(widget.text);
     textCount ??= widget.text;
@@ -306,12 +304,13 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                             }))
                       }
                   });
-            } else if (widget.icon == Icons.check_box_outline_blank_rounded &&
-                !cantClicked) {
+            } else if (widget.icon == Icons.check_box_outline_blank_rounded) {
               setState(() {
-                isQuestionClicked = !isQuestionClicked;
+                isAnonymousClicked = !isAnonymousClicked;
               });
-              ref.read(isQuestionStateProvider.notifier).set(isQuestionClicked);
+              ref
+                  .read(isAnonymousStateProvider.notifier)
+                  .set(isAnonymousClicked);
             } else if (widget.icon == Icons.more_horiz) {
               if (widget.commentId == -3) {
                 notAllowed("이미 삭제된 댓글입니다.");
@@ -330,7 +329,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                 Icon(
                   isHeartClicked
                       ? Icons.favorite
-                      : isQuestionClicked
+                      : isAnonymousClicked
                           ? Icons.check_box_rounded
                           : isFavoriteClicked
                               ? Icons.star
@@ -338,7 +337,7 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
                   size: widget.iconSize,
                   color: isHeartClicked
                       ? Colors.red
-                      : isQuestionClicked
+                      : isAnonymousClicked
                           ? Colors.blue.withOpacity(0.5)
                           : isFavoriteClicked
                               ? Colors.yellow
