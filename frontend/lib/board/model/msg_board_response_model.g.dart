@@ -20,7 +20,7 @@ MsgBoardResponseModel _$MsgBoardResponseModelFromJson(
       images:
           (json['images'] as List<dynamic>).map((e) => e as String).toList(),
       count: ReactCountModel.fromJson(json['count'] as Map<String, dynamic>),
-      isQuestion: json['isQuestion'] as bool,
+      isAnonymous: json['isAnonymous'] as bool,
       isBlockedUser: json['isBlockedUser'] as bool,
       imageCount: (json['imageCount'] as num).toInt(),
       createdDateTime: json['createdDateTime'] as String,
@@ -39,7 +39,7 @@ Map<String, dynamic> _$MsgBoardResponseModelToJson(
       'postContent': instance.postContent,
       'images': instance.images,
       'count': instance.count,
-      'isQuestion': instance.isQuestion,
+      'isAnonymous': instance.isAnonymous,
       'isBlockedUser': instance.isBlockedUser,
       'imageCount': instance.imageCount,
       'createdDateTime': instance.createdDateTime,

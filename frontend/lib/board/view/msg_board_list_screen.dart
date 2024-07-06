@@ -148,7 +148,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                         images: [],
                         count: ReactCountModel(
                             commentReplyCount: 0, likeCount: 0, scrapCount: 0),
-                        isQuestion: false,
+                        isAnonymous: false,
                         isBlockedUser: false,
                         createdDateTime: "",
                         imageCount: 0,
