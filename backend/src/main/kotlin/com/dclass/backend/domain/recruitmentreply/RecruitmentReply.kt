@@ -1,8 +1,7 @@
-package com.dclass.backend.domain.recruitmentReply
+package com.dclass.backend.domain.recruitmentreply
 
 import com.dclass.support.domain.BaseEntity
 import jakarta.persistence.Column
-import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
