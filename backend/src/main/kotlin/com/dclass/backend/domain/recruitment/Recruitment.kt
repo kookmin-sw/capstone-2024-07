@@ -2,7 +2,6 @@ package com.dclass.backend.domain.recruitment
 
 import com.dclass.support.domain.BaseEntity
 import jakarta.persistence.Column
-import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
@@ -41,7 +40,7 @@ class Recruitment(
 
     content: String = "",
 
-    anonymousNumber: Int = 0,
+    scrapCount: Int = 0,
 
     @Column(nullable = false)
     val createdDateTime: LocalDateTime = LocalDateTime.now(),
@@ -80,15 +79,23 @@ class Recruitment(
         private set
 
     @Column(nullable = false)
+    var title: String = title
+        private set
+
+    @Column(nullable = false)
+    var content: String = content
+        private set
+
+    @Column(nullable = false)
+    var scrapCount: Int = scrapCount
+        private set
+
+    @Column(nullable = false)
     var startDateTime: LocalDateTime = startDateTime
         private set
 
     @Column(nullable = false)
     var endDateTime: LocalDateTime = endDateTime
-        private set
-
-    @Column(nullable = false)
-    var anonymousNumber: Int = anonymousNumber
         private set
 
     @Column(nullable = false)
