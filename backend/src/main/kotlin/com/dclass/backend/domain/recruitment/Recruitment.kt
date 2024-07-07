@@ -27,6 +27,8 @@ class Recruitment(
 
     isOnline: Boolean = false,
 
+    isOngoing: Boolean = false,
+
     limit: RecruitmentNumber = RecruitmentNumber(-1),
 
     recruitable: Boolean = false,
@@ -66,6 +68,10 @@ class Recruitment(
 
     @Column(nullable = false)
     var isOnline: Boolean = isOnline
+        private set
+
+    @Column(nullable = false)
+    var isOngoing: Boolean = isOngoing
         private set
 
     @Enumerated(EnumType.STRING)
