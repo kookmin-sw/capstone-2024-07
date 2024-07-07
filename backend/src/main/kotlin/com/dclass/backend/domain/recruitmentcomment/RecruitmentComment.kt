@@ -21,8 +21,6 @@ class RecruitmentComment(
 
     content: String = "",
 
-    recruitmentCommentLikes: RecruitmentCommentLikes = RecruitmentCommentLikes(),
-
     @Column(nullable = false)
     val createdDateTime: LocalDateTime = LocalDateTime.now(),
 
@@ -44,14 +42,7 @@ class RecruitmentComment(
     var modifiedDateTime: LocalDateTime = modifiedDateTime
         private set
 
-    @Embedded
-    var recruitmentCommentLikes: RecruitmentCommentLikes = recruitmentCommentLikes
-        private set
-
     @Column(nullable = false)
     var replyCount: Int = 0
         private set
-
-    val likeCount: Int
-        get() = recruitmentCommentLikes.count
 }
