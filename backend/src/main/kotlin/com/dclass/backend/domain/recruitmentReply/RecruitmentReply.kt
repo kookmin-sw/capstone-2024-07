@@ -20,8 +20,6 @@ class RecruitmentReply(
 
     content: String = "",
 
-    recruitmentReplyLikes: RecruitmentReplyLikes = RecruitmentReplyLikes(),
-
     @Column(nullable = false)
     val createdDateTime: LocalDateTime = LocalDateTime.now(),
 
@@ -35,13 +33,6 @@ class RecruitmentReply(
     @Column(nullable = false, length = 255)
     var content: String = content
         private set
-
-    @Embedded
-    var recruitmentReplyLikes: RecruitmentReplyLikes = recruitmentReplyLikes
-        private set
-
-    val likeCount: Int
-        get() = recruitmentReplyLikes.count
 
     @Column(nullable = false)
     var modifiedDateTime: LocalDateTime = modifiedDateTime
