@@ -149,6 +149,9 @@ class _TextWithIconState extends ConsumerState<TextWithIcon>
 
   @override
   Widget build(BuildContext context) {
+    if (widget.icon == Icons.check_box_outline_blank_rounded) {
+      isAnonymousClicked = ref.watch(isAnonymousStateProvider);
+    }
     return Stack(
       children: [
         Padding(

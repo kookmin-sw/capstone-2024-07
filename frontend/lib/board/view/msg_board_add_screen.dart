@@ -365,6 +365,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
 
     ref.read(imageStateProvider.notifier).clear();
     ref.read(networkImageStateProvider.notifier).clear();
+    ref.read(isAnonymousStateProvider.notifier).set(false);
 
     Navigator.of(context).pop();
   }

@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/const/categorys.dart';
+import 'package:frontend/board/layout/text_with_icon.dart';
 import 'package:frontend/board/model/comment_model.dart';
 import 'package:frontend/board/model/exception_model.dart';
 import 'package:frontend/board/model/msg_board_detail_response_model.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
+import 'package:frontend/board/provider/anonymous_provider.dart';
 import 'package:frontend/board/provider/block_provider.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
@@ -87,9 +89,11 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     final requestData = {
       'postId': widget.board.id.toInt(),
       'content': textEditingController.text,
+      'isAnonymous': ref.watch(isAnonymousStateProvider),
     };
     try {
       await ref.watch(commentProvider).post(requestData);
+      await ref.read(isAnonymousStateProvider.notifier).set(false);
       refresh();
       moveScroll();
     } on DioException catch (e) {
@@ -105,6 +109,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     final requestData = {
       'commentId': commentId,
       'content': textEditingController.text,
+      'isAnonymous': ref.watch(isAnonymousStateProvider),
     };
 
     try {
@@ -118,6 +123,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     }
 
     await ref.read(commentStateProvider.notifier).add(0, -1);
+    await ref.read(isAnonymousStateProvider.notifier).set(false);
     refresh();
   }
 
@@ -850,6 +856,20 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
             ),
             child: Row(
               children: [
+                const SizedBox(
+                  width: 10,
+                ),
+                const TextWithIcon(
+                  icon: Icons.check_box_outline_blank_rounded,
+                  iconSize: 17,
+                  text: "익명",
+                  commentId: -1,
+                  postId: -1,
+                  replyId: -1,
+                  isClicked: false,
+                  isMine: false,
+                  userId: -1,
+                ),
                 Expanded(
                   child: TextField(
                     focusNode: _focusNode,
