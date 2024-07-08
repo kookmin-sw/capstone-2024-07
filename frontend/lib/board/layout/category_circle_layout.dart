@@ -12,21 +12,19 @@ class CategoryCircle extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return GestureDetector(
-      child: Container(
-        // category circle
-        decoration: BoxDecoration(
-          color: PRIMARY10_COLOR,
-          borderRadius: BorderRadius.circular(50),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 3),
-          child: Text(
-            category,
-            style: const TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w400,
-            ),
+    return Container(
+      // category circle
+      decoration: BoxDecoration(
+        color: PRIMARY10_COLOR,
+        borderRadius: BorderRadius.circular(50),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 3),
+        child: Text(
+          category,
+          style: const TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w400,
           ),
         ),
       ),
