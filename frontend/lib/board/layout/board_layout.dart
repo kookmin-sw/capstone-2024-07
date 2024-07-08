@@ -106,9 +106,76 @@ class Board extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CategoryCircle(
-              category:
-                  categoryCodesReverseList[board.communityTitle].toString(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CategoryCircle(
+                  category:
+                      categoryCodesReverseList[board.communityTitle].toString(),
+                ),
+                if (board.communityTitle == "STUDY")
+                  Row(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: ACTIVE_COLOR,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 7,
+                          vertical: 4,
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "온라인",
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: STUDY_PERSON_BACK_COLOR,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 7,
+                          vertical: 4,
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "2",
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: STUDY_PERSON_COLOR,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Text(
+                              "명 남음",
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+              ],
             ),
             const SizedBox(
               height: 5,
@@ -134,6 +201,14 @@ class Board extends ConsumerWidget {
             ),
             ImageViewer(
               board: boardForImageViewer,
+            ),
+            const Text(
+              "#MSA #아키텍처",
+              style: TextStyle(
+                fontSize: 10,
+                color: TAG_COLOR,
+                fontWeight: FontWeight.w400,
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
