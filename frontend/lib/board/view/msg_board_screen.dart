@@ -93,7 +93,6 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
     };
     try {
       await ref.watch(commentProvider).post(requestData);
-      await ref.read(isAnonymousStateProvider.notifier).set(false);
       refresh();
       moveScroll();
     } on DioException catch (e) {
