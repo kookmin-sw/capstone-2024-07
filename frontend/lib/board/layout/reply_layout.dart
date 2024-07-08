@@ -9,12 +9,15 @@ class Reply extends ConsumerStatefulWidget {
   final bool selectReply;
   final bool isMine;
   final int myId;
+  final bool isWriter;
+
   const Reply({
     super.key,
     required this.reply,
     required this.selectReply,
     required this.isMine,
     required this.myId,
+    required this.isWriter,
   });
 
   @override
@@ -71,7 +74,7 @@ class _Reply extends ConsumerState<Reply> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  color: BOARD_CARD_COLOR,
+                  color: widget.isWriter ? MY_COMMENT_COLOR : BOARD_CARD_COLOR,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.25),
@@ -104,7 +107,9 @@ class _Reply extends ConsumerState<Reply> {
                                   fontWeight: FontWeight.w500,
                                   color: widget.selectReply
                                       ? PRIMARY_COLOR
-                                      : Colors.black,
+                                      : widget.isWriter
+                                          ? MY_COMMENT_TEXT_COLOR
+                                          : Colors.black,
                                 ),
                               ),
                               const SizedBox(
