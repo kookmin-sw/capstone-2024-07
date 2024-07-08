@@ -778,7 +778,8 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                           selectCommentIndex: selectCommentIndex,
                           selectReplyIndex: selectReplyIndex,
                           myEmail: myEmail,
-                          myId: myId),
+                          myId: myId,
+                          boardUserId: widget.board.userId),
                     ],
                   ),
                 ),
@@ -942,6 +943,7 @@ class RenderCommentList extends StatelessWidget {
     required this.selectReplyIndex,
     required this.myEmail,
     required this.myId,
+    required this.boardUserId,
   });
 
   final WidgetRef ref;
@@ -950,6 +952,7 @@ class RenderCommentList extends StatelessWidget {
   final List<int> selectReplyIndex;
   final String myEmail;
   final int myId;
+  final int boardUserId;
 
   @override
   Widget build(BuildContext context) {
@@ -990,6 +993,7 @@ class RenderCommentList extends StatelessWidget {
           selectReplyIndex: selectReplyIndex[1],
           isMine: myEmail == comment.userInformation.email,
           myId: myId,
+          boardUserId: boardUserId,
         );
       },
       separatorBuilder: (_, index) {
