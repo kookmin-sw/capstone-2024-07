@@ -11,6 +11,8 @@ class Comment extends ConsumerStatefulWidget {
   final int selectReplyIndex;
   final bool isMine;
   final int myId;
+  final int boardUserId;
+
   const Comment({
     super.key,
     required this.comment,
@@ -18,6 +20,7 @@ class Comment extends ConsumerStatefulWidget {
     required this.selectReplyIndex,
     required this.isMine,
     required this.myId,
+    required this.boardUserId,
   });
 
   @override
@@ -91,7 +94,11 @@ class _CommentState extends ConsumerState<Comment>
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        color: widget.selectComment ? PRIMARY_COLOR : null,
+                        color: widget.selectComment
+                            ? PRIMARY_COLOR
+                            : widget.boardUserId == widget.comment.userId
+                                ? MY_COMMENT_TEXT_COLOR
+                                : null,
                       ),
                     ),
                     const SizedBox(
@@ -171,6 +178,7 @@ class _CommentState extends ConsumerState<Comment>
                 selectReply: widget.selectReplyIndex == reply.id,
                 isMine: widget.myId == reply.userId,
                 myId: widget.myId,
+                isWriter: widget.boardUserId == reply.userId,
               )
           ],
         ),

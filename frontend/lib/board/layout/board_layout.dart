@@ -202,14 +202,15 @@ class Board extends ConsumerWidget {
             ImageViewer(
               board: boardForImageViewer,
             ),
-            const Text(
-              "#MSA #아키텍처",
-              style: TextStyle(
-                fontSize: 10,
-                color: TAG_COLOR,
-                fontWeight: FontWeight.w400,
+            if (board.communityTitle == "STUDY")
+              const Text(
+                "#MSA #아키텍처",
+                style: TextStyle(
+                  fontSize: 10,
+                  color: TAG_COLOR,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
