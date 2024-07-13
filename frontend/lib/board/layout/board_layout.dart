@@ -190,10 +190,41 @@ class ImageViewer extends StatelessWidget {
         height: 5,
       );
     }
+
+    if (board.images.length == 1) {
+      double width = MediaQuery.of(context).size.width;
+
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 10, top: 10),
+        child: SizedBox(
+          width: width,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ShowImageBigger(
+                          imageLink: board.images,
+                          index: board.images.indexOf(board.images[0]),
+                        ),
+                    fullscreenDialog: true),
+              );
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image(
+                image: NetworkImage(board.images[0]),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 10, top: 10),
       child: SizedBox(
-        height: 100,
+        height: 150,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [
@@ -212,15 +243,13 @@ class ImageViewer extends StatelessWidget {
                 },
                 child: Container(
                   margin: const EdgeInsets.only(
-                    right: 10,
+                    right: 20,
                   ),
-                  decoration: BoxDecoration(
+                  child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.black.withOpacity(0.2),
-                  ),
-                  width: 100,
-                  child: Image(
-                    image: NetworkImage(imageLink),
+                    child: Image(
+                      image: NetworkImage(imageLink),
+                    ),
                   ),
                 ),
               ),
