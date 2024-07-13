@@ -87,6 +87,8 @@ flutter:
     - asset/imgs/decle.png
     - asset/imgs/logo.png
     - asset/imgs/logo_white.png
+    - asset/imgs/invite_image01.png
+    - asset/imgs/invite_image02.png
     - asset/jsons/departments.json
     - shorebird.yaml
 

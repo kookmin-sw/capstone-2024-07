@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/layout/invite_detail_layout.dart';
 import 'package:frontend/common/const/colors.dart';
 
 class Invite extends ConsumerWidget {
@@ -53,7 +54,11 @@ class Invite extends ConsumerWidget {
           ),
           GestureDetector(
             onTap: () {
-              // TODO : show about event
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const InviteDetailLayout(),
+                ),
+              );
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
