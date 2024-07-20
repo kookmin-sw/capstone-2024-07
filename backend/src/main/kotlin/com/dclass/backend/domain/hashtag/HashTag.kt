@@ -8,10 +8,17 @@ import jakarta.persistence.Enumerated
 
 @Entity
 class HashTag(
-    val name: String,
+    name: String,
     @Enumerated(EnumType.STRING)
     val target: HashTagTarget,
+
     @Column(nullable = false)
     val targetId: Long,
+
     id: Long = 0L,
-) : BaseEntity(id)
+) : BaseEntity(id) {
+
+    @Column(nullable = false)
+    var name: String = name
+        private set
+}
