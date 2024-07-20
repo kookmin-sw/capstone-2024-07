@@ -30,7 +30,7 @@ class Recruitment(
 
     limit: RecruitmentNumber = RecruitmentNumber(-1),
 
-    recruitable: Boolean = false,
+    recruitable: Boolean = true,
 
     startDateTime: LocalDateTime,
 
