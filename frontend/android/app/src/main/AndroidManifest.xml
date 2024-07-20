@@ -17,7 +17,7 @@
             <!-- "kakao${YOUR_NATIVE_APP_KEY}://oauth" 형식의 앱 실행 스킴 설정 -->
             <!-- 카카오 로그인 Redirect URI -->
             <data android:scheme="kakao38885f51878b5df2c916adbdf3f91132" android:host="oauth"/>
-        </intent-filter>
+        
           </intent-filter>
         </activity>
 
@@ -52,6 +52,7 @@
               <data android:host="kakaolink"
                   android:scheme="kakao38885f51878b5df2c916adbdf3f91132" />
             </intent-filter>
+            
         </activity>
         <!-- Don't delete the meta-data below.
             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
