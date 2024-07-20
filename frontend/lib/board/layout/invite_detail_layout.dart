@@ -4,10 +4,16 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
+import 'package:share/share.dart';
 
-class InviteDetailLayout extends ConsumerWidget {
+class InviteDetailLayout extends ConsumerStatefulWidget {
   const InviteDetailLayout({super.key});
 
+  @override
+  ConsumerState<InviteDetailLayout> createState() => _InviteDetailLayout();
+}
+
+class _InviteDetailLayout extends ConsumerState<InviteDetailLayout> {
   void notAllowed(BuildContext context, String s) {
     showDialog(
         context: context,
@@ -58,7 +64,7 @@ class InviteDetailLayout extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -281,7 +287,8 @@ class InviteDetailLayout extends ConsumerWidget {
                     Clipboard.setData(const ClipboardData(
                         text:
                             "Decl(디클)\n대학교 학과별 커뮤니티\n\nIOS\nhttps://apps.apple.com/kr/app/%EB%94%94%ED%81%B4/id6499332881\n\nANDROID\nhttps://play.google.com/store/apps/details?id=com.capstone.decl&pcampaignid=web_share"));
-                    notAllowed(context, "링크가 복사되었습니다.");
+                    Share.share(
+                        "Decl(디클)\n대학교 학과별 커뮤니티\n\nIOS\nhttps://apps.apple.com/kr/app/%EB%94%94%ED%81%B4/id6499332881\n\nANDROID\nhttps://play.google.com/store/apps/details?id=com.capstone.decl&pcampaignid=web_share");
                   }
                 },
                 child: Row(
