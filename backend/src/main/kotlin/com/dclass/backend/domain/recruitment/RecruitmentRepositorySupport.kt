@@ -1,0 +1,70 @@
+package com.dclass.backend.domain.recruitment
+
+import com.dclass.backend.application.dto.RecruitmentScrollPageRequest
+import com.dclass.backend.application.dto.RecruitmentWithUserResponse
+import com.dclass.backend.domain.user.User
+import com.linecorp.kotlinjdsl.dsl.jpql.jpql
+import com.linecorp.kotlinjdsl.render.jpql.JpqlRenderContext
+import com.linecorp.kotlinjdsl.support.spring.data.jpa.extension.createQuery
+import jakarta.persistence.EntityManager
+
+interface RecruitmentRepositorySupport {
+    fun findRecruitmentScrollPage(
+        departmentId: Long,
+        request: RecruitmentScrollPageRequest,
+    ): List<RecruitmentWithUserResponse>
+
+    fun findRecruitmentScrollPageByUserId(
+        userId: Long,
+        request: RecruitmentScrollPageRequest,
+    ): List<RecruitmentWithUserResponse>
+}
+
+class RecruitmentRepositoryImpl(
+    private val em: EntityManager,
+    private val context: JpqlRenderContext,
+) : RecruitmentRepositorySupport {
+    override fun findRecruitmentScrollPage(
+        departmentId: Long,
+        request: RecruitmentScrollPageRequest,
+    ): List<RecruitmentWithUserResponse> {
+        val query = jpql {
+            selectNew<RecruitmentWithUserResponse>(
+                entity(Recruitment::class),
+                entity(User::class),
+            ).from(
+                entity(Recruitment::class),
+                join(User::class).on(path(Recruitment::userId).equal(path(User::id))),
+            ).whereAnd(
+                path(Recruitment::id).lessThan(request.lastId ?: Long.MAX_VALUE),
+                path(Recruitment::departmentId).equal(departmentId),
+            ).orderBy(
+                path(Recruitment::id).desc(),
+            )
+        }
+
+        return em.createQuery(query, context).setMaxResults(request.size).resultList
+    }
+
+    override fun findRecruitmentScrollPageByUserId(
+        userId: Long,
+        request: RecruitmentScrollPageRequest,
+    ): List<RecruitmentWithUserResponse> {
+        val query = jpql {
+            selectNew<RecruitmentWithUserResponse>(
+                entity(Recruitment::class),
+                entity(User::class),
+            ).from(
+                entity(Recruitment::class),
+                join(User::class).on(path(Recruitment::userId).equal(path(User::id))),
+            ).whereAnd(
+                path(Recruitment::id).lessThan(request.lastId ?: Long.MAX_VALUE),
+                path(Recruitment::userId).equal(userId),
+            ).orderBy(
+                path(Recruitment::id).desc(),
+            )
+        }
+
+        return em.createQuery(query, context).setMaxResults(request.size).resultList
+    }
+}
