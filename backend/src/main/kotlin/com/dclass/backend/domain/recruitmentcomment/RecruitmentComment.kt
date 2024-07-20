@@ -2,7 +2,6 @@ package com.dclass.backend.domain.recruitmentcomment
 
 import com.dclass.support.domain.BaseEntity
 import jakarta.persistence.Column
-import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import jakarta.persistence.Version
 import org.hibernate.annotations.SQLDelete
