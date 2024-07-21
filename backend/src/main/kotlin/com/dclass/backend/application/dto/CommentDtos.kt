@@ -85,7 +85,6 @@ interface CommentReplyResponse {
     val userInformation: UserInformation
 }
 
-
 data class CommentResponse(
     @Schema(
         description = "댓글의 고유 식별자",
@@ -116,7 +115,6 @@ data class CommentResponse(
         example = "false",
     )
     val isAnonymous: Boolean = false,
-
 
     @Schema(
         description = "댓글이 작성된 시각",
