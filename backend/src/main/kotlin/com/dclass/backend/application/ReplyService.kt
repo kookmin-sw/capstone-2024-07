@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class ReplyService(
     private val replyRepository: ReplyRepository,
-    private val replyValidator: ReplyValidator,
+    private val validator: CommentReplyValidator,
     private val eventPublisher: ApplicationEventPublisher,
     private val communityRepository: CommunityRepository,
     private val commentRepository: CommentRepository,
@@ -51,7 +51,7 @@ class ReplyService(
         val post = postRepository.findByIdOrThrow(comment.postId)
         val community = communityRepository.findByIdOrThrow(post.communityId)
 
-        replyValidator.validate(userId, community.departmentId)
+        validator.validate(userId, community.departmentId)
 
         val reply = replyRepository.save(request.toEntity(userId))
 
@@ -101,7 +101,7 @@ class ReplyService(
         val post = postRepository.findByIdOrThrow(comment.postId)
         val community = communityRepository.findByIdOrThrow(post.communityId)
 
-        replyValidator.validate(userId, community.departmentId)
+        validator.validate(userId, community.departmentId)
         reply.like(userId)
     }
 }
