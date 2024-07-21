@@ -6,3 +6,5 @@ create table hash_tag
     target    enum ('RECRUITMENT'),
     primary key (id)
 ) engine=InnoDB;
+
+ALTER TABLE recruitment ADD COLUMN comment_count INTEGER DEFAULT 0 NOT NULL;

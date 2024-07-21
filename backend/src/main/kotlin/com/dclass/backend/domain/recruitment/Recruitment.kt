@@ -43,6 +43,8 @@ class Recruitment(
 
     scrapCount: Int = 0,
 
+    commentCount: Int = 0,
+
     @Column(nullable = false)
     val createdDateTime: LocalDateTime = LocalDateTime.now(),
 
@@ -89,6 +91,10 @@ class Recruitment(
 
     @Column(nullable = false)
     var scrapCount: Int = scrapCount
+        private set
+
+    @Column(nullable = false)
+    var commentCount: Int = commentCount
         private set
 
     @Column(nullable = false)
