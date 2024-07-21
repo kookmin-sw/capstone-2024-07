@@ -1,5 +1,6 @@
 package com.dclass.backend.domain.recruitment
 
+import com.dclass.backend.application.dto.UpdateRecruitmentRequest
 import com.dclass.support.domain.BaseEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -101,4 +102,25 @@ class Recruitment(
     @Column(nullable = false)
     var modifiedDateTime: LocalDateTime = modifiedDateTime
         private set
+
+    fun increaseScrapCount() {
+        scrapCount += 1
+    }
+
+    fun decreaseScrapCount() {
+        scrapCount -= 1
+    }
+
+    fun update(request: UpdateRecruitmentRequest) {
+        type = request.type
+        isOnline = request.isOnline
+        isOngoing = request.isOngoing
+        limit = RecruitmentNumber(request.limit)
+        recruitable = request.recruitable
+        startDateTime = request.startDateTime
+        endDateTime = request.endDateTime
+        title = request.title
+        content = request.content
+        modifiedDateTime = LocalDateTime.now()
+    }
 }
