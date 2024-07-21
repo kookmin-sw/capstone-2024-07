@@ -35,6 +35,7 @@ class ScrapService(
         scrapRepository.delete(scrap)
     }
 
+    // FIXME: 스크랩 서비스에 이 메서드가 있는게 맞을까?
     fun getAll(userId: Long): List<PostResponse> {
         return postRepository.findScrapPostByUserId(userId)
     }
