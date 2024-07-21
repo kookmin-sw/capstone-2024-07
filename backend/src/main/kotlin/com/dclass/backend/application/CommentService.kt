@@ -37,13 +37,13 @@ class CommentService(
     private val commentRepository: CommentRepository,
     private val replyRepository: ReplyRepository,
     private val postRepository: PostRepository,
-    private val commentValidator: CommentValidator,
+    private val validator: CommentReplyValidator,
     private val communityRepository: CommunityRepository,
     private val eventPublisher: ApplicationEventPublisher,
     private val userBlockRepository: UserBlockRepository,
     private val anonymousRepository: AnonymousRepository,
 
-) {
+    ) {
     @Retryable(
         ObjectOptimisticLockingFailureException::class,
         maxAttempts = 3,
@@ -52,7 +52,7 @@ class CommentService(
     fun create(userId: Long, request: CreateCommentRequest): CommentResponse {
         val post = postRepository.findByIdOrThrow(request.postId)
         val community = communityRepository.findByIdOrThrow(post.communityId)
-        commentValidator.validate(userId, community)
+        validator.validate(userId, community.departmentId)
         val comment = commentRepository.save(request.toEntity(userId))
 
         if (request.isAnonymous && !anonymousRepository.existsByUserIdAndPostId(userId, post.id)) {
@@ -95,7 +95,7 @@ class CommentService(
         val post = postRepository.findByIdOrThrow(comment.postId)
         val community = communityRepository.findByIdOrThrow(post.communityId)
 
-        commentValidator.validate(userId, community)
+        validator.validate(userId, community.departmentId)
         comment.like(userId)
     }
 
