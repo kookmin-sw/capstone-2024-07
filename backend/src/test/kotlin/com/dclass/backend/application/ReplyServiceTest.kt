@@ -38,7 +38,7 @@ import org.springframework.context.ApplicationEventPublisher
 class ReplyServiceTest : BehaviorSpec({
 
     val replyRepository = mockk<ReplyRepository>()
-    val replyValidator = mockk<ReplyValidator>()
+    val replyValidator = mockk<CommentReplyValidator>()
     val eventPublisher = mockk<ApplicationEventPublisher>()
     val communityRepository = mockk<CommunityRepository>()
     val commentRepository = mockk<CommentRepository>()
