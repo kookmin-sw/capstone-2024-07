@@ -117,6 +117,14 @@ class Recruitment(
         scrapCount -= 1
     }
 
+    fun increaseCommentReplyCount() {
+        commentCount += 1
+    }
+
+    fun decreaseCommentReplyCount() {
+        commentCount -= 1
+    }
+
     fun update(request: UpdateRecruitmentRequest) {
         type = request.type
         isOnline = request.isOnline
