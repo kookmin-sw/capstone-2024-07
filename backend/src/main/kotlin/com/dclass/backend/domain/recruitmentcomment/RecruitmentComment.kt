@@ -1,17 +1,17 @@
-//package com.dclass.backend.domain.recruitmentcomment
+// package com.dclass.backend.domain.recruitmentcomment
 //
-//import com.dclass.support.domain.BaseEntity
-//import jakarta.persistence.Column
-//import jakarta.persistence.Entity
-//import jakarta.persistence.Version
-//import org.hibernate.annotations.SQLDelete
-//import org.hibernate.annotations.SQLRestriction
-//import java.time.LocalDateTime
+// import com.dclass.support.domain.BaseEntity
+// import jakarta.persistence.Column
+// import jakarta.persistence.Entity
+// import jakarta.persistence.Version
+// import org.hibernate.annotations.SQLDelete
+// import org.hibernate.annotations.SQLRestriction
+// import java.time.LocalDateTime
 //
-//@SQLDelete(sql = "update recruitment_comment set deleted = true where id = ? and version = ?")
-//@SQLRestriction("deleted = false OR (deleted = true AND reply_count > 0)")
-//@Entity
-//class RecruitmentComment(
+// @SQLDelete(sql = "update recruitment_comment set deleted = true where id = ? and version = ?")
+// @SQLRestriction("deleted = false OR (deleted = true AND reply_count > 0)")
+// @Entity
+// class RecruitmentComment(
 //    @Column(nullable = false)
 //    val userId: Long,
 //
@@ -29,7 +29,7 @@
 //    modifiedDateTime: LocalDateTime = LocalDateTime.now(),
 //
 //    id: Long = 0L,
-//) : BaseEntity(id) {
+// ) : BaseEntity(id) {
 //    @Column(nullable = false)
 //    private var deleted: Boolean = false
 //
@@ -44,4 +44,4 @@
 //    @Column(nullable = false)
 //    var replyCount: Int = 0
 //        private set
-//}
+// }
