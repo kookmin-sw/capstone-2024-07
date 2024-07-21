@@ -5,12 +5,12 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 
 @Entity
-class Anonymous (
+class Anonymous(
     @Column(nullable = false)
     val userId: Long,
 
     @Column(nullable = false)
     val postId: Long,
 
-    id : Long = 0L
+    id: Long = 0L,
 ) : BaseEntity(id)
