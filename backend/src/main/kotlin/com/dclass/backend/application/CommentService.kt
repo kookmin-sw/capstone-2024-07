@@ -43,7 +43,7 @@ class CommentService(
     private val userBlockRepository: UserBlockRepository,
     private val anonymousRepository: AnonymousRepository,
 
-    ) {
+) {
     @Retryable(
         ObjectOptimisticLockingFailureException::class,
         maxAttempts = 3,
@@ -109,7 +109,6 @@ class CommentService(
 
         val commentIds = comments.map { it.id }
 
-
         comments.forEach {
             it.isLiked = it.likeCount.findUserById(userId)
             updateUserInfo(it, blockedUserIds, anonymousList, post)
@@ -119,7 +118,6 @@ class CommentService(
             .onEach {
                 updateUserInfo(it, blockedUserIds, anonymousList, post)
             }.groupBy { it.commentId }
-
 
         val data = comments.map {
             CommentReplyWithUserResponse(
@@ -134,7 +132,7 @@ class CommentService(
         it: CommentReplyResponse,
         blockedUserIds: Map<Long, UserBlock>,
         anonymousList: List<Anonymous>,
-        post: Post
+        post: Post,
     ) {
         it.isBlockedUser = blockedUserIds.contains(it.userId)
         val index = anonymousList.indexOfFirst { anon -> anon.userId == it.userId }
@@ -150,7 +148,7 @@ class CommentService(
     ): String {
         return when {
             isAnonymous && index != -1 && isOwner -> "익명(글쓴이)"
-            index != -1  && isAnonymous -> "익명" + (index + 1)
+            index != -1 && isAnonymous -> "익명" + (index + 1)
             else -> nickname
         }
     }
