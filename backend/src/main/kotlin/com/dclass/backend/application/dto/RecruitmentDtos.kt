@@ -108,7 +108,7 @@ data class RecruitmentWithUserAndHashTagResponse(
     val modifiedDateTime: LocalDateTime,
     val userId: Long,
     val userNickname: String,
-    val hashTags: List<String>,
+    val hashTags: List<HashTag>,
 ) {
     constructor(recruitment: RecruitmentWithUserResponse, hashTags: List<HashTag>) : this(
         recruitment.id,
@@ -127,7 +127,7 @@ data class RecruitmentWithUserAndHashTagResponse(
         recruitment.modifiedDateTime,
         recruitment.userId,
         recruitment.userNickname,
-        hashTags.map { it.name },
+        hashTags,
     )
 }
 
@@ -141,3 +141,61 @@ data class RecruitmentsResponse(
         }
     }
 }
+
+data class RecruitmentWithUserAndHashTagDetailResponse(
+    val id: Long,
+    val departmentId: Long,
+    val type: RecruitmentType,
+    val isOnline: Boolean,
+    val isOngoing: Boolean,
+    val limit: Int,
+    val recruitable: Boolean,
+    val startDateTime: LocalDateTime,
+    val endDateTime: LocalDateTime,
+    val title: String,
+    val content: String,
+    val scrapCount: Int,
+    val createdDateTime: LocalDateTime,
+    val modifiedDateTime: LocalDateTime,
+    val userId: Long,
+    val userNickname: String,
+    val hashTags: List<HashTag>,
+    // 추가
+    val isScrapped: Boolean,
+
+) {
+    constructor(recruitment: RecruitmentWithUserResponse, hashTags: List<HashTag>, isScrapped: Boolean) : this(
+        recruitment.id,
+        recruitment.departmentId,
+        recruitment.type,
+        recruitment.isOnline,
+        recruitment.isOngoing,
+        recruitment.limit,
+        recruitment.recruitable,
+        recruitment.startDateTime,
+        recruitment.endDateTime,
+        recruitment.title,
+        recruitment.content,
+        recruitment.scrapCount,
+        recruitment.createdDateTime,
+        recruitment.modifiedDateTime,
+        recruitment.userId,
+        recruitment.userNickname,
+        hashTags,
+        isScrapped,
+    )
+}
+
+data class UpdateRecruitmentRequest(
+    val recruitmentId: Long,
+    val type: RecruitmentType,
+    val isOnline: Boolean,
+    val isOngoing: Boolean,
+    val limit: Int,
+    val startDateTime: LocalDateTime,
+    val endDateTime: LocalDateTime,
+    var title: String,
+    var content: String,
+    val hashTags: List<String>,
+    val recruitable: Boolean,
+)
