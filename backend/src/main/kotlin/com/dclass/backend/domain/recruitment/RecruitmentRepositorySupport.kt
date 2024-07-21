@@ -2,6 +2,7 @@ package com.dclass.backend.domain.recruitment
 
 import com.dclass.backend.application.dto.RecruitmentScrollPageRequest
 import com.dclass.backend.application.dto.RecruitmentWithUserResponse
+import com.dclass.backend.domain.recruitmentscrap.RecruitmentScrap
 import com.dclass.backend.domain.user.User
 import com.linecorp.kotlinjdsl.dsl.jpql.jpql
 import com.linecorp.kotlinjdsl.render.jpql.JpqlRenderContext
@@ -18,6 +19,10 @@ interface RecruitmentRepositorySupport {
         userId: Long,
         request: RecruitmentScrollPageRequest,
     ): List<RecruitmentWithUserResponse>
+
+    fun findScrappedRecruitmentByUserId(userId: Long): List<RecruitmentWithUserResponse>
+
+    fun findRecruitmentById(id: Long): RecruitmentWithUserResponse
 }
 
 class RecruitmentRepositoryImpl(
@@ -46,6 +51,25 @@ class RecruitmentRepositoryImpl(
         return em.createQuery(query, context).setMaxResults(request.size).resultList
     }
 
+    override fun findScrappedRecruitmentByUserId(userId: Long): List<RecruitmentWithUserResponse> {
+        val query = jpql {
+            selectNew<RecruitmentWithUserResponse>(
+                entity(Recruitment::class),
+                entity(User::class),
+            ).from(
+                entity(Recruitment::class),
+                join(User::class).on(path(Recruitment::userId).equal(path(User::id))),
+                join(RecruitmentScrap::class).on(path(Recruitment::id).equal(path(RecruitmentScrap::recruitmentId))),
+            ).where(
+                path(RecruitmentScrap::userId).equal(userId),
+            ).orderBy(
+                path(Recruitment::id).desc(),
+            )
+        }
+
+        return em.createQuery(query, context).resultList
+    }
+
     override fun findRecruitmentScrollPageByUserId(
         userId: Long,
         request: RecruitmentScrollPageRequest,
@@ -66,5 +90,21 @@ class RecruitmentRepositoryImpl(
         }
 
         return em.createQuery(query, context).setMaxResults(request.size).resultList
+    }
+
+    override fun findRecruitmentById(id: Long): RecruitmentWithUserResponse {
+        val query = jpql {
+            selectNew<RecruitmentWithUserResponse>(
+                entity(Recruitment::class),
+                entity(User::class),
+            ).from(
+                entity(Recruitment::class),
+                join(User::class).on(path(Recruitment::userId).equal(path(User::id))),
+            ).where(
+                path(Recruitment::id).equal(id),
+            )
+        }
+
+        return em.createQuery(query, context).singleResult
     }
 }
