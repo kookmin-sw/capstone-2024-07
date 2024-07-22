@@ -34,7 +34,7 @@ class RecruitmentCommentService (
         backoff = Backoff(delay = 500),
     )
     fun create(userId: Long, request: CreateRecruitmentCommentRequest): RecruitmentCommentResponse {
-        val recruitment = recruitmentRepository.findById(request.recruitmentId).orElseThrow()!!
+        val recruitment = recruitmentRepository.findByIdOrThrow(request.recruitmentId)
         validator.validate(userId, recruitment.departmentId)
         val comment = commentRepository.save(request.toEntity(userId))
 
