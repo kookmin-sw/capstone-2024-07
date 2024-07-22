@@ -10,7 +10,7 @@ create table recruitment_comment
     version             bigint       not null,
     deleted             bit          not null,
     primary key (id)
-);
+) engine=InnoDB;
 
 create table recruitment_reply
 (
@@ -22,5 +22,5 @@ create table recruitment_reply
     modified_date_time      datetime(6)  not null,
     deleted                 bit          not null,
     primary key (id)
-);
-)
+) engine=InnoDB;
+
