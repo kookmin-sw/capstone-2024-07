@@ -51,6 +51,7 @@ data class RecruitmentResponse(
 data class RecruitmentScrollPageRequest(
     val lastId: Long? = null,
     val size: Int = 10,
+    val keyword: String? = null,
 )
 
 data class RecruitmentWithUserResponse(

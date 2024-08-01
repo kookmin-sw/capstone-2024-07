@@ -4,7 +4,9 @@ import com.dclass.backend.application.dto.RecruitmentScrollPageRequest
 import com.dclass.backend.application.dto.RecruitmentWithUserResponse
 import com.dclass.backend.domain.recruitmentscrap.RecruitmentScrap
 import com.dclass.backend.domain.user.User
+import com.linecorp.kotlinjdsl.dsl.jpql.Jpql
 import com.linecorp.kotlinjdsl.dsl.jpql.jpql
+import com.linecorp.kotlinjdsl.querymodel.jpql.predicate.Predicatable
 import com.linecorp.kotlinjdsl.render.jpql.JpqlRenderContext
 import com.linecorp.kotlinjdsl.support.spring.data.jpa.extension.createQuery
 import jakarta.persistence.EntityManager
@@ -43,6 +45,7 @@ class RecruitmentRepositoryImpl(
             ).whereAnd(
                 path(Recruitment::id).lessThan(request.lastId ?: Long.MAX_VALUE),
                 path(Recruitment::departmentId).equal(departmentId),
+                searchOption(request),
             ).orderBy(
                 path(Recruitment::id).desc(),
             )
@@ -106,5 +109,16 @@ class RecruitmentRepositoryImpl(
         }
 
         return em.createQuery(query, context).singleResult
+    }
+
+    private fun Jpql.searchOption(request: RecruitmentScrollPageRequest): Predicatable? {
+        return if (request.keyword != null) {
+            or(
+                path(Recruitment::title).like("%${request.keyword}%"),
+                path(Recruitment::content).like("%${request.keyword}%"),
+            )
+        } else {
+            null
+        }
     }
 }
