@@ -15,6 +15,7 @@ import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/provider/image_provider.dart';
 import 'package:frontend/board/provider/anonymous_provider.dart';
 import 'package:frontend/board/provider/network_image_provider.dart';
+import 'package:frontend/board/provider/recruitment_add_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/member/provider/mypage/my_post_state_notifier_provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -34,6 +35,7 @@ class MsgBoardAddScreen extends ConsumerStatefulWidget {
 
 class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   late BoardAdd boardAddAPI;
+  late RecruitmentAdd recruitmentAddAPI;
   bool canUpload = false;
   bool writedTitle = false;
   bool writedContent = false;
@@ -44,9 +46,10 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   List<String> networkImages = [];
   late TextEditingController titleController;
   late TextEditingController contentController;
+  late TextEditingController recruitmentPersonController;
   bool isLoading = false;
 
-  bool isOffline = false;
+  bool isOnline = false;
   bool isAlways = false;
   bool isNotLimit = false;
   DateTime startDate = DateTime.now();
@@ -70,6 +73,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
 
     titleController = TextEditingController(text: title);
     contentController = TextEditingController(text: content);
+    recruitmentPersonController = TextEditingController(text: '0');
   }
 
   @override
@@ -370,6 +374,66 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
     Navigator.of(context).pop();
   }
 
+  String changeDateFormat(DateTime t) {
+    String tS = t.toString();
+    tS = tS.replaceAll(" ", "T");
+    if (tS.length > 23) {
+      tS = tS.replaceRange(23, 26, 'Z');
+    } else {
+      tS = '${tS}Z';
+    }
+    return tS;
+  }
+
+  Future<void> upLoadRecruitment() async {
+    List<String> splitText = content.split("#");
+
+    List<String> hashTags = splitText.sublist(1, splitText.length);
+
+    final requestData = {
+      'type': categoryCodesList2[selectCategory],
+      'isOnline': isOnline,
+      'isOngoing': isAlways,
+      'limit': isNotLimit ? -1 : recruitmentPersonController.text,
+      'startDateTime': changeDateFormat(startDate),
+      'endDateTime': changeDateFormat(DateTime(endDate.year, endDate.month,
+          endDate.day, 23, 59, 59, endDate.millisecond, endDate.microsecond)),
+      'title': title,
+      'content': content,
+      'hashTags': hashTags,
+    };
+
+    try {
+      await recruitmentAddAPI.post(requestData);
+    } on DioException catch (e) {
+      if (e.response != null) {
+        Map<String, dynamic> data = e.response!.data;
+        ExceptionModel exc = ExceptionModel.fromJson(data);
+        debugPrint("RecruitmentPostError : ${exc.message}");
+        notAllowed(exc.message);
+        return;
+      } else {
+        debugPrint("RecruitmentPostError : ${e.message}");
+        notAllowed(e.message!);
+        return;
+      }
+    } catch (e) {
+      debugPrint("RecruitmentPostError : ${e.toString()}");
+      notAllowed("다시 시도해주세요!");
+      return;
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+
+    refresh();
+
+    ref.read(isAnonymousStateProvider.notifier).set(false);
+
+    Navigator.of(context).pop();
+  }
+
   void upLoadDialog() {
     if (canUpload) {
       showDialog(
@@ -404,7 +468,12 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                         setState(() {
                           isLoading = true;
                         });
-                        upLoad();
+                        if (selectCategory == "스터디" ||
+                            selectCategory == "프로젝트") {
+                          upLoadRecruitment();
+                        } else {
+                          upLoad();
+                        }
                       },
                       child: const Text(
                         "네",
@@ -775,11 +844,11 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                         width: 110.0,
                                         height: 28.0,
                                         inactiveColor: INACTIVE_COLOR,
-                                        value: isOffline,
+                                        value: isOnline,
                                         activeColor: ACTIVE_COLOR,
                                         onToggle: (bool? value) {
                                           setState(() {
-                                            isOffline = value ?? false;
+                                            isOnline = value ?? false;
                                           });
                                         }),
                                     const SizedBox(
@@ -829,6 +898,8 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                                 padding: const EdgeInsets.only(
                                                     left: 3.0, top: 7.0),
                                                 child: TextField(
+                                                  controller:
+                                                      recruitmentPersonController,
                                                   textAlign: TextAlign.center,
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.w500,
@@ -1018,6 +1089,9 @@ class BottomView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     msgBoardAddScreenState.boardAddAPI = ref.watch(boardAddProvider);
+    msgBoardAddScreenState.recruitmentAddAPI =
+        ref.watch(recruitmentAddProvider);
+
     return Column(
       children: [
         ImageViewer(

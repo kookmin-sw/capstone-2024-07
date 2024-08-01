@@ -17,6 +17,15 @@ const List<String> categorysList2 = [
   "흥보",
 ];
 
+Map<String, String> categoryCodesList2 = {
+  "자유": "FREE",
+  "스터디": "STUDY",
+  "프로젝트": "PROJECT",
+  "취업": "JOB",
+  "대학원": "GRADUATE",
+  "흥보": "PROMOTION",
+};
+
 Map<String, String> categoryCodesList = {
   "전체": "ALL",
   "인기": "HOT",
