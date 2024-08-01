@@ -24,7 +24,7 @@ class RecruitmentReplyService(
     private val replyRepository: RecruitmentReplyRepository,
     private val recruitmentRepository: RecruitmentRepository,
     private val commentRepository: RecruitmentCommentRepository,
-    private val validator: CommentReplyValidator
+    private val validator: CommentReplyValidator,
 ) {
     @Retryable(
         ObjectOptimisticLockingFailureException::class,
@@ -34,7 +34,7 @@ class RecruitmentReplyService(
     fun create(userId: Long, request: CreateRecruitmentReplyRequest): RecruitmentReplyResponse {
         val comment = commentRepository.getByIdOrThrow(request.commentId)
 
-        if(comment.isDeleted()) {
+        if (comment.isDeleted()) {
             throw CommentException(CommentExceptionType.DELETED_COMMENT)
         }
 

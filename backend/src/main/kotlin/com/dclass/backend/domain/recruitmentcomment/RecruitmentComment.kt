@@ -60,10 +60,10 @@ class RecruitmentComment(
     }
 
     fun increaseReplyCount() {
-        replyCount++;
+        replyCount++
     }
 
     fun decreaseReplyCount() {
-        replyCount--;
+        replyCount--
     }
 }

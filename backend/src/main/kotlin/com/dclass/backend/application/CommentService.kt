@@ -43,7 +43,7 @@ class CommentService(
     private val userBlockRepository: UserBlockRepository,
     private val anonymousRepository: AnonymousRepository,
 
-    ) {
+) {
     @Retryable(
         ObjectOptimisticLockingFailureException::class,
         maxAttempts = 3,

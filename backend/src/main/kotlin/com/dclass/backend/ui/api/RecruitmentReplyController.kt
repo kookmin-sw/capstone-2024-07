@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "RecruitmentReply", description = "프로젝트/스터디 대댓글 관련 API 명세")
 @RequestMapping("/api/recruitment-replies")
 @RestController
-class RecruitmentReplyController (
+class RecruitmentReplyController(
     private val replyService: RecruitmentReplyService,
-){
+) {
 
     @Operation(summary = "프로젝트/스터디 대댓글 생성 API", description = "프로젝트/스터디 댓글에 대댓글을 생성합니다.")
     @ApiResponse(responseCode = "200", description = "대댓글 생성 성공")
