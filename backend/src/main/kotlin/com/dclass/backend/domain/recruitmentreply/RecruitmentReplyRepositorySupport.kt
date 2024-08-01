@@ -14,26 +14,28 @@ interface RecruitmentReplyRepositorySupport {
 }
 
 class RecruitmentReplyRepositoryImpl(
-    private val em : EntityManager,
+    private val em: EntityManager,
     private val context: JpqlRenderContext,
 ) : RecruitmentReplyRepositorySupport {
-        override fun findRecruitmentRepliesWithUserByCommentIdIn(commentIds: List<Long>): List<RecruitmentReplyWithUserResponse> {
-            val query = jpql {
-                selectNew<RecruitmentReplyWithUserResponse>(
-                    entity(RecruitmentReply::class),
-                    entity(User::class),
-                ).from(
-                    entity(RecruitmentReply::class),
-                    join(User::class).on(path(RecruitmentReply::userId).eq(path(User::id))),
-                ).where(
-                    replyExist(commentIds),
-                )
-            }
-
-            return em.createQuery(query, context).resultList
+    override fun findRecruitmentRepliesWithUserByCommentIdIn(
+        commentIds: List<Long>,
+    ): List<RecruitmentReplyWithUserResponse> {
+        val query = jpql {
+            selectNew<RecruitmentReplyWithUserResponse>(
+                entity(RecruitmentReply::class),
+                entity(User::class),
+            ).from(
+                entity(RecruitmentReply::class),
+                join(User::class).on(path(RecruitmentReply::userId).eq(path(User::id))),
+            ).where(
+                replyExist(commentIds),
+            )
         }
 
-        private fun Jpql.replyExist(request: List<Long>): Predicatable? {
-            return if (request.isNotEmpty()) path(RecruitmentReply::recruitmentCommentId).`in`(request) else null
-        }
+        return em.createQuery(query, context).resultList
+    }
+
+    private fun Jpql.replyExist(request: List<Long>): Predicatable? {
+        return if (request.isNotEmpty()) path(RecruitmentReply::recruitmentCommentId).`in`(request) else null
+    }
 }

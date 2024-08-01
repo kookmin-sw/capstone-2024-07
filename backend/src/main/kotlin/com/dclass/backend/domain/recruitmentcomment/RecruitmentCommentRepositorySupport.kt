@@ -2,7 +2,6 @@ package com.dclass.backend.domain.recruitmentcomment
 
 import com.dclass.backend.application.dto.RecruitmentCommentScrollRequest
 import com.dclass.backend.application.dto.RecruitmentCommentWithUserResponse
-import com.dclass.backend.application.dto.RecruitmentScrollPageRequest
 import com.dclass.backend.domain.recruitmentreply.RecruitmentReply
 import com.dclass.backend.domain.user.User
 import com.linecorp.kotlinjdsl.dsl.jpql.jpql
@@ -11,7 +10,9 @@ import com.linecorp.kotlinjdsl.support.spring.data.jpa.extension.createQuery
 import jakarta.persistence.EntityManager
 
 interface RecruitmentCommentRepositorySupport {
-    fun findRecruitmentCommentWithUserByRecruitmentId(request: RecruitmentCommentScrollRequest): List<RecruitmentCommentWithUserResponse>
+    fun findRecruitmentCommentWithUserByRecruitmentId(
+        request: RecruitmentCommentScrollRequest,
+    ): List<RecruitmentCommentWithUserResponse>
     fun countRecruitmentCommentReplyByRecruitmentId(recruitmentId: Long): Long
 }
 
@@ -19,7 +20,9 @@ class RecruitmentCommentRepositoryImpl(
     private val em: EntityManager,
     private val context: JpqlRenderContext,
 ) : RecruitmentCommentRepositorySupport {
-    override fun findRecruitmentCommentWithUserByRecruitmentId(request: RecruitmentCommentScrollRequest): List<RecruitmentCommentWithUserResponse> {
+    override fun findRecruitmentCommentWithUserByRecruitmentId(
+        request: RecruitmentCommentScrollRequest,
+    ): List<RecruitmentCommentWithUserResponse> {
         val query = jpql {
             selectNew<RecruitmentCommentWithUserResponse>(
                 entity(RecruitmentComment::class),
@@ -46,7 +49,9 @@ class RecruitmentCommentRepositoryImpl(
                 count(entity(RecruitmentComment::class)),
             ).from(
                 entity(RecruitmentComment::class),
-                join(RecruitmentReply::class).on(path(RecruitmentComment::id).eq(path(RecruitmentReply::recruitmentCommentId))),
+                join(
+                    RecruitmentReply::class,
+                ).on(path(RecruitmentComment::id).eq(path(RecruitmentReply::recruitmentCommentId))),
             ).where(
                 path(RecruitmentComment::recruitmentId).eq(recruitmentId),
             ).asSubquery().`as`(replyCount)

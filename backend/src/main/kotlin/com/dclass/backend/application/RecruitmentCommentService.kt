@@ -22,12 +22,12 @@ import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service
-class RecruitmentCommentService (
+class RecruitmentCommentService(
     private val commentRepository: RecruitmentCommentRepository,
     private val replyRepository: RecruitmentReplyRepository,
     private val recruitmentRepository: RecruitmentRepository,
     private val validator: CommentReplyValidator,
-){
+) {
     @Retryable(
         ObjectOptimisticLockingFailureException::class,
         maxAttempts = 3,
@@ -43,7 +43,7 @@ class RecruitmentCommentService (
         return RecruitmentCommentResponse(comment)
     }
 
-    fun update(userId: Long, request: UpdateRecruitmentCommentRequest){
+    fun update(userId: Long, request: UpdateRecruitmentCommentRequest) {
         val comment = commentRepository.getByIdAndUserIdOrThrow(request.commentId, userId)
 
         comment.changeContent(request.content)
@@ -56,7 +56,7 @@ class RecruitmentCommentService (
     )
     fun delete(userId: Long, request: DeleteRecruitmentCommentRequest) {
         val comment = commentRepository.getByIdAndUserIdOrThrow(request.commentId, userId)
-        if(comment.isDeleted()) throw CommentException(CommentExceptionType.DELETED_COMMENT)
+        if (comment.isDeleted()) throw CommentException(CommentExceptionType.DELETED_COMMENT)
         commentRepository.delete(comment)
 
         val recruitment = recruitmentRepository.findByIdOrThrow(comment.recruitmentId)
@@ -71,7 +71,8 @@ class RecruitmentCommentService (
             .groupBy { it.commentId }
         val data = comments.map {
             RecruitmentCommentReplyWithUserResponse(
-                it, replies[it.id] ?: emptyList()
+                it,
+                replies[it.id] ?: emptyList(),
             )
         }
 
@@ -80,4 +81,3 @@ class RecruitmentCommentService (
         return RecruitmentCommentsResponse.of(data, request.size)
     }
 }
-

@@ -29,7 +29,6 @@ data class CreateRecruitmentReplyRequest(
     fun toEntity(userId: Long): RecruitmentReply {
         return RecruitmentReply(userId, commentId, content)
     }
-
 }
 
 data class UpdateRecruitmentReplyRequest(
@@ -59,7 +58,7 @@ data class RecruitmentReplyResponse(
         description = "대댓글의 고유 식별자",
         example = "1",
     )
-    val id:Long,
+    val id: Long,
 
     @Schema(
         description = "댓글을 작성한 유저의 고유 식별자",
@@ -150,8 +149,8 @@ data class RecruitmentReplyWithUserResponse(
         example = "2021-08-01T00:00:00",
     )
     val createdAt: LocalDateTime,
-): RecruitmentCommentReplyResponse {
-    constructor(reply: RecruitmentReply, user :User) : this(
+) : RecruitmentCommentReplyResponse {
+    constructor(reply: RecruitmentReply, user: User) : this(
         id = reply.id,
         userId = reply.userId,
         commentId = reply.recruitmentCommentId,

@@ -53,8 +53,9 @@ data class DeleteRecruitmentCommentRequest(
     val commentId: Long,
 )
 
-interface RecruitmentCommentReplyResponse{
+interface RecruitmentCommentReplyResponse {
     val userId: Long
+
 //    var isBlockedUser: Boolean
     // TODO : 익명 여부 추가
 //    val isAnonymous: Boolean
@@ -287,7 +288,6 @@ data class RecruitmentCommentReplyWithUserResponse(
     )
 }
 
-
 data class RecruitmentCommentsResponse(
     @Schema(
         description = "댓글 목록",
@@ -301,8 +301,8 @@ data class RecruitmentCommentsResponse(
     )
     val meta: MetaData,
 ) {
-    companion object{
-        fun of(data: List<RecruitmentCommentReplyWithUserResponse>, limit: Int) : RecruitmentCommentsResponse {
+    companion object {
+        fun of(data: List<RecruitmentCommentReplyWithUserResponse>, limit: Int): RecruitmentCommentsResponse {
             return RecruitmentCommentsResponse(data, MetaData(data.size, data.size == limit))
         }
     }

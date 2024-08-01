@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/recruitment-comments")
 @RestController
 class RecruitmentCommentController(
-    private val commentService: RecruitmentCommentService
+    private val commentService: RecruitmentCommentService,
 ) {
 
     @Operation(summary = "프로젝트/스터디 댓글 생성 API", description = "프로젝트/스터디에 댓글을 생성합니다.")
@@ -71,7 +71,7 @@ class RecruitmentCommentController(
     fun getComments(
         @LoginUser user: User,
         request: RecruitmentCommentScrollRequest,
-    ) : ResponseEntity<RecruitmentCommentsResponse> {
+    ): ResponseEntity<RecruitmentCommentsResponse> {
         val comments = commentService.findAll(user.id, request)
         return ResponseEntity.ok(comments)
     }
