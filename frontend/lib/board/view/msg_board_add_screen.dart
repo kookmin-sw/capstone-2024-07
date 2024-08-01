@@ -473,7 +473,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
           ),
           body: Stack(children: [
             Transform.translate(
-              offset: const Offset(80.0, 430.0),
+              offset: Offset(80.0, height / 2),
               child: Image.asset(
                 'asset/imgs/logo.png',
                 width: 450.0,
@@ -827,7 +827,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                               height: 20,
                                               child: Padding(
                                                 padding: const EdgeInsets.only(
-                                                    left: 3.0, top: 7.0),
+                                                    left: 3.0, bottom: 3.0),
                                                 child: TextField(
                                                   textAlign: TextAlign.center,
                                                   style: const TextStyle(
