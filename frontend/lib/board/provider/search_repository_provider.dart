@@ -23,9 +23,19 @@ abstract class SearchRepository {
   @Headers({
     'accessToken': 'true',
   })
-  Future<CursorPaginationModel<MsgBoardResponseModel>> paginate(
-    @Query('lastId') int lastId,
-    @Query('size') int size,
-    @Query('keyword') String keyword,
-  );
+  Future<CursorPaginationModel<MsgBoardResponseModel>> paginatePosts(
+      @Query('lastId') int lastId,
+      @Query('size') int size,
+      @Query('keyword') String keyword,
+      );
+
+  @GET('/api/recruitment')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<CursorPaginationModel<MsgBoardResponseModel>> paginateRecruitment(
+      @Query('lastId') int lastId,
+      @Query('size') int size,
+      @Query('keyword') String keyword,
+      );
 }

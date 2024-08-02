@@ -21,6 +21,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   final ScrollController controller = ScrollController();
   String searchKeyword = '';
   bool isSearched = false;
+  String selectedPostType = 'general';
 
   @override
   void initState() {
@@ -141,6 +142,25 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               ),
             ],
           ),
+          SizedBox(height: 10),
+          DropdownButton<String>(
+            value: selectedPostType,
+            items: [
+              DropdownMenuItem(
+                value: 'general',
+                child: Text('일반'),
+              ),
+              DropdownMenuItem(
+                value: 'study-project',
+                child: Text('스터디-프로젝트'),
+              ),
+            ],
+            onChanged: (String? newValue) {
+              setState(() {
+                selectedPostType = newValue!;
+              });
+            },
+          ),
         ],
       ),
     );
@@ -153,7 +173,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       });
       ref
           .read(searchStateNotifierProvider.notifier)
-          .updateAndFetch(searchKeyword);
+          .updateAndFetch(searchKeyword, selectedPostType);
     }
   }
 
@@ -187,7 +207,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     return RefreshIndicator(
       onRefresh: () async {
         ref.read(searchStateNotifierProvider.notifier).lastId =
-            9223372036854775807;
+        9223372036854775807;
         await ref
             .read(searchStateNotifierProvider.notifier)
             .paginate(forceRefetch: true);
@@ -200,15 +220,15 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             return Center(
               child: cp is CursorPaginationModelFetchingMore
                   ? const CircularProgressIndicator(
-                      color: PRIMARY_COLOR,
-                    )
+                color: PRIMARY_COLOR,
+              )
                   : const Text(
-                      'Copyright 2024. Decl Team all rights reserved.\n',
-                      style: TextStyle(
-                        color: BODY_TEXT_COLOR,
-                        fontSize: 12.0,
-                      ),
-                    ),
+                'Copyright 2024. Decl Team all rights reserved.\n',
+                style: TextStyle(
+                  color: BODY_TEXT_COLOR,
+                  fontSize: 12.0,
+                ),
+              ),
             );
           }
 
@@ -223,8 +243,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => MsgBoardScreen(
-                          board: pItem,
-                        ),
+                      board: pItem,
+                    ),
                     fullscreenDialog: true),
               );
             },

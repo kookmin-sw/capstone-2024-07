@@ -37,20 +37,23 @@ class SearchStateNotifier extends StateNotifier<CursorPaginationModelBase> {
   int lastId;
   int size;
   String keyword;
+  String postType;
 
   SearchStateNotifier({
     required this.repository,
     required this.lastId,
     required this.size,
     required this.keyword,
+    this.postType = 'general', // Default value
   }) : super(CursorPaginationModelLoading()) {
     paginate();
   }
 
   bool get isMounted => _mounted;
 
-  void updateAndFetch(String newKeyword) {
+  void updateAndFetch(String newKeyword, String newPostType) {
     keyword = newKeyword;
+    postType = newPostType;
     lastId = 9223372036854775807;
     paginate(forceRefetch: true);
   }
@@ -105,7 +108,13 @@ class SearchStateNotifier extends StateNotifier<CursorPaginationModelBase> {
           state = CursorPaginationModelLoading();
         }
       }
-      final resp = await repository.paginate(lastId, size, keyword);
+
+      CursorPaginationModel resp;
+      if (postType == 'general') {
+        resp = await repository.paginatePosts(lastId, size, keyword);
+      } else {
+        resp = await repository.paginateRecruitment(lastId, size, keyword);
+      }
 
       if (!isMounted) return;
 
