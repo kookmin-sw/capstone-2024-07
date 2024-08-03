@@ -15,6 +15,8 @@ import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/provider/image_provider.dart';
 import 'package:frontend/board/provider/anonymous_provider.dart';
 import 'package:frontend/board/provider/network_image_provider.dart';
+import 'package:frontend/board/provider/recruitment_add_provider.dart';
+import 'package:frontend/board/provider/recruitment_state_notifier_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/member/provider/mypage/my_post_state_notifier_provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -89,6 +91,11 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
     ref.read(myPostStateNotifierProvider.notifier).lastId = 9223372036854775807;
     await ref
         .read(myPostStateNotifierProvider.notifier)
+        .paginate(forceRefetch: true);
+    ref.read(recruitmentStateNotifierProvider.notifier).lastId =
+        9223372036854775807;
+    await ref
+        .read(recruitmentStateNotifierProvider.notifier)
         .paginate(forceRefetch: true);
   }
 
