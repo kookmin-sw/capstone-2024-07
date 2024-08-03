@@ -21,6 +21,7 @@ class RecruitmentResponseModel {
   final DateTime modifiedDateTime;
   final int userId;
   final String userNickname;
+  final List<HashTagsModel> hashTags;
 
   RecruitmentResponseModel({
     required this.id,
@@ -40,6 +41,7 @@ class RecruitmentResponseModel {
     required this.modifiedDateTime,
     required this.userId,
     required this.userNickname,
+    required this.hashTags,
   });
 
   factory RecruitmentResponseModel.fromJson(Map<String, dynamic> json) =>

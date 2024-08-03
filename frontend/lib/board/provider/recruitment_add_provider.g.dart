@@ -19,7 +19,7 @@ class _RecruitmentAdd implements RecruitmentAdd {
   String? baseUrl;
 
   @override
-  Future<CursorPaginationModel<RecruitmentResponseModel>> get(
+  Future<CursorPaginationModel<RecruitmentResponseModel>> paginate(
     int lastId,
     int size,
   ) async {
@@ -39,7 +39,7 @@ class _RecruitmentAdd implements RecruitmentAdd {
     )
             .compose(
               _dio.options,
-              '/api/recruitmentId',
+              '/api/recruitment',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -70,7 +70,7 @@ class _RecruitmentAdd implements RecruitmentAdd {
     )
         .compose(
           _dio.options,
-          '/api/recruitment/',
+          '/api/recruitment',
           queryParameters: queryParameters,
           data: _data,
         )

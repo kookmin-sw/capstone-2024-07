@@ -19,16 +19,16 @@ final recruitmentAddProvider = Provider<RecruitmentAdd>((ref) {
 abstract class RecruitmentAdd {
   factory RecruitmentAdd(Dio dio, {String baseUrl}) = _RecruitmentAdd;
 
-  @GET('/api/recruitmentId')
+  @GET('/api/recruitment')
   @Headers({
     'accessToken': 'true',
   })
-  Future<CursorPaginationModel<RecruitmentResponseModel>> get(
+  Future<CursorPaginationModel<RecruitmentResponseModel>> paginate(
     @Query('lastId') int lastId,
     @Query('size') int size,
   );
 
-  @PUT('/api/recruitment/')
+  @PUT('/api/recruitment')
   @Headers({
     'accessToken': 'true',
   })

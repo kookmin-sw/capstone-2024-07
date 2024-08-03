@@ -26,6 +26,9 @@ RecruitmentResponseModel _$RecruitmentResponseModelFromJson(
       modifiedDateTime: DateTime.parse(json['modifiedDateTime'] as String),
       userId: (json['userId'] as num).toInt(),
       userNickname: json['userNickname'] as String,
+      hashTags: (json['hashTags'] as List<dynamic>)
+          .map((e) => HashTagsModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$RecruitmentResponseModelToJson(
@@ -48,6 +51,7 @@ Map<String, dynamic> _$RecruitmentResponseModelToJson(
       'modifiedDateTime': instance.modifiedDateTime.toIso8601String(),
       'userId': instance.userId,
       'userNickname': instance.userNickname,
+      'hashTags': instance.hashTags,
     };
 
 HashTagsModel _$HashTagsModelFromJson(Map<String, dynamic> json) =>

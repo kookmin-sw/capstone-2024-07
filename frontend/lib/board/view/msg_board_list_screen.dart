@@ -9,6 +9,7 @@ import 'package:frontend/board/component/board_card.dart';
 import 'package:frontend/board/layout/invite_layout.dart';
 import 'package:frontend/board/layout/study_box_layout.dart';
 import 'package:frontend/board/model/msg_board_detail_response_model.dart';
+import 'package:frontend/board/model/recruitment_response_model.dart';
 import 'package:frontend/board/provider/api_category_provider.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/board_detail_state_notifier_provider.dart';
@@ -17,6 +18,7 @@ import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/provider/category_provider.dart';
 import 'package:frontend/board/provider/comment_pagination_provider.dart';
 import 'package:frontend/board/provider/payload_state_notifier_provider.dart';
+import 'package:frontend/board/provider/recruitment_state_notifier_provider.dart';
 import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/board/view/msg_board_screen.dart';
 import 'package:frontend/board/view/search_screen.dart';
@@ -106,6 +108,12 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                       9223372036854775807;
                   await ref
                       .read(boardStateNotifierProvider.notifier)
+                      .paginate(forceRefetch: true);
+
+                  ref.read(recruitmentStateNotifierProvider.notifier).lastId =
+                      9223372036854775807;
+                  await ref
+                      .read(recruitmentStateNotifierProvider.notifier)
                       .paginate(forceRefetch: true);
                 },
                 child: ListView(
@@ -417,6 +425,44 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
     final communityTitle = ref.watch(categoryTitleProvider);
     final isHot = ref.watch(isHotProvider);
     if (communityTitle == null && !isHot) {
+      final data = ref.watch(recruitmentStateNotifierProvider);
+
+      if (data is CursorPaginationModelLoading) {
+        return const Center(
+          child: CircularProgressIndicator(
+            color: PRIMARY_COLOR,
+          ),
+        );
+      }
+
+      if (data is CursorPaginationModelError) {
+        return const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "데이터를 불러올 수 없습니다.",
+              style: TextStyle(color: BOARD_CARD_TIME_COLOR, fontSize: 16.0),
+            ),
+          ],
+        );
+      }
+
+      final cp = data as CursorPaginationModel;
+
+      if (cp.data.isEmpty) {
+        return const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "스터디/프로젝트 모집글을 올려보세요!",
+              style: TextStyle(color: BOARD_CARD_TIME_COLOR, fontSize: 16.0),
+            ),
+          ],
+        );
+      }
+
       return Padding(
         padding: const EdgeInsets.only(
           top: 10.0,
@@ -466,14 +512,17 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                     padding: const EdgeInsets.only(left: 20.0),
                     child: Row(
                       children: [
-                        for (int i = 0; i < 10; i++)
-                          const Padding(
-                            padding: EdgeInsets.only(
+                        for (int i = 0;
+                            i < (cp.data.length < 20 ? cp.data.length : 20);
+                            i++)
+                          Padding(
+                            padding: const EdgeInsets.only(
                               right: 25.0,
                               top: 5.0,
                               bottom: 17.0,
                             ),
-                            child: StudyBox(),
+                            child:
+                                StudyBox(recruitmentResponseModel: cp.data[i]),
                           )
                       ],
                     ),
