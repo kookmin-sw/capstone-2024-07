@@ -23,6 +23,7 @@ import 'package:frontend/board/provider/recruitment_state_notifier_provider.dart
 import 'package:frontend/board/view/msg_board_add_screen.dart';
 import 'package:frontend/board/view/msg_board_screen.dart';
 import 'package:frontend/board/view/search_screen.dart';
+import 'package:frontend/board/view/study_board_screen.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 
@@ -407,14 +408,13 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
             child: StudyBoardCard(recruitmentResponseModel: pItem),
             onTap: () async {
               // 상세페이지
-              // ref.read(boardDetailNotifier.notifier).add(pItem.id);
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(
-              //     builder: (_) => MsgBoardScreen(
-              //       board: pItem,
-              //     ),
-              //   ),
-              // );
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => StudyBoardScreen(
+                    board: pItem,
+                  ),
+                ),
+              );
             },
           );
         },
@@ -606,8 +606,20 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                               top: 5.0,
                               bottom: 17.0,
                             ),
-                            child:
-                                StudyBox(recruitmentResponseModel: cp.data[i]),
+                            child: GestureDetector(
+                                onTap: () {
+                                  // 상세페이지
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => StudyBoardScreen(
+                                        board: cp.data[i],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: StudyBox(
+                                  recruitmentResponseModel: cp.data[i],
+                                )),
                           )
                       ],
                     ),
