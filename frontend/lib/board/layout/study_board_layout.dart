@@ -46,17 +46,6 @@ class StudyBoard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    String hashTags = "";
-    int hashTagsNum = 0;
-    for (HashTagsModel h in recruitmentResponseModel.hashTags) {
-      if (hashTagsNum < 2) {
-        hashTags += "#${h.name} ";
-        hashTagsNum++;
-      } else {
-        break;
-      }
-    }
-
     String allText = recruitmentResponseModel.content;
     List<String> splitText = allText.split("\n");
 
@@ -73,6 +62,17 @@ class StudyBoard extends ConsumerWidget {
               fontWeight: FontWeight.w400,
             ),
             recognizer: TapGestureRecognizer()..onTap = () => _launchUrl(t),
+          ),
+        );
+      } else if (t.startsWith('#')) {
+        spans.add(
+          TextSpan(
+            text: '$t\n',
+            style: const TextStyle(
+              color: TAG_COLOR,
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         );
       } else {
@@ -216,17 +216,6 @@ class StudyBoard extends ConsumerWidget {
                 children: spans,
               ),
             ),
-            const SizedBox(
-              height: 5,
-            ),
-            Text(
-              hashTags,
-              style: const TextStyle(
-                fontSize: 10,
-                color: TAG_COLOR,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -240,8 +229,8 @@ class StudyBoard extends ConsumerWidget {
                 Row(
                   children: [
                     BigButton(
-                      icon: Icons.favorite_outline_rounded,
-                      iconSize: 13,
+                      icon: Icons.star_outline_rounded,
+                      iconSize: 20,
                       text: recruitmentResponseModel.scrapCount.toString(),
                       postId: recruitmentResponseModel.id,
                       isClicked: false,
