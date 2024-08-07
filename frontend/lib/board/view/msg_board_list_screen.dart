@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:frontend/board/component/board_card.dart';
+import 'package:frontend/board/component/study_board_card.dart';
 import 'package:frontend/board/layout/invite_layout.dart';
 import 'package:frontend/board/layout/study_box_layout.dart';
 import 'package:frontend/board/model/msg_board_detail_response_model.dart';
@@ -339,6 +340,90 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
   }
 
   Widget renderBoardList() {
+    final communityTitle = ref.watch(categoryTitleProvider);
+    if (communityTitle == "STUDY") {
+      final data = ref.watch(recruitmentStateNotifierProvider);
+
+      if (data is CursorPaginationModelLoading) {
+        return const Center(
+          child: CircularProgressIndicator(
+            color: PRIMARY_COLOR,
+          ),
+        );
+      }
+
+      if (data is CursorPaginationModelError) {
+        return const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "데이터를 불러올 수 없습니다.",
+              style: TextStyle(color: BOARD_CARD_TIME_COLOR, fontSize: 16.0),
+            ),
+          ],
+        );
+      }
+
+      final cp = data as CursorPaginationModel;
+
+      if (cp.data.isEmpty) {
+        return const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "스터디/프로젝트 모집글을 올려보세요!",
+              style: TextStyle(color: BOARD_CARD_TIME_COLOR, fontSize: 16.0),
+            ),
+          ],
+        );
+      }
+
+      return ListView.separated(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: cp.data.length + 1,
+        itemBuilder: (_, index) {
+          if (index == cp.data.length) {
+            return Center(
+              child: cp is CursorPaginationModelFetchingMore
+                  ? const CircularProgressIndicator(
+                      color: PRIMARY_COLOR,
+                    )
+                  : const Text(
+                      'Copyright 2024. Decl Team all rights reserved.\n',
+                      style: TextStyle(
+                        color: BODY_TEXT_COLOR,
+                        fontSize: 12.0,
+                      ),
+                    ),
+            );
+          }
+
+          final RecruitmentResponseModel pItem = cp.data[index];
+
+          return GestureDetector(
+            child: StudyBoardCard(recruitmentResponseModel: pItem),
+            onTap: () async {
+              // 상세페이지
+              // ref.read(boardDetailNotifier.notifier).add(pItem.id);
+              // Navigator.of(context).push(
+              //   MaterialPageRoute(
+              //     builder: (_) => MsgBoardScreen(
+              //       board: pItem,
+              //     ),
+              //   ),
+              // );
+            },
+          );
+        },
+        separatorBuilder: (_, index) {
+          return const SizedBox(height: 10.0);
+        },
+      );
+    }
+
     final data = ref.watch(boardStateNotifierProvider);
 
     if (data is CursorPaginationModelLoading) {

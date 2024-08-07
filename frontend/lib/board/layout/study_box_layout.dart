@@ -79,49 +79,50 @@ class _StudyBox extends ConsumerState<StudyBox> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-                decoration: BoxDecoration(
-                  color: STUDY_PERSON_BACK_COLOR,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 7,
-                  vertical: 4,
-                ),
-                child: widget.recruitmentResponseModel.limit != -1
-                    ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            widget.recruitmentResponseModel.limit.toString(),
-                            style: const TextStyle(
-                              fontSize: 10,
-                              color: STUDY_PERSON_COLOR,
-                              fontWeight: FontWeight.w500,
-                            ),
+              decoration: BoxDecoration(
+                color: STUDY_PERSON_BACK_COLOR,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 7,
+                vertical: 4,
+              ),
+              child: widget.recruitmentResponseModel.limit != -1
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          widget.recruitmentResponseModel.limit.toString(),
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: STUDY_PERSON_COLOR,
+                            fontWeight: FontWeight.w500,
                           ),
-                          const Text(
-                            "명 남음",
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                            ),
+                        ),
+                        const Text(
+                          "명 남음",
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
                           ),
-                        ],
-                      )
-                    : const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            "제한없음",
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: CLOUD_COLOR,
-                              fontWeight: FontWeight.w500,
-                            ),
+                        ),
+                      ],
+                    )
+                  : const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "제한없음",
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: CLOUD_COLOR,
+                            fontWeight: FontWeight.w500,
                           ),
-                        ],
-                      )),
+                        ),
+                      ],
+                    ),
+            ),
             Padding(
               padding: const EdgeInsets.all(3.0),
               child: Column(

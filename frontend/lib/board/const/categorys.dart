@@ -26,6 +26,15 @@ Map<String, String> categoryCodesList2 = {
   "흥보": "PROMOTION",
 };
 
+Map<String, String> categoryCodesReverseList2 = {
+  "FREE": "자유",
+  "STUDY": "스터디",
+  "PROJECT": "프로젝트",
+  "JOB": "취업",
+  "GRADUATE": "대학원",
+  "PROMOTION": "흥보",
+};
+
 Map<String, String> categoryCodesList = {
   "전체": "ALL",
   "인기": "HOT",

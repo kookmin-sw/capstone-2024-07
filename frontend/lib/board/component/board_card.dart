@@ -111,13 +111,12 @@ class BoardCard extends StatelessWidget {
                     categoryCodesReverseList[communityTitle] ?? communityTitle),
                 Row(
                   children: [
-                    if (communityTitle != "STUDY")
-                      TextWithIconForView(
-                        icon: Icons.favorite_outline_rounded,
-                        iconSize: 15,
-                        text: count.likeCount.toString(),
-                        color: Colors.red,
-                      ),
+                    TextWithIconForView(
+                      icon: Icons.favorite_outline_rounded,
+                      iconSize: 15,
+                      text: count.likeCount.toString(),
+                      color: Colors.red,
+                    ),
                     const SizedBox(
                       width: 13,
                     ),
@@ -138,38 +137,6 @@ class BoardCard extends StatelessWidget {
                     const SizedBox(
                       width: 13,
                     ),
-                    if (communityTitle == "STUDY")
-                      Container(
-                        decoration: BoxDecoration(
-                          color: STUDY_PERSON_BACK_COLOR,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 7,
-                          vertical: 4,
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              "2",
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: STUDY_PERSON_COLOR,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            Text(
-                              "명 남음",
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                   ],
                 ),
               ],
@@ -198,39 +165,14 @@ class BoardCard extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                if (communityTitle != "STUDY")
-                  Text(
-                    "${changeTime(createdDateTime)} | $userNickname",
-                    style: const TextStyle(
-                      fontSize: 8,
-                      color: BOARD_CARD_TIME_COLOR,
-                      fontWeight: FontWeight.w400,
-                    ),
+                Text(
+                  "${changeTime(createdDateTime)} | $userNickname",
+                  style: const TextStyle(
+                    fontSize: 8,
+                    color: BOARD_CARD_TIME_COLOR,
+                    fontWeight: FontWeight.w400,
                   ),
-                if (communityTitle == "STUDY")
-                  const Row(
-                    children: [
-                      Text(
-                        "2024.06.17~08.02",
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        "#통계학 #경진대회",
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: TAG_COLOR,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
-                  ),
+                ),
               ],
             ),
           ],
