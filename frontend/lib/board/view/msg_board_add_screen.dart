@@ -72,6 +72,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
 
     titleController = TextEditingController(text: title);
     contentController = TextEditingController(text: content);
+    recruitmentPersonController = TextEditingController();
   }
 
   @override
@@ -834,7 +835,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                               height: 20,
                                               child: Padding(
                                                 padding: const EdgeInsets.only(
-                                                    left: 3.0, bottom: 3.0),
+                                                    left: 3.0, bottom: 8.0),
                                                 child: TextField(
                                                   textAlign: TextAlign.center,
                                                   style: const TextStyle(
