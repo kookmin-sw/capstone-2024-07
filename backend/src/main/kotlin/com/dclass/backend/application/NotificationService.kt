@@ -17,7 +17,7 @@ class NotificationService(
     val notificationRepository: NotificationRepository,
 ) {
     //
-    private val DEFAULT_TIMEOUT = 1000L * 60L * 60L
+    private val DEFAULT_TIMEOUT = 1000L * 60L * 60L + 1000L * 10L
     private val log = logger()
 
     fun subscribe(id: Long, lastEventId: String): SseEmitter {
