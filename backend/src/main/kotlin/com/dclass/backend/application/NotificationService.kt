@@ -23,8 +23,16 @@ class NotificationService(
     fun subscribe(id: Long, lastEventId: String): SseEmitter {
         val emitterId = makeTimeIncludeId(id)
         val emitter = emitterRepository.save(emitterId, SseEmitter(DEFAULT_TIMEOUT))
-        emitter.onTimeout(emitter::complete)
-        emitter.onCompletion { emitterRepository.delete(emitterId) }
+//        emitter.onTimeout(emitter::complete)
+//        emitter.onCompletion { emitterRepository.delete(emitterId) }
+        emitter.onTimeout{
+            log.info("Timeout occurred. [emitterId=$emitterId]")
+            emitter.complete()
+        }
+        emitter.onCompletion {
+            log.info("Completion occurred. [emitterId=$emitterId]")
+            emitterRepository.delete(emitterId)
+        }
 
         sendNotification(
             emitter,
