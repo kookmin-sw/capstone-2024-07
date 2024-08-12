@@ -10,6 +10,7 @@ import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
 import 'package:frontend/board/model/exception_model.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
+import 'package:frontend/board/model/recruitment_response_model.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/provider/image_provider.dart';
@@ -26,9 +27,15 @@ import 'package:http/http.dart' as http;
 
 class MsgBoardAddScreen extends ConsumerStatefulWidget {
   final bool isEdit;
-  final MsgBoardResponseModel board;
+  final bool isRecruitment;
+  final MsgBoardResponseModel? board;
+  final RecruitmentResponseModel? recruitmentBoard;
   const MsgBoardAddScreen(
-      {super.key, required this.isEdit, required this.board});
+      {super.key,
+      required this.isEdit,
+      required this.isRecruitment,
+      required this.board,
+      required this.recruitmentBoard});
 
   @override
   ConsumerState<MsgBoardAddScreen> createState() => _MsgBoardAddScreenState();
@@ -59,20 +66,43 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.isEdit) {
-      selectCategory =
-          categoryCodesReverseList[widget.board.communityTitle].toString();
-      title = widget.board.postTitle;
-      content = widget.board.postContent;
-      isAnonymous = widget.board.isAnonymous;
-      canUpload = widget.isEdit;
 
-      canUpload = writedTitle = writedContent = true;
+    int limit = -2;
+
+    if (widget.isEdit) {
+      if (widget.isRecruitment) {
+        selectCategory =
+            categoryCodesReverseList2[widget.recruitmentBoard!.type].toString();
+        title = widget.recruitmentBoard!.title;
+        content = widget.recruitmentBoard!.content;
+
+        isOnline = widget.recruitmentBoard!.isOnline;
+        isAlways = widget.recruitmentBoard!.isOngoing;
+        isNotLimit = widget.recruitmentBoard!.limit == -1;
+        startDate = widget.recruitmentBoard!.startDateTime;
+        endDate = widget.recruitmentBoard!.endDateTime;
+        limit = widget.recruitmentBoard!.limit;
+
+        canUpload = writedTitle = writedContent = true;
+      } else {
+        selectCategory =
+            categoryCodesReverseList[widget.board!.communityTitle].toString();
+        title = widget.board!.postTitle;
+        content = widget.board!.postContent;
+        isAnonymous = widget.board!.isAnonymous;
+
+        canUpload = writedTitle = writedContent = true;
+      }
     }
 
     titleController = TextEditingController(text: title);
     contentController = TextEditingController(text: content);
-    recruitmentPersonController = TextEditingController();
+    if (limit == -2) {
+      recruitmentPersonController = TextEditingController();
+    } else {
+      recruitmentPersonController =
+          TextEditingController(text: limit.toString());
+    }
   }
 
   @override
@@ -276,7 +306,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
     if (widget.isEdit) {
       final requestData = {
         'communityTitle': categoryCodesList[selectCategory],
-        'postId': widget.board.id,
+        'postId': widget.board!.id,
         'title': title,
         'content': content,
         'isAnonymous': isAnonymous,
@@ -373,6 +403,107 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
 
     ref.read(imageStateProvider.notifier).clear();
     ref.read(networkImageStateProvider.notifier).clear();
+    ref.read(isAnonymousStateProvider.notifier).set(false);
+
+    Navigator.of(context).pop();
+  }
+
+  String changeDateFormat(DateTime t) {
+    String tS = t.toString();
+    tS = tS.replaceAll(" ", "T");
+    if (tS.length > 23) {
+      tS = tS.replaceRange(23, 26, 'Z');
+    } else {
+      tS = '${tS}Z';
+    }
+    return tS;
+  }
+
+  Future<void> upLoadRecruitment() async {
+    List<String> splitText = content.split("#");
+
+    List<String> hashTags = splitText.sublist(1, splitText.length);
+
+    if (widget.isEdit) {
+      final requestData = {
+        'recruitmentId': widget.recruitmentBoard?.id.toString(),
+        'type': categoryCodesList2[selectCategory],
+        'isOnline': isOnline,
+        'isOngoing': isAlways,
+        'limit': isNotLimit ? -1 : recruitmentPersonController.text,
+        'startDateTime': changeDateFormat(startDate),
+        'endDateTime': changeDateFormat(DateTime(endDate.year, endDate.month,
+            endDate.day, 23, 59, 59, endDate.millisecond, endDate.microsecond)),
+        'title': title,
+        'content': content,
+        'hashTags': hashTags,
+        'recruitable': widget.recruitmentBoard?.recruitable,
+      };
+
+      try {
+        await recruitmentAddAPI.modify(requestData);
+      } on DioException catch (e) {
+        if (e.response != null) {
+          Map<String, dynamic> data = e.response!.data;
+          ExceptionModel exc = ExceptionModel.fromJson(data);
+          debugPrint("RecruitmentModifyError : ${exc.message}");
+          notAllowed(exc.message);
+          return;
+        } else {
+          debugPrint("RecruitmentModifyError : ${e.message}");
+          notAllowed(e.message!);
+          return;
+        }
+      } catch (e) {
+        debugPrint("RecruitmentModifyError : ${e.toString()}");
+        notAllowed("다시 시도해주세요!");
+        return;
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } else {
+      final requestData = {
+        'type': categoryCodesList2[selectCategory],
+        'isOnline': isOnline,
+        'isOngoing': isAlways,
+        'limit': isNotLimit ? -1 : recruitmentPersonController.text,
+        'startDateTime': changeDateFormat(startDate),
+        'endDateTime': changeDateFormat(DateTime(endDate.year, endDate.month,
+            endDate.day, 23, 59, 59, endDate.millisecond, endDate.microsecond)),
+        'title': title,
+        'content': content,
+        'hashTags': hashTags,
+      };
+
+      try {
+        await recruitmentAddAPI.post(requestData);
+      } on DioException catch (e) {
+        if (e.response != null) {
+          Map<String, dynamic> data = e.response!.data;
+          ExceptionModel exc = ExceptionModel.fromJson(data);
+          debugPrint("RecruitmentPostError : ${exc.message}");
+          notAllowed(exc.message);
+          return;
+        } else {
+          debugPrint("RecruitmentPostError : ${e.message}");
+          notAllowed(e.message!);
+          return;
+        }
+      } catch (e) {
+        debugPrint("RecruitmentPostError : ${e.toString()}");
+        notAllowed("다시 시도해주세요!");
+        return;
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+
+    refresh();
+
     ref.read(isAnonymousStateProvider.notifier).set(false);
 
     Navigator.of(context).pop();
@@ -1028,9 +1159,10 @@ class BottomView extends ConsumerWidget {
     msgBoardAddScreenState.boardAddAPI = ref.watch(boardAddProvider);
     return Column(
       children: [
-        ImageViewer(
-          msgBoardAddScreenState: msgBoardAddScreenState,
-        ),
+        if (!(widget.isRecruitment))
+          ImageViewer(
+            msgBoardAddScreenState: msgBoardAddScreenState,
+          ),
         Container(
           decoration: const BoxDecoration(
             border: Border(
@@ -1078,7 +1210,15 @@ class BottomView extends ConsumerWidget {
               if (widget.isEdit)
                 TextButton(
                   onPressed: () async {
-                    await ref.watch(boardAddProvider).delete(widget.board.id);
+                    if (widget.isRecruitment) {
+                      await ref
+                          .watch(recruitmentAddProvider)
+                          .delete(widget.recruitmentBoard!.id);
+                    } else {
+                      await ref
+                          .watch(boardAddProvider)
+                          .delete(widget.board!.id);
+                    }
                     ref.read(boardStateNotifierProvider.notifier).lastId =
                         9223372036854775807;
                     await ref
@@ -1116,7 +1256,7 @@ class ImageViewer extends ConsumerWidget {
     msgBoardAddScreenState.realImages = images;
     if (msgBoardAddScreenState.widget.isEdit) {
       msgBoardAddScreenState.networkImages =
-          msgBoardAddScreenState.widget.board.images;
+          msgBoardAddScreenState.widget.board!.images;
       for (var removeImg in ref.watch(networkImageStateProvider)) {
         msgBoardAddScreenState.networkImages.remove(removeImg);
       }

@@ -6,15 +6,14 @@ import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/layout/recruitment_comment_layout.dart';
 import 'package:frontend/board/layout/study_board_layout.dart';
 import 'package:frontend/board/model/exception_model.dart';
-import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/board/model/recruitment_comment_model.dart';
 import 'package:frontend/board/model/recruitment_response_model.dart';
 import 'package:frontend/board/provider/block_provider.dart';
-import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/provider/comment_pagination_provider.dart';
 import 'package:frontend/board/provider/comment_notifier_provider.dart';
 import 'package:frontend/board/provider/image_provider.dart';
+import 'package:frontend/board/provider/recruitment_add_provider.dart';
 import 'package:frontend/board/provider/recruitment_comment_pagination_provider.dart';
 import 'package:frontend/board/provider/recruitment_comment_provider.dart';
 import 'package:frontend/board/provider/recruitment_reply_provider.dart';
@@ -406,7 +405,7 @@ class _StudyBoardScreenState extends ConsumerState<StudyBoardScreen> {
                               ),
                               onPressed: () async {
                                 await ref
-                                    .watch(boardAddProvider)
+                                    .watch(recruitmentAddProvider)
                                     .delete(widget.board.id);
                                 await ref
                                     .read(boardStateNotifierProvider.notifier)
@@ -452,25 +451,9 @@ class _StudyBoardScreenState extends ConsumerState<StudyBoardScreen> {
                                   MaterialPageRoute(
                                     builder: (_) => MsgBoardAddScreen(
                                       isEdit: true,
-                                      board: MsgBoardResponseModel(
-                                        id: 0,
-                                        userId: 0,
-                                        userNickname: "",
-                                        universityName: "",
-                                        communityId: 0,
-                                        communityTitle: "",
-                                        postTitle: "",
-                                        postContent: "",
-                                        images: [],
-                                        count: ReactCountModel(
-                                            commentReplyCount: 0,
-                                            likeCount: 0,
-                                            scrapCount: 0),
-                                        isAnonymous: false,
-                                        isBlockedUser: false,
-                                        createdDateTime: "",
-                                        imageCount: 0,
-                                      ),
+                                      isRecruitment: true,
+                                      board: null,
+                                      recruitmentBoard: widget.board,
                                     ),
                                   ),
                                 );
