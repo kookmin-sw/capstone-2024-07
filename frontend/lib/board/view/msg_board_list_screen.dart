@@ -144,25 +144,11 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => MsgBoardAddScreen(
+                    builder: (_) => const MsgBoardAddScreen(
                       isEdit: false,
-                      board: MsgBoardResponseModel(
-                        id: 0,
-                        userId: 0,
-                        userNickname: "",
-                        universityName: "",
-                        communityId: 0,
-                        communityTitle: "",
-                        postTitle: "",
-                        postContent: "",
-                        images: [],
-                        count: ReactCountModel(
-                            commentReplyCount: 0, likeCount: 0, scrapCount: 0),
-                        isAnonymous: false,
-                        isBlockedUser: false,
-                        createdDateTime: "",
-                        imageCount: 0,
-                      ),
+                      isRecruitment: false,
+                      board: null,
+                      recruitmentBoard: null,
                     ),
                   ),
                 );
@@ -407,6 +393,7 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
           return GestureDetector(
             child: StudyBoardCard(recruitmentResponseModel: pItem),
             onTap: () async {
+              ref.read(boardDetailNotifier.notifier).add(pItem.id);
               // 상세페이지
               Navigator.of(context).push(
                 MaterialPageRoute(
@@ -608,6 +595,9 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                             ),
                             child: GestureDetector(
                                 onTap: () {
+                                  ref
+                                      .read(boardDetailNotifier.notifier)
+                                      .add(cp.data[i].id);
                                   // 상세페이지
                                   Navigator.of(context).push(
                                     MaterialPageRoute(

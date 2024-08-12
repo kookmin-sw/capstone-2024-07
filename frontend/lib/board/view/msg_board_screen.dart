@@ -457,7 +457,9 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                                   MaterialPageRoute(
                                     builder: (_) => MsgBoardAddScreen(
                                       isEdit: true,
+                                      isRecruitment: false,
                                       board: widget.board,
+                                      recruitmentBoard: null,
                                     ),
                                   ),
                                 );
