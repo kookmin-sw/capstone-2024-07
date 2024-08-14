@@ -17,6 +17,7 @@ data class CreateRecruitmentRequest(
     var title: String,
     var content: String,
     val hashTags: List<String>,
+    val isAnonymous: Boolean = false,
 ) {
     fun toRecruitment(userId: Long, departmentId: Long): Recruitment {
         return Recruitment(
@@ -30,6 +31,7 @@ data class CreateRecruitmentRequest(
             endDateTime = endDateTime,
             title = title,
             content = content,
+            isAnonymous = isAnonymous,
         )
     }
 }
@@ -71,7 +73,8 @@ data class RecruitmentWithUserResponse(
     val createdDateTime: LocalDateTime,
     val modifiedDateTime: LocalDateTime,
     val userId: Long,
-    val userNickname: String,
+    val isAnonymous: Boolean,
+    var userNickname: String,
 ) {
     constructor(recruitment: Recruitment, user: User) : this(
         recruitment.id,
@@ -90,6 +93,7 @@ data class RecruitmentWithUserResponse(
         recruitment.createdDateTime,
         recruitment.modifiedDateTime,
         recruitment.userId,
+        recruitment.isAnonymous,
         user.nickname,
     )
 }
@@ -166,9 +170,7 @@ data class RecruitmentWithUserAndHashTagDetailResponse(
     val userId: Long,
     val userNickname: String,
     val hashTags: List<HashTag>,
-    // 추가
     val isScrapped: Boolean,
-
 ) {
     constructor(recruitment: RecruitmentWithUserResponse, hashTags: List<HashTag>, isScrapped: Boolean) : this(
         recruitment.id,
