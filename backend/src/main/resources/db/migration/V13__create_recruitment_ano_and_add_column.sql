@@ -5,3 +5,5 @@ create table recruitment_anonymous
     user_id        bigint not null,
     primary key (id)
 ) engine=InnoDB;
+
+alter table recruitment add column is_anonymous bit default TRUE;
