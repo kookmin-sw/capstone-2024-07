@@ -33,6 +33,8 @@ class Recruitment(
 
     recruitable: Boolean = true,
 
+    isAnonymous: Boolean = false,
+
     startDateTime: LocalDateTime,
 
     endDateTime: LocalDateTime,
@@ -61,6 +63,10 @@ class Recruitment(
 
     @Column(nullable = false)
     var recruitable: Boolean = recruitable
+        private set
+
+    @Column(nullable = false)
+    var isAnonymous: Boolean = isAnonymous
         private set
 
     @Enumerated(EnumType.STRING)
