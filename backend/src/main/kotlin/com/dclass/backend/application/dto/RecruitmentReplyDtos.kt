@@ -19,15 +19,14 @@ data class CreateRecruitmentReplyRequest(
     )
     val content: String,
 
-    // TODO : 익명 여부 추가
-//    @Schema(
-//        description = "익명 여부",
-//        example = "false",
-//    )
-//    val isAnonymous: Boolean = false,
+    @Schema(
+        description = "익명 여부",
+        example = "false",
+    )
+    val isAnonymous: Boolean = false,
 ) {
     fun toEntity(userId: Long): RecruitmentReply {
-        return RecruitmentReply(userId, commentId, content)
+        return RecruitmentReply(userId, commentId, content, isAnonymous = isAnonymous)
     }
 }
 
@@ -78,12 +77,11 @@ data class RecruitmentReplyResponse(
     )
     val content: String,
 
-    // TODO : 익명 여부 추가
-//    @Schema(
-//        description = "익명 여부",
-//        example = "false",
-//    )
-//    val isAnonymous: Boolean,
+    @Schema(
+        description = "익명 여부",
+        example = "false",
+    )
+    val isAnonymous: Boolean,
 
     @Schema(
         description = "대댓글이 작성된 시각",
@@ -96,7 +94,7 @@ data class RecruitmentReplyResponse(
         reply.userId,
         reply.recruitmentCommentId,
         reply.content,
-//        reply.isAnonymous,
+        reply.isAnonymous,
         reply.createdDateTime,
     )
 }
@@ -126,18 +124,17 @@ data class RecruitmentReplyWithUserResponse(
     )
     val content: String,
 
-    // TODO : 익명 여부 추가
-//    @Schema(
-//        description = "익명 여부",
-//        example = "false",
-//    )
-//    override val isAnonymous: Boolean,
+    @Schema(
+        description = "익명 여부",
+        example = "false",
+    )
+    override var isAnonymous: Boolean,
 
-//    @Schema(
-//        description = "차단한 사용자 여부",
-//        example = "false",
-//    )
-//    override var isBlockedUser: Boolean = false,
+    @Schema(
+        description = "차단한 사용자 여부",
+        example = "false",
+    )
+    override var isBlockedUser: Boolean = false,
 
     @Schema(
         description = "대댓글을 작성한 유저의 정보",
@@ -155,7 +152,7 @@ data class RecruitmentReplyWithUserResponse(
         userId = reply.userId,
         commentId = reply.recruitmentCommentId,
         content = reply.content,
-//        isAnonymous = reply.isAnonymous,
+        isAnonymous = reply.isAnonymous,
         createdAt = reply.createdDateTime,
         userInformation = UserInformation(user.name, user.email, user.nickname),
     )

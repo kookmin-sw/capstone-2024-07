@@ -19,15 +19,14 @@ data class CreateRecruitmentCommentRequest(
     )
     val content: String,
 
-    // TODO : 익명 여부 추가
-//    @Schema(
-//        description = "익명 여부",
-//        example = "false",
-//    )
-//    val isAnonymous: Boolean = false,
+    @Schema(
+        description = "익명 여부",
+        example = "false",
+    )
+    val isAnonymous: Boolean = false,
 ) {
     fun toEntity(userId: Long): RecruitmentComment {
-        return RecruitmentComment(userId, recruitmentId, content)
+        return RecruitmentComment(userId, recruitmentId, content, isAnonymous = isAnonymous)
     }
 }
 
@@ -55,10 +54,8 @@ data class DeleteRecruitmentCommentRequest(
 
 interface RecruitmentCommentReplyResponse {
     val userId: Long
-
-//    var isBlockedUser: Boolean
-    // TODO : 익명 여부 추가
-//    val isAnonymous: Boolean
+    var isBlockedUser: Boolean
+    var isAnonymous: Boolean
     val userInformation: UserInformation
 }
 
@@ -148,12 +145,11 @@ data class RecruitmentCommentWithUserResponse(
     )
     val deleted: Boolean,
 
-    // TODO : 익명 여부 추가
-//    @Schema(
-//        description = "익명 여부",
-//        example = "false",
-//    )
-//    override val isAnonymous: Boolean = false,
+    @Schema(
+        description = "익명 여부",
+        example = "false",
+    )
+    override var isAnonymous: Boolean = false,
 
     @Schema(
         description = "댓글이 작성된 시각",
@@ -172,11 +168,11 @@ data class RecruitmentCommentWithUserResponse(
     )
     override val userInformation: UserInformation,
 
-//    @Schema(
-//        description = "차단 여부",
-//        example = "false",
-//    )
-//    override var isBlockedUser: Boolean,
+    @Schema(
+        description = "차단 여부",
+        example = "false",
+    )
+    override var isBlockedUser: Boolean,
 ) : RecruitmentCommentReplyResponse {
     constructor(comment: RecruitmentComment, user: User) : this(
         id = comment.id,
@@ -184,11 +180,10 @@ data class RecruitmentCommentWithUserResponse(
         recruitmentId = comment.recruitmentId,
         content = comment.content.takeIf { !comment.isDeleted() } ?: "삭제된 댓글 입니다.",
         deleted = comment.isDeleted(),
-        // TODO : 익명 여부 추가
-//        isAnonymous = comment.isAnonymous,
+        isAnonymous = comment.isAnonymous,
         createdDateTime = comment.createdDateTime,
         modifiedDateTime = comment.modifiedDateTime,
-//        isBlockedUser = false,
+        isBlockedUser = false,
         userInformation = UserInformation(user.name, user.email, user.nickname),
     )
 }
@@ -230,18 +225,17 @@ data class RecruitmentCommentReplyWithUserResponse(
     )
     val deleted: Boolean,
 
-//    @Schema(
-//        description = "차단된 사용자 여부",
-//        example = "true",
-//    )
-//    var isBlockedUser: Boolean,
+    @Schema(
+        description = "차단된 사용자 여부",
+        example = "true",
+    )
+    var isBlockedUser: Boolean,
 
-    // TODO : 익명 여부 추가
-//    @Schema(
-//        description = "익명 여부",
-//        example = "false",
-//    )
-//    val isAnonymous: Boolean = false,
+    @Schema(
+        description = "익명 여부",
+        example = "false",
+    )
+    val isAnonymous: Boolean = false,
 
     @Schema(
         description = "댓글이 작성된 시각",
@@ -280,9 +274,9 @@ data class RecruitmentCommentReplyWithUserResponse(
         recruitmentId = commentWithUserResponse.recruitmentId,
         content = commentWithUserResponse.content,
         deleted = commentWithUserResponse.deleted,
-//        isBlockedUser = commentWithUserResponse.isBlockedUser,
-        // TODO : 익명 여부 추가
-//        isAnonymous = commentWithUserResponse.isAnonymous,
+        isBlockedUser = commentWithUserResponse.isBlockedUser,
+
+        isAnonymous = commentWithUserResponse.isAnonymous,
         createdAt = commentWithUserResponse.createdDateTime,
         replies = replies,
     )
