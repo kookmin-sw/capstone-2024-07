@@ -8,3 +8,4 @@ create table recruitment_anonymous
 
 alter table recruitment add column is_anonymous bit default TRUE;
 alter table recruitment_comment add column is_anonymous bit default TRUE;
+alter table recruitment_reply add column is_anonymous bit default TRUE;
