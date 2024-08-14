@@ -17,4 +17,16 @@ data class UserInformation(
     fun same(name: String): Boolean {
         return this.name == name
     }
+
+    fun updateAnonymous(index: Int, isAnonymous: Boolean, isOwner: Boolean) {
+        if(!isAnonymous){
+            return;
+        }
+        if(index != -1) {
+            this.nickname = "익명 ${index+1}"
+            if(isOwner) {
+                this.nickname = "익명(글쓴이)"
+            }
+        }
+    }
 }
