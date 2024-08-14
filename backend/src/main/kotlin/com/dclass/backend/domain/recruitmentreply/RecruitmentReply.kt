@@ -19,7 +19,7 @@ class RecruitmentReply(
 
     content: String = "",
 
-//    isAnonymous: Boolean = false,
+    isAnonymous: Boolean = false,
 
     @Column(nullable = false)
     val createdDateTime: LocalDateTime = LocalDateTime.now(),
@@ -35,10 +35,9 @@ class RecruitmentReply(
     var content: String = content
         private set
 
-    // TODO : 익명 여부 추가
-//    @Column(nullable = false)
-//    var isAnonymous: Boolean = isAnonymous
-//        private set
+    @Column(nullable = false)
+    var isAnonymous: Boolean = isAnonymous
+        private set
 
     @Column(nullable = false)
     var modifiedDateTime: LocalDateTime = modifiedDateTime
