@@ -7,3 +7,4 @@ create table recruitment_anonymous
 ) engine=InnoDB;
 
 alter table recruitment add column is_anonymous bit default TRUE;
+alter table recruitment_comment add column is_anonymous bit default TRUE;
