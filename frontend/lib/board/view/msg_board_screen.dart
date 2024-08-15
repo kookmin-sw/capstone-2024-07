@@ -861,14 +861,14 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                 const SizedBox(
                   width: 10,
                 ),
-                const TextWithIcon(
+                TextWithIcon(
                   icon: Icons.check_box_outline_blank_rounded,
                   iconSize: 17,
                   text: "익명",
                   commentId: -1,
                   postId: -1,
                   replyId: -1,
-                  isClicked: false,
+                  isClicked: ref.watch(isAnonymousStateProvider),
                   isMine: false,
                   userId: -1,
                 ),
@@ -882,7 +882,7 @@ class _MsgBoardScreenState extends ConsumerState<MsgBoardScreen> {
                     decoration: InputDecoration(
                       hintText: '입력',
                       contentPadding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
+                          vertical: 12, horizontal: 20),
                       border: InputBorder.none,
                       suffixIcon: GestureDetector(
                         child: Padding(

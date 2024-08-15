@@ -125,20 +125,6 @@ class _RecruitmentCommentState extends ConsumerState<RecruitmentComment>
                     child: Row(
                       children: [
                         TextWithIcon(
-                          icon: Icons.favorite_outline_rounded,
-                          iconSize: 15,
-                          text: widget.recruitmentComment.likeCount.count
-                              .toString(),
-                          commentId: widget.recruitmentComment.deleted
-                              ? -3
-                              : widget.recruitmentComment.id,
-                          postId: -1,
-                          replyId: -1,
-                          isClicked: widget.recruitmentComment.isLiked,
-                          isMine: widget.isMine,
-                          userId: widget.recruitmentComment.userId,
-                        ),
-                        TextWithIcon(
                           icon: Icons.chat_outlined,
                           iconSize: 15,
                           text: widget.recruitmentComment.replies.length
