@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/board/model/comment_model.dart';
+import 'package:frontend/board/layout/recruitment_reply_layout.dart';
 import 'package:frontend/board/model/recruitment_comment_model.dart';
 import 'package:frontend/common/const/colors.dart';
-import 'package:frontend/board/layout/reply_layout.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
 
 class RecruitmentComment extends ConsumerStatefulWidget {
@@ -31,7 +30,7 @@ class RecruitmentComment extends ConsumerStatefulWidget {
 class _RecruitmentCommentState extends ConsumerState<RecruitmentComment>
     with SingleTickerProviderStateMixin {
   late AnimationController animationController;
-  List<ReplyModel> replies = [];
+  List<RecruitmentReplyModel> replies = [];
 
   @override
   void initState() {
@@ -166,7 +165,7 @@ class _RecruitmentCommentState extends ConsumerState<RecruitmentComment>
               ),
             ),
             for (var reply in replies)
-              Reply(
+              RecruitmentReply(
                 reply: reply,
                 selectReply: widget.selectReplyIndex == reply.id,
                 isMine: widget.myId == reply.userId,

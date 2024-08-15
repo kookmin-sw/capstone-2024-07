@@ -14,7 +14,7 @@ class RecruitmentCommentModel {
   final bool isBlockedUser;
   final bool isAnonymous;
   final String createdAt;
-  final List<ReplyModel> replies;
+  final List<RecruitmentReplyModel> replies;
 
   RecruitmentCommentModel(
       this.id,
@@ -30,4 +30,27 @@ class RecruitmentCommentModel {
 
   factory RecruitmentCommentModel.fromJson(Map<String, dynamic> json) =>
       _$RecruitmentCommentModelFromJson(json);
+}
+
+@JsonSerializable()
+class RecruitmentReplyModel {
+  final int id;
+  final int userId;
+  final int commentId;
+  final String content;
+  final bool isBlockedUser;
+  final UserInformation userInformation;
+  final String createdAt;
+
+  RecruitmentReplyModel(
+    this.id,
+    this.userId,
+    this.userInformation,
+    this.commentId,
+    this.content,
+    this.isBlockedUser,
+    this.createdAt,
+  );
+  factory RecruitmentReplyModel.fromJson(Map<String, dynamic> json) =>
+      _$RecruitmentReplyModelFromJson(json);
 }
