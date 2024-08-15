@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/layout/big_button_layout.dart';
-import 'package:frontend/board/model/recruitment_response_model.dart';
+import 'package:frontend/board/model/recruitment_detail_response_model.dart';
 import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/board/layout/category_circle_layout.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class StudyBoard extends ConsumerWidget {
-  final RecruitmentResponseModel recruitmentResponseModel;
+  final RecruitmentDetailResponseModel recruitmentDetailResponseModel;
   final bool isMine;
   final double titleSize;
 
   const StudyBoard({
     super.key,
-    required this.recruitmentResponseModel,
+    required this.recruitmentDetailResponseModel,
     required this.titleSize,
     required this.isMine,
   });
@@ -46,7 +46,7 @@ class StudyBoard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    String allText = recruitmentResponseModel.content;
+    String allText = recruitmentDetailResponseModel.content;
     List<String> splitText = allText.split("\n");
 
     List<TextSpan> spans = [];
@@ -116,9 +116,9 @@ class StudyBoard extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CategoryCircle(
-                  category:
-                      categoryCodesReverseList2[recruitmentResponseModel.type]
-                          .toString(),
+                  category: categoryCodesReverseList2[
+                          recruitmentDetailResponseModel.type]
+                      .toString(),
                 ),
                 Row(
                   children: [
@@ -135,7 +135,9 @@ class StudyBoard extends ConsumerWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            recruitmentResponseModel.isOnline ? "온라인" : "오프라인",
+                            recruitmentDetailResponseModel.isOnline
+                                ? "온라인"
+                                : "오프라인",
                             style: const TextStyle(
                               fontSize: 10,
                               color: Colors.white,
@@ -157,12 +159,13 @@ class StudyBoard extends ConsumerWidget {
                         horizontal: 7,
                         vertical: 4,
                       ),
-                      child: recruitmentResponseModel.limit != -1
+                      child: recruitmentDetailResponseModel.limit != -1
                           ? Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  recruitmentResponseModel.limit.toString(),
+                                  recruitmentDetailResponseModel.limit
+                                      .toString(),
                                   style: const TextStyle(
                                     fontSize: 10,
                                     color: STUDY_PERSON_COLOR,
@@ -201,7 +204,7 @@ class StudyBoard extends ConsumerWidget {
               height: 5,
             ),
             Text(
-              recruitmentResponseModel.title,
+              recruitmentDetailResponseModel.title,
               style: TextStyle(
                 fontSize: titleSize,
                 fontWeight: FontWeight.w500,
@@ -220,7 +223,7 @@ class StudyBoard extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "${changeTime(recruitmentResponseModel.createdDateTime.toString())} | ${recruitmentResponseModel.userNickname}",
+                  "${changeTime(recruitmentDetailResponseModel.createdDateTime.toString())} | ${recruitmentDetailResponseModel.userNickname}",
                   style: const TextStyle(
                     fontSize: 8,
                     fontWeight: FontWeight.w400,
@@ -231,11 +234,13 @@ class StudyBoard extends ConsumerWidget {
                     BigButton(
                       icon: Icons.star_outline_rounded,
                       iconSize: 20,
-                      text: recruitmentResponseModel.scrapCount.toString(),
-                      postId: recruitmentResponseModel.id,
-                      isClicked: false,
+                      text:
+                          recruitmentDetailResponseModel.scrapCount.toString(),
+                      postId: recruitmentDetailResponseModel.id,
+                      isClicked: recruitmentDetailResponseModel.isScrapped,
                       isMine: isMine,
-                      userId: recruitmentResponseModel.userId,
+                      userId: recruitmentDetailResponseModel.userId,
+                      isRecruitment: true,
                     ),
                   ],
                 ),

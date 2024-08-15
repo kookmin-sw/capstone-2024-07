@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
+import 'package:frontend/board/provider/recruitment_scrap_provider.dart';
 import 'package:frontend/board/provider/scrap_provider.dart';
 import 'package:frontend/common/const/colors.dart';
 
@@ -15,6 +16,7 @@ class BigButton extends ConsumerStatefulWidget {
   final bool isClicked;
   final bool isMine;
   final int userId;
+  final bool isRecruitment;
 
   const BigButton({
     super.key,
@@ -25,6 +27,7 @@ class BigButton extends ConsumerStatefulWidget {
     required this.isClicked,
     required this.isMine,
     required this.userId,
+    required this.isRecruitment,
   });
 
   @override
@@ -140,16 +143,28 @@ class _BigButtonState extends ConsumerState<BigButton>
                 }
               }
             } else if (widget.icon == Icons.star_outline_rounded) {
-              if (isFavoriteClicked) {
-                await ref.read(scrapProvider).delete(widget.postId);
+              if (widget.isRecruitment) {
+                if (isFavoriteClicked) {
+                  await ref
+                      .read(recruitmentScrapProvider)
+                      .delete(widget.postId);
+                } else {
+                  await ref.read(recruitmentScrapProvider).post(widget.postId);
+                }
+                // TODO : My Recruitment Scrap
               } else {
-                await ref.read(scrapProvider).post(widget.postId);
+                if (isFavoriteClicked) {
+                  await ref.read(scrapProvider).delete(widget.postId);
+                } else {
+                  await ref.read(scrapProvider).post(widget.postId);
+                }
+                ref.read(myScrapStateNotifierProvider.notifier).lastId =
+                    9223372036854775807;
+                ref
+                    .read(myScrapStateNotifierProvider.notifier)
+                    .paginate(forceRefetch: true);
               }
-              ref.read(myScrapStateNotifierProvider.notifier).lastId =
-                  9223372036854775807;
-              ref
-                  .read(myScrapStateNotifierProvider.notifier)
-                  .paginate(forceRefetch: true);
+
               setState(() {
                 if (isFavoriteClicked) {
                   textCount -= 1;

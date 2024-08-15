@@ -231,6 +231,7 @@ class Board extends ConsumerWidget {
                       isClicked: board.likedBy,
                       isMine: isMine,
                       userId: board.userId,
+                      isRecruitment: false,
                     ),
                     const SizedBox(
                       width: 13,
@@ -243,6 +244,7 @@ class Board extends ConsumerWidget {
                       isClicked: board.isScrapped,
                       isMine: isMine,
                       userId: board.userId,
+                      isRecruitment: false,
                     ),
                   ],
                 ),
