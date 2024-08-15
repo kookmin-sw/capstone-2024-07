@@ -15,9 +15,8 @@ RecruitmentCommentModel _$RecruitmentCommentModelFromJson(
       (json['recruitmentId'] as num).toInt(),
       json['content'] as String,
       json['deleted'] as bool,
-      LikeCount.fromJson(json['likeCount'] as Map<String, dynamic>),
-      json['isLiked'] as bool,
       json['isBlockedUser'] as bool,
+      json['isAnonymous'] as bool,
       json['createdAt'] as String,
       (json['replies'] as List<dynamic>)
           .map((e) => ReplyModel.fromJson(e as Map<String, dynamic>))
@@ -32,10 +31,9 @@ Map<String, dynamic> _$RecruitmentCommentModelToJson(
       'userId': instance.userId,
       'recruitmentId': instance.recruitmentId,
       'content': instance.content,
-      'likeCount': instance.likeCount,
       'deleted': instance.deleted,
-      'isLiked': instance.isLiked,
       'isBlockedUser': instance.isBlockedUser,
+      'isAnonymous': instance.isAnonymous,
       'createdAt': instance.createdAt,
       'replies': instance.replies,
     };

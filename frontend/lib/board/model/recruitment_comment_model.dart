@@ -10,10 +10,9 @@ class RecruitmentCommentModel {
   final int userId;
   final int recruitmentId;
   final String content;
-  final LikeCount likeCount;
   final bool deleted;
-  final bool isLiked;
   final bool isBlockedUser;
+  final bool isAnonymous;
   final String createdAt;
   final List<ReplyModel> replies;
 
@@ -24,9 +23,8 @@ class RecruitmentCommentModel {
       this.recruitmentId,
       this.content,
       this.deleted,
-      this.likeCount,
-      this.isLiked,
       this.isBlockedUser,
+      this.isAnonymous,
       this.createdAt,
       this.replies);
 

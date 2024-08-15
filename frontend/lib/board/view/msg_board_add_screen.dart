@@ -475,6 +475,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
         'title': title,
         'content': content,
         'hashTags': hashTags,
+        'isAnonymous': isAnonymous,
       };
 
       try {

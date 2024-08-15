@@ -5,9 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/const/categorys.dart';
 import 'package:frontend/board/layout/recruitment_comment_layout.dart';
 import 'package:frontend/board/layout/study_board_layout.dart';
+import 'package:frontend/board/layout/text_with_icon.dart';
 import 'package:frontend/board/model/exception_model.dart';
 import 'package:frontend/board/model/recruitment_comment_model.dart';
 import 'package:frontend/board/model/recruitment_response_model.dart';
+import 'package:frontend/board/provider/anonymous_provider.dart';
 import 'package:frontend/board/provider/block_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/provider/comment_pagination_provider.dart';
@@ -828,6 +830,20 @@ class _StudyBoardScreenState extends ConsumerState<StudyBoardScreen> {
             ),
             child: Row(
               children: [
+                const SizedBox(
+                  width: 10,
+                ),
+                TextWithIcon(
+                  icon: Icons.check_box_outline_blank_rounded,
+                  iconSize: 17,
+                  text: "익명",
+                  commentId: -1,
+                  postId: -1,
+                  replyId: -1,
+                  isClicked: ref.watch(isAnonymousStateProvider),
+                  isMine: false,
+                  userId: -1,
+                ),
                 Expanded(
                   child: TextField(
                     focusNode: _focusNode,
@@ -838,7 +854,7 @@ class _StudyBoardScreenState extends ConsumerState<StudyBoardScreen> {
                     decoration: InputDecoration(
                       hintText: '입력',
                       contentPadding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
+                          vertical: 12, horizontal: 20),
                       border: InputBorder.none,
                       suffixIcon: GestureDetector(
                         child: Padding(
