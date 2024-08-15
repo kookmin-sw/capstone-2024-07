@@ -8,6 +8,7 @@ import 'package:frontend/board/layout/study_board_layout.dart';
 import 'package:frontend/board/layout/text_with_icon.dart';
 import 'package:frontend/board/model/exception_model.dart';
 import 'package:frontend/board/model/recruitment_comment_model.dart';
+import 'package:frontend/board/model/recruitment_detail_response_model.dart';
 import 'package:frontend/board/model/recruitment_response_model.dart';
 import 'package:frontend/board/provider/anonymous_provider.dart';
 import 'package:frontend/board/provider/block_provider.dart';
@@ -807,8 +808,30 @@ class _StudyBoardScreenState extends ConsumerState<StudyBoardScreen> {
   }
 
   Widget renderBoardDetail(bool isMine) {
-    return StudyBoard(
-        recruitmentResponseModel: widget.board, titleSize: 14, isMine: isMine);
+    return FutureBuilder(
+      future: ref.watch(recruitmentAddProvider).get(widget.board.id),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return const Text(
+            '이미 삭제된 글입니다.',
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.black,
+              fontWeight: FontWeight.w500,
+            ),
+          );
+        } else {
+          RecruitmentDetailResponseModel boardDetail =
+              snapshot.data ?? widget.board as RecruitmentDetailResponseModel;
+          return StudyBoard(
+              recruitmentDetailResponseModel: boardDetail,
+              titleSize: 14,
+              isMine: isMine);
+        }
+      },
+    );
   }
 
   Widget renderTextField(selectCommentIndex, selectReplyIndex) {
