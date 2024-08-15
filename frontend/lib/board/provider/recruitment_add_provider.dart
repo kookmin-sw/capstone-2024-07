@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart' hide Headers;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/model/recruitment_detail_response_model.dart';
 import 'package:frontend/board/model/recruitment_response_model.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
 import 'package:frontend/common/provider/dio_provider.dart';
@@ -49,6 +50,14 @@ abstract class RecruitmentAdd {
     'accessToken': 'true',
   })
   Future<void> delete(
+    @Path('recruitmentId') int recruitmentId,
+  );
+
+  @GET('/api/recruitment/{recruitmentId}')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<RecruitmentDetailResponseModel> get(
     @Path('recruitmentId') int recruitmentId,
   );
 }
