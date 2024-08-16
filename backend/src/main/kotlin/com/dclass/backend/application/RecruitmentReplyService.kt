@@ -6,6 +6,7 @@ import com.dclass.backend.application.dto.RecruitmentReplyResponse
 import com.dclass.backend.application.dto.UpdateRecruitmentReplyRequest
 import com.dclass.backend.domain.recruitment.RecruitmentRepository
 import com.dclass.backend.domain.recruitment.findByIdOrThrow
+import com.dclass.backend.domain.recruitmentanonymous.RecruitmentAnonymousRepository
 import com.dclass.backend.domain.recruitmentcomment.RecruitmentCommentRepository
 import com.dclass.backend.domain.recruitmentcomment.getByIdOrThrow
 import com.dclass.backend.domain.recruitmentreply.RecruitmentReplyRepository
@@ -25,6 +26,7 @@ class RecruitmentReplyService(
     private val recruitmentRepository: RecruitmentRepository,
     private val commentRepository: RecruitmentCommentRepository,
     private val validator: CommentReplyValidator,
+    private val anonymousRepository: RecruitmentAnonymousRepository,
 ) {
     @Retryable(
         ObjectOptimisticLockingFailureException::class,
@@ -44,7 +46,9 @@ class RecruitmentReplyService(
 
         val reply = replyRepository.save(request.toEntity(userId))
 
-        // TODO : 익명 여부
+        if (request.isAnonymous && !anonymousRepository.existsByUserIdAndRecruitmentId(userId, recruitment.id)) {
+            anonymousRepository.save(request.toAnonymousEntity(userId, recruitment.id))
+        }
 
         comment.increaseReplyCount()
         recruitment.increaseCommentReplyCount()
