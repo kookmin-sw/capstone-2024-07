@@ -1,5 +1,6 @@
 package com.dclass.backend.application.dto
 
+import com.dclass.backend.domain.recruitmentanonymous.RecruitmentAnonymous
 import com.dclass.backend.domain.recruitmentreply.RecruitmentReply
 import com.dclass.backend.domain.user.User
 import com.dclass.backend.domain.user.UserInformation
@@ -27,6 +28,10 @@ data class CreateRecruitmentReplyRequest(
 ) {
     fun toEntity(userId: Long): RecruitmentReply {
         return RecruitmentReply(userId, commentId, content, isAnonymous = isAnonymous)
+    }
+
+    fun toAnonymousEntity(userId: Long, postId: Long): RecruitmentAnonymous {
+        return RecruitmentAnonymous(userId, postId)
     }
 }
 
