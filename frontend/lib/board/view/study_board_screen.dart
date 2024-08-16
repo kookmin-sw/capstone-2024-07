@@ -20,6 +20,7 @@ import 'package:frontend/board/provider/recruitment_add_provider.dart';
 import 'package:frontend/board/provider/recruitment_comment_pagination_provider.dart';
 import 'package:frontend/board/provider/recruitment_comment_provider.dart';
 import 'package:frontend/board/provider/recruitment_reply_provider.dart';
+import 'package:frontend/board/provider/recruitment_state_notifier_provider.dart';
 import 'package:frontend/board/provider/reply_notifier_provider.dart';
 import 'package:frontend/board/provider/report_provider.dart';
 import 'package:frontend/board/view/msg_board_add_screen.dart';
@@ -28,7 +29,6 @@ import 'package:frontend/common/const/colors.dart';
 import 'package:frontend/common/model/cursor_pagination_model.dart';
 import 'package:frontend/member/model/member_model.dart';
 import 'package:frontend/member/provider/member_state_notifier_provider.dart';
-import 'package:frontend/member/provider/mypage/my_comment_state_notifier_provider.dart';
 import 'package:frontend/member/provider/mypage/my_post_state_notifier_provider.dart';
 
 class StudyBoardScreen extends ConsumerStatefulWidget {
@@ -71,11 +71,12 @@ class _StudyBoardScreenState extends ConsumerState<StudyBoardScreen> {
     await ref
         .read(recruitmentCommentPaginationProvider.notifier)
         .paginate(forceRefetch: true);
-    ref.read(myCommentStateNotifierProvider.notifier).lastId =
-        9223372036854775807;
-    ref
-        .read(myCommentStateNotifierProvider.notifier)
-        .paginate(forceRefetch: true);
+    // TODO : my recruitment comment
+    // ref.read(myCommentStateNotifierProvider.notifier).lastId =
+    //     9223372036854775807;
+    // ref
+    //     .read(myCommentStateNotifierProvider.notifier)
+    //     .paginate(forceRefetch: true);
 
     firstTime = true;
 
@@ -89,6 +90,7 @@ class _StudyBoardScreenState extends ConsumerState<StudyBoardScreen> {
     final requestData = {
       'recruitmentId': widget.board.id.toInt(),
       'content': textEditingController.text,
+      'isAnonymous': ref.watch(isAnonymousStateProvider),
     };
     try {
       await ref.watch(recruitmentCommentProvider).post(requestData);
@@ -107,6 +109,7 @@ class _StudyBoardScreenState extends ConsumerState<StudyBoardScreen> {
     final requestData = {
       'commentId': commentId,
       'content': textEditingController.text,
+      'isAnonymous': ref.watch(isAnonymousStateProvider),
     };
 
     try {
@@ -410,6 +413,10 @@ class _StudyBoardScreenState extends ConsumerState<StudyBoardScreen> {
                                 await ref
                                     .watch(recruitmentAddProvider)
                                     .delete(widget.board.id);
+                                await ref
+                                    .read(recruitmentStateNotifierProvider
+                                        .notifier)
+                                    .paginate(forceRefetch: true);
                                 await ref
                                     .read(boardStateNotifierProvider.notifier)
                                     .paginate(forceRefetch: true);
@@ -754,14 +761,7 @@ class _StudyBoardScreenState extends ConsumerState<StudyBoardScreen> {
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () async {
-                  ref
-                      .read(commentPaginationProvider.notifier)
-                      .paginate(forceRefetch: true);
-                  ref.read(myCommentStateNotifierProvider.notifier).lastId =
-                      9223372036854775807;
-                  ref
-                      .read(myCommentStateNotifierProvider.notifier)
-                      .paginate(forceRefetch: true);
+                  refresh();
                 },
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
