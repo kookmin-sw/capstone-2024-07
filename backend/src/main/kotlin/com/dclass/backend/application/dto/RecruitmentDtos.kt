@@ -4,6 +4,7 @@ import com.dclass.backend.domain.hashtag.HashTag
 import com.dclass.backend.domain.recruitment.Recruitment
 import com.dclass.backend.domain.recruitment.RecruitmentNumber
 import com.dclass.backend.domain.recruitment.RecruitmentType
+import com.dclass.backend.domain.recruitmentanonymous.RecruitmentAnonymous
 import com.dclass.backend.domain.user.User
 import java.time.LocalDateTime
 
@@ -33,6 +34,10 @@ data class CreateRecruitmentRequest(
             content = content,
             isAnonymous = isAnonymous,
         )
+    }
+
+    fun toAnonymousEntity(userId: Long, recruitmentId: Long): RecruitmentAnonymous {
+        return RecruitmentAnonymous(userId, recruitmentId)
     }
 }
 

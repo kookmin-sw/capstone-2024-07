@@ -14,6 +14,7 @@ import com.dclass.backend.domain.hashtag.HashTagRepository
 import com.dclass.backend.domain.hashtag.HashTagTarget.RECRUITMENT
 import com.dclass.backend.domain.recruitment.RecruitmentRepository
 import com.dclass.backend.domain.recruitment.findByIdOrThrow
+import com.dclass.backend.domain.recruitmentanonymous.RecruitmentAnonymousRepository
 import com.dclass.backend.domain.recruitmentscrap.RecruitmentScrapRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -25,10 +26,17 @@ class RecruitmentService(
     private val belongRepository: BelongRepository,
     private val hashTagRepository: HashTagRepository,
     private val recruitmentScrapRepository: RecruitmentScrapRepository,
+    private val anonymousRepository: RecruitmentAnonymousRepository
 ) {
     fun getAll(userId: Long, request: RecruitmentScrollPageRequest): RecruitmentsResponse {
         val activatedDepartmentId = belongRepository.getOrThrow(userId).activated
+
         val recruitments = recruitmentRepository.findRecruitmentScrollPage(activatedDepartmentId, request)
+            .map {
+                it.apply {
+                    if (this.isAnonymous) this.userNickname = "익명"
+                }
+            }
         val hashTags = hashTagRepository.findRecruitmentHashTagByTargetAndTargetIdIn(
             RECRUITMENT,
             recruitments.map { it.id },
@@ -67,7 +75,9 @@ class RecruitmentService(
     // TODO getCommentedAndReplied
 
     fun getById(userId: Long, recruitmentId: Long): RecruitmentWithUserAndHashTagDetailResponse {
+        val anonymousList = anonymousRepository.findByRecruitmentId(recruitmentId)
         val recruitment = recruitmentRepository.findRecruitmentById(recruitmentId)
+            .apply { if (isAnonymous) userNickname = "익명" }
         val hashTags = hashTagRepository.findRecruitmentHashTagByTargetAndTargetId(RECRUITMENT, recruitmentId)
         val scrapped = recruitmentScrapRepository.existsByUserIdAndRecruitmentId(userId, recruitmentId)
         return RecruitmentWithUserAndHashTagDetailResponse(recruitment, hashTags, scrapped)
@@ -77,6 +87,11 @@ class RecruitmentService(
         val activatedDepartmentId = belongRepository.getOrThrow(userId).activated
         val recruitment = recruitmentRepository.save(request.toRecruitment(userId, activatedDepartmentId))
         val hashTags = hashTagRepository.saveAll(request.hashTags.map { HashTag(it, RECRUITMENT, recruitment.id) })
+
+        if (request.isAnonymous && !anonymousRepository.existsByUserIdAndRecruitmentId(userId, recruitment.id)) {
+            anonymousRepository.save(request.toAnonymousEntity(userId, recruitment.id))
+        }
+
         return RecruitmentResponse(recruitment)
     }
 
