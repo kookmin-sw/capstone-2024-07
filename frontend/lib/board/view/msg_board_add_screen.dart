@@ -475,7 +475,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
         'title': title,
         'content': content,
         'hashTags': hashTags,
-        'isAnonymous': isAnonymous,
+        'isAnonymous': ref.watch(isAnonymousStateProvider),
       };
 
       try {
@@ -764,21 +764,26 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                             ),
                                             GestureDetector(
                                               onTap: () async {
-                                                final selectedDate =
-                                                    await showDatePicker(
-                                                  context: context,
-                                                  initialDate: startDate,
-                                                  firstDate: DateTime.now(),
-                                                  lastDate: DateTime(2100),
-                                                );
-                                                if (selectedDate != null) {
-                                                  setState(() {
-                                                    startDate = selectedDate;
-                                                    if (endDate
-                                                        .isBefore(startDate)) {
-                                                      endDate = selectedDate;
-                                                    }
-                                                  });
+                                                if (isAlways) {
+                                                  notAllowed(
+                                                      "먼저, 항시진행 체크해제를 해주세요");
+                                                } else {
+                                                  final selectedDate =
+                                                      await showDatePicker(
+                                                    context: context,
+                                                    initialDate: startDate,
+                                                    firstDate: DateTime.now(),
+                                                    lastDate: DateTime(2100),
+                                                  );
+                                                  if (selectedDate != null) {
+                                                    setState(() {
+                                                      startDate = selectedDate;
+                                                      if (endDate.isBefore(
+                                                          startDate)) {
+                                                        endDate = selectedDate;
+                                                      }
+                                                    });
+                                                  }
                                                 }
                                               },
                                               child: Container(
@@ -796,10 +801,13 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                                     ),
                                                     child: Text(
                                                       "${startDate.year.toString()}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}",
-                                                      style: const TextStyle(
+                                                      style: TextStyle(
                                                         fontSize: 10,
                                                         fontWeight:
                                                             FontWeight.w500,
+                                                        color: isAlways
+                                                            ? Colors.grey
+                                                            : Colors.black,
                                                       ),
                                                     ),
                                                   )),
@@ -819,17 +827,22 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                             ),
                                             GestureDetector(
                                               onTap: () async {
-                                                final selectedDate =
-                                                    await showDatePicker(
-                                                  context: context,
-                                                  initialDate: endDate,
-                                                  firstDate: startDate,
-                                                  lastDate: DateTime(2100),
-                                                );
-                                                if (selectedDate != null) {
-                                                  setState(() {
-                                                    endDate = selectedDate;
-                                                  });
+                                                if (isAlways) {
+                                                  notAllowed(
+                                                      "먼저, 항시진행 체크해제를 해주세요");
+                                                } else {
+                                                  final selectedDate =
+                                                      await showDatePicker(
+                                                    context: context,
+                                                    initialDate: endDate,
+                                                    firstDate: startDate,
+                                                    lastDate: DateTime(2100),
+                                                  );
+                                                  if (selectedDate != null) {
+                                                    setState(() {
+                                                      endDate = selectedDate;
+                                                    });
+                                                  }
                                                 }
                                               },
                                               child: Container(
@@ -847,10 +860,13 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                                     ),
                                                     child: Text(
                                                       "${endDate.year.toString()}-${endDate.month.toString().padLeft(2, '0')}-${endDate.day.toString().padLeft(2, '0')}",
-                                                      style: const TextStyle(
+                                                      style: TextStyle(
                                                         fontSize: 10,
                                                         fontWeight:
                                                             FontWeight.w500,
+                                                        color: isAlways
+                                                            ? Colors.grey
+                                                            : Colors.black,
                                                       ),
                                                     ),
                                                   )),
@@ -974,6 +990,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 10,
                                                   ),
+                                                  enabled: !isNotLimit,
                                                   keyboardType:
                                                       TextInputType.number,
                                                   inputFormatters: <TextInputFormatter>[
@@ -1158,12 +1175,15 @@ class BottomView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     msgBoardAddScreenState.boardAddAPI = ref.watch(boardAddProvider);
+    msgBoardAddScreenState.recruitmentAddAPI =
+        ref.watch(recruitmentAddProvider);
+    bool noImage = msgBoardAddScreenState.selectCategory == "스터디" ||
+        msgBoardAddScreenState.selectCategory == "프로젝트";
     return Column(
       children: [
-        if (!(widget.isRecruitment))
-          ImageViewer(
-            msgBoardAddScreenState: msgBoardAddScreenState,
-          ),
+        ImageViewer(
+          msgBoardAddScreenState: msgBoardAddScreenState,
+        ),
         Container(
           decoration: const BoxDecoration(
             border: Border(
@@ -1182,20 +1202,9 @@ class BottomView extends ConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Row(
+              Row(
                 children: [
-                  TextWithIcon(
-                    icon: Icons.image_rounded,
-                    iconSize: 17,
-                    text: "사진",
-                    commentId: -1,
-                    postId: -1,
-                    replyId: -1,
-                    isClicked: false,
-                    isMine: false,
-                    userId: -1,
-                  ),
-                  TextWithIcon(
+                  const TextWithIcon(
                     icon: Icons.check_box_outline_blank_rounded,
                     iconSize: 17,
                     text: "익명",
@@ -1206,6 +1215,18 @@ class BottomView extends ConsumerWidget {
                     isMine: false,
                     userId: -1,
                   ),
+                  if (!noImage)
+                    const TextWithIcon(
+                      icon: Icons.image_rounded,
+                      iconSize: 17,
+                      text: "사진",
+                      commentId: -1,
+                      postId: -1,
+                      replyId: -1,
+                      isClicked: false,
+                      isMine: false,
+                      userId: -1,
+                    ),
                 ],
               ),
               if (widget.isEdit)
