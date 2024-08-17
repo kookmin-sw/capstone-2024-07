@@ -43,6 +43,7 @@ class MsgBoardAddScreen extends ConsumerStatefulWidget {
 
 class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   late BoardAdd boardAddAPI;
+  late RecruitmentAdd recruitmentAddAPI;
   bool canUpload = false;
   bool writedTitle = false;
   bool writedContent = false;
@@ -53,9 +54,10 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   List<String> networkImages = [];
   late TextEditingController titleController;
   late TextEditingController contentController;
+  late TextEditingController recruitmentPersonController;
   bool isLoading = false;
 
-  bool isOffline = false;
+  bool isOnline = false;
   bool isAlways = false;
   bool isNotLimit = false;
   DateTime startDate = DateTime.now();
@@ -544,7 +546,12 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                         setState(() {
                           isLoading = true;
                         });
-                        upLoad();
+                        if (selectCategory == "스터디" ||
+                            selectCategory == "프로젝트") {
+                          upLoadRecruitment();
+                        } else {
+                          upLoad();
+                        }
                       },
                       child: const Text(
                         "네",
@@ -613,7 +620,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
           ),
           body: Stack(children: [
             Transform.translate(
-              offset: Offset(80.0, height / 2),
+              offset: const Offset(80.0, 430.0),
               child: Image.asset(
                 'asset/imgs/logo.png',
                 width: 450.0,
@@ -931,11 +938,11 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                         width: 110.0,
                                         height: 28.0,
                                         inactiveColor: INACTIVE_COLOR,
-                                        value: isOffline,
+                                        value: isOnline,
                                         activeColor: ACTIVE_COLOR,
                                         onToggle: (bool? value) {
                                           setState(() {
-                                            isOffline = value ?? false;
+                                            isOnline = value ?? false;
                                           });
                                         }),
                                     const SizedBox(
@@ -985,6 +992,8 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                                 padding: const EdgeInsets.only(
                                                     left: 3.0, bottom: 8.0),
                                                 child: TextField(
+                                                  controller:
+                                                      recruitmentPersonController,
                                                   textAlign: TextAlign.center,
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.w500,
@@ -1179,6 +1188,7 @@ class BottomView extends ConsumerWidget {
         ref.watch(recruitmentAddProvider);
     bool noImage = msgBoardAddScreenState.selectCategory == "스터디" ||
         msgBoardAddScreenState.selectCategory == "프로젝트";
+
     return Column(
       children: [
         ImageViewer(
