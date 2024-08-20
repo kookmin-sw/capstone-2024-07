@@ -11,13 +11,13 @@ final recruitmentCommentPaginationProvider = StateNotifierProvider<
   (ref) {
     final recruitmentCommentNotifier = ref.watch(recruitmentCommentProvider);
     final recruitmentId = ref.watch(boardDetailNotifier);
-    const initialLastPostId = 1;
+    const lastCommentId = 0;
     const size = 15;
 
     final notifier = RecruitmentCommentPaginationNotifier(
       recruitmentCommentNotifier: recruitmentCommentNotifier,
       recruitmentId: recruitmentId,
-      lastCommentId: initialLastPostId,
+      lastCommentId: lastCommentId,
       size: size,
     );
     return notifier;
@@ -94,7 +94,7 @@ class RecruitmentCommentPaginationNotifier
         } else {
           state = CursorPaginationModelLoading();
         }
-        lastCommentId = 1;
+        lastCommentId = 0;
       }
       final resp = await recruitmentCommentNotifier.paginate(
           recruitmentId, lastCommentId, size);
