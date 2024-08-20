@@ -99,12 +99,14 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
 
     titleController = TextEditingController(text: title);
     contentController = TextEditingController(text: content);
-    if (limit == -2) {
+    if (limit == -2 || limit == -1) {
       recruitmentPersonController = TextEditingController();
     } else {
       recruitmentPersonController =
           TextEditingController(text: limit.toString());
     }
+
+    recruitmentPersonController.addListener(editPersonListener);
   }
 
   @override
@@ -114,6 +116,14 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
     height = MediaQuery.of(context).size.height;
 
     debugPrint("크기 : $width $height");
+  }
+
+  void editPersonListener() {
+    setState(() {
+      canUpload = writedTitle &&
+          writedContent &&
+          recruitmentPersonController.text.isNotEmpty;
+    });
   }
 
   void refresh() async {
@@ -1037,6 +1047,13 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                       onTap: () {
                                         setState(() {
                                           isNotLimit = !isNotLimit;
+                                          if (!isNotLimit) {
+                                            canUpload = canUpload &&
+                                                recruitmentPersonController
+                                                    .text.isNotEmpty;
+                                          } else {
+                                            canUpload = true;
+                                          }
                                         });
                                       },
                                       child: Container(
@@ -1191,9 +1208,10 @@ class BottomView extends ConsumerWidget {
 
     return Column(
       children: [
-        ImageViewer(
-          msgBoardAddScreenState: msgBoardAddScreenState,
-        ),
+        if (!noImage)
+          ImageViewer(
+            msgBoardAddScreenState: msgBoardAddScreenState,
+          ),
         Container(
           decoration: const BoxDecoration(
             border: Border(
