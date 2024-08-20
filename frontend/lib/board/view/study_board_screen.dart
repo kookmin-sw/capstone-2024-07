@@ -13,7 +13,6 @@ import 'package:frontend/board/model/recruitment_response_model.dart';
 import 'package:frontend/board/provider/anonymous_provider.dart';
 import 'package:frontend/board/provider/block_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
-import 'package:frontend/board/provider/comment_pagination_provider.dart';
 import 'package:frontend/board/provider/comment_notifier_provider.dart';
 import 'package:frontend/board/provider/image_provider.dart';
 import 'package:frontend/board/provider/recruitment_add_provider.dart';
@@ -59,7 +58,7 @@ class _StudyBoardScreenState extends ConsumerState<StudyBoardScreen> {
 
   void scrollListener() {
     if (controller.offset > controller.position.maxScrollExtent - 150) {
-      ref.read(commentPaginationProvider.notifier).paginate(
+      ref.read(recruitmentCommentPaginationProvider.notifier).paginate(
             fetchMore: true,
           );
     }
