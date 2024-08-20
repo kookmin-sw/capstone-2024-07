@@ -11,6 +11,7 @@ import 'package:frontend/board/layout/text_with_icon.dart';
 import 'package:frontend/board/model/exception_model.dart';
 import 'package:frontend/board/model/msg_board_response_model.dart';
 import 'package:frontend/board/model/recruitment_response_model.dart';
+import 'package:frontend/board/provider/api_category_provider.dart';
 import 'package:frontend/board/provider/board_add_provider.dart';
 import 'package:frontend/board/provider/board_state_notifier_provider.dart';
 import 'package:frontend/board/provider/image_provider.dart';
@@ -95,7 +96,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
 
         canUpload = writedTitle = writedContent = true;
       }
-    }
+    } else {}
 
     titleController = TextEditingController(text: title);
     contentController = TextEditingController(text: content);
@@ -116,6 +117,15 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
     height = MediaQuery.of(context).size.height;
 
     debugPrint("크기 : $width $height");
+
+    final communityTitle = ref.watch(categoryTitleProvider);
+    final isHot = ref.watch(isHotProvider);
+    debugPrint("$communityTitle 이게 클릭?");
+    if (communityTitle == null || isHot) {
+      selectCategory = "자유";
+    } else {
+      selectCategory = categoryCodesReverseList2[communityTitle]!;
+    }
   }
 
   void editPersonListener() {
