@@ -44,8 +44,30 @@ class StudyBoard extends ConsumerWidget {
     }
   }
 
+  String getTwoWord(int t) {
+    if (t < 10) {
+      return "0$t";
+    } else {
+      return "$t";
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    DateTime start = recruitmentDetailResponseModel.startDateTime;
+    DateTime end = recruitmentDetailResponseModel.endDateTime;
+
+    String date = "";
+    if (!recruitmentDetailResponseModel.isOngoing) {
+      if (start.year == end.year) {
+        date =
+            "${start.year}.${getTwoWord(start.month)}.${getTwoWord(start.day)}~${getTwoWord(end.month)}.${getTwoWord(end.day)}";
+      } else {
+        date =
+            "${start.year % 100}.${getTwoWord(start.month)}.${getTwoWord(start.day)}~${end.year % 100}.${getTwoWord(end.month)}.${getTwoWord(end.day)}";
+      }
+    }
+
     String allText = recruitmentDetailResponseModel.content;
     List<String> splitText = allText.split("\n");
 
@@ -210,8 +232,25 @@ class StudyBoard extends ConsumerWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
+            recruitmentDetailResponseModel.isOngoing
+                ? const Text(
+                    "항시진행",
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: CLOUD_COLOR,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  )
+                : Text(
+                    "진행기간 | $date",
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
             const SizedBox(
-              height: 5,
+              height: 10,
             ),
             RichText(
               softWrap: true,
