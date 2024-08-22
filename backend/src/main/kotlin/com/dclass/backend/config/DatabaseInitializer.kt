@@ -3,8 +3,10 @@ package com.dclass.backend.config
 import com.dclass.backend.application.CommentService
 import com.dclass.backend.application.PostService
 import com.dclass.backend.application.ReplyService
+import com.dclass.backend.common.BulkInsertRepository
 import com.dclass.backend.domain.belong.Belong
 import com.dclass.backend.domain.belong.BelongRepository
+import com.dclass.backend.domain.blacklist.Blacklist
 import com.dclass.backend.domain.comment.Comment
 import com.dclass.backend.domain.comment.CommentRepository
 import com.dclass.backend.domain.community.Community
@@ -20,6 +22,8 @@ import com.dclass.backend.domain.user.University
 import com.dclass.backend.domain.user.UniversityRepository
 import com.dclass.backend.domain.user.User
 import com.dclass.backend.domain.user.UserRepository
+import com.dclass.backend.security.JwtTokenProvider
+import jakarta.persistence.EntityManager
 import jakarta.transaction.Transactional
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Profile
@@ -31,6 +35,7 @@ import java.time.LocalDateTime
 @Component
 class DatabaseInitializer(
     private val database: Database,
+    private val entityManager: EntityManager,
     private val universityRepository: UniversityRepository,
     private val departmentRepository: DepartmentRepository,
     private val communityRepository: CommunityRepository,
@@ -42,7 +47,19 @@ class DatabaseInitializer(
     private val commentService: CommentService,
     private val replyService: ReplyService,
     private val postService: PostService,
+    private val bulkInsertRepository: BulkInsertRepository,
 ) : CommandLineRunner {
+
+    private fun prev(){
+        entityManager.createNativeQuery("set foreign_key_checks = 0").executeUpdate()
+        entityManager.createNativeQuery("set autocommit = 0").executeUpdate()
+    }
+
+    private fun nxt(){
+        entityManager.createNativeQuery("commit").executeUpdate()
+        entityManager.createNativeQuery("set foreign_key_checks = 1").executeUpdate()
+        entityManager.createNativeQuery("set autocommit = 1").executeUpdate()
+    }
 
     override fun run(vararg args: String) {
         cleanUp()
@@ -58,6 +75,7 @@ class DatabaseInitializer(
         populateDepartment()
         populateCommunity()
         populateUser()
+//        populateBlacklist()
 //        populateDummyPosts()
 //        populateDummyComments()
 //        populateDummyReplies()
@@ -775,20 +793,50 @@ class DatabaseInitializer(
         val communityIds = (445L..450L).toList()
 
         val dummyPosts = mutableListOf<Post>()
-
+        val batchSize = 10000
         var number = 1
 
         for (user in users) {
-            for (i in 1..10) {
+            for (i in 1..100000) {
                 val communityId = communityIds.random()
                 val community = communityRepository.findById(communityId).get()
                 val post = createDummyPost(user, community, number)
                 dummyPosts.add(post)
                 number++
+
+
+                if (dummyPosts.size >= batchSize) {
+                    prev()
+                    bulkInsertRepository.bulkInsert(dummyPosts)
+                    nxt()
+                    dummyPosts.clear()
+                }
             }
         }
+    }
 
-        postRepository.saveAll(dummyPosts)
+    private fun populateBlacklist(){
+        val blacklists = mutableListOf<Blacklist>()
+        var number = 1L
+        val batchSize = 100000
+        val totalSize = 100000 * 30
+        for(i in 1..totalSize){
+            val blacklist= Blacklist(invalidRefreshToken = generateRandomString(100),id=i.toLong())
+            blacklists.add(blacklist)
+            if(blacklists.size >= batchSize){
+                prev()
+                bulkInsertRepository.bulkBlacklistInsert(blacklists)
+                nxt()
+                blacklists.clear()
+            }
+        }
+    }
+
+    fun generateRandomString(length: Int): String {
+        val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+        return (1..length)
+            .map { chars.random() }
+            .joinToString("")
     }
 
     private fun createDummyPost(user: User, community: Community, number: Int): Post {
@@ -796,7 +844,7 @@ class DatabaseInitializer(
         val content = "Dummy Post Content"
         val createdDateTime = LocalDateTime.now()
 
-        return Post(user.id, community.id, title, content, PostLikes(), createdDateTime = createdDateTime)
+        return Post(user.id, community.id, title, content, PostLikes(), createdDateTime = createdDateTime,id=number.toLong())
     }
 
     private fun populateDummyComments() {
