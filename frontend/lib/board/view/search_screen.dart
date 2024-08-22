@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/board/component/study_board_card.dart';
+import 'package:frontend/board/provider/recruitment_state_notifier_provider.dart';
 import 'package:frontend/board/provider/search_state_notifier_provider.dart';
 import 'package:frontend/board/view/study_board_screen.dart';
 import 'package:frontend/common/const/colors.dart';
@@ -10,6 +11,8 @@ import 'package:frontend/board/model/recruitment_response_model.dart';
 import 'package:frontend/board/component/board_card.dart';
 import 'package:frontend/board/view/msg_board_screen.dart';
 import 'package:go_router/go_router.dart';
+
+import '../provider/board_detail_state_notifier_provider.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -219,6 +222,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           if (item is MsgBoardResponseModel) {
             return GestureDetector(
               onTap: () {
+                ref.read(boardDetailNotifier.notifier).add(item.id);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -231,6 +235,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           } else if (item is RecruitmentResponseModel) {
             return GestureDetector(
               onTap: () {
+                ref.read(boardDetailNotifier.notifier).add(item.id);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
