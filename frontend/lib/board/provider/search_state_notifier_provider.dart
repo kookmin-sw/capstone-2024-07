@@ -37,6 +37,7 @@ class SearchStateNotifier extends StateNotifier<CursorPaginationModelBase> {
   int lastId;
   int size;
   String keyword;
+  String searchType = '일반'; // 검색 유형을 저장하는 변수
 
   SearchStateNotifier({
     required this.repository,
@@ -49,8 +50,9 @@ class SearchStateNotifier extends StateNotifier<CursorPaginationModelBase> {
 
   bool get isMounted => _mounted;
 
-  void updateAndFetch(String newKeyword) {
+  void updateAndFetch(String newKeyword, String newSearchType) {
     keyword = newKeyword;
+    searchType = newSearchType; // 검색 유형 업데이트
     lastId = 9223372036854775807;
     paginate(forceRefetch: true);
   }
@@ -105,7 +107,11 @@ class SearchStateNotifier extends StateNotifier<CursorPaginationModelBase> {
           state = CursorPaginationModelLoading();
         }
       }
-      final resp = await repository.paginate(lastId, size, keyword);
+
+      // 검색 유형에 따라 다른 API 호출
+      final resp = searchType == '일반'
+          ? await repository.paginate(lastId, size, keyword)
+          : await repository.searchRecruitment(lastId, size, keyword);
 
       if (!isMounted) return;
 

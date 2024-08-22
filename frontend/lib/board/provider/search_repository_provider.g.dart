@@ -57,6 +57,45 @@ class _SearchRepository implements SearchRepository {
     return value;
   }
 
+  @override
+  Future<CursorPaginationModel<RecruitmentResponseModel>> searchRecruitment(
+    int lastId,
+    int size,
+    String keyword,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'lastId': lastId,
+      r'size': size,
+      r'keyword': keyword,
+    };
+    final _headers = <String, dynamic>{r'accessToken': 'true'};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<CursorPaginationModel<RecruitmentResponseModel>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/api/recruitment',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = CursorPaginationModel<RecruitmentResponseModel>.fromJson(
+      _result.data!,
+      (json) => RecruitmentResponseModel.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||
