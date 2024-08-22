@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
 import 'package:frontend/common/const/data.dart';
+import 'package:frontend/member/view/signup/referral_input_screen.dart';
 
 import '../../../common/component/notice_popup_dialog.dart';
 import '../../../common/provider/dio_provider.dart';
 import '../../provider/signup_provider.dart';
-import '../login_screen.dart';
 
 class SignupCompleteScreen extends ConsumerWidget {
   @override
@@ -30,21 +30,11 @@ class SignupCompleteScreen extends ConsumerWidget {
           },
         );
         if (response.statusCode == 200) {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return NoticePopupDialog(
-                message: "회원가입이 완료되었습니다.",
-                buttonText: "닫기",
-                onPressed: () {
-                  ref.read(signupProvider.notifier).resetState();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
-                  );
-                },
-              );
-            },
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ReferralInputScreen(),
+            ),
           );
         }
       } on DioException catch (e) {
