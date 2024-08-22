@@ -6,6 +6,7 @@ import 'package:retrofit/http.dart';
 
 import '../../common/const/data.dart';
 import '../model/msg_board_response_model.dart';
+import '../model/recruitment_response_model.dart'; // RecruitmentResponseModel import 추가
 
 part 'search_repository_provider.g.dart';
 
@@ -24,8 +25,18 @@ abstract class SearchRepository {
     'accessToken': 'true',
   })
   Future<CursorPaginationModel<MsgBoardResponseModel>> paginate(
-    @Query('lastId') int lastId,
-    @Query('size') int size,
-    @Query('keyword') String keyword,
-  );
+      @Query('lastId') int lastId,
+      @Query('size') int size,
+      @Query('keyword') String keyword,
+      );
+
+  @GET('/api/recruitment')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<CursorPaginationModel<RecruitmentResponseModel>> searchRecruitment( // 반환 타입 수정
+      @Query('lastId') int lastId,
+      @Query('size') int size,
+      @Query('keyword') String keyword,
+      );
 }

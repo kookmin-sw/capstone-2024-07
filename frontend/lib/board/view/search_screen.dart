@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/board/component/study_board_card.dart';
 import 'package:frontend/board/provider/search_state_notifier_provider.dart';
-import 'package:frontend/board/provider/searck_keyword_provider.dart';
-
-import '../../common/const/colors.dart';
-import '../../common/model/cursor_pagination_model.dart';
-import '../component/board_card.dart';
-import '../model/msg_board_response_model.dart';
-import '../provider/board_detail_state_notifier_provider.dart';
-import 'msg_board_screen.dart';
+import 'package:frontend/board/view/study_board_screen.dart';
+import 'package:frontend/common/const/colors.dart';
+import 'package:frontend/common/model/cursor_pagination_model.dart';
+import 'package:frontend/board/model/msg_board_response_model.dart';
+import 'package:frontend/board/model/recruitment_response_model.dart';
+import 'package:frontend/board/component/board_card.dart';
+import 'package:frontend/board/view/msg_board_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -21,6 +22,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   final ScrollController controller = ScrollController();
   String searchKeyword = '';
   bool isSearched = false;
+  String searchType = '일반';
 
   @override
   void initState() {
@@ -81,6 +83,20 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         children: [
           Row(
             children: [
+              DropdownButton<String>(
+                value: searchType,
+                items: <String>['일반', '스터디'].map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    searchType = newValue!;
+                  });
+                },
+              ),
               Expanded(
                 child: TextFormField(
                   cursorColor: PRIMARY_COLOR,
@@ -114,7 +130,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     setState(() {
                       searchKeyword = value;
                     });
-                    ref.read(searchKeywordProvider.notifier).state = value;
                   },
                   onFieldSubmitted: (String value) => search(ref),
                 ),
@@ -125,15 +140,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   height: 60,
                   child: TextButton(
                     onPressed: () {
-                      ref.read(searchKeywordProvider.notifier).state = '';
-                      ref
-                          .read(searchStateNotifierProvider.notifier)
-                          .resetSearchResults();
                       setState(() {
                         searchKeyword = '';
                         isSearched = false;
                       });
-                      Navigator.of(context).pop();
+                      ref.read(searchStateNotifierProvider.notifier).resetSearchResults();
+                      context.pop();
                     },
                     child: const Text('취소'),
                   ),
@@ -151,9 +163,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       setState(() {
         isSearched = true;
       });
-      ref
-          .read(searchStateNotifierProvider.notifier)
-          .updateAndFetch(searchKeyword);
+      ref.read(searchStateNotifierProvider.notifier).updateAndFetch(searchKeyword, searchType);
     }
   }
 
@@ -177,9 +187,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final cp = data as CursorPaginationModel;
 
     if (cp.data.isEmpty) {
-      return Center(
-        child: Text("검색 결과가 없습니다.",
-          style: TextStyle(color: BODY_TEXT_COLOR, fontSize: 16.0),
+      return const Center(
+        child: Text(
+          "검색된 내용이 없습니다.",
+          style: TextStyle(color: Colors.grey, fontSize: 16.0),
         ),
       );
     }
@@ -187,48 +198,41 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     return RefreshIndicator(
       onRefresh: () async {
         ref.read(searchStateNotifierProvider.notifier).lastId =
-            9223372036854775807;
-        await ref
-            .read(searchStateNotifierProvider.notifier)
-            .paginate(forceRefetch: true);
+        9223372036854775807;
+        await ref.read(searchStateNotifierProvider.notifier).paginate(forceRefetch: true);
       },
       child: ListView.separated(
         controller: controller,
-        itemCount: cp.data.length + 1,
+        itemCount: cp.data.length,
         itemBuilder: (_, index) {
-          if (index == cp.data.length) {
-            return Center(
-              child: cp is CursorPaginationModelFetchingMore
-                  ? const CircularProgressIndicator(
-                      color: PRIMARY_COLOR,
-                    )
-                  : const Text(
-                      'Copyright 2024. Decl Team all rights reserved.\n',
-                      style: TextStyle(
-                        color: BODY_TEXT_COLOR,
-                        fontSize: 12.0,
-                      ),
-                    ),
+          final item = cp.data[index];
+          if (item is MsgBoardResponseModel) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MsgBoardScreen(board: item),
+                  ),
+                );
+              },
+              child: BoardCard.fromModel(msgBoardResponseModel: item),
             );
+          } else if (item is RecruitmentResponseModel) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StudyBoardScreen(board: item),
+                  ),
+                );
+              },
+              child: StudyBoardCard(recruitmentResponseModel: item),
+            );
+          } else {
+            return const SizedBox.shrink(); // 알 수 없는 타입의 경우 빈 위젯 반환
           }
-
-          final MsgBoardResponseModel pItem = cp.data[index];
-
-          return GestureDetector(
-            child: BoardCard.fromModel(msgBoardResponseModel: pItem),
-            onTap: () async {
-              // 상세페이지
-              ref.read(boardDetailNotifier.notifier).add(pItem.id);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MsgBoardScreen(
-                          board: pItem,
-                        ),
-                    fullscreenDialog: true),
-              );
-            },
-          );
         },
         separatorBuilder: (_, index) {
           return const SizedBox(height: 1.0);
