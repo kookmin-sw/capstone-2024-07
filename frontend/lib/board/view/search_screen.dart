@@ -79,16 +79,21 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   Widget _renderTextFormField(WidgetRef ref, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
-      child: Column(
+      child: Row(
         children: [
-          Row(
-            children: [
-              DropdownButton<String>(
+          SizedBox(
+            width: 70,
+            height: 70,
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
                 value: searchType,
                 items: <String>['일반', '스터디'].map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Text(
+                      value,
+                      style: const TextStyle(fontSize: 16),
+                    ),
                   );
                 }).toList(),
                 onChanged: (String? newValue) {
@@ -96,67 +101,72 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     searchType = newValue!;
                   });
                 },
+                iconSize: 20,
+                dropdownColor: Colors.white,
+                isDense: true,
               ),
-              Expanded(
-                child: TextFormField(
-                  cursorColor: PRIMARY_COLOR,
-                  decoration: InputDecoration(
-                    hintText: '검색어를 입력해주세요.',
-                    hintStyle: const TextStyle(
-                      color: PRIMARY_COLOR,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    suffixIcon: IconButton(
-                      icon: const Icon(
-                        Icons.search,
-                        size: 30.0,
-                      ),
-                      color: PRIMARY_COLOR,
-                      onPressed: () => search(ref),
-                    ),
-                    enabledBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                      borderSide: BorderSide(color: PRIMARY_COLOR, width: 1.5),
-                    ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                      borderSide: BorderSide(color: PRIMARY_COLOR, width: 2.5),
-                    ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: TextFormField(
+              cursorColor: PRIMARY_COLOR,
+              decoration: InputDecoration(
+                hintText: '검색어를 입력해주세요.',
+                hintStyle: const TextStyle(
+                  color: PRIMARY_COLOR,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w500,
+                ),
+                filled: true,
+                fillColor: Colors.white,
+                suffixIcon: IconButton(
+                  icon: const Icon(
+                    Icons.search,
+                    size: 24.0,
                   ),
-                  onChanged: (String value) {
-                    setState(() {
-                      searchKeyword = value;
-                    });
-                  },
-                  onFieldSubmitted: (String value) => search(ref),
+                  color: PRIMARY_COLOR,
+                  onPressed: () => search(ref),
+                ),
+                enabledBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                  borderSide: BorderSide(color: PRIMARY_COLOR, width: 1.5),
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                  borderSide: BorderSide(color: PRIMARY_COLOR, width: 2.5),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: SizedBox(
-                  height: 60,
-                  child: TextButton(
-                    onPressed: () {
-                      setState(() {
-                        searchKeyword = '';
-                        isSearched = false;
-                      });
-                      ref.read(searchStateNotifierProvider.notifier).resetSearchResults();
-                      context.pop();
-                    },
-                    child: const Text('취소'),
-                  ),
-                ),
+              onChanged: (String value) {
+                setState(() {
+                  searchKeyword = value;
+                });
+              },
+              onFieldSubmitted: (String value) => search(ref),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: SizedBox(
+              height: 40,
+              child: TextButton(
+                onPressed: () {
+                  setState(() {
+                    searchKeyword = '';
+                    isSearched = false;
+                  });
+                  ref.read(searchStateNotifierProvider.notifier).resetSearchResults();
+                  context.pop();
+                },
+                child: const Text('취소'),
               ),
-            ],
+            ),
           ),
         ],
       ),
     );
   }
+
 
   void search(WidgetRef ref) {
     if (searchKeyword.isNotEmpty) {
