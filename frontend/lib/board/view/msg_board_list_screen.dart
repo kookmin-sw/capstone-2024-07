@@ -220,6 +220,11 @@ class _MsgBoardListScreenState extends ConsumerState<MsgBoardListScreen> {
                   ref
                       .read(boardStateNotifierProvider.notifier)
                       .paginate(forceRefetch: true);
+                  ref.read(recruitmentStateNotifierProvider.notifier).lastId =
+                      9223372036854775807;
+                  await ref
+                      .read(recruitmentStateNotifierProvider.notifier)
+                      .paginate(forceRefetch: true);
                 }
               } catch (e) {
                 debugPrint("Select Major Error : $e");
