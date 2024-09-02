@@ -82,6 +82,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
         isOnline = widget.recruitmentBoard!.isOnline;
         isAlways = widget.recruitmentBoard!.isOngoing;
         isNotLimit = widget.recruitmentBoard!.limit == -1;
+        isAnonymous = widget.recruitmentBoard!.isAnonymous;
         startDate = widget.recruitmentBoard!.startDateTime;
         endDate = widget.recruitmentBoard!.endDateTime;
         limit = widget.recruitmentBoard!.limit;
@@ -116,15 +117,23 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
 
-    debugPrint("크기 : $width $height");
-
     final communityTitle = ref.watch(categoryTitleProvider);
     final isHot = ref.watch(isHotProvider);
-    debugPrint("$communityTitle 이게 클릭?");
+
     if (communityTitle == null || isHot) {
       selectCategory = "자유";
     } else {
       selectCategory = categoryCodesReverseList2[communityTitle]!;
+    }
+
+    if (widget.isEdit) {
+      if (widget.isRecruitment) {
+        selectCategory =
+            categoryCodesReverseList2[widget.recruitmentBoard!.type]!;
+      } else {
+        selectCategory =
+            categoryCodesReverseList2[widget.board!.communityTitle]!;
+      }
     }
   }
 
@@ -442,11 +451,14 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
   }
 
   Future<void> upLoadRecruitment() async {
+    isAnonymous = ref.watch(isAnonymousStateProvider);
+
     List<String> splitText = content.split("#");
 
     List<String> hashTags = splitText.sublist(1, splitText.length);
 
     if (widget.isEdit) {
+      debugPrint("anony : $isAnonymous");
       final requestData = {
         'recruitmentId': widget.recruitmentBoard?.id.toString(),
         'type': categoryCodesList2[selectCategory],
@@ -459,7 +471,7 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
         'title': title,
         'content': content,
         'hashTags': hashTags,
-        'recruitable': widget.recruitmentBoard?.recruitable,
+        'isAnonymous': isAnonymous,
       };
 
       try {
@@ -1242,14 +1254,14 @@ class BottomView extends ConsumerWidget {
             children: [
               Row(
                 children: [
-                  const TextWithIcon(
+                  TextWithIcon(
                     icon: Icons.check_box_outline_blank_rounded,
                     iconSize: 17,
                     text: "익명",
                     commentId: -1,
                     postId: -1,
                     replyId: -1,
-                    isClicked: false,
+                    isClicked: msgBoardAddScreenState.isAnonymous,
                     isMine: false,
                     userId: -1,
                   ),
@@ -1314,7 +1326,8 @@ class ImageViewer extends ConsumerWidget {
     List<XFile> images;
     images = ref.watch(imageStateProvider);
     msgBoardAddScreenState.realImages = images;
-    if (msgBoardAddScreenState.widget.isEdit) {
+    if (msgBoardAddScreenState.widget.isEdit &&
+        !msgBoardAddScreenState.widget.isRecruitment) {
       msgBoardAddScreenState.networkImages =
           msgBoardAddScreenState.widget.board!.images;
       for (var removeImg in ref.watch(networkImageStateProvider)) {

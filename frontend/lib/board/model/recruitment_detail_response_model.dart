@@ -13,6 +13,7 @@ class RecruitmentDetailResponseModel extends RecruitmentResponseModel {
     required super.type,
     required super.isOnline,
     required super.isOngoing,
+    required super.isAnonymous,
     required super.limit,
     required super.recruitable,
     required super.startDateTime,
