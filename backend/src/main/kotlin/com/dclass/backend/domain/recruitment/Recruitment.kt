@@ -135,6 +135,7 @@ class Recruitment(
         type = request.type
         isOnline = request.isOnline
         isOngoing = request.isOngoing
+        isAnonymous = request.isAnonymous
         limit = RecruitmentNumber(request.limit)
         recruitable = request.recruitable
         startDateTime = request.startDateTime

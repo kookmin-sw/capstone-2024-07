@@ -209,6 +209,7 @@ data class UpdateRecruitmentRequest(
     val type: RecruitmentType,
     val isOnline: Boolean,
     val isOngoing: Boolean,
+    val isAnonymous: Boolean,
     val limit: Int,
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
