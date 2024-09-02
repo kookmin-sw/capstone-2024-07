@@ -9,6 +9,7 @@ class RecruitmentResponseModel {
   final String type;
   final bool isOnline;
   final bool isOngoing;
+  final bool isAnonymous;
   final int limit;
   final bool recruitable;
   final DateTime startDateTime;
@@ -29,6 +30,7 @@ class RecruitmentResponseModel {
     required this.type,
     required this.isOnline,
     required this.isOngoing,
+    required this.isAnonymous,
     required this.limit,
     required this.recruitable,
     required this.startDateTime,
