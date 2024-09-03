@@ -17,7 +17,7 @@ data class CreateRecruitmentRequest(
     val endDateTime: LocalDateTime,
     var title: String,
     var content: String,
-    val hashTags: List<String>,
+    val hashTags: List<String> = emptyList(),
     val isAnonymous: Boolean = false,
 ) {
     fun toRecruitment(userId: Long, departmentId: Long): Recruitment {
@@ -215,6 +215,6 @@ data class UpdateRecruitmentRequest(
     val endDateTime: LocalDateTime,
     var title: String,
     var content: String,
-    val hashTags: List<String>,
+    val hashTags: List<String> = emptyList(),
     val recruitable: Boolean,
 )
