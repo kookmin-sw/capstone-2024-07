@@ -1020,31 +1020,27 @@ class _MsgBoardAddScreenState extends ConsumerState<MsgBoardAddScreen> {
                                               ),
                                               width: 20,
                                               height: 20,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 3.0, bottom: 8.0),
-                                                child: TextField(
-                                                  controller:
-                                                      recruitmentPersonController,
-                                                  textAlign: TextAlign.center,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 10,
-                                                  ),
-                                                  enabled: !isNotLimit,
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                  inputFormatters: <TextInputFormatter>[
-                                                    FilteringTextInputFormatter
-                                                        .digitsOnly
-                                                  ],
-                                                  maxLength: 1,
-                                                  decoration:
-                                                      const InputDecoration(
-                                                    hintText: "0",
-                                                    counterText: "",
-                                                    border: InputBorder.none,
-                                                  ),
+                                              child: TextField(
+                                                controller:
+                                                    recruitmentPersonController,
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 12,
+                                                ),
+                                                enabled: !isNotLimit,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                inputFormatters: <TextInputFormatter>[
+                                                  FilteringTextInputFormatter
+                                                      .digitsOnly
+                                                ],
+                                                maxLength: 1,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText: "0",
+                                                  counterText: "",
+                                                  border: InputBorder.none,
                                                 ),
                                               ),
                                             ),
